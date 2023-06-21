@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:miria/i18n/strings.g.dart';
 
 class SimpleMessageDialog extends StatelessWidget {
   final String message;
@@ -22,7 +23,7 @@ class SimpleMessageDialog extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text("ほい"))
+            child: Text(t.gotIt))
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:miria/i18n/strings.g.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/tab_icon.dart';
 import 'package:miria/model/tab_setting.dart';
@@ -332,7 +333,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                     if (!mounted) return;
                     Navigator.of(context).pop();
                   },
-                  child: const Text("ほい"),
+                  child: Text(t.gotIt),
                 ),
               )
             ],
