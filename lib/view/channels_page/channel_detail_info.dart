@@ -97,6 +97,8 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
         return ErrorDetail(error: error);
       }
     }
+    final isFavorited = data.isFavorited;
+    final isFollowing = data.isFollowing;
 
     return Column(
       children: [
@@ -130,13 +132,14 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
           ),
         ),
         const Padding(padding: EdgeInsets.only(top: 10)),
-        Align(
+        if (isFavorited != null && isFollowing != null)
+          Align(
             alignment: Alignment.centerRight,
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                data.isFavorited
+                isFavorited
                     ? ElevatedButton.icon(
                         onPressed: unfavorite.expectFailure(context),
                         icon: const Icon(Icons.favorite_border),
@@ -145,7 +148,7 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
                         onPressed: favorite.expectFailure(context),
                         child: const Text("お気に入りにいれる")),
                 const Padding(padding: EdgeInsets.only(left: 10)),
-                data.isFollowing
+                isFollowing
                     ? ElevatedButton.icon(
                         onPressed: unfollow.expectFailure(context),
                         icon: const Icon(Icons.check),
@@ -154,7 +157,8 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
                         onPressed: follow.expectFailure(context),
                         child: const Text("フォローする"))
               ],
-            )),
+            ),
+          ),
         MfmText(data.description ?? ""),
         for (final pinnedNote in data.pinnedNotes ?? [])
           MisskeyNote(note: pinnedNote)
