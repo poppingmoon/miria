@@ -95,7 +95,7 @@ jobs:
             export KEYSTORE_PASSWORD="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}"
             export KEY_ALIAS="${{ secrets.ANDROID_KEY_ALIAS }}"
             export KEY_PASSWORD="${{ secrets.ANDROID_KEY_PASSWORD }}"
-            flutter build apk --no-tree-shake-icons --release
+            flutter build apk --no-tree-shake-icons --release --verbose
 
         - name: Create tag and release note
           env:
