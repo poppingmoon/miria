@@ -266,3 +266,5 @@ final misskeyServerListNotifierProvider = AsyncNotifierProvider.autoDispose<
 );
 
 final cacheManagerProvider = Provider<BaseCacheManager?>((ref) => null);
+
+final miAuthCallbackProvider = StateProvider.autoDispose<Uri?>((ref) => null);
