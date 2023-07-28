@@ -29,6 +29,7 @@ class ImportExportRepository extends ChangeNotifier {
       builder: (context2) => FolderSelectDialog(
         account: account,
         fileShowTarget: "miria.json.unknown",
+        confirmationText: "このフォルダーからインポートする",
       ),
     );
     if (result == null) return;
@@ -116,6 +117,7 @@ class ImportExportRepository extends ChangeNotifier {
       builder: (context2) => FolderSelectDialog(
         account: account,
         fileShowTarget: "miria.json.unknown",
+        confirmationText: "このフォルダーに保存する",
       ),
     );
     if (result == null) return;
