@@ -24,17 +24,16 @@ class ImportExportRepository extends ChangeNotifier {
   ImportExportRepository(this.reader);
 
   Future<void> import(BuildContext context, Account account) async {
-    final folder = await showDialog<DriveFolder>(
-      barrierDismissible: false,
+    final result = await showDialog<FolderResult>(
       context: context,
-      builder: (context2) => WillPopScope(
-        onWillPop: () async => false,
-        child: FolderSelectDialog(
-          account: account,
-          fileShowTarget: "miria.json.unknown",
-        ),
+      builder: (context2) => FolderSelectDialog(
+        account: account,
+        fileShowTarget: "miria.json.unknown",
       ),
     );
+    if (result == null) return;
+
+    final folder = result.folder;
 
     final alreadyExists =
         await reader(misskeyProvider(account)).drive.files.find(
@@ -112,17 +111,16 @@ class ImportExportRepository extends ChangeNotifier {
   }
 
   Future<void> export(BuildContext context, Account account) async {
-    final folder = await showDialog<DriveFolder>(
-      barrierDismissible: false,
+    final result = await showDialog<FolderResult>(
       context: context,
-      builder: (context2) => WillPopScope(
-        onWillPop: () async => false,
-        child: FolderSelectDialog(
-          account: account,
-          fileShowTarget: "miria.json.unknown",
-        ),
+      builder: (context2) => FolderSelectDialog(
+        account: account,
+        fileShowTarget: "miria.json.unknown",
       ),
     );
+    if (result == null) return;
+
+    final folder = result.folder;
 
     final alreadyExists =
         await reader(misskeyProvider(account)).drive.files.find(
