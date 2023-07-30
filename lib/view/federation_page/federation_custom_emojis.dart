@@ -36,6 +36,7 @@ class FederationCustomEmojisState
       emojis
         ..clear()
         ..addAll(result.emojis.groupListsBy((e) => e.category ?? ""));
+      if (!mounted) return;
       setState(() {});
     });
   }
@@ -92,7 +93,8 @@ class FederationCustomEmojisState
                                 decoration: BoxDecoration(
                                     color: Theme.of(context).primaryColor),
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left: 3, right: 3),
+                                  padding:
+                                      const EdgeInsets.only(left: 3, right: 3),
                                   child: Text(
                                     "センシティブ",
                                     style: Theme.of(context)

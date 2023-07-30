@@ -53,6 +53,7 @@ class NoteDetailPageState extends ConsumerState<NoteDetailPage> {
       conversations
         ..clear()
         ..addAll(conversationResult.toList().reversed);
+      if (!mounted) return;
       setState(() {
         isLoading = false;
       });

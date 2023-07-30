@@ -84,10 +84,12 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                   ads: misskeyMeta?.ads ?? []);
         }
 
+        if (!mounted) return;
         setState(() {});
       } catch (e, s) {
         print(e);
         print(s);
+        if (!mounted) return;
         setState(() {
           error = e;
         });
