@@ -20,6 +20,7 @@ import 'package:uuid/uuid.dart';
 
 class AccountRepository extends ChangeNotifier {
   final List<Account> _account = [];
+  final accountDataValidated = <bool>[];
 
   Iterable<Account> get account => _account;
 
@@ -42,17 +43,26 @@ class AccountRepository extends ChangeNotifier {
         ..addAll(
             (jsonDecode(storedData) as List).map((e) => Account.fromJson(e)));
 
-      // 起動時にアカウント情報を取得する
-      for (int i = 0; i < _account.length; i++) {
-        _account[i] = _account[i]
-            .copyWith(i: await reader(misskeyProvider(_account[i])).i.i());
-      }
+      accountDataValidated
+        ..clear()
+        ..addAll(Iterable.generate(_account.length, (index) => false));
+
       notifyListeners();
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
     }
+  }
+
+  Future<void> loadFromSourceIfNeed(Account account) async {
+    final index = _account.indexOf(account);
+    if (index == -1) return;
+    if (accountDataValidated.isNotEmpty && accountDataValidated[index]) return;
+    _account[index] = _account[index]
+        .copyWith(i: await reader(misskeyProvider(_account[index])).i.i());
+    accountDataValidated[index] = true;
+    notifyListeners();
   }
 
   Future<void> _addIfTabSettingNothing() async {
@@ -85,26 +95,7 @@ class AccountRepository extends ChangeNotifier {
     await save();
   }
 
-  Future<void> loginAsPassword(
-      String server, String userId, String password) async {
-    final token =
-        await MisskeyServer().loginAsPassword(server, userId, password);
-    final i = await Misskey(token: token, host: server).i.i();
-    final account = Account(host: server, token: token, userId: userId, i: i);
-    addAccount(account);
-    await _addIfTabSettingNothing();
-  }
-
-  Future<void> loginAsToken(String server, String token) async {
-    final i = await Misskey(token: token, host: server).i.i();
-    addAccount(Account(host: server, userId: i.username, token: token, i: i));
-    await _addIfTabSettingNothing();
-    await reader(emojiRepositoryProvider(account.last)).loadFromSource();
-  }
-
-  String sessionId = "";
-
-  Future<void> openMiAuth(String server) async {
+  Future<void> validateMisskey(String server) async {
     //先にnodeInfoを取得する
     final Response nodeInfo;
 
@@ -133,13 +124,37 @@ class AccountRepository extends ChangeNotifier {
     if (software == "calckey" ||
         software == "dolphin" ||
         software == "mastodon" ||
-        software == "fedibird") {
+        software == "fedibird" ||
+        software == "firefish") {
       throw SpecifiedException("Miriaは$softwareに未対応です。");
     }
     final version = nodeInfoResult["software"]["version"];
     if (availableServerVersion.allMatches(version).isEmpty) {
       throw SpecifiedException("Miriaが認識できないバージョンです。\n$software $version");
     }
+  }
+
+  Future<void> loginAsPassword(
+      String server, String userId, String password) async {
+    final token =
+        await MisskeyServer().loginAsPassword(server, userId, password);
+    final i = await Misskey(token: token, host: server).i.i();
+    final account = Account(host: server, token: token, userId: userId, i: i);
+    addAccount(account);
+    await _addIfTabSettingNothing();
+  }
+
+  Future<void> loginAsToken(String server, String token) async {
+    await validateMisskey(server);
+    final i = await Misskey(token: token, host: server).i.i();
+    addAccount(Account(host: server, userId: i.username, token: token, i: i));
+    await _addIfTabSettingNothing();
+  }
+
+  String sessionId = "";
+
+  Future<void> openMiAuth(String server) async {
+    await validateMisskey(server);
 
     sessionId = const Uuid().v4();
     await launchUrl(
@@ -155,11 +170,13 @@ class AccountRepository extends ChangeNotifier {
     await addAccount(
         Account(host: server, userId: i.username, token: token, i: i));
     await _addIfTabSettingNothing();
-    await reader(emojiRepositoryProvider(account.last)).loadFromSource();
   }
 
   Future<void> addAccount(Account account) async {
     _account.add(account);
+    accountDataValidated.add(true);
+    await reader(emojiRepositoryProvider(account)).loadFromSourceIfNeed();
+
     await save();
   }
 

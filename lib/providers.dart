@@ -12,6 +12,7 @@ import 'package:miria/repository/emoji_repository.dart';
 import 'package:miria/repository/favorite_repository.dart';
 import 'package:miria/repository/general_settings_repository.dart';
 import 'package:miria/repository/hybrid_timeline_repository.dart';
+import 'package:miria/repository/import_export_repository.dart';
 import 'package:miria/repository/main_stream_repository.dart';
 import 'package:miria/repository/global_time_line_repository.dart';
 import 'package:miria/repository/home_time_line_repository.dart';
@@ -40,6 +41,8 @@ final localTimeLineProvider =
               ref.read(generalSettingsRepositoryProvider),
               tabSetting,
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
+              ref.read(accountRepository),
+              ref.read(emojiRepositoryProvider(tabSetting.account)),
             ));
 final homeTimeLineProvider =
     ChangeNotifierProvider.family<TimelineRepository, TabSetting>(
@@ -50,6 +53,8 @@ final homeTimeLineProvider =
               ref.read(generalSettingsRepositoryProvider),
               tabSetting,
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
+              ref.read(accountRepository),
+              ref.read(emojiRepositoryProvider(tabSetting.account)),
             ));
 final globalTimeLineProvider =
     ChangeNotifierProvider.family<TimelineRepository, TabSetting>(
@@ -70,6 +75,8 @@ final hybridTimeLineProvider =
               ref.read(generalSettingsRepositoryProvider),
               tabSetting,
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
+              ref.read(accountRepository),
+              ref.read(emojiRepositoryProvider(tabSetting.account)),
             ));
 
 final channelTimelineProvider =
@@ -81,6 +88,8 @@ final channelTimelineProvider =
               ref.read(generalSettingsRepositoryProvider),
               tabSetting,
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
+              ref.read(accountRepository),
+              ref.read(emojiRepositoryProvider(tabSetting.account)),
             ));
 
 final userListTimelineProvider =
@@ -92,6 +101,8 @@ final userListTimelineProvider =
               ref.read(generalSettingsRepositoryProvider),
               tabSetting,
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
+              ref.read(accountRepository),
+              ref.read(emojiRepositoryProvider(tabSetting.account)),
             ));
 
 final antennaTimelineProvider =
@@ -103,6 +114,8 @@ final antennaTimelineProvider =
               ref.read(generalSettingsRepositoryProvider),
               tabSetting,
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
+              ref.read(accountRepository),
+              ref.read(emojiRepositoryProvider(tabSetting.account)),
             ));
 
 final mainStreamRepositoryProvider =
@@ -153,6 +166,9 @@ final photoEditProvider =
     ref.read(dioProvider),
   ),
 );
+
+final importExportRepository =
+    ChangeNotifierProvider((ref) => ImportExportRepository(ref.read));
 
 // TODO: 下書きの機能かんがえるときにfamilyの引数みなおす
 final noteCreateProvider = StateNotifierProvider.family

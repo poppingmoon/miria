@@ -15,6 +15,17 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    NotesAfterRenoteRoute.name: (routeData) {
+      final args = routeData.argsAs<NotesAfterRenoteRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: NotesAfterRenotePage(
+          key: args.key,
+          note: args.note,
+          account: args.account,
+        ),
+      );
+    },
     AntennaRoute.name: (routeData) {
       final args = routeData.argsAs<AntennaRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -370,7 +381,56 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ImportExportRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ImportExportPage(),
+      );
+    },
   };
+}
+
+/// generated route for
+/// [NotesAfterRenotePage]
+class NotesAfterRenoteRoute extends PageRouteInfo<NotesAfterRenoteRouteArgs> {
+  NotesAfterRenoteRoute({
+    Key? key,
+    required Note note,
+    required Account account,
+    List<PageRouteInfo>? children,
+  }) : super(
+          NotesAfterRenoteRoute.name,
+          args: NotesAfterRenoteRouteArgs(
+            key: key,
+            note: note,
+            account: account,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'NotesAfterRenoteRoute';
+
+  static const PageInfo<NotesAfterRenoteRouteArgs> page =
+      PageInfo<NotesAfterRenoteRouteArgs>(name);
+}
+
+class NotesAfterRenoteRouteArgs {
+  const NotesAfterRenoteRouteArgs({
+    this.key,
+    required this.note,
+    required this.account,
+  });
+
+  final Key? key;
+
+  final Note note;
+
+  final Account account;
+
+  @override
+  String toString() {
+    return 'NotesAfterRenoteRouteArgs{key: $key, note: $note, account: $account}';
+  }
 }
 
 /// generated route for
@@ -1677,4 +1737,18 @@ class FavoritedNoteRouteArgs {
   String toString() {
     return 'FavoritedNoteRouteArgs{key: $key, account: $account}';
   }
+}
+
+/// generated route for
+/// [ImportExportPage]
+class ImportExportRoute extends PageRouteInfo<void> {
+  const ImportExportRoute({List<PageRouteInfo>? children})
+      : super(
+          ImportExportRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ImportExportRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }

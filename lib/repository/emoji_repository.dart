@@ -8,10 +8,14 @@ import 'package:miria/model/misskey_emoji_data.dart';
 import 'package:miria/model/unicode_emoji.dart';
 import 'package:miria/repository/account_settings_repository.dart';
 import 'package:misskey_dart/misskey_dart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class EmojiRepository {
   List<EmojiRepositoryData>? emoji;
+  Future<void> loadFromSourceIfNeed();
   Future<void> loadFromSource();
+
+  Future<void> loadFromLocalCache();
   Future<List<MisskeyEmojiData>> searchEmojis(String name, {int limit = 30});
   List<MisskeyEmojiData> defaultEmojis({int limit});
 }
@@ -42,6 +46,8 @@ class EmojiRepositoryImpl extends EmojiRepository {
     required this.accountSettingsRepository,
   });
 
+  bool isNeedLoading = false;
+
   String format(String emojiName) {
     return emojiName
         .replaceAll("_", "")
@@ -50,8 +56,43 @@ class EmojiRepositoryImpl extends EmojiRepository {
   }
 
   @override
+  Future<void> loadFromLocalCache() async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedData = prefs.getString("emojis@${account.host}");
+    if (storedData == null || storedData.isEmpty) {
+      return;
+    }
+    await _setEmojiData(EmojisResponse.fromJson(jsonDecode(storedData)));
+  }
+
+  @override
   Future<void> loadFromSource() async {
-    final toH = const KanaKit().toHiragana;
+    final serverFetchData = await misskey.emojis();
+    await _setEmojiData(serverFetchData);
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+        "emojis@${account.host}", jsonEncode(serverFetchData));
+    isNeedLoading = true;
+  }
+
+  @override
+  Future<void> loadFromSourceIfNeed() async {
+    if (isNeedLoading) return;
+    await loadFromSource();
+  }
+
+  String toHiraganaSafe(String text) {
+    try {
+      return const KanaKit().toHiragana(text);
+    } catch (e) {
+      return text;
+    }
+  }
+
+  Future<void> _setEmojiData(EmojisResponse response) async {
+    final toH = toHiraganaSafe;
+
     final unicodeEmojis =
         (jsonDecode(await rootBundle.loadString("assets/emoji_list.json"))
                 as List)
@@ -65,20 +106,21 @@ class EmojiRepositoryImpl extends EmojiRepository {
                   aliases: [e.name, ...e.keywords],
                   category: e.category,
                 ));
-    emoji = (await misskey.emojis())
-        .emojis
+
+    emoji = response.emojis
         .map((e) => EmojiRepositoryData(
-            emoji: CustomEmojiData(
-              baseName: e.name,
-              hostedName: ":${e.name}@.:",
-              url: e.url,
-              isCurrentServer: true,
-              isSensitive: e.isSensitive,
-            ),
-            category: e.category ?? "",
-            kanaName: toH(format(e.name)),
-            aliases: e.aliases,
-            kanaAliases: e.aliases.map((e2) => format(toH(e2))).toList()))
+              emoji: CustomEmojiData(
+                baseName: e.name,
+                hostedName: ":${e.name}@.:",
+                url: e.url,
+                isCurrentServer: true,
+                isSensitive: e.isSensitive,
+              ),
+              category: e.category ?? "",
+              kanaName: toH(format(e.name)),
+              aliases: e.aliases,
+              kanaAliases: e.aliases.map((e2) => format(toH(e2))).toList(),
+            ))
         .toList();
     emoji!.addAll(unicodeEmojis);
   }
