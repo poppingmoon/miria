@@ -345,11 +345,11 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SplashPage(),
       );
     },
-    TimeLineRoute.name: (routeData) {
-      final args = routeData.argsAs<TimeLineRouteArgs>();
+    TimelineRoute.name: (routeData) {
+      final args = routeData.argsAs<TimelineRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: TimeLinePage(
+        child: TimelinePage(
           key: args.key,
           initialTabSetting: args.initialTabSetting,
         ),
@@ -1626,29 +1626,29 @@ class SplashRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [TimeLinePage]
-class TimeLineRoute extends PageRouteInfo<TimeLineRouteArgs> {
-  TimeLineRoute({
+/// [TimelinePage]
+class TimelineRoute extends PageRouteInfo<TimelineRouteArgs> {
+  TimelineRoute({
     Key? key,
     required TabSetting initialTabSetting,
     List<PageRouteInfo>? children,
   }) : super(
-          TimeLineRoute.name,
-          args: TimeLineRouteArgs(
+          TimelineRoute.name,
+          args: TimelineRouteArgs(
             key: key,
             initialTabSetting: initialTabSetting,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'TimeLineRoute';
+  static const String name = 'TimelineRoute';
 
-  static const PageInfo<TimeLineRouteArgs> page =
-      PageInfo<TimeLineRouteArgs>(name);
+  static const PageInfo<TimelineRouteArgs> page =
+      PageInfo<TimelineRouteArgs>(name);
 }
 
-class TimeLineRouteArgs {
-  const TimeLineRouteArgs({
+class TimelineRouteArgs {
+  const TimelineRouteArgs({
     this.key,
     required this.initialTabSetting,
   });
@@ -1659,7 +1659,7 @@ class TimeLineRouteArgs {
 
   @override
   String toString() {
-    return 'TimeLineRouteArgs{key: $key, initialTabSetting: $initialTabSetting}';
+    return 'TimelineRouteArgs{key: $key, initialTabSetting: $initialTabSetting}';
   }
 }
 
