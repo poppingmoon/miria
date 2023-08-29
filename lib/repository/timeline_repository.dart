@@ -1,217 +1,352 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:miria/model/general_settings.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/model/tab_setting.dart';
-import 'package:miria/repository/general_settings_repository.dart';
-import 'package:miria/repository/main_stream_repository.dart';
-import 'package:miria/repository/note_repository.dart';
+import 'package:miria/model/tab_type.dart';
+import 'package:miria/model/timeline_state.dart';
+import 'package:miria/providers.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
-class NotifierQueueList extends QueueList<Note> {
-  final NoteRepository noteRepository;
-  final TabSetting tabSetting;
-  final GeneralSettingsRepository generalSettingsRepository;
-
-  NotifierQueueList(
-    this.noteRepository,
-    this.generalSettingsRepository,
-    this.tabSetting,
-  );
-
-  bool filterAs(Note element) {
-    if (tabSetting.renoteDisplay == false &&
-        element.text == null &&
-        element.cw == null &&
-        element.renoteId != null) {
-      return false;
-    }
-    if (generalSettingsRepository.settings.nsfwInherit ==
-            NSFWInherit.removeNsfw &&
-        (element.files.any((e) => e.isSensitive) ||
-            element.renote?.files.any((e) => e.isSensitive) == true ||
-            element.reply?.files.any((e) => e.isSensitive) == true)) {
-      return false;
-    }
-    return true;
-  }
-
-  @override
-  void add(Note element) {
-    if (!filterAs(element)) return;
-    super.add(element);
-    noteRepository.registerNote(element);
-  }
-
-  @override
-  void addAll(Iterable<Note> iterable) {
-    final target = iterable.where((e) => filterAs(e));
-    super.addAll(target);
-    noteRepository.registerAll(target);
-  }
-
-  @override
-  void addFirst(Note element) {
-    if (!filterAs(element)) return;
-    super.addFirst(element);
-    noteRepository.registerNote(element);
-  }
-
-  @override
-  void addLast(Note element) {
-    if (!filterAs(element)) return;
-    super.addLast(element);
-    noteRepository.registerNote(element);
-  }
-
-  @override
-  void insert(int index, Note element) {
-    if (!filterAs(element)) return;
-    super.insert(index, element);
-    noteRepository.registerNote(element);
-  }
-}
-
 class SubscribeItem {
-  final DateTime? unsubscribedTime;
   final String noteId;
   final String? renoteId;
   final String? replyId;
+  final bool isUnsubscribed;
 
   const SubscribeItem({
     required this.noteId,
     required this.renoteId,
     required this.replyId,
-    this.unsubscribedTime,
+    this.isUnsubscribed = false,
   });
+
+  Iterable<String> get ids {
+    return [noteId, renoteId, replyId].nonNulls;
+  }
+
+  bool contains(String id) {
+    return ids.contains(id);
+  }
 }
 
-abstract class TimelineRepository extends ChangeNotifier {
-  final NoteRepository noteRepository;
-  final MainStreamRepository globalNotificationRepository;
-  final GeneralSettingsRepository generalSettingsRepository;
-  final TabSetting tabSetting;
+class TimelineRepository
+    extends AutoDisposeFamilyNotifier<TimelineState, TabSetting> {
+  List<SubscribeItem> _subscribedList = [];
+  late SocketController _socketController;
 
-  final List<SubscribeItem> subscribedList = [];
-
-  TimelineRepository(
-    this.noteRepository,
-    this.globalNotificationRepository,
-    this.generalSettingsRepository,
-    this.tabSetting,
-  ) {
-    // describer
-    Timer.periodic(const Duration(seconds: 10), (timer) {
-      final now = DateTime.now();
-      bool condition(SubscribeItem element) =>
-          element.unsubscribedTime != null &&
-          now.difference(element.unsubscribedTime!) <
-              const Duration(seconds: 10);
-      for (final item in subscribedList.where(condition)) {
-        // 他に参照がなければ、購読を解除する
-        if (subscribedList.every(
-            (e) => e.renoteId != item.noteId && e.replyId != item.noteId)) {
-          describe(item.noteId);
-        }
-
-        final renoteId = item.renoteId;
-        if (renoteId != null) {
-          if (subscribedList.every((e) =>
-              (e.noteId != item.renoteId &&
-                  e.replyId != item.renoteId &&
-                  (e.noteId != item.noteId && e.renoteId != item.renoteId)) ||
-              e.noteId == item.noteId)) {
-            describe(renoteId);
-          }
-        }
-
-        final replyId = item.replyId;
-        if (replyId != null) {
-          if (subscribedList.every((e) =>
-              (e.noteId != item.replyId &&
-                  e.replyId != item.replyId &&
-                  (e.noteId != item.noteId && e.replyId != item.replyId)) ||
-              e.noteId == item.noteId)) {
-            describe(replyId);
-          }
-        }
-      }
-
-      subscribedList.removeWhere(condition);
+  @override
+  TimelineState build(TabSetting arg) {
+    final timer = Timer.periodic(
+      const Duration(seconds: 10),
+      (_) => _checkUnsubscribed(),
+    );
+    Future(() {
+      _startTimeline();
     });
+    ref.onDispose(() {
+      timer.cancel();
+      _disconnect();
+    });
+    return const TimelineState();
   }
 
-  late final QueueList<Note> newerNotes =
-      NotifierQueueList(noteRepository, generalSettingsRepository, tabSetting);
-  late final QueueList<Note> olderNotes =
-      NotifierQueueList(noteRepository, generalSettingsRepository, tabSetting);
+  TabSetting get _tabSetting => arg;
 
-  void startTimeline() {}
+  SocketController _createSocketController({
+    required void Function(Note note) onNoteReceived,
+    required FutureOr<void> Function(String id, TimelineReacted reaction)
+        onReacted,
+    required FutureOr<void> Function(String id, TimelineVoted vote) onVoted,
+  }) {
+    final misskey = ref.read(misskeyProvider(_tabSetting.account));
 
-  void disconnect() {}
-
-  void reconnect() {
-    globalNotificationRepository.reconnect();
+    return switch (_tabSetting.tabType) {
+      TabType.localTimeline => misskey.localTimelineStream(
+          onNoteReceived: onNoteReceived,
+          onReacted: onReacted,
+          onVoted: onVoted,
+        ),
+      TabType.homeTimeline => misskey.homeTimelineStream(
+          onNoteReceived: onNoteReceived,
+          onReacted: onReacted,
+          onVoted: onVoted,
+        ),
+      TabType.globalTimeline => misskey.globalTimelineStream(
+          onNoteReceived: onNoteReceived,
+          onReacted: onReacted,
+          onVoted: onVoted,
+        ),
+      TabType.hybridTimeline => misskey.hybridTimelineStream(
+          onNoteReceived: onNoteReceived,
+          onReacted: onReacted,
+          onVoted: onVoted,
+        ),
+      TabType.channel => misskey.channelStream(
+          channelId: _tabSetting.channelId!,
+          onNoteReceived: onNoteReceived,
+          onReacted: onReacted,
+          onVoted: onVoted,
+        ),
+      TabType.userList => misskey.userListStream(
+          listId: _tabSetting.listId!,
+          onNoteReceived: onNoteReceived,
+          onReacted: onReacted,
+          onVoted: onVoted,
+        ),
+      TabType.antenna => misskey.antennaStream(
+          antennaId: _tabSetting.antennaId!,
+          onNoteReceived: onNoteReceived,
+          onReacted: onReacted,
+          onVoted: onVoted,
+        ),
+    };
   }
 
-  void updateNote(Note newNote) {
-    var isChanged = false;
-    newerNotes.forEachIndexed((index, element) {
-      if (element.id == newNote.id) {
-        newerNotes[index] = newNote;
-        isChanged = true;
-      }
-      if (element.renote?.id == newNote.id) {
-        newerNotes[index] = newerNotes[index].copyWith(renote: newNote);
-      }
-    });
+  Future<Iterable<Note>> _requestNotes({
+    int limit = 30,
+    String? untilId,
+  }) {
+    final misskey = ref.read(misskeyProvider(_tabSetting.account));
 
-    if (isChanged) {
-      notifyListeners();
+    return switch (_tabSetting.tabType) {
+      TabType.localTimeline => misskey.notes.localTimeline(
+          NotesLocalTimelineRequest(
+            limit: limit,
+            untilId: untilId,
+          ),
+        ),
+      TabType.homeTimeline => misskey.notes.homeTimeline(
+          NotesTimelineRequest(
+            limit: limit,
+            untilId: untilId,
+          ),
+        ),
+      TabType.globalTimeline => misskey.notes.globalTimeline(
+          NotesGlobalTimelineRequest(
+            limit: limit,
+            untilId: untilId,
+          ),
+        ),
+      TabType.hybridTimeline => misskey.notes.hybridTimeline(
+          NotesHybridTimelineRequest(
+            limit: limit,
+            untilId: untilId,
+          ),
+        ),
+      TabType.channel => misskey.channels.timeline(
+          ChannelsTimelineRequest(
+            channelId: _tabSetting.channelId!,
+            limit: limit,
+            untilId: untilId,
+          ),
+        ),
+      TabType.userList => misskey.notes.userListTimeline(
+          UserListTimelineRequest(
+            listId: _tabSetting.listId!,
+            limit: limit,
+            untilId: untilId,
+          ),
+        ),
+      TabType.antenna => misskey.antennas.notes(
+          AntennasNotesRequest(
+            antennaId: _tabSetting.antennaId!,
+            limit: limit,
+            untilId: untilId,
+          ),
+        ),
+    };
+  }
+
+  Future<void> _startTimeline() async {
+    state = state.copyWith(isLoading: true);
+
+    final account = _tabSetting.account;
+    final noteRepository = ref.read(notesProvider(account));
+
+    try {
+      ref.read(mainStreamRepositoryProvider(account)).reconnect();
+      await Future.wait([
+        ref.read(emojiRepositoryProvider(account)).loadFromSourceIfNeed(),
+        ref.read(accountRepository).loadFromSourceIfNeed(account),
+        if (state.olderNotes.isEmpty)
+          downDirectionLoad()
+        else
+          _reloadLatestNotes(),
+      ]);
+    } catch (e) {
+      state = state.copyWith(error: e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+
+    _socketController = _createSocketController(
+      onNoteReceived: (note) {
+        noteRepository.registerNote(note);
+        state = state.copyWith(newerNotes: [...state.newerNotes, note]);
+      },
+      onReacted: (id, reaction) {
+        noteRepository.addReaction(id, reaction);
+      },
+      onVoted: (id, vote) {
+        noteRepository.addVote(id, vote);
+      },
+    );
+    ref.read(misskeyProvider(account)).startStreaming();
+  }
+
+  Future<void> downDirectionLoad() async {
+    if (state.isDownDirectionLoading) return;
+    state = state.copyWith(isDownDirectionLoading: true);
+    try {
+      final notes = await _requestNotes(untilId: state.oldestNote?.id);
+      ref.read(notesProvider(_tabSetting.account)).registerAll(notes);
+      state = state.copyWith(
+        olderNotes: [...state.olderNotes, ...notes],
+        isLastLoaded: notes.isEmpty,
+      );
+    } finally {
+      state = state.copyWith(isDownDirectionLoading: false);
     }
   }
 
-  /// 最近のノートを残してリセットする
-  void moveToOlder() {
-    for (final newerNote in newerNotes) {
-      olderNotes.addFirst(newerNote);
-    }
-    newerNotes.clear();
-    Future(() async {
-      notifyListeners();
-    });
-  }
+  Future<void> _reloadLatestNotes() async {
+    _moveToOlder();
 
-  Future<int> previousLoad() async {
-    return 0;
-  }
-
-  void subscribe(SubscribeItem item) {
-    final index =
-        subscribedList.indexWhere((element) => element.noteId == item.noteId);
-    if (index == -1) {
-      subscribedList.add(item);
-    } else {
-      subscribedList[index] = item;
-    }
-  }
-
-  void preserveDescribe(String id) {
-    final index = subscribedList.indexWhere((element) => element.noteId == id);
-    if (index == -1) {
-      // already described?
+    final notes = await _requestNotes();
+    if (notes.isEmpty) {
       return;
     }
-    final item = subscribedList[index];
 
-    subscribedList[index] = SubscribeItem(
-      noteId: item.noteId,
-      renoteId: item.renoteId,
-      replyId: item.replyId,
-      unsubscribedTime: DateTime.now(),
+    ref.read(notesProvider(_tabSetting.account)).registerAll(notes);
+
+    if (state.olderNotes.isEmpty ||
+        state.olderNotes.first.createdAt < notes.last.createdAt) {
+      state = state.copyWith(olderNotes: notes.toList());
+    } else {
+      state = state.copyWith(
+        olderNotes: [
+          ...notes.where(
+            (note) =>
+                !state.olderNotes.any((olderNote) => note.id == olderNote.id),
+          ),
+          ...state.olderNotes,
+        ],
+      );
+    }
+  }
+
+  void _disconnect() {
+    _socketController.disconnect();
+  }
+
+  void reconnect() {
+    _socketController.reconnect();
+    ref.read(mainStreamRepositoryProvider(_tabSetting.account)).reconnect();
+    _reloadLatestNotes();
+  }
+
+  void _moveToOlder() {
+    state = state.copyWith(
+      newerNotes: [],
+      olderNotes: [...state.newerNotes.reversed, ...state.olderNotes],
     );
   }
 
-  void describe(String id) {}
+  /// [_subscribedList] に含まれる全てのidの集合を返す
+  Set<String> _subscribedIds() {
+    return _subscribedList
+        .fold(<String>[], (acc, item) => [...acc, ...item.ids]).toSet();
+  }
+
+  void subscribe({
+    required String noteId,
+    String? renoteId,
+    String? replyId,
+  }) {
+    if (!_tabSetting.isSubscribe) return;
+
+    final item = SubscribeItem(
+      noteId: noteId,
+      renoteId: renoteId,
+      replyId: replyId,
+    );
+    final subscribedIds = _subscribedIds();
+
+    final index =
+        _subscribedList.indexWhere((element) => element.noteId == noteId);
+    if (index == -1) {
+      _subscribedList.add(item);
+      if (!subscribedIds.contains(noteId)) {
+        _socketController.subNote(noteId);
+      }
+    } else {
+      _subscribedList[index] = item;
+    }
+
+    if (renoteId != null) {
+      if (!subscribedIds.contains(renoteId)) {
+        _socketController.subNote(renoteId);
+      }
+    }
+
+    if (replyId != null) {
+      if (!subscribedIds.contains(replyId)) {
+        _socketController.subNote(replyId);
+      }
+    }
+  }
+
+  void _checkUnsubscribed() {
+    final group = _subscribedList.groupListsBy(
+      (item) => item.isUnsubscribed,
+    );
+    final unsubscribedList = group[true] ?? [];
+    _subscribedList = group[false] ?? [];
+    final subscribedIds = _subscribedIds();
+
+    for (final unsubscribedItem in unsubscribedList) {
+      final noteId = unsubscribedItem.noteId;
+      final renoteId = unsubscribedItem.renoteId;
+      final replyId = unsubscribedItem.replyId;
+
+      if (!subscribedIds.contains(noteId)) {
+        _unsubscribe(noteId);
+      }
+
+      if (renoteId != null) {
+        if (!subscribedIds.contains(renoteId)) {
+          _unsubscribe(renoteId);
+        }
+      }
+
+      if (replyId != null) {
+        if (_subscribedList.every((item) => !item.contains(replyId))) {
+          _unsubscribe(replyId);
+        }
+      }
+    }
+  }
+
+  void preserveUnsubscribe(String id) {
+    final index = _subscribedList.indexWhere((element) => element.noteId == id);
+    if (index == -1) {
+      // already unsubscribed?
+      return;
+    }
+    final item = _subscribedList[index];
+
+    _subscribedList[index] = SubscribeItem(
+      noteId: item.noteId,
+      renoteId: item.renoteId,
+      replyId: item.replyId,
+      isUnsubscribed: true,
+    );
+  }
+
+  void _unsubscribe(String id) {
+    _socketController.unsubNote(id);
+  }
 }

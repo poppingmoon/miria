@@ -1,180 +1,68 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/model/tab_type.dart';
 import 'package:miria/providers.dart';
-import 'package:miria/repository/socket_timeline_repository.dart';
-import 'package:miria/router/app_router.dart';
 import 'package:miria/view/channel_dialog.dart';
 import 'package:miria/view/common/account_scope.dart';
-import 'package:miria/view/common/error_detail.dart';
-import 'package:miria/view/common/error_dialog_handler.dart';
-import 'package:miria/view/server_detail_dialog.dart';
-import 'package:miria/view/themes/app_theme.dart';
 import 'package:miria/view/common/common_drawer.dart';
+import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/common/misskey_notes/network_image.dart';
 import 'package:miria/view/common/notification_icon.dart';
 import 'package:miria/view/common/tab_icon_view.dart';
-import 'package:miria/view/common/timeline_listview.dart';
+import 'package:miria/view/server_detail_dialog.dart';
+import 'package:miria/view/themes/app_theme.dart';
 import 'package:miria/view/timeline_page/misskey_timeline.dart';
 import 'package:miria/view/timeline_page/timeline_emoji.dart';
 import 'package:miria/view/timeline_page/timeline_note.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:misskey_dart/misskey_dart.dart';
 
-@RoutePage()
-class TimelinePage extends ConsumerStatefulWidget {
-  final TabSetting initialTabSetting;
+class TimelineAppBar extends ConsumerWidget {
+  const TimelineAppBar({super.key, required this.scaffoldKey});
 
-  const TimelinePage({super.key, required this.initialTabSetting});
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => TimelinePageState();
-}
-
-class TimelinePageState extends ConsumerState<TimelinePage> {
-  late final List<TabSetting> tabSettings;
-  late int currentIndex;
-  late final PageController pageController;
-  late final List<TimelineScrollController> scrollControllers;
-
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-
-  @override
-  void initState() {
-    tabSettings = ref.read(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tabSettings = ref.watch(
       tabSettingsRepositoryProvider.select((repo) => repo.tabSettings.toList()),
     );
-    currentIndex = tabSettings.indexOf(widget.initialTabSetting);
-    pageController = PageController(initialPage: currentIndex);
-    scrollControllers =
-        List.generate(tabSettings.length, (_) => TimelineScrollController());
-    super.initState();
-  }
+    final page = ref.watch(timelinePageControllerProvider);
 
-  @override
-  void dispose() {
-    super.dispose();
-    pageController.dispose();
-  }
-
-  TabSetting get currentTabSetting {
-    return tabSettings[currentIndex];
-  }
-
-  Future<void> note() async {
-    final text = ref.read(timelineNoteProvider).value.text;
-    if (text.isEmpty) return;
-    try {
-      final accountSettings = ref
-          .read(accountSettingsRepositoryProvider)
-          .fromAccount(currentTabSetting.account);
-      ref.read(timelineNoteProvider).clear();
-      FocusManager.instance.primaryFocus?.unfocus();
-
-      await ref.read(misskeyProvider(currentTabSetting.account)).notes.create(
-            NotesCreateRequest(
-              text: text,
-              channelId: currentTabSetting.channelId,
-              visibility: accountSettings.defaultNoteVisibility,
-              localOnly: currentTabSetting.channelId != null ||
-                  accountSettings.defaultIsLocalOnly,
-              reactionAcceptance: accountSettings.defaultReactionAcceptance,
-            ),
-          );
-    } catch (e) {
-      ref.read(timelineNoteProvider).text = text;
-      rethrow;
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  void reload() {
-    ref.read(currentTabSetting.timelineProvider).moveToOlder();
-    scrollControllers[currentIndex].forceScrollToTop();
-  }
-
-  void changeTab(int index) {
-    final tabSetting = tabSettings[index];
-    if ([TabType.globalTimeline, TabType.homeTimeline, TabType.hybridTimeline]
-        .contains(tabSetting.tabType)) {
-      ref.read(tabSetting.timelineProvider).moveToOlder();
-    }
-    setState(() {
-      currentIndex = index;
-    });
-  }
-
-  void noteCreateRoute() {
-    CommunityChannel? channel;
-    if (currentTabSetting.channelId != null) {
-      final Note? note;
-      final timeline = ref.read(currentTabSetting.timelineProvider);
-      if (timeline.olderNotes.isNotEmpty) {
-        note = timeline.olderNotes.first;
-      } else if (timeline.newerNotes.isNotEmpty) {
-        note = timeline.newerNotes.first;
-      } else {
-        //TODO: チャンネルにノートがないとき
-        note = null;
-      }
-      final noteChannel = note?.channel;
-
-      if (noteChannel != null) {
-        channel = CommunityChannel(
-          id: noteChannel.id,
-          createdAt: DateTime.now(),
-          name: noteChannel.name,
-          pinnedNoteIds: [],
-          usersCount: 0,
-          notesCount: 0,
-          isFollowing: false,
-          isFavorited: false,
-          hasUnreadNote: false,
-          pinnedNotes: [],
-        );
-      }
-    }
-    final sendText = ref.read(timelineNoteProvider).text;
-    ref.read(timelineNoteProvider).text = "";
-    context.pushRoute(NoteCreateRoute(
-      channel: channel,
-      initialText: sendText,
-      initialAccount: currentTabSetting.account,
-    ));
-  }
-
-  Widget buildAppbar() {
     return AppBar(
       title: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: tabSettings
               .mapIndexed(
-                (index, tabSetting) => Ink(
-                  color: tabSetting == currentTabSetting
-                      ? AppTheme.of(context).currentDisplayTabColor
-                      : Colors.transparent,
-                  child: AccountScope(
-                    account: tabSetting.account,
-                    child: IconButton(
-                      icon: TabIconView(
-                        icon: tabSetting.icon,
-                        color: tabSetting == currentTabSetting
-                            ? Theme.of(context).primaryColor
-                            : Colors.white,
+                (index, tabSetting) => Builder(
+                  builder: (context) {
+                    final isCurrentTab = tabSetting == page.tabSetting;
+
+                    return Ink(
+                      color: isCurrentTab
+                          ? AppTheme.of(context).currentDisplayTabColor
+                          : Colors.transparent,
+                      child: AccountScope(
+                        account: tabSetting.account,
+                        child: IconButton(
+                          icon: TabIconView(
+                            icon: tabSetting.icon,
+                            color: isCurrentTab
+                                ? Theme.of(context).primaryColor
+                                : Colors.white,
+                          ),
+                          onPressed: () => isCurrentTab
+                              ? ref
+                                  .read(timelinePageControllerProvider.notifier)
+                                  .forceScrollToTop()
+                              : page.pageController.jumpToPage(index),
+                        ),
                       ),
-                      onPressed: () => tabSetting == currentTabSetting
-                          ? reload()
-                          : pageController.jumpToPage(index),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               )
               .toList(),
@@ -182,122 +70,129 @@ class TimelinePageState extends ConsumerState<TimelinePage> {
       ),
       actions: [
         AccountScope(
-          account: currentTabSetting.account,
+          account: page.tabSetting.account,
           child: const NotificationIcon(),
         ),
       ],
       leading: IconButton(
-          onPressed: () => scaffoldKey.currentState?.openDrawer(),
-          icon: const Icon(Icons.menu)),
+        onPressed: () => scaffoldKey.currentState?.openDrawer(),
+        icon: const Icon(Icons.menu),
+      ),
     );
   }
+}
+
+class TabHeader extends ConsumerWidget {
+  const TabHeader({super.key, required this.tabSetting});
+
+  final TabSetting tabSetting;
 
   @override
-  Widget build(BuildContext context) {
-    final socketTimelineBase = ref.watch(currentTabSetting.timelineProvider);
-    final socketTimeline = socketTimelineBase is SocketTimelineRepository
-        ? socketTimelineBase
-        : null;
+  Widget build(BuildContext context, WidgetRef ref) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: Theme.of(context).primaryColor),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 5,
+                top: 5,
+                bottom: 5,
+              ),
+              child: Text(tabSetting.name),
+            ),
+          ),
+          const SizedBox(
+            height: 24,
+            child: NetworkImageView(
+              url:
+                  "https://nos3.arkjp.net/image.webp?url=https%3A%2F%2Fs3.arkjp.net%2Fmisskey%2Fc8a26f2b-7541-4fc6-bebb-036482b53cec.gif&emoji=1",
+              type: ImageType.customEmoji,
+            ),
+          ),
+          if (tabSetting.tabType == TabType.channel)
+            IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => ChannelDialog(
+                    channelId: tabSetting.channelId ?? "",
+                    account: tabSetting.account,
+                  ),
+                );
+              },
+              icon: const Icon(Icons.info_outline),
+            )
+          else if ([
+            TabType.hybridTimeline,
+            TabType.localTimeline,
+            TabType.globalTimeline,
+            TabType.homeTimeline,
+          ].contains(tabSetting.tabType))
+            IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => ServerDetailDialog(
+                    account: tabSetting.account,
+                  ),
+                );
+              },
+              icon: const Icon(Icons.smart_toy_outlined),
+            ),
+          const Padding(
+            padding: EdgeInsets.only(right: 5),
+          ),
+          IconButton(
+            onPressed:
+                ref.read(timelinePageControllerProvider.notifier).reconnect,
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+@RoutePage()
+class TimelinePage extends ConsumerWidget {
+  TimelinePage({super.key});
+
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+
+  void noteCreateRoute() {}
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tabSettings = ref.watch(
+      tabSettingsRepositoryProvider.select((repo) => repo.tabSettings.toList()),
+    );
+    final page = ref.watch(timelinePageControllerProvider);
+    final controller = ref.watch(timelinePageControllerProvider.notifier);
+    final tabPosition = ref.watch(
+      generalSettingsRepositoryProvider.select(
+        (repo) => repo.settings.tabPosition,
+      ),
+    );
 
     return Scaffold(
       key: scaffoldKey,
-      appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(0),
-          child: AppBar(
-            automaticallyImplyLeading: false,
-          )),
       body: SafeArea(
         child: Column(
           children: [
-            if (ref
-                    .read(generalSettingsRepositoryProvider)
-                    .settings
-                    .tabPosition ==
-                TabPosition.top)
-              buildAppbar(),
-            Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Theme.of(context).primaryColor),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 5,
-                        top: 5,
-                        bottom: 5,
-                      ),
-                      child: Text(currentTabSetting.name),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 24,
-                    child: NetworkImageView(
-                      url:
-                          "https://nos3.arkjp.net/image.webp?url=https%3A%2F%2Fs3.arkjp.net%2Fmisskey%2Fc8a26f2b-7541-4fc6-bebb-036482b53cec.gif&emoji=1",
-                      type: ImageType.customEmoji,
-                    ),
-                  ),
-                  if (currentTabSetting.tabType == TabType.channel)
-                    IconButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => ChannelDialog(
-                            channelId: currentTabSetting.channelId ?? "",
-                            account: currentTabSetting.account,
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.info_outline),
-                    )
-                  else if ([
-                    TabType.hybridTimeline,
-                    TabType.localTimeline,
-                    TabType.globalTimeline,
-                    TabType.homeTimeline,
-                  ].contains(currentTabSetting.tabType))
-                    IconButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => ServerDetailDialog(
-                            account: currentTabSetting.account,
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.smart_toy_outlined),
-                    ),
-                  const Padding(
-                    padding: EdgeInsets.only(right: 5),
-                  ),
-                  IconButton(
-                    onPressed: () => ref
-                        .read(
-                          currentTabSetting.tabType
-                              .timelineProvider(currentTabSetting),
-                        )
-                        .reconnect(),
-                    icon: const Icon(Icons.refresh),
-                  )
-                ],
-              ),
-            ),
-            if (socketTimeline?.isLoading == true)
-              const Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: Center(child: CircularProgressIndicator()),
-              ),
-            if (socketTimeline?.error != null)
-              ErrorDetail(error: socketTimeline?.error!),
+            if (tabPosition == TabPosition.top)
+              TimelineAppBar(scaffoldKey: scaffoldKey),
+            TabHeader(tabSetting: page.tabSetting),
             Expanded(
               child: PageView.builder(
-                controller: pageController,
+                controller: page.pageController,
                 itemCount: tabSettings.length,
-                onPageChanged: (index) => changeTab(index),
+                onPageChanged: (index) => controller.changePage(index),
                 itemBuilder: (_, index) {
                   final tabSetting = tabSettings[index];
                   return AccountScope(
@@ -308,11 +203,7 @@ class TimelinePageState extends ConsumerState<TimelinePage> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Expanded(
-                          child: MisskeyTimeline(
-                            controller: scrollControllers[index],
-                            timeLineRepositoryProvider:
-                                tabSetting.tabType.timelineProvider(tabSetting),
-                          ),
+                          child: MisskeyTimeline(tabSetting: tabSetting),
                         ),
                         const TimelineEmoji(),
                       ],
@@ -334,30 +225,31 @@ class TimelinePageState extends ConsumerState<TimelinePage> {
                     child: TimelineNoteField(),
                   ),
                   IconButton(
-                    onPressed: note.expectFailure(context),
+                    onPressed: ref
+                        .read(timelinePageControllerProvider.notifier)
+                        .note
+                        .expectFailure(context),
                     icon: const Icon(Icons.edit),
                   ),
                   IconButton(
-                    onPressed: noteCreateRoute,
+                    onPressed: () => ref
+                        .read(timelinePageControllerProvider.notifier)
+                        .noteCreateRoute(context),
                     icon: const Icon(Icons.keyboard_arrow_right),
-                  )
+                  ),
                 ],
               ),
             ),
-            if (ref
-                        .read(generalSettingsRepositoryProvider)
-                        .settings
-                        .tabPosition ==
-                    TabPosition.bottom &&
+            if (tabPosition == TabPosition.bottom &&
                 !ref.watch(timelineFocusNode).hasFocus)
-              buildAppbar(),
+              TimelineAppBar(scaffoldKey: scaffoldKey),
           ],
         ),
       ),
       resizeToAvoidBottomInset: true,
       drawerEnableOpenDragGesture: true,
       drawer: CommonDrawer(
-        initialOpenAccount: currentTabSetting.account,
+        initialOpenAccount: page.tabSetting.account,
       ),
     );
   }

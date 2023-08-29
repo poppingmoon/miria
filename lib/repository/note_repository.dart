@@ -26,8 +26,10 @@ class NoteRepository extends ChangeNotifier {
   Map<String, NoteStatus> get noteStatuses => _noteStatuses;
 
   void updateNoteStatus(
-      String id, NoteStatus Function(NoteStatus status) statusPredicate,
-      {bool isNotify = true}) {
+    String id,
+    NoteStatus Function(NoteStatus status) statusPredicate, {
+    bool isNotify = true,
+  }) {
     _noteStatuses[id] = statusPredicate.call(_noteStatuses[id]!);
     if (isNotify) notifyListeners();
   }
@@ -38,10 +40,11 @@ class NoteRepository extends ChangeNotifier {
       reply: note.reply ?? _notes[note.replyId],
     );
     _noteStatuses[note.id] ??= const NoteStatus(
-        isCwOpened: false,
-        isLongVisible: false,
-        isReactionedRenote: false,
-        isLongVisibleInitialized: false);
+      isCwOpened: false,
+      isLongVisible: false,
+      isReactionedRenote: false,
+      isLongVisibleInitialized: false,
+    );
     final renote = note.renote;
     final reply = note.reply;
     if (renote != null) {
@@ -66,6 +69,45 @@ class NoteRepository extends ChangeNotifier {
     Future(() {
       notifyListeners();
     });
+  }
+
+  void addReaction(String noteId, TimelineReacted reaction) {
+    final registeredNote = _notes[noteId];
+    if (registeredNote == null) return;
+
+    final reactions = Map.of(registeredNote.reactions);
+    reactions[reaction.reaction] = (reactions[reaction.reaction] ?? 0) + 1;
+    final emoji = reaction.emoji;
+    final reactionEmojis = Map.of(registeredNote.reactionEmojis);
+    if (emoji != null && !reaction.reaction.endsWith("@.:")) {
+      reactionEmojis[emoji.name] = emoji.url;
+    }
+
+    registerNote(
+      registeredNote.copyWith(
+        reactions: reactions,
+        reactionEmojis: reactionEmojis,
+      ),
+    );
+  }
+
+  void addVote(String noteId, TimelineVoted vote) {
+    final registeredNote = _notes[noteId];
+    if (registeredNote == null) return;
+
+    final poll = registeredNote.poll;
+    if (poll == null) return;
+
+    final choices = poll.choices.toList();
+    choices[vote.choice] = choices[vote.choice].copyWith(
+      votes: choices[vote.choice].votes + 1,
+    );
+
+    registerNote(
+      registeredNote.copyWith(
+        poll: poll.copyWith(choices: choices),
+      ),
+    );
   }
 
   Future<void> refresh(String noteId) async {
