@@ -150,7 +150,8 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                   (status) => status.copyWith(isMuteOpened: true),
                 ),
             child: Padding(
-              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0, left: 10.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
               child: Text(
                 "${displayNote.user.name ?? displayNote.user.username}が何か言うとるわ",
                 style: Theme.of(context).textTheme.bodySmall,
@@ -221,6 +222,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
               top: MediaQuery.textScalerOf(context).scale(5),
               bottom: MediaQuery.textScalerOf(context).scale(5),
               left: displayNote.channel?.color != null ? 4.0 : 0.0,
+              right: 10,
             ),
             decoration: widget.isDisplayBorder
                 ? BoxDecoration(
