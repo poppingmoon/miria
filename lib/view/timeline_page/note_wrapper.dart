@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/note_extension.dart';
+import 'package:miria/model/general_settings.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/misskey_notes/misskey_note.dart';
@@ -46,11 +47,28 @@ class NoteWrapper extends ConsumerWidget {
   final Note targetNote;
   final TabSetting tabSetting;
 
+  bool filter(WidgetRef ref, Note note) {
+    if (!tabSetting.renoteDisplay && note.isEmptyRenote) {
+      return false;
+    }
+    final nsfwInherit =
+        ref.watch(generalSettingsRepositoryProvider).settings.nsfwInherit;
+    if (nsfwInherit == NSFWInherit.removeNsfw && note.containsSensitiveFile) {
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final note = ref.watch(
       _subscribeNoteProvider((targetNote, tabSetting)),
     );
+
+    if (!filter(ref, note ?? targetNote)) {
+      return Container();
+    }
+
     if (note == null) {
       debugPrint("note was not found. $targetNote");
       return MisskeyNote(
