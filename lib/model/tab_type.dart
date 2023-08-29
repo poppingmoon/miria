@@ -1,6 +1,6 @@
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/providers.dart';
-import 'package:miria/repository/time_line_repository.dart';
+import 'package:miria/repository/timeline_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum TabType {
@@ -20,13 +20,13 @@ enum TabType {
       TabSetting setting) {
     switch (this) {
       case TabType.localTimeline:
-        return localTimeLineProvider(setting);
+        return localTimelineProvider(setting);
       case TabType.homeTimeline:
-        return homeTimeLineProvider(setting);
+        return homeTimelineProvider(setting);
       case TabType.globalTimeline:
-        return globalTimeLineProvider(setting);
+        return globalTimelineProvider(setting);
       case TabType.hybridTimeline:
-        return hybridTimeLineProvider(setting); //FIXME
+        return hybridTimelineProvider(setting); //FIXME
       case TabType.channel:
         return channelTimelineProvider(setting);
       case TabType.userList:

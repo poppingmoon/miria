@@ -6,7 +6,7 @@ import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/repository/account_repository.dart';
 import 'package:miria/repository/emoji_repository.dart';
 import 'package:miria/repository/main_stream_repository.dart';
-import 'package:miria/repository/time_line_repository.dart';
+import 'package:miria/repository/timeline_repository.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 abstract class SocketTimelineRepository extends TimelineRepository {
@@ -71,7 +71,7 @@ abstract class SocketTimelineRepository extends TimelineRepository {
   }
 
   @override
-  void startTimeLine() {
+  void startTimeline() {
     Future(() async {
       try {
         await emojiRepository.loadFromSourceIfNeed();

@@ -19,7 +19,7 @@ import 'package:miria/repository/home_time_line_repository.dart';
 import 'package:miria/repository/local_time_line_repository.dart';
 import 'package:miria/repository/note_repository.dart';
 import 'package:miria/repository/tab_settings_repository.dart';
-import 'package:miria/repository/time_line_repository.dart';
+import 'package:miria/repository/timeline_repository.dart';
 import 'package:miria/repository/user_list_time_line_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
@@ -32,9 +32,9 @@ final fileSystemProvider =
 final misskeyProvider = Provider.family<Misskey, Account>(
     (ref, account) => Misskey(token: account.token, host: account.host));
 
-final localTimeLineProvider =
+final localTimelineProvider =
     ChangeNotifierProvider.family<TimelineRepository, TabSetting>(
-        (ref, tabSetting) => LocalTimeLineRepository(
+        (ref, tabSetting) => LocalTimelineRepository(
               ref.read(misskeyProvider(tabSetting.account)),
               ref.read(notesProvider(tabSetting.account)),
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
@@ -44,9 +44,9 @@ final localTimeLineProvider =
               ref.read(accountRepository),
               ref.read(emojiRepositoryProvider(tabSetting.account)),
             ));
-final homeTimeLineProvider =
+final homeTimelineProvider =
     ChangeNotifierProvider.family<TimelineRepository, TabSetting>(
-        (ref, tabSetting) => HomeTimeLineRepository(
+        (ref, tabSetting) => HomeTimelineRepository(
               ref.read(misskeyProvider(tabSetting.account)),
               ref.read(notesProvider(tabSetting.account)),
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
@@ -56,9 +56,9 @@ final homeTimeLineProvider =
               ref.read(accountRepository),
               ref.read(emojiRepositoryProvider(tabSetting.account)),
             ));
-final globalTimeLineProvider =
+final globalTimelineProvider =
     ChangeNotifierProvider.family<TimelineRepository, TabSetting>(
-        (ref, tabSetting) => GlobalTimeLineRepository(
+        (ref, tabSetting) => GlobalTimelineRepository(
               ref.read(misskeyProvider(tabSetting.account)),
               ref.read(notesProvider(tabSetting.account)),
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
@@ -66,7 +66,7 @@ final globalTimeLineProvider =
               tabSetting,
             ));
 
-final hybridTimeLineProvider =
+final hybridTimelineProvider =
     ChangeNotifierProvider.family<TimelineRepository, TabSetting>(
         (ref, tabSetting) => HybridTimelineRepository(
               ref.read(misskeyProvider(tabSetting.account)),

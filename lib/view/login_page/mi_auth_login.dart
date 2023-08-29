@@ -25,7 +25,7 @@ class MiAuthLoginState extends ConsumerState<MiAuthLogin> {
       await ref.read(accountRepository).validateMiAuth(serverController.text);
       if (!mounted) return;
       context.pushRoute(
-        TimeLineRoute(
+        TimelineRoute(
           initialTabSetting:
               ref.read(tabSettingsRepositoryProvider).tabSettings.first,
         ),
