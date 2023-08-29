@@ -70,7 +70,7 @@ class TimelinePageTest {
             .overrideWith((ref, arg) => MockEmojiRepository())
       ],
       child: DefaultRootWidget(
-        initialRoute: TimeLineRoute(initialTabSetting: tabSetting),
+        initialRoute: TimelineRoute(initialTabSetting: tabSetting),
       ),
     );
   }
