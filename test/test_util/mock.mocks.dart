@@ -1482,6 +1482,70 @@ class MockNoteRepository extends _i1.Mock implements _i26.NoteRepository {
       );
 
   @override
+  void addReaction(
+    String? noteId,
+    _i5.TimelineReacted? reaction,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #addReaction,
+          [
+            noteId,
+            reaction,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeReaction(
+    String? noteId,
+    _i5.TimelineReacted? reaction,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #removeReaction,
+          [
+            noteId,
+            reaction,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void addVote(
+    String? noteId,
+    _i5.TimelineVoted? vote,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #addVote,
+          [
+            noteId,
+            vote,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void updateNote(
+    String? noteId,
+    _i5.NoteEdited? note,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #updateNote,
+          [
+            noteId,
+            note,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   _i18.Future<void> refresh(String? noteId) => (super.noSuchMethod(
         Invocation.method(
           #refresh,
