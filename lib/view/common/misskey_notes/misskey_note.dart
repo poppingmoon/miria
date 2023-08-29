@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:mfm_parser/mfm_parser.dart' as parser;
 import 'package:miria/const.dart';
 import 'package:miria/extensions/date_time_extension.dart';
+import 'package:miria/extensions/note_extension.dart';
 import 'package:miria/extensions/note_visibility_extension.dart';
 import 'package:miria/extensions/user_extension.dart';
 import 'package:miria/model/account.dart';
@@ -224,11 +225,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
     final renoteId = widget.note.renote?.id;
     final Note? renoteNote;
 
-    bool isEmptyRenote = renoteId != null &&
-        latestActualNote?.text == null &&
-        latestActualNote?.cw == null &&
-        (latestActualNote?.files.isEmpty ?? true) &&
-        latestActualNote?.poll == null;
+    final isEmptyRenote = latestActualNote?.isEmptyRenote ?? false;
 
     if (isEmptyRenote) {
       renoteNote = ref.watch(notesProvider(AccountScope.of(context))
