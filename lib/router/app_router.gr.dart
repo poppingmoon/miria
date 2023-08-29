@@ -346,13 +346,11 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     TimelineRoute.name: (routeData) {
-      final args = routeData.argsAs<TimelineRouteArgs>();
+      final args = routeData.argsAs<TimelineRouteArgs>(
+          orElse: () => const TimelineRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: TimelinePage(
-          key: args.key,
-          initialTabSetting: args.initialTabSetting,
-        ),
+        child: TimelinePage(key: args.key),
       );
     },
     UsersListDetailRoute.name: (routeData) {
@@ -1630,14 +1628,10 @@ class SplashRoute extends PageRouteInfo<void> {
 class TimelineRoute extends PageRouteInfo<TimelineRouteArgs> {
   TimelineRoute({
     Key? key,
-    required TabSetting initialTabSetting,
     List<PageRouteInfo>? children,
   }) : super(
           TimelineRoute.name,
-          args: TimelineRouteArgs(
-            key: key,
-            initialTabSetting: initialTabSetting,
-          ),
+          args: TimelineRouteArgs(key: key),
           initialChildren: children,
         );
 
@@ -1648,18 +1642,13 @@ class TimelineRoute extends PageRouteInfo<TimelineRouteArgs> {
 }
 
 class TimelineRouteArgs {
-  const TimelineRouteArgs({
-    this.key,
-    required this.initialTabSetting,
-  });
+  const TimelineRouteArgs({this.key});
 
   final Key? key;
 
-  final TabSetting initialTabSetting;
-
   @override
   String toString() {
-    return 'TimelineRouteArgs{key: $key, initialTabSetting: $initialTabSetting}';
+    return 'TimelineRouteArgs{key: $key}';
   }
 }
 
