@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/extensions/note_extension.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
@@ -92,7 +93,7 @@ class _NotesAfterRenotePageState extends ConsumerState<NotesAfterRenotePage> {
       return (List<Note>.empty(), untilId);
     }
     final lastRenoteId = renotesAndQuotes.last.id;
-    final renotes = renotesAndQuotes.where((note) => isRenote(note));
+    final renotes = renotesAndQuotes.where((note) => note.isEmptyRenote);
     final notesAfterRenote = await Future.wait(
       renotes.map((renote) => getNoteAfterNote(misskey, renote)),
     );
@@ -118,13 +119,5 @@ class _NotesAfterRenotePageState extends ConsumerState<NotesAfterRenotePage> {
       ),
     );
     return notes.singleOrNull;
-  }
-
-  /// 指定されたノートが引用ではないリノートかどうか
-  bool isRenote(Note note) {
-    return note.renoteId != null &&
-        note.text == null &&
-        note.fileIds.isEmpty &&
-        note.poll == null;
   }
 }
