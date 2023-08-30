@@ -42,11 +42,13 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
     isLoading = true;
     Future(() async {
       try {
+        final result = await widget.initializeFuture();
         items
           ..clear()
-          ..addAll(await widget.initializeFuture());
+          ..addAll(result);
         setState(() {
           isLoading = false;
+          if (result.isEmpty) isFinalPage = true;
         });
         scrollController.animateTo(-scrollController.position.pixels,
             duration: const Duration(milliseconds: 100), curve: Curves.easeIn);
