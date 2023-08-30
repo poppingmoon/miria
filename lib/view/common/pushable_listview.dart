@@ -12,6 +12,7 @@ class PushableListView<T> extends ConsumerStatefulWidget {
   final Object listKey;
   final bool shrinkWrap;
   final ScrollPhysics? physics;
+  final bool hideIsEmpty;
 
   const PushableListView({
     super.key,
@@ -21,6 +22,7 @@ class PushableListView<T> extends ConsumerStatefulWidget {
     this.listKey = "",
     this.shrinkWrap = false,
     this.physics,
+    this.hideIsEmpty = false,
   });
 
   @override
@@ -113,6 +115,14 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
       itemBuilder: (context, index) {
         if (items.length == index) {
           if (isFinalPage) {
+            if (items.isEmpty && !widget.hideIsEmpty) {
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text("ありません"),
+                ),
+              );
+            }
             return Container();
           }
 
