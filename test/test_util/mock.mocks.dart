@@ -6,7 +6,7 @@
 import 'dart:async' as _i18;
 import 'dart:io' as _i15;
 import 'dart:typed_data' as _i26;
-import 'dart:ui' as _i20;
+import 'dart:ui' as _i21;
 
 import 'package:dio/dio.dart' as _i27;
 import 'package:dio/src/adapter.dart' as _i11;
@@ -18,11 +18,11 @@ import 'package:dio/src/transformer.dart' as _i12;
 import 'package:file_picker/file_picker.dart' as _i30;
 import 'package:miria/model/account.dart' as _i19;
 import 'package:miria/model/account_settings.dart' as _i2;
-import 'package:miria/model/acct.dart' as _i22;
+import 'package:miria/model/acct.dart' as _i20;
 import 'package:miria/model/general_settings.dart' as _i3;
 import 'package:miria/model/misskey_emoji_data.dart' as _i24;
 import 'package:miria/model/tab_setting.dart' as _i17;
-import 'package:miria/repository/account_settings_repository.dart' as _i21;
+import 'package:miria/repository/account_settings_repository.dart' as _i22;
 import 'package:miria/repository/emoji_repository.dart' as _i23;
 import 'package:miria/repository/general_settings_repository.dart' as _i25;
 import 'package:miria/repository/tab_settings_repository.dart' as _i16;
@@ -693,7 +693,17 @@ class MockTabSettingsRepository extends _i1.Mock
         returnValueForMissingStub: _i18.Future<void>.value(),
       ) as _i18.Future<void>);
   @override
-  void addListener(_i20.VoidCallback? listener) => super.noSuchMethod(
+  _i18.Future<void> initializeTabSettings(_i20.Acct? acct) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #initializeTabSettings,
+          [acct],
+        ),
+        returnValue: _i18.Future<void>.value(),
+        returnValueForMissingStub: _i18.Future<void>.value(),
+      ) as _i18.Future<void>);
+  @override
+  void addListener(_i21.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
           [listener],
@@ -701,7 +711,7 @@ class MockTabSettingsRepository extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
-  void removeListener(_i20.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i21.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #removeListener,
           [listener],
@@ -730,7 +740,7 @@ class MockTabSettingsRepository extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAccountSettingsRepository extends _i1.Mock
-    implements _i21.AccountSettingsRepository {
+    implements _i22.AccountSettingsRepository {
   @override
   Iterable<_i2.AccountSettings> get accountSettings => (super.noSuchMethod(
         Invocation.getter(#accountSettings),
@@ -771,7 +781,7 @@ class MockAccountSettingsRepository extends _i1.Mock
         returnValueForMissingStub: _i18.Future<void>.value(),
       ) as _i18.Future<void>);
   @override
-  _i2.AccountSettings fromAcct(_i22.Acct? acct) => (super.noSuchMethod(
+  _i2.AccountSettings fromAcct(_i20.Acct? acct) => (super.noSuchMethod(
         Invocation.method(
           #fromAcct,
           [acct],
@@ -813,7 +823,7 @@ class MockAccountSettingsRepository extends _i1.Mock
         ),
       ) as _i2.AccountSettings);
   @override
-  void addListener(_i20.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i21.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
           [listener],
@@ -821,7 +831,7 @@ class MockAccountSettingsRepository extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
-  void removeListener(_i20.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i21.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #removeListener,
           [listener],
@@ -958,7 +968,7 @@ class MockGeneralSettingsRepository extends _i1.Mock
         returnValueForMissingStub: _i18.Future<void>.value(),
       ) as _i18.Future<void>);
   @override
-  void addListener(_i20.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i21.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
           [listener],
@@ -966,7 +976,7 @@ class MockGeneralSettingsRepository extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
-  void removeListener(_i20.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i21.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #removeListener,
           [listener],
