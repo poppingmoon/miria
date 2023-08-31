@@ -15,6 +15,10 @@ class Account with _$Account {
     required IResponse i,
   }) = _Account;
 
+  String get acct {
+    return "@$userId@$host";
+  }
+
   factory Account.fromJson(Map<String, Object?> json) =>
       _$AccountFromJson(json);
 

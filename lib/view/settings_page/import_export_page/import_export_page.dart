@@ -20,6 +20,8 @@ class ImportExportPageState extends ConsumerState<ImportExportPage> {
 
   @override
   Widget build(BuildContext context) {
+    final accounts = ref.watch(accountRepositoryProvider);
+
     return Scaffold(
       appBar: AppBar(title: const Text("設定のインポート・エクスポート")),
       body: Padding(
@@ -40,11 +42,10 @@ class ImportExportPageState extends ConsumerState<ImportExportPage> {
                     child: DropdownButton(
                       isExpanded: true,
                       items: [
-                        for (final account
-                            in ref.read(accountRepository).account)
+                        for (final account in accounts)
                           DropdownMenuItem(
                             value: account,
-                            child: Text("@${account.userId}@${account.host}"),
+                            child: Text(account.acct),
                           ),
                       ],
                       value: selectedImportAccount,
@@ -83,11 +84,10 @@ class ImportExportPageState extends ConsumerState<ImportExportPage> {
                     child: DropdownButton(
                       isExpanded: true,
                       items: [
-                        for (final account
-                            in ref.read(accountRepository).account)
+                        for (final account in accounts)
                           DropdownMenuItem(
                             value: account,
-                            child: Text("@${account.userId}@${account.host}"),
+                            child: Text(account.acct),
                           ),
                       ],
                       value: selectedExportAccount,

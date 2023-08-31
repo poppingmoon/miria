@@ -60,7 +60,7 @@ class ImportExportRepository extends ChangeNotifier {
         .map((e) => AccountSettings.fromJson(e));
 
     // アカウント設定よみこみ
-    final accounts = reader(accountRepository).account;
+    final accounts = reader(accountRepositoryProvider);
     for (final accountSetting in importedAccountSettings) {
       // この端末でログイン済みのアカウントであれば
       if (accounts.any((element) =>

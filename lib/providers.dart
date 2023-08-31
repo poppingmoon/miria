@@ -41,7 +41,7 @@ final localTimeLineProvider =
               ref.read(generalSettingsRepositoryProvider),
               tabSetting,
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(accountRepository),
+              ref.read(accountRepositoryProvider.notifier),
               ref.read(emojiRepositoryProvider(tabSetting.account)),
             ));
 final homeTimeLineProvider =
@@ -53,7 +53,7 @@ final homeTimeLineProvider =
               ref.read(generalSettingsRepositoryProvider),
               tabSetting,
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(accountRepository),
+              ref.read(accountRepositoryProvider.notifier),
               ref.read(emojiRepositoryProvider(tabSetting.account)),
             ));
 final globalTimeLineProvider =
@@ -75,7 +75,7 @@ final hybridTimeLineProvider =
               ref.read(generalSettingsRepositoryProvider),
               tabSetting,
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(accountRepository),
+              ref.read(accountRepositoryProvider.notifier),
               ref.read(emojiRepositoryProvider(tabSetting.account)),
             ));
 
@@ -88,7 +88,7 @@ final channelTimelineProvider =
               ref.read(generalSettingsRepositoryProvider),
               tabSetting,
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(accountRepository),
+              ref.read(accountRepositoryProvider.notifier),
               ref.read(emojiRepositoryProvider(tabSetting.account)),
             ));
 
@@ -101,7 +101,7 @@ final userListTimelineProvider =
               ref.read(generalSettingsRepositoryProvider),
               tabSetting,
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(accountRepository),
+              ref.read(accountRepositoryProvider.notifier),
               ref.read(emojiRepositoryProvider(tabSetting.account)),
             ));
 
@@ -114,7 +114,7 @@ final antennaTimelineProvider =
               ref.read(generalSettingsRepositoryProvider),
               tabSetting,
               ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(accountRepository),
+              ref.read(accountRepositoryProvider.notifier),
               ref.read(emojiRepositoryProvider(tabSetting.account)),
             ));
 
@@ -124,7 +124,7 @@ final mainStreamRepositoryProvider =
             ref.read(misskeyProvider(account)),
             ref.read(emojiRepositoryProvider(account)),
             account,
-            ref.read(accountRepository)));
+            ref.read(accountRepositoryProvider.notifier)));
 
 final favoriteProvider = ChangeNotifierProvider.autoDispose
     .family<FavoriteRepository, Account>((ref, account) => FavoriteRepository(
@@ -142,10 +142,9 @@ final emojiRepositoryProvider = Provider.family<EmojiRepository, Account>(
         accountSettingsRepository:
             ref.read(accountSettingsRepositoryProvider)));
 
-final accountRepository = ChangeNotifierProvider((ref) => AccountRepository(
-    ref.read(tabSettingsRepositoryProvider),
-    ref.read(accountSettingsRepositoryProvider),
-    ref.read));
+final accountRepositoryProvider =
+    NotifierProvider<AccountRepository, List<Account>>(AccountRepository.new);
+
 final tabSettingsRepositoryProvider =
     ChangeNotifierProvider((ref) => TabSettingsRepository());
 

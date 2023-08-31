@@ -369,8 +369,8 @@ class BannerArea extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bannerAnnouncement = ref.watch(accountRepository.select((value) =>
-        value.account
+    final bannerAnnouncement = ref.watch(accountRepositoryProvider.select(
+        (value) => value
             .where((element) =>
                 element ==
                 ref
@@ -419,7 +419,7 @@ class AnnoucementInfo extends ConsumerWidget {
   const AnnoucementInfo({super.key, required this.index});
 
   void announcementsRoute(BuildContext context, WidgetRef ref) {
-    final account = ref.read(accountRepository.select((value) => value.account
+    final account = ref.read(accountRepositoryProvider.select((value) => value
         .where((element) =>
             element ==
             ref
@@ -434,19 +434,19 @@ class AnnoucementInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasUnread = ref.watch(accountRepository.select((value) => value
-        .account
-        .where((element) =>
-            element ==
-            ref
-                .read(tabSettingsRepositoryProvider)
-                .tabSettings
-                .toList()[index]
-                .account)
-        .firstOrNull
-        ?.i
-        .unreadAnnouncements
-        .isNotEmpty));
+    final hasUnread = ref.watch(accountRepositoryProvider.select((value) =>
+        value
+            .where((element) =>
+                element ==
+                ref
+                    .read(tabSettingsRepositoryProvider)
+                    .tabSettings
+                    .toList()[index]
+                    .account)
+            .firstOrNull
+            ?.i
+            .unreadAnnouncements
+            .isNotEmpty));
 
     if (hasUnread == true) {
       return IconButton(

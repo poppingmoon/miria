@@ -572,6 +572,16 @@ class MockTabSettingsRepository extends _i1.Mock
         returnValueForMissingStub: _i16.Future<void>.value(),
       ) as _i16.Future<void>);
   @override
+  _i16.Future<void> initializeTabSettings(_i17.Account? account) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #initializeTabSettings,
+          [account],
+        ),
+        returnValue: _i16.Future<void>.value(),
+        returnValueForMissingStub: _i16.Future<void>.value(),
+      ) as _i16.Future<void>);
+  @override
   void addListener(_i18.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
