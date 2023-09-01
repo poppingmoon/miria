@@ -30,8 +30,8 @@ final fileSystemProvider =
 final misskeyProvider = Provider.family<Misskey, Account>(
     (ref, account) => Misskey(token: account.token, host: account.host));
 
-final timelineRepositoryProvider = NotifierProvider.autoDispose
-    .family<TimelineRepository, TimelineState, TabSetting>(
+final timelineRepositoryProvider =
+    NotifierProvider.family<TimelineRepository, TimelineState, TabSetting>(
   TimelineRepository.new,
 );
 

@@ -16,6 +16,10 @@ class TimelineController
     final listKey = GlobalKey<SliverAnimatedListState>();
     final scrollController = ScrollController();
 
+    Future(() {
+      ref.read(timelineRepositoryProvider(arg).notifier).startTimeline();
+    });
+
     // 定期的にスクロールすることで追従する
     final timer = Timer.periodic(
       const Duration(milliseconds: 20),
@@ -49,6 +53,7 @@ class TimelineController
     ref.onDispose(() {
       timer.cancel();
       scrollController.dispose();
+      ref.read(timelineRepositoryProvider(arg).notifier).disconnect();
     });
 
     return TimelineControllerState(

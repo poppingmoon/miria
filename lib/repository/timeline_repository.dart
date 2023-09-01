@@ -32,8 +32,7 @@ class SubscribeItem {
   }
 }
 
-class TimelineRepository
-    extends AutoDisposeFamilyNotifier<TimelineState, TabSetting> {
+class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
   List<SubscribeItem> _subscribedList = [];
   late SocketController _socketController;
 
@@ -44,11 +43,11 @@ class TimelineRepository
       (_) => _checkUnsubscribed(),
     );
     Future(() {
-      _startTimeline();
+      startTimeline();
     });
     ref.onDispose(() {
       timer.cancel();
-      _disconnect();
+      disconnect();
     });
     return const TimelineState();
   }
@@ -160,8 +159,13 @@ class TimelineRepository
     };
   }
 
-  Future<void> _startTimeline() async {
-    state = state.copyWith(isLoading: true);
+  Future<void> startTimeline() async {
+    state = state.copyWith(
+      isLoading: true,
+      isDownDirectionLoading: false,
+      isLastLoaded: false,
+      error: null,
+    );
 
     final account = _tabSetting.account;
     final noteRepository = ref.read(notesProvider(account));
@@ -238,7 +242,7 @@ class TimelineRepository
     }
   }
 
-  void _disconnect() {
+  void disconnect() {
     _socketController.disconnect();
   }
 

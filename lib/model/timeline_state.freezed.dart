@@ -16,11 +16,22 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$TimelineState {
+  /// ストリーミングで受け取ったノート. 最後尾が最新
   List<Note> get newerNotes => throw _privateConstructorUsedError;
+
+  /// API呼び出しで取得したノート. 先頭が最新
   List<Note> get olderNotes => throw _privateConstructorUsedError;
+
+  /// 最初の読み込み中かどうか
   bool get isLoading => throw _privateConstructorUsedError;
+
+  /// 追加のノートを取得中かどうか
   bool get isDownDirectionLoading => throw _privateConstructorUsedError;
+
+  /// すべてのノートを取得したかどうか
   bool get isLastLoaded => throw _privateConstructorUsedError;
+
+  /// 初期化中のエラー
   Object? get error => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -164,7 +175,10 @@ class _$_TimelineState extends _TimelineState {
         _olderNotes = olderNotes,
         super._();
 
+  /// ストリーミングで受け取ったノート. 最後尾が最新
   final List<Note> _newerNotes;
+
+  /// ストリーミングで受け取ったノート. 最後尾が最新
   @override
   @JsonKey()
   List<Note> get newerNotes {
@@ -173,7 +187,10 @@ class _$_TimelineState extends _TimelineState {
     return EqualUnmodifiableListView(_newerNotes);
   }
 
+  /// API呼び出しで取得したノート. 先頭が最新
   final List<Note> _olderNotes;
+
+  /// API呼び出しで取得したノート. 先頭が最新
   @override
   @JsonKey()
   List<Note> get olderNotes {
@@ -182,15 +199,22 @@ class _$_TimelineState extends _TimelineState {
     return EqualUnmodifiableListView(_olderNotes);
   }
 
+  /// 最初の読み込み中かどうか
   @override
   @JsonKey()
   final bool isLoading;
+
+  /// 追加のノートを取得中かどうか
   @override
   @JsonKey()
   final bool isDownDirectionLoading;
+
+  /// すべてのノートを取得したかどうか
   @override
   @JsonKey()
   final bool isLastLoaded;
+
+  /// 初期化中のエラー
   @override
   final Object? error;
 
@@ -245,16 +269,28 @@ abstract class _TimelineState extends TimelineState {
   const _TimelineState._() : super._();
 
   @override
+
+  /// ストリーミングで受け取ったノート. 最後尾が最新
   List<Note> get newerNotes;
   @override
+
+  /// API呼び出しで取得したノート. 先頭が最新
   List<Note> get olderNotes;
   @override
+
+  /// 最初の読み込み中かどうか
   bool get isLoading;
   @override
+
+  /// 追加のノートを取得中かどうか
   bool get isDownDirectionLoading;
   @override
+
+  /// すべてのノートを取得したかどうか
   bool get isLastLoaded;
   @override
+
+  /// 初期化中のエラー
   Object? get error;
   @override
   @JsonKey(ignore: true)
