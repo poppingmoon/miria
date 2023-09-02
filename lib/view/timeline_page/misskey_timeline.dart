@@ -46,17 +46,18 @@ class MisskeyTimeline extends ConsumerWidget {
                     );
                   },
                 ),
-                SliverList(
+                SliverList.builder(
                   key: centerKey,
-                  delegate: SliverChildListDelegate([
-                    ...timeline.olderNotes.map(
-                      (note) => NoteWrapper(
-                        targetNote: note,
-                        tabSetting: tabSetting,
-                      ),
-                    ),
-                    TimelineButtomItem(tabSetting: tabSetting),
-                  ]),
+                  itemCount: timeline.olderNotes.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == timeline.olderNotes.length) {
+                      return TimelineButtomItem(tabSetting: tabSetting);
+                    }
+                    return NoteWrapper(
+                      targetNote: timeline.olderNotes[index],
+                      tabSetting: tabSetting,
+                    );
+                  },
                 ),
               ],
             ),
