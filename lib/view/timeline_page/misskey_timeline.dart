@@ -8,15 +8,15 @@ import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/timeline_page/note_wrapper.dart';
 
 class MisskeyTimeline extends ConsumerWidget {
-  const MisskeyTimeline({super.key, required this.tabSetting});
+  MisskeyTimeline({super.key, required this.tabSetting});
 
   final TabSetting tabSetting;
+  final centerKey = UniqueKey();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final timeline = ref.watch(timelineRepositoryProvider(tabSetting));
     final controller = ref.watch(timelineControllerProvider(tabSetting));
-    final centerKey = UniqueKey();
 
     return Column(
       children: [
