@@ -233,8 +233,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
       state = state.copyWith(
         olderNotes: [
           ...notes.where(
-            (note) =>
-                !state.olderNotes.any((olderNote) => note.id == olderNote.id),
+            (note) => (state.olderNotes.first.createdAt < note.createdAt),
           ),
           ...state.olderNotes,
         ],
