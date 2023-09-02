@@ -246,7 +246,12 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
   }
 
   void reconnect() {
-    _socketController.reconnect();
+    try {
+      _socketController.reconnect();
+    } catch (e) {
+      startTimeline();
+      return;
+    }
     ref.read(mainStreamRepositoryProvider(_tabSetting.account)).reconnect();
     _reloadLatestNotes();
   }
