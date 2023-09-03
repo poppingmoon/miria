@@ -7,6 +7,20 @@ import 'package:miria/providers.dart';
 import 'package:miria/view/common/misskey_notes/misskey_note.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
+final _noteFilterProvider =
+    Provider.autoDispose.family<bool, (Note, TabSetting)>((ref, tuple) {
+  final (note, tabSetting) = tuple;
+  if (!tabSetting.renoteDisplay && note.isEmptyRenote) {
+    return false;
+  }
+  final nsfwInherit =
+      ref.watch(generalSettingsRepositoryProvider).settings.nsfwInherit;
+  if (nsfwInherit == NSFWInherit.removeNsfw && note.containsSensitiveFile) {
+    return false;
+  }
+  return true;
+});
+
 final _subscribeNoteProvider =
     Provider.autoDispose.family<Note?, (Note, TabSetting)>((ref, tuple) {
   final (note, tabSetting) = tuple;
@@ -47,27 +61,16 @@ class NoteWrapper extends ConsumerWidget {
   final Note targetNote;
   final TabSetting tabSetting;
 
-  bool filter(WidgetRef ref, Note note) {
-    if (!tabSetting.renoteDisplay && note.isEmptyRenote) {
-      return false;
-    }
-    final nsfwInherit =
-        ref.watch(generalSettingsRepositoryProvider).settings.nsfwInherit;
-    if (nsfwInherit == NSFWInherit.removeNsfw && note.containsSensitiveFile) {
-      return false;
-    }
-    return true;
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final satisfied = ref.watch(_noteFilterProvider((targetNote, tabSetting)));
+    if (!satisfied) {
+      return Container();
+    }
+
     final note = ref.watch(
       _subscribeNoteProvider((targetNote, tabSetting)),
     );
-
-    if (!filter(ref, note ?? targetNote)) {
-      return Container();
-    }
 
     if (note == null) {
       debugPrint("note was not found. $targetNote");
