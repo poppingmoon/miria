@@ -1,52 +1,33 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/date_time_extension.dart';
+import 'package:miria/extensions/note_extension.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/model/tab_type.dart';
 import 'package:miria/model/timeline_state.dart';
 import 'package:miria/providers.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
-class SubscribeItem {
-  final String noteId;
-  final String? renoteId;
-  final String? replyId;
-  final bool isUnsubscribed;
-
-  const SubscribeItem({
-    required this.noteId,
-    required this.renoteId,
-    required this.replyId,
-    this.isUnsubscribed = false,
-  });
-
-  Iterable<String> get ids {
-    return [noteId, renoteId, replyId].nonNulls;
-  }
-
-  bool contains(String id) {
-    return ids.contains(id);
-  }
-}
-
 class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
-  List<SubscribeItem> _subscribedList = [];
+  /// ノートのidとそのノートを現在参照しているノートの数の対応
+  final HashMap<String, int> _subscriptionCount = HashMap();
+
   late SocketController _socketController;
 
   @override
   TimelineState build(TabSetting arg) {
-    final timer = Timer.periodic(
-      const Duration(seconds: 10),
-      (_) => _checkUnsubscribed(),
-    );
+    if (arg.isSubscribe) {
+      Timer.periodic(
+        const Duration(seconds: 10),
+        (_) => _checkUnsubscribed(),
+      );
+    }
     Future(() {
       startTimeline();
     });
     ref.onDispose(() {
-      timer.cancel();
       disconnect();
     });
     return const TimelineState();
@@ -265,95 +246,70 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     );
   }
 
-  /// [_subscribedList] に含まれる全てのidの集合を返す
-  Set<String> _subscribedIds() {
-    return _subscribedList
-        .fold(<String>[], (acc, item) => [...acc, ...item.ids]).toSet();
-  }
-
-  void subscribe({
-    required String noteId,
-    String? renoteId,
-    String? replyId,
-  }) {
+  void subscribe(Note note) {
     if (!_tabSetting.isSubscribe) return;
 
-    final item = SubscribeItem(
-      noteId: noteId,
-      renoteId: renoteId,
-      replyId: replyId,
-    );
-    final subscribedIds = _subscribedIds();
+    final renoteId = note.renoteId;
+    final replyId = note.replyId;
 
-    final index =
-        _subscribedList.indexWhere((element) => element.noteId == noteId);
-    if (index == -1) {
-      _subscribedList.add(item);
-      if (!subscribedIds.contains(noteId)) {
-        _socketController.subNote(noteId);
-      }
-    } else {
-      _subscribedList[index] = item;
+    if (!note.isEmptyRenote) {
+      _subscribe(note.id);
     }
-
     if (renoteId != null) {
-      if (!subscribedIds.contains(renoteId)) {
-        _socketController.subNote(renoteId);
-      }
+      _subscribe(renoteId);
     }
-
     if (replyId != null) {
-      if (!subscribedIds.contains(replyId)) {
-        _socketController.subNote(replyId);
-      }
+      _subscribe(replyId);
+    }
+  }
+
+  void _subscribe(String id) {
+    _subscriptionCount.update(
+      id,
+      (count) => count + 1,
+      ifAbsent: () {
+        _socketController.subNote(id);
+        return 1;
+      },
+    );
+  }
+
+  void preserveUnsubscribe(Note note) {
+    if (!_tabSetting.isSubscribe) return;
+
+    final renoteId = note.renoteId;
+    final replyId = note.replyId;
+
+    if (!note.isEmptyRenote) {
+      _subscriptionCount.update(
+        note.id,
+        (count) => count - 1,
+        ifAbsent: () => 0,
+      );
+    }
+    if (renoteId != null) {
+      _subscriptionCount.update(
+        renoteId,
+        (count) => count - 1,
+        ifAbsent: () => 0,
+      );
+    }
+    if (replyId != null) {
+      _subscriptionCount.update(
+        replyId,
+        (count) => count - 1,
+        ifAbsent: () => 0,
+      );
     }
   }
 
   void _checkUnsubscribed() {
-    final group = _subscribedList.groupListsBy(
-      (item) => item.isUnsubscribed,
-    );
-    final unsubscribedList = group[true] ?? [];
-    _subscribedList = group[false] ?? [];
-    final subscribedIds = _subscribedIds();
-
-    for (final unsubscribedItem in unsubscribedList) {
-      final noteId = unsubscribedItem.noteId;
-      final renoteId = unsubscribedItem.renoteId;
-      final replyId = unsubscribedItem.replyId;
-
-      if (!subscribedIds.contains(noteId)) {
-        _unsubscribe(noteId);
+    _subscriptionCount.forEach((id, count) {
+      if (count < 1) {
+        _unsubscribe(id);
       }
-
-      if (renoteId != null) {
-        if (!subscribedIds.contains(renoteId)) {
-          _unsubscribe(renoteId);
-        }
-      }
-
-      if (replyId != null) {
-        if (_subscribedList.every((item) => !item.contains(replyId))) {
-          _unsubscribe(replyId);
-        }
-      }
-    }
-  }
-
-  void preserveUnsubscribe(String id) {
-    final index = _subscribedList.indexWhere((element) => element.noteId == id);
-    if (index == -1) {
-      // already unsubscribed?
-      return;
-    }
-    final item = _subscribedList[index];
-
-    _subscribedList[index] = SubscribeItem(
-      noteId: item.noteId,
-      renoteId: item.renoteId,
-      replyId: item.replyId,
-      isUnsubscribed: true,
-    );
+    });
+    _subscriptionCount.removeWhere((id, count) => count < 1);
   }
 
   void _unsubscribe(String id) {

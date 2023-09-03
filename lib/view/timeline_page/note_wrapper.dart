@@ -28,20 +28,10 @@ final _subscribeNoteProvider =
   final timelineRepository =
       ref.watch(timelineRepositoryProvider(tabSetting).notifier);
 
-  if (note.isEmptyRenote) {
-    timelineRepository.subscribe(
-      noteId: note.renoteId!,
-    );
-  } else {
-    timelineRepository.subscribe(
-      noteId: note.id,
-      renoteId: note.renoteId,
-      replyId: note.replyId,
-    );
-  }
+  timelineRepository.subscribe(note);
 
   ref.onDispose(() {
-    timelineRepository.preserveUnsubscribe(note.id);
+    timelineRepository.preserveUnsubscribe(note);
   });
 
   return ref.watch(
