@@ -36,29 +36,35 @@ class NoteSearchPageState extends ConsumerState<SearchPage> {
     return DefaultTabController(
       length: 2,
       child: AccountScope(
-          account: widget.account,
-          child: Scaffold(
-              appBar: AppBar(
-                title: const Text("検索"),
-                bottom: const TabBar(
-                  tabs: [
-                    Tab(text: "ノート"),
-                    Tab(text: "ユーザー"),
-                  ],
+        account: widget.account,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("検索"),
+            bottom: const TabBar(
+              tabs: [
+                Tab(text: "ノート"),
+                Tab(text: "ユーザー"),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              NoteSearch(initialSearchText: widget.initialSearchText),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                child: UserSelectContent(
+                  onSelected: (item) => context.pushRoute(
+                    UserRoute(
+                      userId: item.id,
+                      account: widget.account,
+                    ),
+                  ),
                 ),
               ),
-              body: TabBarView(
-                children: [
-                  NoteSearch(initialSearchText: widget.initialSearchText),
-                  Padding(
-                      padding:
-                          const EdgeInsets.only(left: 10, right: 10, top: 10),
-                      child: UserSelectContent(
-                        onSelected: (item) => context.pushRoute(UserRoute(
-                            userId: item.id, account: widget.account)),
-                      ))
-                ],
-              ))),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
