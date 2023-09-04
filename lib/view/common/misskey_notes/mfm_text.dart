@@ -33,6 +33,8 @@ class MfmText extends ConsumerStatefulWidget {
   final List<InlineSpan> prefixSpan;
   final Function(MisskeyEmojiData)? onEmojiTap;
   final bool isEnableAnimatedMFM;
+  final TextOverflow? overflow;
+  final int? maxLines;
 
   const MfmText({
     super.key,
@@ -46,6 +48,8 @@ class MfmText extends ConsumerStatefulWidget {
     this.prefixSpan = const [],
     this.onEmojiTap,
     this.isEnableAnimatedMFM = true,
+    this.overflow,
+    this.maxLines,
   }) : assert(mfmText != null || mfmNode != null);
 
   @override
@@ -142,6 +146,8 @@ class MfmTextState extends ConsumerState<MfmText> {
       suffixSpan: widget.suffixSpan,
       prefixSpan: widget.prefixSpan,
       isUseAnimation: widget.isEnableAnimatedMFM,
+      overflow: widget.overflow,
+      maxLines: widget.maxLines,
     );
   }
 }
