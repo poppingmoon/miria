@@ -30,6 +30,24 @@ void main() {
     assert(parsed.toString() == aid);
   });
 
+  test("aidx", () {
+    final date = DateTime.now();
+    final random = BigInt.from(Random().nextInt(pow(36, 4).toInt()));
+    final aidx = Id(
+      method: IdGenMethod.aidx,
+      date: date,
+      random: random,
+    ).toString();
+    final parsed = Id.parse(aidx);
+    assert(aidx.length == 16);
+    assert(parsed.method == IdGenMethod.aidx);
+    assert(
+      parsed.date.millisecondsSinceEpoch == date.millisecondsSinceEpoch,
+    );
+    assert(parsed.random == random);
+    assert(parsed.toString() == aidx);
+  });
+
   test("meid", () {
     final date = DateTime.now();
     final random = randomBigInt(4 * 12);

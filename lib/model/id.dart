@@ -25,6 +25,9 @@ enum IdGenMethod {
   /// [2000年からの経過ミリ秒 (base36, 8桁)] + [ランダム (base36, 2桁)]
   aid,
 
+  /// [2000年からの経過ミリ秒 (base36, 8桁)] + [個体ID (base36, 4桁)] + [カウンタ (base36, 4桁)]
+  aidx,
+
   /// [エポックミリ秒 + 0x8000_0000_0000 (hex, 12桁)] + [ランダム (hex, 12桁)]
   meid,
 
@@ -46,6 +49,7 @@ class Id {
   })  : assert(random >= BigInt.zero),
         assert(
           (method == IdGenMethod.aid && random < BigInt.from(36).pow(2)) ||
+              (method == IdGenMethod.aidx && random < BigInt.from(36).pow(8)) ||
               ((method == IdGenMethod.meid || method == IdGenMethod.meidg) &&
                   random < BigInt.from(16).pow(12)) ||
               (method == IdGenMethod.ulid &&
@@ -63,6 +67,15 @@ class Id {
     if (length == 10) {
       return Id(
         method: IdGenMethod.aid,
+        date: DateTime.fromMillisecondsSinceEpoch(
+          int.parse(str.substring(0, 8), radix: 36) + _time2000,
+        ),
+        random: BigInt.parse(str.substring(8), radix: 36),
+      );
+    }
+    if (length == 16) {
+      return Id(
+        method: IdGenMethod.aidx,
         date: DateTime.fromMillisecondsSinceEpoch(
           int.parse(str.substring(0, 8), radix: 36) + _time2000,
         ),
@@ -116,6 +129,11 @@ class Id {
         final timeStr =
             (epochMillis - _time2000).toRadixString(36).padLeft(8, "0");
         final randomStr = random.toRadixString(36).padLeft(2, "0");
+        return "$timeStr$randomStr";
+      case IdGenMethod.aidx:
+        final timeStr =
+            (epochMillis - _time2000).toRadixString(36).padLeft(8, "0");
+        final randomStr = random.toRadixString(36).padLeft(8, "0");
         return "$timeStr$randomStr";
       case IdGenMethod.meid:
         final timeStr =
