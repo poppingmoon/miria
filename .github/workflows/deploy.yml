@@ -11,7 +11,7 @@ env:
 
 jobs:
   build_for_iOS:
-    name: iOS・Android用ビルド
+    name: iOS用ビルド
     runs-on: macos-latest
 
     steps:
@@ -89,17 +89,54 @@ jobs:
             bundle install
             fastlane release
 
-        - name: Create apk file
-          run: |
-            echo -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode --output ./android/release.keystore
-            export ANDROID_KEYSTORE_PASSWORD="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}"
-            export ANDROID_KEY_ALIAS="${{ secrets.ANDROID_KEY_ALIAS }}"
-            export ANDROID_KEY_PASSWORD="${{ secrets.ANDROID_KEY_PASSWORD }}"            
-            flutter build apk --no-tree-shake-icons --release
-            mv ./build/app/outputs/flutter-apk/app-release.apk ./build/app/outputs/flutter-apk/miria-$BUMP_VERSION.apk
 
-        - name: Create tag and release note
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          run: |
-            gh release create v$BUMP_VERSION --generate-notes --draft ./build/app/outputs/flutter-apk/miria-$BUMP_VERSION.apk
+  build_apk_appimage:
+    name: Android・Linux用ビルド
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+          
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Initialize git config
+        run: |
+          git config --local user.name $GIT_USER_NAME
+          git config --local user.email $GIT_USER_EMAIL
+
+      - name: Get Version
+        run: export "VERSION=$BUMP_VERSION"
+
+      - name: Create apk file
+        run: |
+          echo -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode --output ./android/release.keystore
+          export ANDROID_KEYSTORE_PASSWORD="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}"
+          export ANDROID_KEY_ALIAS="${{ secrets.ANDROID_KEY_ALIAS }}"
+          export ANDROID_KEY_PASSWORD="${{ secrets.ANDROID_KEY_PASSWORD }}"            
+          flutter build apk --no-tree-shake-icons --release
+          mv ./build/app/outputs/flutter-apk/app-release.apk ./build/app/outputs/flutter-apk/miria-$VERSION.apk
+
+      - name: Create AppImage file
+        run: |
+          sudo apt install libsecret-1-dev
+          flutter pub global activate flutter_distributor
+          $HOME/.pub-cache/bin/flutter_distributor package --platform linux --targets appimage
+          mv ./dist/$VERSION/miria-$VERSION-linux.AppImage ./dist/$VERSION/miria-$VERSION-amd64.AppImage
+
+
+      - name: Create tag and release note
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create v$VERSION --generate-notes --draft ./build/app/outputs/flutter-apk/miria-$VERSION.apk ./dist/$VERSION/miria-$VERSION-amd64.AppImage 
