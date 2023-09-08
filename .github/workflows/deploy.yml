@@ -129,7 +129,10 @@ jobs:
 
       - name: Create AppImage file
         run: |
-          sudo apt install libsecret-1-dev clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev
+          sudo apt install libsecret-1-dev clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev locate libfuse2
+          wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+          chmod +x appimagetool
+          sudo mv appimagetool /usr/local/bin/
           flutter pub global activate flutter_distributor
           flutter_distributor package --platform linux --targets appimage
           mv ./dist/$VERSION/miria-$VERSION-linux.AppImage ./dist/$VERSION/miria-$VERSION-amd64.AppImage
