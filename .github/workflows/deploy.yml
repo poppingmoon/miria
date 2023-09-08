@@ -131,7 +131,7 @@ jobs:
         run: |
           sudo apt install libsecret-1-dev
           flutter pub global activate flutter_distributor
-          $HOME/.pub-cache/bin/flutter_distributor package --platform linux --targets appimage
+          flutter_distributor package --platform linux --targets appimage
           mv ./dist/$VERSION/miria-$VERSION-linux.AppImage ./dist/$VERSION/miria-$VERSION-amd64.AppImage
 
 
