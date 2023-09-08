@@ -76,7 +76,17 @@ class UserNotesState extends ConsumerState<UserNotes> {
                   ),
                 ),
               ),
-              IconButton(
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: (untilDate == null)
+                      ? null
+                      : (Theme.of(context).brightness == Brightness.light)
+                          ? Theme.of(context).primaryColorLight
+                          : Theme.of(context).primaryColorDark,
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  color: (untilDate == null) ? null : Colors.white,
                   onPressed: () async {
                     final firstDate = widget.actualAccount == null
                         ? ref
@@ -101,7 +111,9 @@ class UserNotesState extends ConsumerState<UserNotes> {
                     }
                     setState(() {});
                   },
-                  icon: const Icon(Icons.date_range))
+                  icon: const Icon(Icons.date_range),
+                ),
+              ),
             ],
           ),
         ),
