@@ -6,6 +6,7 @@ import 'package:miria/model/general_settings.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/model/tab_type.dart';
 import 'package:miria/providers.dart';
+import 'package:miria/router/app_router.dart';
 import 'package:miria/view/channel_dialog.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/common_drawer.dart';
@@ -18,6 +19,7 @@ import 'package:miria/view/themes/app_theme.dart';
 import 'package:miria/view/timeline_page/misskey_timeline.dart';
 import 'package:miria/view/timeline_page/timeline_emoji.dart';
 import 'package:miria/view/timeline_page/timeline_note.dart';
+import 'package:misskey_dart/misskey_dart.dart';
 
 class TimelineAppBar extends ConsumerWidget {
   const TimelineAppBar({super.key, required this.scaffoldKey});
@@ -133,7 +135,8 @@ class TabHeader extends ConsumerWidget {
             TabType.localTimeline,
             TabType.globalTimeline,
             TabType.homeTimeline,
-          ].contains(tabSetting.tabType))
+          ].contains(tabSetting.tabType)) ...[
+            AnnoucementInfo(tabSetting: tabSetting),
             IconButton(
               onPressed: () {
                 showDialog(
@@ -145,6 +148,7 @@ class TabHeader extends ConsumerWidget {
               },
               icon: const Icon(Icons.smart_toy_outlined),
             ),
+          ],
           const Padding(
             padding: EdgeInsets.only(right: 5),
           ),
@@ -202,6 +206,7 @@ class TimelinePage extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
+                        BannerArea(tabSetting: tabSetting),
                         Expanded(
                           child: MisskeyTimeline(tabSetting: tabSetting),
                         ),
@@ -252,5 +257,128 @@ class TimelinePage extends ConsumerWidget {
         initialOpenAccount: page.tabSetting.account,
       ),
     );
+  }
+}
+
+class BannerArea extends ConsumerWidget {
+  final TabSetting tabSetting;
+
+  const BannerArea({super.key, required this.tabSetting});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bannerAnnouncement = ref.watch(
+      accountRepository.select((repository) {
+        return repository.account
+            .firstWhereOrNull(
+                (element) => element.acct == tabSetting.account.acct)
+            ?.i
+            .unreadAnnouncements;
+      }),
+    );
+
+    // ダイアログの実装が大変なので（状態管理とか）いったんバナーと一緒に扱う
+    final bannerData = bannerAnnouncement
+        ?.where((element) =>
+            element.display == AnnouncementDisplayType.banner ||
+            element.display == AnnouncementDisplayType.dialog)
+        .lastOrNull;
+
+    if (bannerData == null) return const SizedBox.shrink();
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(left: 10, top: 3, bottom: 3),
+      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+      child: Row(
+        children: [
+          if (bannerData.icon != null)
+            AnnouncementIcon(iconType: bannerData.icon!),
+          const Padding(padding: EdgeInsets.only(left: 10)),
+          Text(
+            "${bannerData.title}　${bannerData.text}",
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AnnoucementInfo extends ConsumerWidget {
+  final TabSetting tabSetting;
+
+  const AnnoucementInfo({super.key, required this.tabSetting});
+
+  void announcementsRoute(BuildContext context, WidgetRef ref) {
+    final account = ref
+        .read(accountRepository)
+        .account
+        .firstWhereOrNull((element) => element.acct == tabSetting.account.acct);
+    if (account == null) return;
+    context.pushRoute(AnnouncementRoute(account: account));
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final hasUnread = ref.watch(
+      accountRepository.select((repository) {
+        return repository.account
+            .firstWhereOrNull(
+                (element) => element.acct == tabSetting.account.acct)
+            ?.i
+            .unreadAnnouncements
+            .isNotEmpty;
+      }),
+    );
+    if (hasUnread == true) {
+      return IconButton(
+          onPressed: () => announcementsRoute(context, ref),
+          icon: Stack(children: [
+            const Icon(Icons.campaign),
+            Transform.translate(
+                offset: const Offset(12, 12),
+                child: SizedBox(
+                  width: 14,
+                  height: 14,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 1.5),
+                      borderRadius: BorderRadius.circular(20),
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                )),
+          ]));
+    } else {
+      return IconButton(
+          onPressed: () => announcementsRoute(context, ref),
+          icon: const Icon(Icons.campaign));
+    }
+  }
+}
+
+class AnnouncementIcon extends StatelessWidget {
+  final AnnouncementIconType iconType;
+
+  const AnnouncementIcon({super.key, required this.iconType});
+
+  @override
+  Widget build(BuildContext context) {
+    switch (iconType) {
+      case AnnouncementIconType.info:
+        return const Icon(Icons.info, color: Colors.white);
+      case AnnouncementIconType.warning:
+        return const Icon(Icons.warning, color: Colors.white);
+      case AnnouncementIconType.error:
+        return const Icon(Icons.error, color: Colors.white);
+      case AnnouncementIconType.success:
+        return const Icon(Icons.check, color: Colors.white);
+      default:
+        return const SizedBox.shrink();
+    }
   }
 }

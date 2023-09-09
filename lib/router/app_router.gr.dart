@@ -385,6 +385,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: TimelinePage(key: args.key),
       );
     },
+    AnnouncementRoute.name: (routeData) {
+      final args = routeData.argsAs<AnnouncementRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: AnnouncementPage(
+          key: args.key,
+          account: args.account,
+        ),
+      );
+    },
   };
 }
 
@@ -1739,5 +1749,43 @@ class TimelineRouteArgs {
   @override
   String toString() {
     return 'TimelineRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
+/// [AnnouncementPage]
+class AnnouncementRoute extends PageRouteInfo<AnnouncementRouteArgs> {
+  AnnouncementRoute({
+    Key? key,
+    required Account account,
+    List<PageRouteInfo>? children,
+  }) : super(
+          AnnouncementRoute.name,
+          args: AnnouncementRouteArgs(
+            key: key,
+            account: account,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'AnnouncementRoute';
+
+  static const PageInfo<AnnouncementRouteArgs> page =
+      PageInfo<AnnouncementRouteArgs>(name);
+}
+
+class AnnouncementRouteArgs {
+  const AnnouncementRouteArgs({
+    this.key,
+    required this.account,
+  });
+
+  final Key? key;
+
+  final Account account;
+
+  @override
+  String toString() {
+    return 'AnnouncementRouteArgs{key: $key, account: $account}';
   }
 }

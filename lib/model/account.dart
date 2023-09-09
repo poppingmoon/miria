@@ -29,6 +29,10 @@ class Account with _$Account {
   @override
   int get hashCode => Object.hash(runtimeType, host, userId);
 
+  String get acct {
+    return "@$userId@$host";
+  }
+
   factory Account.demoAccount(String host) => Account(
       host: host,
       userId: "",
