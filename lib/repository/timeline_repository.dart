@@ -232,7 +232,10 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     try {
       _socketController.reconnect();
     } catch (e) {
-      startTimeline();
+      Future(() async {
+        await ref.read(misskeyProvider(arg.account)).streamingService.restart();
+        startTimeline();
+      });
       return;
     }
     ref.read(mainStreamRepositoryProvider(_tabSetting.account)).reconnect();
