@@ -16,8 +16,13 @@ final noteSearchProvider =
 
 class NoteSearch extends ConsumerStatefulWidget {
   final NoteSearchCondition? initialCondition;
+  final FocusNode? focusNode;
 
-  const NoteSearch({super.key, required this.initialCondition});
+  const NoteSearch({
+    super.key,
+    required this.initialCondition,
+    this.focusNode,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => NoteSearchState();
@@ -38,6 +43,12 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
         ref.read(noteSearchProvider.notifier).state = initial;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override

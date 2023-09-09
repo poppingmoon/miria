@@ -24,6 +24,23 @@ class SearchPage extends ConsumerStatefulWidget {
 }
 
 class SearchPageState extends ConsumerState<SearchPage> {
+  late final List<FocusNode> focusNodes;
+  int tabIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    focusNodes = [FocusNode(), FocusNode()];
+  }
+
+  @override
+  void dispose() {
+    for (final focusNode in focusNodes) {
+      focusNode.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -40,23 +57,40 @@ class SearchPageState extends ConsumerState<SearchPage> {
               ],
             ),
           ),
-          body: TabBarView(
-            children: [
-              NoteSearch(
-                initialCondition: widget.initialNoteSearchCondition,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                child: UserSelectContent(
-                  onSelected: (item) => context.pushRoute(
-                    UserRoute(
-                      userId: item.id,
-                      account: widget.account,
+          body: Builder(
+            builder: (context) {
+              final tabController = DefaultTabController.of(context);
+              tabController.addListener(() {
+                if (tabController.index != tabIndex) {
+                  focusNodes[tabController.index].requestFocus();
+                  setState(() {
+                    tabIndex = tabController.index;
+                  });
+                }
+              });
+              return TabBarView(
+                controller: tabController,
+                children: [
+                  NoteSearch(
+                    initialCondition: widget.initialNoteSearchCondition,
+                    focusNode: focusNodes[0],
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 10, top: 10),
+                    child: UserSelectContent(
+                      focusNode: focusNodes[1],
+                      onSelected: (item) => context.pushRoute(
+                        UserRoute(
+                          userId: item.id,
+                          account: widget.account,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ],
+                ],
+              );
+            },
           ),
         ),
       ),
