@@ -1,4 +1,4 @@
-name: Snapパッケージのビルド
+name: デプロイ(snap)
 run-name: Building Miria's Snap package
 on: [workflow_dispatch]
 jobs:
@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Build snap
         uses: snapcore/action-build@v1
@@ -15,10 +15,9 @@ jobs:
 
       - name: Get Build Version
         run: |
-          sudo snap install flutter --classic
-          flutter pub get
-          echo "VERSION=$(flutter pub run cider version)" >> $GITHUB_ENV  
-          
+          pwd
+          echo "VERSION=$(cat pubspec.yaml | grep version | cut -d ' ' -f 2)" >> $GITHUB_ENV
+
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -26,7 +25,8 @@ jobs:
           gh release create v$VERSION --generate-notes --draft ${{ steps.snapcraft.outputs.snap }}
 
       # https://github.com/snapcore/action-publish
-      # 以下をコメントアウトすることでSnap Storeへのアップロードすることが可能です。
+      # 以下をコメントアウトを解除することでSnap Storeへアップロードすることが可能です。
+      # Snap Storeでの公開後は、上記のCreate releaseをコメントアウトしてください（通常、SnapファイルをそのままStore外で公開することはありません）。
       #- name: Upload snap store
       #  uses: snapcore/action-publish@v1
       #  env:
