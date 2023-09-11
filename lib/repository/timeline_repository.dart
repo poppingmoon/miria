@@ -86,7 +86,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
   }
 
   Future<Iterable<Note>> _requestNotes({
-    int limit = 30,
+    int? limit,
     String? untilId,
   }) {
     final misskey = ref.read(misskeyProvider(_tabSetting.account));
@@ -100,7 +100,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
         ),
       TabType.homeTimeline => misskey.notes.homeTimeline(
           NotesTimelineRequest(
-            limit: limit,
+            limit: limit ?? 30,
             untilId: untilId,
           ),
         ),
