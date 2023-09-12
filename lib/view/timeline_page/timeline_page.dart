@@ -11,12 +11,12 @@ import 'package:miria/view/channel_dialog.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/common_drawer.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
-import 'package:miria/view/common/misskey_notes/network_image.dart';
 import 'package:miria/view/common/notification_icon.dart';
 import 'package:miria/view/common/tab_icon_view.dart';
 import 'package:miria/view/server_detail_dialog.dart';
 import 'package:miria/view/themes/app_theme.dart';
 import 'package:miria/view/timeline_page/misskey_timeline.dart';
+import 'package:miria/view/timeline_page/nyanpuppu.dart';
 import 'package:miria/view/timeline_page/timeline_emoji.dart';
 import 'package:miria/view/timeline_page/timeline_note.dart';
 import 'package:misskey_dart/misskey_dart.dart';
@@ -109,14 +109,7 @@ class TabHeader extends ConsumerWidget {
               child: Text(tabSetting.name),
             ),
           ),
-          const SizedBox(
-            height: 24,
-            child: NetworkImageView(
-              url:
-                  "https://nos3.arkjp.net/image.webp?url=https%3A%2F%2Fs3.arkjp.net%2Fmisskey%2Fc8a26f2b-7541-4fc6-bebb-036482b53cec.gif&emoji=1",
-              type: ImageType.customEmoji,
-            ),
-          ),
+          const Nyanpuppu(),
           if (tabSetting.tabType == TabType.channel)
             IconButton(
               onPressed: () {
