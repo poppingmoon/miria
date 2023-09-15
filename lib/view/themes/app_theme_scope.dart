@@ -60,17 +60,30 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
         defaultTargetPlatform == TargetPlatform.macOS) {
       return "SF Pro Text";
     }
-    if (defaultTargetPlatform == TargetPlatform.linux) {
+    if (defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.linux) {
       return "Noto Sans CJK JP";
+    }
+    if (defaultTargetPlatform == TargetPlatform.windows) {
+      return "Noto Sans JP";
     }
 
     return "KosugiMaru";
   }
 
   List<String> resolveFontFamilyCallback() {
-    if (defaultTargetPlatform == TargetPlatform.windows ||
+    if (defaultTargetPlatform == TargetPlatform.android ||
         defaultTargetPlatform == TargetPlatform.linux) {
-      return ["Noto Sans CJK JP", "KosugiMaru", "BIZ UDPGothic"];
+      return [
+        "Noto Sans",
+        "DejaVu Sans",
+        ];
+    }
+    if (defaultTargetPlatform == TargetPlatform.windows) {
+      return [
+        "Noto Sans",
+        "BIZ UDPGothic",
+      ];
     }
     if (defaultTargetPlatform == TargetPlatform.iOS ||
         defaultTargetPlatform == TargetPlatform.macOS) {
@@ -87,7 +100,14 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
         defaultTargetPlatform == TargetPlatform.macOS) {
       return ["Hiragino Mincho ProN", "Apple Color Emoji"];
     }
-    return ["Noto Serif CJK JP", "Noto Serif"];
+    if (defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.linux) {
+      return "Noto Serif CJK JP";
+    }
+    if (defaultTargetPlatform == TargetPlatform.windows) {
+      return "Noto Serif JP";
+    }
+    return "Noto Serif";
   }
 
   TextStyle resolveUnicodeEmojiStyle() {
@@ -109,7 +129,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
        defaultTargetPlatform == TargetPlatform.linux) {
       return const TextStyle(
           fontFamily: "Noto Color Emoji",
-          fontFamilyFallback: ["Noto Color Emoji", "Noto Sans JP"]);
+          fontFamilyFallback: ["Noto Color Emoji", "Noto Sans"]);
     }
     return const TextStyle();
   }
