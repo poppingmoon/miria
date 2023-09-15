@@ -86,6 +86,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = ref.watch(generalSettingsRepositoryProvider).settings;
     return Scaffold(
       appBar: AppBar(title: const Text("全般設定")),
       body: SingleChildScrollView(
@@ -322,10 +323,18 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                         onChanged: (value) {
                           setState(() {
                             textScaleFactor = value;
-                            save();
                           });
                         },
-                      )
+                      ),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed:
+                              (settings.textScaleFactor == textScaleFactor)
+                                  ? null
+                                  : save,
+                          child: const Text("変更"),
+                        ),
+                      ),
                     ],
                   ),
                 ),
