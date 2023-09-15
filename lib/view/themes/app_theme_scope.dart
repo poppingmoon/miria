@@ -72,19 +72,6 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
   }
 
   List<String> resolveFontFamilyCallback() {
-    if (defaultTargetPlatform == TargetPlatform.android ||
-        defaultTargetPlatform == TargetPlatform.linux) {
-      return [
-        "Noto Sans",
-        "DejaVu Sans",
-        ];
-    }
-    if (defaultTargetPlatform == TargetPlatform.windows) {
-      return [
-        "Noto Sans",
-        "BIZ UDPGothic",
-      ];
-    }
     if (defaultTargetPlatform == TargetPlatform.iOS ||
         defaultTargetPlatform == TargetPlatform.macOS) {
       return [
@@ -92,7 +79,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
         "Apple Color Emoji",
       ];
     }
-    return [];
+    return ["Noto Sans", "DejaVu Sans"];
   }
 
   List<String> resolveFontFamilySerifCallback() {
@@ -100,14 +87,8 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
         defaultTargetPlatform == TargetPlatform.macOS) {
       return ["Hiragino Mincho ProN", "Apple Color Emoji"];
     }
-    if (defaultTargetPlatform == TargetPlatform.android ||
-        defaultTargetPlatform == TargetPlatform.linux) {
-      return "Noto Serif CJK JP";
-    }
-    if (defaultTargetPlatform == TargetPlatform.windows) {
-      return "Noto Serif JP";
-    }
-    return "Noto Serif";
+
+    return ["Noto Serif CJK JP", "Noto Serif JP", "Noto Serif"];
   }
 
   TextStyle resolveUnicodeEmojiStyle() {
