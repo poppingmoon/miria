@@ -205,6 +205,7 @@ class UserDetailTabState extends ConsumerState<UserDetailTab> {
               remoteResponse: remoteResponse);
         }
       } catch (e) {
+        if (!mounted) return;
         setState(() {
           error = e;
         });
