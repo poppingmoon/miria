@@ -772,9 +772,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: "8c02c665d769296357dfd9ff06e9de9a9d577d68"
-      url: "https://github.com/shiosyakeyakini-info/mfm_renderer.git"
+      ref: next
+      resolved-ref: "1c1816131590643ffb9ea012cad4f8d398c4f8d0"
+      url: "https://github.com/poppingmoon/mfm_renderer.git"
     source: git
     version: "0.0.1"
   mime:
@@ -789,9 +789,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: dbb1408a334fb4d6a78ae5c05d54a047637296e9
-      url: "https://github.com/shiosyakeyakini-info/misskey_dart.git"
+      ref: next
+      resolved-ref: "666a5cbcd03d75ac3b60958c4e6635e348f8851b"
+      url: "https://github.com/poppingmoon/misskey_dart.git"
     source: git
     version: "1.0.0"
   mockito:
