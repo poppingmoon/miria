@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:miria/model/account.dart';
+import 'package:miria/model/tab_icon.dart';
 import 'package:miria/model/tab_setting.dart';
+import 'package:miria/model/tab_type.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,5 +56,28 @@ class TabSettingsRepository extends ChangeNotifier {
         element.account.userId == account.userId);
     await save(_tabSettings);
     notifyListeners();
+  }
+
+  Future<void> initializeTabSettings(Account account) async {
+    await save([
+      TabSetting(
+        icon: TabIcon(codePoint: Icons.home.codePoint),
+        tabType: TabType.homeTimeline,
+        name: "ホームタイムライン",
+        account: account,
+      ),
+      TabSetting(
+        icon: TabIcon(codePoint: Icons.public.codePoint),
+        tabType: TabType.localTimeline,
+        name: "ローカルタイムライン",
+        account: account,
+      ),
+      TabSetting(
+        icon: TabIcon(codePoint: Icons.rocket_launch.codePoint),
+        tabType: TabType.globalTimeline,
+        name: "グローバルタイムライン",
+        account: account,
+      ),
+    ]);
   }
 }

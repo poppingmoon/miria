@@ -261,8 +261,8 @@ class BannerArea extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bannerAnnouncement = ref.watch(
-      accountRepository.select((repository) {
-        return repository.account
+      accountRepositoryProvider.select((accounts) {
+        return accounts
             .firstWhereOrNull(
                 (element) => element.acct == tabSetting.account.acct)
             ?.i
@@ -308,8 +308,7 @@ class AnnoucementInfo extends ConsumerWidget {
 
   void announcementsRoute(BuildContext context, WidgetRef ref) {
     final account = ref
-        .read(accountRepository)
-        .account
+        .read(accountRepositoryProvider)
         .firstWhereOrNull((element) => element.acct == tabSetting.account.acct);
     if (account == null) return;
     context.pushRoute(AnnouncementRoute(account: account));
@@ -318,8 +317,8 @@ class AnnoucementInfo extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasUnread = ref.watch(
-      accountRepository.select((repository) {
-        return repository.account
+      accountRepositoryProvider.select((accounts) {
+        return accounts
             .firstWhereOrNull(
                 (element) => element.acct == tabSetting.account.acct)
             ?.i
