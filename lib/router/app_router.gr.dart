@@ -203,7 +203,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: SearchPage(
           key: args.key,
-          initialSearchText: args.initialSearchText,
+          initialNoteSearchCondition: args.initialNoteSearchCondition,
           account: args.account,
         ),
       );
@@ -1105,14 +1105,14 @@ class PhotoEditRouteArgs {
 class SearchRoute extends PageRouteInfo<SearchRouteArgs> {
   SearchRoute({
     Key? key,
-    String? initialSearchText,
+    NoteSearchCondition? initialNoteSearchCondition,
     required Account account,
     List<PageRouteInfo>? children,
   }) : super(
           SearchRoute.name,
           args: SearchRouteArgs(
             key: key,
-            initialSearchText: initialSearchText,
+            initialNoteSearchCondition: initialNoteSearchCondition,
             account: account,
           ),
           initialChildren: children,
@@ -1126,19 +1126,19 @@ class SearchRoute extends PageRouteInfo<SearchRouteArgs> {
 class SearchRouteArgs {
   const SearchRouteArgs({
     this.key,
-    this.initialSearchText,
+    this.initialNoteSearchCondition,
     required this.account,
   });
 
   final Key? key;
 
-  final String? initialSearchText;
+  final NoteSearchCondition? initialNoteSearchCondition;
 
   final Account account;
 
   @override
   String toString() {
-    return 'SearchRouteArgs{key: $key, initialSearchText: $initialSearchText, account: $account}';
+    return 'SearchRouteArgs{key: $key, initialNoteSearchCondition: $initialNoteSearchCondition, account: $account}';
   }
 }
 
