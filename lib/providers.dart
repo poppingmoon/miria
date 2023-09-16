@@ -2,28 +2,26 @@ import 'package:dio/dio.dart';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/tab_setting.dart';
+import 'package:miria/model/timeline_controller_state.dart';
+import 'package:miria/model/timeline_page_state.dart';
+import 'package:miria/model/timeline_state.dart';
 import 'package:miria/repository/account_repository.dart';
 import 'package:miria/repository/account_settings_repository.dart';
-import 'package:miria/repository/antenna_timeline_repository.dart';
-import 'package:miria/repository/channel_time_line_repository.dart';
 import 'package:miria/repository/emoji_repository.dart';
 import 'package:miria/repository/favorite_repository.dart';
 import 'package:miria/repository/general_settings_repository.dart';
-import 'package:miria/repository/hybrid_timeline_repository.dart';
 import 'package:miria/repository/import_export_repository.dart';
 import 'package:miria/repository/main_stream_repository.dart';
-import 'package:miria/repository/global_time_line_repository.dart';
-import 'package:miria/repository/home_time_line_repository.dart';
-import 'package:miria/repository/local_time_line_repository.dart';
 import 'package:miria/repository/note_repository.dart';
 import 'package:miria/repository/tab_settings_repository.dart';
-import 'package:miria/repository/time_line_repository.dart';
-import 'package:miria/repository/user_list_time_line_repository.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/repository/timeline_repository.dart';
 import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
 import 'package:miria/state_notifier/photo_edit_page/photo_edit_state_notifier.dart';
+import 'package:miria/state_notifier/timeline_page/timeline_controller.dart';
+import 'package:miria/state_notifier/timeline_page/timeline_page_controller.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 final dioProvider = Provider((ref) => Dio());
@@ -32,91 +30,20 @@ final fileSystemProvider =
 final misskeyProvider = Provider.family<Misskey, Account>(
     (ref, account) => Misskey(token: account.token, host: account.host));
 
-final localTimeLineProvider =
-    ChangeNotifierProvider.family<TimelineRepository, TabSetting>(
-        (ref, tabSetting) => LocalTimeLineRepository(
-              ref.read(misskeyProvider(tabSetting.account)),
-              ref.read(notesProvider(tabSetting.account)),
-              ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(generalSettingsRepositoryProvider),
-              tabSetting,
-              ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(accountRepository),
-              ref.read(emojiRepositoryProvider(tabSetting.account)),
-            ));
-final homeTimeLineProvider =
-    ChangeNotifierProvider.family<TimelineRepository, TabSetting>(
-        (ref, tabSetting) => HomeTimeLineRepository(
-              ref.read(misskeyProvider(tabSetting.account)),
-              ref.read(notesProvider(tabSetting.account)),
-              ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(generalSettingsRepositoryProvider),
-              tabSetting,
-              ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(accountRepository),
-              ref.read(emojiRepositoryProvider(tabSetting.account)),
-            ));
-final globalTimeLineProvider =
-    ChangeNotifierProvider.family<TimelineRepository, TabSetting>(
-        (ref, tabSetting) => GlobalTimeLineRepository(
-              ref.read(misskeyProvider(tabSetting.account)),
-              ref.read(notesProvider(tabSetting.account)),
-              ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(generalSettingsRepositoryProvider),
-              tabSetting,
-            ));
+final timelineRepositoryProvider =
+    NotifierProvider.family<TimelineRepository, TimelineState, TabSetting>(
+  TimelineRepository.new,
+);
 
-final hybridTimeLineProvider =
-    ChangeNotifierProvider.family<TimelineRepository, TabSetting>(
-        (ref, tabSetting) => HybridTimelineRepository(
-              ref.read(misskeyProvider(tabSetting.account)),
-              ref.read(notesProvider(tabSetting.account)),
-              ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(generalSettingsRepositoryProvider),
-              tabSetting,
-              ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(accountRepository),
-              ref.read(emojiRepositoryProvider(tabSetting.account)),
-            ));
+final timelineControllerProvider = NotifierProvider.autoDispose
+    .family<TimelineController, TimelineControllerState, TabSetting>(
+  TimelineController.new,
+);
 
-final channelTimelineProvider =
-    ChangeNotifierProvider.family<ChannelTimelineRepository, TabSetting>(
-        (ref, tabSetting) => ChannelTimelineRepository(
-              ref.read(misskeyProvider(tabSetting.account)),
-              ref.read(notesProvider(tabSetting.account)),
-              ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(generalSettingsRepositoryProvider),
-              tabSetting,
-              ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(accountRepository),
-              ref.read(emojiRepositoryProvider(tabSetting.account)),
-            ));
-
-final userListTimelineProvider =
-    ChangeNotifierProvider.family<UserListTimelineRepository, TabSetting>(
-        (ref, tabSetting) => UserListTimelineRepository(
-              ref.read(misskeyProvider(tabSetting.account)),
-              ref.read(notesProvider(tabSetting.account)),
-              ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(generalSettingsRepositoryProvider),
-              tabSetting,
-              ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(accountRepository),
-              ref.read(emojiRepositoryProvider(tabSetting.account)),
-            ));
-
-final antennaTimelineProvider =
-    ChangeNotifierProvider.family<AntennaTimelineRepository, TabSetting>(
-        (ref, tabSetting) => AntennaTimelineRepository(
-              ref.read(misskeyProvider(tabSetting.account)),
-              ref.read(notesProvider(tabSetting.account)),
-              ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(generalSettingsRepositoryProvider),
-              tabSetting,
-              ref.read(mainStreamRepositoryProvider(tabSetting.account)),
-              ref.read(accountRepository),
-              ref.read(emojiRepositoryProvider(tabSetting.account)),
-            ));
+final timelinePageControllerProvider =
+    NotifierProvider.autoDispose<TimelinePageController, TimelinePageState>(
+  TimelinePageController.new,
+);
 
 final mainStreamRepositoryProvider =
     ChangeNotifierProvider.family<MainStreamRepository, Account>(
