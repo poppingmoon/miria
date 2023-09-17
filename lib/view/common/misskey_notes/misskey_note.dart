@@ -461,7 +461,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                 displayNote,
                                 requestEmoji: emojiData,
                               ),
-                              overflow: TextOverflow.fade,
+                              overflow: TextOverflow.clip,
                               suffixSpan: [
                                 if (!isEmptyRenote &&
                                     displayNote.renoteId != null &&
