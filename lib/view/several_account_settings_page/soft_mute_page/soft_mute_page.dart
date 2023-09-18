@@ -17,6 +17,7 @@ class SoftMuteState extends ConsumerState<SoftMutePage> {
       body: SingleChildScrollView(
         child: CommonFuture(
           future: () async {
+            // ignore: inference_failure_on_collection_literal
             return [];
           }(),
           complete: (context, data) {

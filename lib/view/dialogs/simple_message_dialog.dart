@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class SimpleMessageDialog extends StatelessWidget {
   final String message;
 
-  static Future<void> show(BuildContext context, String message) async =>
-      await showDialog(
+  static Future<void> show(BuildContext context, String message) => showDialog(
         context: context,
         builder: (context) => SimpleMessageDialog(message: message),
       );

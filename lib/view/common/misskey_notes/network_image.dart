@@ -53,7 +53,7 @@ class NetworkImageView extends StatelessWidget {
         imageUrl: url,
         fit: fit,
         errorWidget: (context, url, error) =>
-            errorBuilder?.call(context, error, StackTrace.current) ??
+            errorBuilder?.call(context, error as Object, StackTrace.current) ??
             Container(),
         height: height,
         placeholder: (context, url) =>

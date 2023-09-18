@@ -270,7 +270,7 @@ class _$_PhotoEdit implements _PhotoEdit {
       this.isInitialized = false,
       this.initialImage,
       this.editedImage,
-      this.cropOffset = const Offset(0, 0),
+      this.cropOffset = Offset.zero,
       this.cropSize = Size.zero,
       this.defaultSize = Size.zero,
       this.actualSize = Size.zero,

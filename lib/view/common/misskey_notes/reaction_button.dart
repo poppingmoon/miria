@@ -111,7 +111,7 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
         await ref.read(notesProvider(account)).refresh(widget.noteId);
       },
       onLongPress: () {
-        showDialog(
+        showDialog<void>(
           context: context,
           builder: (context2) {
             return ReactionUserDialog(

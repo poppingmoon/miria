@@ -26,7 +26,8 @@ class TabSettingsRepository extends ChangeNotifier {
       _tabSettings
         ..clear()
         ..addAll(
-          (jsonDecode(storedData) as List).map((e) => TabSetting.fromJson(e)),
+          (jsonDecode(storedData) as List)
+              .map((e) => TabSetting.fromJson(e as Map<String, dynamic>)),
         );
     } catch (e) {
       if (kDebugMode) print(e);

@@ -42,7 +42,7 @@ class AbuseDialogState extends ConsumerState<AbuseDialog> {
         );
     if (!mounted) return;
     Navigator.of(context).pop();
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) =>
           const SimpleMessageDialog(message: "内容が送信されました。ご報告ありがとうございました。"),

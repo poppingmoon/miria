@@ -62,7 +62,11 @@ class EmojiRepositoryImpl extends EmojiRepository {
     if (storedData == null || storedData.isEmpty) {
       return;
     }
-    await _setEmojiData(EmojisResponse.fromJson(jsonDecode(storedData)));
+    await _setEmojiData(
+      EmojisResponse.fromJson(
+        jsonDecode(storedData) as Map<String, dynamic>,
+      ),
+    );
   }
 
   @override
@@ -98,7 +102,7 @@ class EmojiRepositoryImpl extends EmojiRepository {
     final unicodeEmojis =
         (jsonDecode(await rootBundle.loadString("assets/emoji_list.json"))
                 as List)
-            .map((e) => UnicodeEmoji.fromJson(e))
+            .map((e) => UnicodeEmoji.fromJson(e as Map<String, dynamic>))
             .map(
               (e) => EmojiRepositoryData(
                 emoji: UnicodeEmojiData(char: e.char),

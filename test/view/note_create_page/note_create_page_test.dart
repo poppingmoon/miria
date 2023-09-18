@@ -1,3 +1,5 @@
+// ignore_for_file: inference_failure_on_function_invocation
+
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -1086,7 +1088,7 @@ void main() {
 
         final mockDio = MockDio();
         when(mockDio.get(any, options: anyNamed("options")))
-            .thenAnswer((_) async => await TestData.binaryImageResponse);
+            .thenAnswer((_) => TestData.binaryImageResponse);
 
         await tester.pumpWidget(
           ProviderScope(
@@ -1139,7 +1141,7 @@ void main() {
 
         final mockDio = MockDio();
         when(mockDio.get(any, options: anyNamed("options")))
-            .thenAnswer((_) async => await TestData.binaryImageResponse);
+            .thenAnswer((_) => TestData.binaryImageResponse);
 
         final memoryFileSystem = MemoryFileSystem();
         final binaryImage = await TestData.binaryImage;
@@ -1217,7 +1219,7 @@ void main() {
 
         final mockDio = MockDio();
         when(mockDio.get(any, options: anyNamed("options")))
-            .thenAnswer((_) async => await TestData.binaryImageResponse);
+            .thenAnswer((_) => TestData.binaryImageResponse);
 
         final memoryFileSystem = MemoryFileSystem();
         final binaryData =
@@ -1623,7 +1625,7 @@ void main() {
 
         final mockDio = MockDio();
         when(mockDio.get(any, options: anyNamed("options")))
-            .thenAnswer((_) async => await TestData.binaryImageResponse);
+            .thenAnswer((_) => TestData.binaryImageResponse);
 
         final memoryFileSystem = MemoryFileSystem();
         final binaryData =
@@ -2789,7 +2791,7 @@ void main() {
 
         final mockDio = MockDio();
         when(mockDio.get(any, options: anyNamed("options")))
-            .thenAnswer((_) async => await TestData.binaryImageResponse);
+            .thenAnswer((_) => TestData.binaryImageResponse);
 
         await tester.pumpWidget(
           ProviderScope(

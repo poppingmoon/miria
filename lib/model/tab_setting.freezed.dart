@@ -36,7 +36,7 @@ mixin _$TabSetting {
   String? get antennaId => throw _privateConstructorUsedError;
 
   /// ノートの投稿のキャプチャをするかどうか
-  dynamic get isSubscribe => throw _privateConstructorUsedError;
+  bool get isSubscribe => throw _privateConstructorUsedError;
 
   /// タブ名
   String get name => throw _privateConstructorUsedError;
@@ -68,7 +68,7 @@ abstract class $TabSettingCopyWith<$Res> {
       String? channelId,
       String? listId,
       String? antennaId,
-      dynamic isSubscribe,
+      bool isSubscribe,
       String name,
       Account account,
       bool renoteDisplay,
@@ -96,7 +96,7 @@ class _$TabSettingCopyWithImpl<$Res, $Val extends TabSetting>
     Object? channelId = freezed,
     Object? listId = freezed,
     Object? antennaId = freezed,
-    Object? isSubscribe = freezed,
+    Object? isSubscribe = null,
     Object? name = null,
     Object? account = null,
     Object? renoteDisplay = null,
@@ -123,10 +123,10 @@ class _$TabSettingCopyWithImpl<$Res, $Val extends TabSetting>
           ? _value.antennaId
           : antennaId // ignore: cast_nullable_to_non_nullable
               as String?,
-      isSubscribe: freezed == isSubscribe
+      isSubscribe: null == isSubscribe
           ? _value.isSubscribe
           : isSubscribe // ignore: cast_nullable_to_non_nullable
-              as dynamic,
+              as bool,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -177,7 +177,7 @@ abstract class _$$_TabSettingCopyWith<$Res>
       String? channelId,
       String? listId,
       String? antennaId,
-      dynamic isSubscribe,
+      bool isSubscribe,
       String name,
       Account account,
       bool renoteDisplay,
@@ -205,7 +205,7 @@ class __$$_TabSettingCopyWithImpl<$Res>
     Object? channelId = freezed,
     Object? listId = freezed,
     Object? antennaId = freezed,
-    Object? isSubscribe = freezed,
+    Object? isSubscribe = null,
     Object? name = null,
     Object? account = null,
     Object? renoteDisplay = null,
@@ -232,7 +232,10 @@ class __$$_TabSettingCopyWithImpl<$Res>
           ? _value.antennaId
           : antennaId // ignore: cast_nullable_to_non_nullable
               as String?,
-      isSubscribe: freezed == isSubscribe ? _value.isSubscribe! : isSubscribe,
+      isSubscribe: null == isSubscribe
+          ? _value.isSubscribe
+          : isSubscribe // ignore: cast_nullable_to_non_nullable
+              as bool,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -295,7 +298,7 @@ class _$_TabSetting extends _TabSetting {
   /// ノートの投稿のキャプチャをするかどうか
   @override
   @JsonKey()
-  final dynamic isSubscribe;
+  final bool isSubscribe;
 
   /// タブ名
   @override
@@ -332,8 +335,8 @@ class _$_TabSetting extends _TabSetting {
             (identical(other.listId, listId) || other.listId == listId) &&
             (identical(other.antennaId, antennaId) ||
                 other.antennaId == antennaId) &&
-            const DeepCollectionEquality()
-                .equals(other.isSubscribe, isSubscribe) &&
+            (identical(other.isSubscribe, isSubscribe) ||
+                other.isSubscribe == isSubscribe) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.account, account) || other.account == account) &&
             (identical(other.renoteDisplay, renoteDisplay) ||
@@ -344,18 +347,8 @@ class _$_TabSetting extends _TabSetting {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      icon,
-      tabType,
-      channelId,
-      listId,
-      antennaId,
-      const DeepCollectionEquality().hash(isSubscribe),
-      name,
-      account,
-      renoteDisplay,
-      withFiles);
+  int get hashCode => Object.hash(runtimeType, icon, tabType, channelId, listId,
+      antennaId, isSubscribe, name, account, renoteDisplay, withFiles);
 
   @JsonKey(ignore: true)
   @override
@@ -378,7 +371,7 @@ abstract class _TabSetting extends TabSetting {
       final String? channelId,
       final String? listId,
       final String? antennaId,
-      final dynamic isSubscribe,
+      final bool isSubscribe,
       required final String name,
       required final Account account,
       final bool renoteDisplay,
@@ -410,7 +403,7 @@ abstract class _TabSetting extends TabSetting {
   @override
 
   /// ノートの投稿のキャプチャをするかどうか
-  dynamic get isSubscribe;
+  bool get isSubscribe;
   @override
 
   /// タブ名

@@ -308,7 +308,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                         ),
                         IconButton(
                           onPressed: () async {
-                            final result = await showDialog(
+                            final result = await showDialog<String>(
                               context: context,
                               builder: (context) => UpdateMemoDialog(
                                 account: widget.account,
@@ -333,7 +333,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                 spacing: 5,
                 runSpacing: 5,
                 children: [
-                  for (final role in response.roles ?? [])
+                  for (final role in response.roles ?? <UserRole>[])
                     Container(
                       decoration: BoxDecoration(
                         border:
@@ -536,7 +536,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                for (final note in response.pinnedNotes ?? [])
+                for (final note in response.pinnedNotes ?? <Note>[])
                   MisskeyNote(
                     note: note,
                     loginAs: widget.controlAccount,

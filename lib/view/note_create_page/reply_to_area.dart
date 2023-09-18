@@ -61,7 +61,7 @@ class ReplyToArea extends ConsumerWidget {
                   padding: EdgeInsets.zero,
                   style: const ButtonStyle(
                     padding: MaterialStatePropertyAll(EdgeInsets.zero),
-                    minimumSize: MaterialStatePropertyAll(Size(0, 0)),
+                    minimumSize: MaterialStatePropertyAll(Size.zero),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                 ),
@@ -78,7 +78,7 @@ class ReplyToArea extends ConsumerWidget {
             padding: EdgeInsets.zero,
             style: const ButtonStyle(
               padding: MaterialStatePropertyAll(EdgeInsets.zero),
-              minimumSize: MaterialStatePropertyAll(Size(0, 0)),
+              minimumSize: MaterialStatePropertyAll(Size.zero),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             icon: Icon(

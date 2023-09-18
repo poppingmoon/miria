@@ -164,7 +164,7 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
           ),
         ),
         MfmText(mfmText: data.description ?? ""),
-        for (final pinnedNote in data.pinnedNotes ?? [])
+        for (final pinnedNote in data.pinnedNotes ?? <Note>[])
           MisskeyNote(note: pinnedNote),
       ],
     );

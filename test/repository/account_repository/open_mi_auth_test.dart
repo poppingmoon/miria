@@ -1,3 +1,5 @@
+// ignore_for_file: inference_failure_on_function_invocation
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -30,7 +32,7 @@ void main() {
     final accountRepository = provider.read(accountRepositoryProvider.notifier);
 
     expect(
-      () async => await accountRepository.openMiAuth("sawakai.space"),
+      accountRepository.openMiAuth("sawakai.space"),
       throwsA(isA<SpecifiedException>()),
     );
     verify(
@@ -67,7 +69,7 @@ void main() {
     final accountRepository = provider.read(accountRepositoryProvider.notifier);
 
     await expectLater(
-      () async => await accountRepository.openMiAuth("calckey.jp"),
+      accountRepository.openMiAuth("calckey.jp"),
       throwsA(isA<SpecifiedException>()),
     );
 
@@ -106,7 +108,7 @@ void main() {
     final accountRepository = provider.read(accountRepositoryProvider.notifier);
 
     await expectLater(
-      () async => await accountRepository.openMiAuth("misskey.dev"),
+      accountRepository.openMiAuth("misskey.dev"),
       throwsA(isA<SpecifiedException>()),
     );
   });

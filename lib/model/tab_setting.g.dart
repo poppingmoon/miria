@@ -13,7 +13,7 @@ _$_TabSetting _$$_TabSettingFromJson(Map<String, dynamic> json) =>
       channelId: json['channelId'] as String?,
       listId: json['listId'] as String?,
       antennaId: json['antennaId'] as String?,
-      isSubscribe: json['isSubscribe'] ?? true,
+      isSubscribe: json['isSubscribe'] as bool? ?? true,
       name: json['name'] as String,
       account: Account.fromJson(json['account'] as Map<String, dynamic>),
       renoteDisplay: json['renoteDisplay'] as bool? ?? true,

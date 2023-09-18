@@ -156,14 +156,14 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
       final files = <MisskeyPostFile>[];
       for (final file in deletedNote.files) {
         if (file.type.startsWith("image")) {
-          final response = await dio.get(
+          final response = await dio.get<Uint8List>(
             file.url,
             options: Options(responseType: ResponseType.bytes),
           );
           files.add(
             ImageFileAlreadyPostedFile(
               fileName: file.name,
-              data: response.data,
+              data: response.data!,
               id: file.id,
               isNsfw: file.isSensitive,
               caption: file.comment ?? "",
@@ -452,7 +452,7 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
       );
       if (result == null) return;
       if (result.type.startsWith("image")) {
-        final fileContentResponse = await dio.get(
+        final fileContentResponse = await dio.get<Uint8List>(
           result.url,
           options: Options(responseType: ResponseType.bytes),
         );
@@ -461,7 +461,7 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
           files: [
             ...state.files,
             ImageFileAlreadyPostedFile(
-              data: fileContentResponse.data,
+              data: fileContentResponse.data!,
               fileName: result.name,
               id: result.id,
               isEdited: false,

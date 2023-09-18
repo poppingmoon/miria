@@ -67,7 +67,7 @@ class InputComplementState extends ConsumerState<InputComplement> {
 
     ref.listen(widget.focusNode, (previous, next) async {
       if (!next.hasFocus) {
-        await Future.delayed(
+        await Future<void>.delayed(
           Duration(milliseconds: ref.read(inputComplementDelayedProvider)),
         );
         if (!mounted) return;

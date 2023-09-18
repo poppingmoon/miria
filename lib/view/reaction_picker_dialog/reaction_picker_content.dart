@@ -12,7 +12,7 @@ import 'package:miria/view/dialogs/simple_message_dialog.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class ReactionPickerContent extends ConsumerStatefulWidget {
-  final FutureOr Function(MisskeyEmojiData emoji) onTap;
+  final FutureOr<void> Function(MisskeyEmojiData emoji) onTap;
   final bool isAcceptSensitive;
 
   const ReactionPickerContent({
@@ -125,7 +125,7 @@ class ReactionPickerContentState extends ConsumerState<ReactionPickerContent> {
 
 class EmojiButton extends ConsumerStatefulWidget {
   final MisskeyEmojiData emoji;
-  final FutureOr Function(MisskeyEmojiData emoji) onTap;
+  final FutureOr<void> Function(MisskeyEmojiData emoji) onTap;
   final bool isForceVisible;
   final bool isAcceptSensitive;
 
@@ -167,7 +167,7 @@ class EmojiButtonState extends ConsumerState<EmojiButton> {
             backgroundColor: MaterialStatePropertyAll(Colors.transparent),
             padding: MaterialStatePropertyAll(EdgeInsets.all(5)),
             elevation: MaterialStatePropertyAll(0),
-            minimumSize: MaterialStatePropertyAll(Size(0, 0)),
+            minimumSize: MaterialStatePropertyAll(Size.zero),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
           onPressed: () async {

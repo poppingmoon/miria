@@ -52,15 +52,18 @@ class ImportExportRepository extends ChangeNotifier {
 
     final importFile = alreadyExists.first;
 
-    final response = await reader(dioProvider)
-        .get(importFile.url, options: Options(responseType: ResponseType.json));
+    final response = await reader(dioProvider).get<String>(
+      importFile.url,
+      options: Options(responseType: ResponseType.json),
+    );
 
-    final json = jsonDecode(response.data);
+    final json = jsonDecode(response.data!) as Map<String, dynamic>;
 
-    final importedGeneralSettings =
-        GeneralSettings.fromJson(json["generalSettings"]);
+    final importedGeneralSettings = GeneralSettings.fromJson(
+      json["generalSettings"] as Map<String, dynamic>,
+    );
     final importedAccountSettings = (json["accountSettings"] as List)
-        .map((e) => AccountSettings.fromJson(e));
+        .map((e) => AccountSettings.fromJson(e as Map<String, dynamic>));
 
     // アカウント設定よみこみ
     final accounts = reader(accountRepositoryProvider);
@@ -81,11 +84,14 @@ class ImportExportRepository extends ChangeNotifier {
     // タブ設定
     final tabSettings = <TabSetting>[];
 
-    for (final tabSetting in json["tabSettings"]) {
+    for (final e in json["tabSettings"] as List) {
+      final tabSetting = e as Map<String, dynamic>;
       final account = accounts.firstWhereOrNull(
-        (element) =>
-            tabSetting["account"]["host"] == element.host &&
-            tabSetting["account"]["userId"] == element.userId,
+        (element) {
+          final account = tabSetting["account"] as Map<String, dynamic>;
+          return account["host"] == element.host &&
+              account["userId"] == element.userId;
+        },
       );
 
       if (account == null) {
@@ -94,7 +100,7 @@ class ImportExportRepository extends ChangeNotifier {
 
       // Unhandled Exception: type 'EqualUnmodifiableMapView<dynamic, dynamic>' is not a subtype of type 'Map<String, dynamic>?' in type cast
       // freezedがわるさしてそう
-      (tabSetting as Map<String, dynamic>)
+      tabSetting
         ..remove("account")
         ..addEntries(
           [MapEntry("account", jsonDecode(jsonEncode(account.toJson())))],
@@ -161,6 +167,7 @@ class ImportExportRepository extends ChangeNotifier {
 
     // 外に漏れると困るので
     for (final element in data["tabSettings"] as List) {
+      // ignore: avoid_dynamic_calls
       element["account"]
         ..remove("token")
         ..remove("i");

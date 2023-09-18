@@ -105,7 +105,7 @@ class MisskeyServerList extends ConsumerWidget {
                         ),
                         const Padding(padding: EdgeInsets.only(top: 10)),
                         Text(
-                          "${item.nodeInfo?.usage?.users?.total?.format()}人が参加中",
+                          "${item.nodeInfo?.usage?.users?.total.format()}人が参加中",
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         const Padding(padding: EdgeInsets.only(top: 10)),

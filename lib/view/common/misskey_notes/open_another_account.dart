@@ -86,7 +86,7 @@ class OpenAnotherAccountState extends ConsumerState<OpenAnotherAccount> {
           final resultNote = await ref
               .read(misskeyProvider(account))
               .notes
-              .show(NotesShowRequest(noteId: result.object["id"]));
+              .show(NotesShowRequest(noteId: result.object["id"] as String));
           if (!mounted) return;
           context
               .pushRoute(NoteDetailRoute(note: resultNote, account: account));

@@ -1,3 +1,5 @@
+// ignore_for_file: inference_failure_on_collection_literal, avoid_classes_with_only_static_members
+
 class AuthTestData {
   static Map<String, dynamic> calckeyNodeInfo = {
     "links": [

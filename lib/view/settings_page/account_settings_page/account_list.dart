@@ -52,7 +52,7 @@ class AccountListPage extends ConsumerWidget {
                         IconButton(
                           icon: const Icon(Icons.delete),
                           onPressed: () {
-                            showDialog(
+                            showDialog<void>(
                               context: context,
                               builder: (context) => AlertDialog(
                                 content: const Text("ほんまに削除してええな？"),

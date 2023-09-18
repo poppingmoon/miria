@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_classes_with_only_static_members
+
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:json5/json5.dart';
@@ -333,7 +335,7 @@ class TestData {
   securityKeysList: [],
 }
 
-"""),
+""") as Map<String, dynamic>,
   );
 
   // note
@@ -379,9 +381,9 @@ class TestData {
   files: [],
   replyId: null,
   renoteId: null,
-}  
-  
-  '''),
+}
+
+  ''') as Map<String, dynamic>,
   );
   static String note1ExpectText = "気づいたら、健康保険証っぽいプラズマ化したつまようじの賞味期限が切れてました…";
   static String note1ExpectId = "9g3rcngj3e";
@@ -422,8 +424,8 @@ class TestData {
   files: [],
   replyId: null,
   renoteId: null,
-}  
-  '''),
+}
+  ''') as Map<String, dynamic>,
   );
 
   /// 自身のノート（藍ちゃん）２
@@ -473,8 +475,8 @@ class TestData {
   files: [],
   replyId: null,
   renoteId: null,
-}  
-  '''),
+}
+  ''') as Map<String, dynamic>,
   );
 
   /// 自身のノート（投票込みのノート）
@@ -545,7 +547,7 @@ class TestData {
   },
 }
 
-'''),
+''') as Map<String, dynamic>,
   );
 
   /// 自身でないノート２
@@ -658,8 +660,8 @@ class TestData {
   replyId: null,
   renoteId: null,
   myReaction: ':ultra_igyo@.:',
-}  
-  '''),
+}
+  ''') as Map<String, dynamic>,
   );
 
   static String note3ExpectUserName = "@oishiibot";
@@ -672,7 +674,7 @@ class TestData {
     createdAt: '2023-05-16T12:35:31.447Z',
     name: '秘蔵の藍ちゃんフォルダ',
     parentId: null,
-  }'''),
+  }''') as Map<String, dynamic>,
   );
 
   static DriveFolder folder1Child = DriveFolder.fromJson(
@@ -682,7 +684,7 @@ class TestData {
     createdAt: '2023-05-16T12:35:31.447Z',
     name: 'えっちなやつ',
     parentId: '9ettn0mv95',
-  }'''),
+  }''') as Map<String, dynamic>,
   );
 
   // ドライブ（ファイル）
@@ -708,8 +710,8 @@ class TestData {
     folder: null,
     userId: null,
     user: null,
-  }  
-  '''),
+  }
+  ''') as Map<String, dynamic>,
   );
 
   static DriveFile drive2AsVideo = DriveFile.fromJson(
@@ -732,7 +734,7 @@ class TestData {
   userId: null,
   user: null,
 }
-  '''),
+  ''') as Map<String, dynamic>,
   );
 
   static Future<Uint8List> get binaryImage async => Uint8List.fromList(
@@ -760,7 +762,7 @@ class TestData {
   emojis: {},
   onlineStatus: 'online',
   badgeRoles: [],
-}'''),
+}''') as Map<String, dynamic>,
   );
   static String user1ExpectId = "7rkr3b1c1c";
 
@@ -932,7 +934,7 @@ class TestData {
   isBlocked: false,
   isMuted: false,
   isRenoteMuted: false,
-}  '''),
+}  ''') as Map<String, dynamic>,
   );
 
   static User detailedUser2 = User.fromJson(
@@ -1043,7 +1045,7 @@ class TestData {
   isBlocked: false,
   isMuted: false,
   isRenoteMuted: false,
-}'''),
+}''') as Map<String, dynamic>,
   );
 
   static String detailedUser2ExpectedId = "9gbzuv2cze";
@@ -1157,9 +1159,9 @@ class TestData {
   isBlocked: false,
   isMuted: false,
   isRenoteMuted: false,
-}  
-  
-  '''),
+}
+
+  ''') as Map<String, dynamic>,
   );
 
   static UsersShowResponse usersShowResponse2 = UsersShowResponse.fromJson(
@@ -1332,9 +1334,9 @@ class TestData {
   isBlocked: false,
   isMuted: false,
   isRenoteMuted: false,
-}  
-  
-  '''),
+}
+
+  ''') as Map<String, dynamic>,
   );
 
   // カスタム絵文字
@@ -1431,7 +1433,7 @@ class TestData {
     isFavorited: true,
     hasUnreadNote: false,
   }
-  '''),
+  ''') as Map<String, dynamic>,
   );
   static String channel1ExpectId = "9axtmmcxuy";
   static String channel1ExpectName = "ブルーアーカイ部 総合";
@@ -1456,8 +1458,8 @@ class TestData {
   isFollowing: true,
   isFavorited: true,
   hasUnreadNote: false,
-}  
-  '''),
+}
+  ''') as Map<String, dynamic>,
   );
   static String channel2ExpectId = "9b3chwrm7f";
   static String channel2ExpectName = "Misskeyアークナイツ部";

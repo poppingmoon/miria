@@ -30,7 +30,7 @@ class AccountRepository extends Notifier<List<Account>> {
     }
     try {
       state = (jsonDecode(storedData) as List)
-          .map((e) => Account.fromJson(e))
+          .map((e) => Account.fromJson(e as Map<String, dynamic>))
           .toList();
       _validatedAccts.clear();
     } catch (e) {
@@ -97,7 +97,7 @@ class AccountRepository extends Notifier<List<Account>> {
 
   Future<void> _validateMisskey(String server) async {
     //先にnodeInfoを取得する
-    final Response nodeInfo;
+    final Response<Map<String, dynamic>> nodeInfo;
 
     final Uri uri;
     try {
@@ -117,17 +117,21 @@ class AccountRepository extends Notifier<List<Account>> {
     } catch (e) {
       throw SpecifiedException("$server はMisskeyサーバーとして認識できませんでした。");
     }
-    final nodeInfoHref = nodeInfo.data["links"][0]["href"];
-    final nodeInfoHrefResponse = await ref.read(dioProvider).get(nodeInfoHref);
+    final links = nodeInfo.data!["links"] as List;
+    final link = links.first as Map<String, dynamic>;
+    final nodeInfoHref = link["href"] as String;
+    final nodeInfoHrefResponse =
+        await ref.read(dioProvider).get<Map<String, dynamic>>(nodeInfoHref);
     final nodeInfoResult = nodeInfoHrefResponse.data;
 
-    final software = nodeInfoResult["software"]["name"];
+    final software = nodeInfoResult!["software"] as Map<String, dynamic>;
+    final name = software["name"];
     // these software already known as unavailable this app
-    if (software == "mastodon" || software == "fedibird") {
-      throw SpecifiedException("Miriaは$softwareに未対応です。");
+    if (name == "mastodon" || name == "fedibird") {
+      throw SpecifiedException("Miriaは$nameに未対応です。");
     }
 
-    final version = nodeInfoResult["software"]["version"];
+    final version = software["version"];
 
     final endpoints = await Misskey(host: server, token: null).endpoints();
     if (!endpoints.contains("emojis")) {
@@ -196,6 +200,7 @@ class AccountRepository extends Notifier<List<Account>> {
 
   Future<void> reorder(int oldIndex, int newIndex) async {
     if (oldIndex < newIndex) {
+      // ignore: parameter_assignments
       newIndex -= 1;
     }
     final newState = state.toList();

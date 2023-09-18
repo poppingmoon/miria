@@ -113,7 +113,7 @@ class TabHeader extends ConsumerWidget {
           if (tabSetting.tabType == TabType.channel)
             IconButton(
               onPressed: () {
-                showDialog(
+                showDialog<void>(
                   context: context,
                   builder: (context) => ChannelDialog(
                     channelId: tabSetting.channelId ?? "",
@@ -144,7 +144,7 @@ class TabHeader extends ConsumerWidget {
             AnnoucementInfo(tabSetting: tabSetting),
             IconButton(
               onPressed: () {
-                showDialog(
+                showDialog<void>(
                   context: context,
                   builder: (context) => ServerDetailDialog(
                     account: tabSetting.account,
@@ -220,33 +220,25 @@ class TimelinePage extends ConsumerWidget {
                 },
               ),
             ),
-            Container(
-              // decoration: filteringInputEmoji.isEmpty
-              //     ? BoxDecoration(
-              //         border: Border(
-              //             top: BorderSide(
-              //                 color: Theme.of(context).primaryColor)))
-              //     : null,
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: TimelineNoteField(),
-                  ),
-                  IconButton(
-                    onPressed: ref
-                        .read(timelinePageControllerProvider.notifier)
-                        .note
-                        .expectFailure(context),
-                    icon: const Icon(Icons.edit),
-                  ),
-                  IconButton(
-                    onPressed: () => ref
-                        .read(timelinePageControllerProvider.notifier)
-                        .noteCreateRoute(context),
-                    icon: const Icon(Icons.keyboard_arrow_right),
-                  ),
-                ],
-              ),
+            Row(
+              children: [
+                const Expanded(
+                  child: TimelineNoteField(),
+                ),
+                IconButton(
+                  onPressed: ref
+                      .read(timelinePageControllerProvider.notifier)
+                      .note
+                      .expectFailure(context),
+                  icon: const Icon(Icons.edit),
+                ),
+                IconButton(
+                  onPressed: () => ref
+                      .read(timelinePageControllerProvider.notifier)
+                      .noteCreateRoute(context),
+                  icon: const Icon(Icons.keyboard_arrow_right),
+                ),
+              ],
             ),
             if (tabPosition == TabPosition.bottom &&
                 !ref.watch(timelineFocusNode).hasFocus)

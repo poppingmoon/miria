@@ -136,8 +136,7 @@ class NoteCreatePageState extends ConsumerState<NoteCreatePage> {
           title: const Text("ノート"),
           actions: [
             IconButton(
-              onPressed: () async =>
-                  await notifier.note().expectFailure(context),
+              onPressed: () => notifier.note().expectFailure(context),
               icon: const Icon(Icons.send),
             ),
           ],
@@ -169,8 +168,7 @@ class NoteCreatePageState extends ConsumerState<NoteCreatePage> {
                       Row(
                         children: [
                           IconButton(
-                            onPressed: () async =>
-                                await notifier.chooseFile(context),
+                            onPressed: () => notifier.chooseFile(context),
                             icon: const Icon(Icons.image),
                           ),
                           IconButton(

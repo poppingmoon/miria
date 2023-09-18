@@ -119,7 +119,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
   @override
   void didUpdateWidget(covariant MisskeyImage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (!const ListEquality()
+    if (!const ListEquality<String>()
         .equals(oldWidget.targetFiles, widget.targetFiles)) {
       cachedWidget = null;
     }
@@ -173,7 +173,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                 return;
               } else {
                 if (widget.fileType.startsWith("image")) {
-                  showDialog(
+                  showDialog<void>(
                     context: context,
                     builder: (context) => ImageDialog(
                       imageUrlList: widget.targetFiles,
@@ -236,7 +236,8 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                 }
 
                 return FutureBuilder(
-                  future: Future.delayed(const Duration(milliseconds: 100)),
+                  future:
+                      Future<void>.delayed(const Duration(milliseconds: 100)),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (widget.fileType.startsWith("image")) {

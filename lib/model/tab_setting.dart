@@ -25,7 +25,7 @@ class TabSetting with _$TabSetting {
     String? antennaId,
 
     /// ノートの投稿のキャプチャをするかどうか
-    @Default(true) isSubscribe,
+    @Default(true) bool isSubscribe,
 
     /// タブ名
     required String name,

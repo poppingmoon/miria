@@ -59,6 +59,7 @@ dependencies:
   scrollable_positioned_list: ^0.3.6
   share_plus: ^7.0.2
   shared_preferences: ^2.1.0
+  stack_trace: ^1.11.0
   tuple: ^2.0.1
   twemoji_v2: ^0.5.3
   url_launcher: ^6.1.10
@@ -93,6 +94,7 @@ dev_dependencies:
   json_serializable: ^6.6.1
   lint: ^2.1.2
   mockito: ^5.4.2
+  plugin_platform_interface: ^2.1.6
 
 flutter:
   uses-material-design: true

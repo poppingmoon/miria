@@ -27,7 +27,7 @@ class PhotoEdit with _$PhotoEdit {
     @Default(false) bool isInitialized,
     Uint8List? initialImage,
     Uint8List? editedImage,
-    @Default(Offset(0, 0)) Offset cropOffset,
+    @Default(Offset.zero) Offset cropOffset,
     @Default(Size.zero) Size cropSize,
     @Default(Size.zero) Size defaultSize,
     @Default(Size.zero) Size actualSize,
