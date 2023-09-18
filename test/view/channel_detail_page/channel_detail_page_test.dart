@@ -23,14 +23,14 @@ void main() {
           overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
           child: DefaultRootWidget(
             initialRoute: ChannelDetailRoute(
-                account: TestData.account, channelId: TestData.channel1.id),
-          )));
+                account: TestData.account, channelId: TestData.channel1.id,),
+          ),),);
       await tester.pumpAndSettle();
 
       expect(
           find.textContaining(TestData.expectChannel1DescriptionContaining,
-              findRichText: true),
-          findsOneWidget);
+              findRichText: true,),
+          findsOneWidget,);
     });
 
     testWidgets("チャンネルがセンシティブの場合、センシティブである旨が表示されること", (tester) async {
@@ -38,14 +38,14 @@ void main() {
       final misskey = MockMisskey();
       when(misskey.channels).thenReturn(channel);
       when(channel.show(any)).thenAnswer((_) async =>
-          TestData.channel1.copyWith(bannerUrl: null, isSensitive: true));
+          TestData.channel1.copyWith(bannerUrl: null, isSensitive: true),);
 
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
           child: DefaultRootWidget(
             initialRoute: ChannelDetailRoute(
-                account: TestData.account, channelId: TestData.channel1.id),
-          )));
+                account: TestData.account, channelId: TestData.channel1.id,),
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.textContaining("センシティブ"), findsOneWidget);
@@ -56,14 +56,14 @@ void main() {
       final misskey = MockMisskey();
       when(misskey.channels).thenReturn(channel);
       when(channel.show(any)).thenAnswer((_) async =>
-          TestData.channel1.copyWith(bannerUrl: null, isFavorited: false));
+          TestData.channel1.copyWith(bannerUrl: null, isFavorited: false),);
 
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
           child: DefaultRootWidget(
             initialRoute: ChannelDetailRoute(
-                account: TestData.account, channelId: TestData.channel1.id),
-          )));
+                account: TestData.account, channelId: TestData.channel1.id,),
+          ),),);
       await tester.pumpAndSettle();
 
       await tester.tap(find.text("お気に入りにいれる"));
@@ -71,7 +71,7 @@ void main() {
       expect(find.text("お気に入り中"), findsOneWidget);
 
       verify(channel.favorite(argThat(
-          equals(ChannelsFavoriteRequest(channelId: TestData.channel1.id)))));
+          equals(ChannelsFavoriteRequest(channelId: TestData.channel1.id)),),),);
     });
 
     testWidgets("チャンネルをお気に入りに設定している場合、お気に入りを解除できること", (tester) async {
@@ -79,14 +79,14 @@ void main() {
       final misskey = MockMisskey();
       when(misskey.channels).thenReturn(channel);
       when(channel.show(any)).thenAnswer((_) async =>
-          TestData.channel1.copyWith(bannerUrl: null, isFavorited: true));
+          TestData.channel1.copyWith(bannerUrl: null, isFavorited: true),);
 
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
           child: DefaultRootWidget(
             initialRoute: ChannelDetailRoute(
-                account: TestData.account, channelId: TestData.channel1.id),
-          )));
+                account: TestData.account, channelId: TestData.channel1.id,),
+          ),),);
       await tester.pumpAndSettle();
 
       await tester.tap(find.text("お気に入り中"));
@@ -94,7 +94,7 @@ void main() {
       expect(find.text("お気に入りにいれる"), findsOneWidget);
 
       verify(channel.unfavorite(argThat(
-          equals(ChannelsUnfavoriteRequest(channelId: TestData.channel1.id)))));
+          equals(ChannelsUnfavoriteRequest(channelId: TestData.channel1.id)),),),);
     });
 
     testWidgets("チャンネルをフォローしていない場合、フォローすることができること", (tester) async {
@@ -102,14 +102,14 @@ void main() {
       final misskey = MockMisskey();
       when(misskey.channels).thenReturn(channel);
       when(channel.show(any)).thenAnswer((_) async =>
-          TestData.channel1.copyWith(bannerUrl: null, isFollowing: false));
+          TestData.channel1.copyWith(bannerUrl: null, isFollowing: false),);
 
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
           child: DefaultRootWidget(
             initialRoute: ChannelDetailRoute(
-                account: TestData.account, channelId: TestData.channel1.id),
-          )));
+                account: TestData.account, channelId: TestData.channel1.id,),
+          ),),);
       await tester.pumpAndSettle();
 
       await tester.tap(find.text("フォローする"));
@@ -117,7 +117,7 @@ void main() {
       expect(find.text("フォローしています"), findsOneWidget);
 
       verify(channel.follow(argThat(
-          equals(ChannelsFollowRequest(channelId: TestData.channel1.id)))));
+          equals(ChannelsFollowRequest(channelId: TestData.channel1.id)),),),);
     });
 
     testWidgets("チャンネルをフォローしている場合、フォロー解除をすることができること", (tester) async {
@@ -125,14 +125,14 @@ void main() {
       final misskey = MockMisskey();
       when(misskey.channels).thenReturn(channel);
       when(channel.show(any)).thenAnswer((_) async =>
-          TestData.channel1.copyWith(bannerUrl: null, isFollowing: true));
+          TestData.channel1.copyWith(bannerUrl: null, isFollowing: true),);
 
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
           child: DefaultRootWidget(
             initialRoute: ChannelDetailRoute(
-                account: TestData.account, channelId: TestData.channel1.id),
-          )));
+                account: TestData.account, channelId: TestData.channel1.id,),
+          ),),);
       await tester.pumpAndSettle();
 
       await tester.tap(find.text("フォローしています"));
@@ -140,7 +140,7 @@ void main() {
       expect(find.text("フォローする"), findsOneWidget);
 
       verify(channel.unfollow(argThat(
-          equals(ChannelsUnfollowRequest(channelId: TestData.channel1.id)))));
+          equals(ChannelsUnfollowRequest(channelId: TestData.channel1.id)),),),);
     });
   });
 
@@ -150,7 +150,7 @@ void main() {
       final misskey = MockMisskey();
       when(misskey.channels).thenReturn(channel);
       when(channel.show(any)).thenAnswer((_) async =>
-          TestData.channel1.copyWith(bannerUrl: null, isFollowing: false));
+          TestData.channel1.copyWith(bannerUrl: null, isFollowing: false),);
       when(channel.timeline(any))
           .thenAnswer((realInvocation) async => [TestData.note1]);
 
@@ -158,8 +158,8 @@ void main() {
           overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
           child: DefaultRootWidget(
             initialRoute: ChannelDetailRoute(
-                account: TestData.account, channelId: TestData.channel1.id),
-          )));
+                account: TestData.account, channelId: TestData.channel1.id,),
+          ),),);
       await tester.pumpAndSettle();
 
       await tester.tap(find.text("タイムライン"));
@@ -167,12 +167,12 @@ void main() {
 
       expect(find.text(TestData.note1.text!), findsOneWidget);
       verify(channel.timeline(argThat(predicate<ChannelsTimelineRequest>(
-          (e) => e.channelId == TestData.channel1.id))));
+          (e) => e.channelId == TestData.channel1.id,),),),);
 
       await tester.pageNation();
       verify(channel.timeline(argThat(predicate<ChannelsTimelineRequest>((e) =>
           e.channelId == TestData.channel1.id &&
-          e.untilId == TestData.note1.id))));
+          e.untilId == TestData.note1.id,),),),);
     });
   });
 }

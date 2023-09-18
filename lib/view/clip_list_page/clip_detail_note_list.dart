@@ -31,6 +31,6 @@ class ClipDetailNoteList extends ConsumerWidget {
       return response.toList();
     }, itemBuilder: (context, item) {
       return MisskeyNote(note: item);
-    });
+    },);
   }
 }

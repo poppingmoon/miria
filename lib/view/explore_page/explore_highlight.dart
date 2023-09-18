@@ -36,12 +36,12 @@ class ExploreHighlightState extends ConsumerState<ExploreHighlight> {
                                   .toggleButtonsTheme
                                   .borderWidth!
                                   .toInt() *
-                              2),
+                              2,),
                   onPressed: (index) => setState(() {
                         isNote = index == 0;
                       }),
                   isSelected: [isNote, !isNote],
-                  children: const [Text("ノート"), Text("アンケート")]),
+                  children: const [Text("ノート"), Text("アンケート")],),
             ),
           ),
           Expanded(
@@ -73,14 +73,14 @@ class ExploreHighlightState extends ConsumerState<ExploreHighlight> {
                       .featured(NotesFeaturedRequest(
                         offset: index,
                         untilId: item.id,
-                      ));
+                      ),);
                 } else {
                   note = await ref
                       .read(misskeyProvider(account))
                       .notes
                       .polls
                       .recommendation(
-                          NotesPollsRecommendationRequest(offset: index));
+                          NotesPollsRecommendationRequest(offset: index),);
                 }
                 ref.read(notesProvider(account)).registerAll(note);
 
@@ -88,7 +88,7 @@ class ExploreHighlightState extends ConsumerState<ExploreHighlight> {
               },
               itemBuilder: (context, item) => MisskeyNote(note: item),
             ),
-          )
+          ),
         ],
       ),
     );

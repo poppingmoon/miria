@@ -22,7 +22,7 @@ class ChannelTimeline extends ConsumerWidget {
               .read(misskeyProvider(account))
               .channels
               .timeline(
-                  ChannelsTimelineRequest(channelId: channelId, limit: 30));
+                  ChannelsTimelineRequest(channelId: channelId, limit: 30),);
           ref.read(notesProvider(account)).registerAll(response);
           return response.toList();
         },
@@ -31,10 +31,10 @@ class ChannelTimeline extends ConsumerWidget {
               .read(misskeyProvider(account))
               .channels
               .timeline(ChannelsTimelineRequest(
-                  channelId: channelId, untilId: lastItem.id, limit: 30));
+                  channelId: channelId, untilId: lastItem.id, limit: 30,),);
           ref.read(notesProvider(account)).registerAll(response);
           return response.toList();
         },
-        itemBuilder: (context, item) => MisskeyNote(note: item));
+        itemBuilder: (context, item) => MisskeyNote(note: item),);
   }
 }

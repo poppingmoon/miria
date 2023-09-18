@@ -20,7 +20,7 @@ class EditedPhotoImage extends ConsumerWidget {
           child: Padding(
               padding:
                   EdgeInsets.all(10 * (defaultSize.width / actualSize.width)),
-              child: Image.memory(image)));
+              child: Image.memory(image),),);
     }
     return const Positioned(
       child: SizedBox.shrink(),

@@ -27,12 +27,12 @@ class PasswordLoginState extends ConsumerState<PasswordLogin> {
 
   Future<void> login() async {
     await ref.read(accountRepository).loginAsPassword(
-        serverController.text, userController.text, passwordController.text);
+        serverController.text, userController.text, passwordController.text,);
 
     if (!mounted) return;
     context.pushRoute(TimeLineRoute(
         initialTabSetting:
-            ref.read(tabSettingsRepositoryProvider).tabSettings.first));
+            ref.read(tabSettingsRepositoryProvider).tabSettings.first,),);
   }
 
   @override
@@ -58,35 +58,35 @@ class PasswordLoginState extends ConsumerState<PasswordLogin> {
                     decoration:
                         const InputDecoration(prefixIcon: Icon(Icons.dns)),
                   ),
-                ]),
+                ],),
                 TableRow(children: [
                   const Padding(padding: EdgeInsets.only(bottom: 10)),
-                  Container()
-                ]),
+                  Container(),
+                ],),
                 TableRow(children: [
                   const Text("ユーザー名"),
                   TextField(
                       enabled: false,
                       controller: userController,
                       decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.account_circle)))
-                ]),
+                          prefixIcon: Icon(Icons.account_circle),),),
+                ],),
                 TableRow(children: [
                   const Padding(padding: EdgeInsets.only(bottom: 10)),
-                  Container()
-                ]),
+                  Container(),
+                ],),
                 TableRow(children: [
                   const Padding(
                       padding: EdgeInsets.only(right: 20),
-                      child: Text("パスワード")),
+                      child: Text("パスワード"),),
                   TextField(
                     enabled: false,
                     controller: passwordController,
                     decoration:
                         const InputDecoration(prefixIcon: Icon(Icons.key)),
                     obscureText: true,
-                  )
-                ]),
+                  ),
+                ],),
                 TableRow(children: [
                   Container(),
                   Padding(
@@ -95,10 +95,10 @@ class PasswordLoginState extends ConsumerState<PasswordLogin> {
                         onPressed: () {
                           login();
                         },
-                        child: const Text("ログイン")),
-                  )
-                ])
-              ])
-        ]));
+                        child: const Text("ログイン"),),
+                  ),
+                ],),
+              ],),
+        ],),);
   }
 }

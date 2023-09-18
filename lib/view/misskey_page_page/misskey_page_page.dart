@@ -43,21 +43,19 @@ class MisskeyPagePage extends ConsumerWidget {
                 constraints: const BoxConstraints(maxWidth: 800),
                 child: SingleChildScrollView(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
                     children: [
                       MfmText(
                           mfmText: page.title,
-                          style: Theme.of(context).textTheme.headlineSmall),
+                          style: Theme.of(context).textTheme.headlineSmall,),
                       MfmText(
                           mfmText: page.summary ?? "",
-                          style: Theme.of(context).textTheme.bodySmall),
+                          style: Theme.of(context).textTheme.bodySmall,),
                       const Divider(),
                       if (page.eyeCatchingImage != null)
                         NetworkImageView(
                             url: page.eyeCatchingImage!.url,
-                            type: ImageType.image),
+                            type: ImageType.image,),
                       for (final content in page.content)
                         PageContent(content: content, page: page),
                       const Divider(),
@@ -79,8 +77,8 @@ class MisskeyPagePage extends ConsumerWidget {
                                 pathSegments: [
                                   "@${page.user.username}",
                                   "pages",
-                                  page.name
-                                ])),
+                                  page.name,
+                                ],),),
                             child: Text(
                               "ブラウザで表示する",
                               style: AppTheme.of(context).linkStyle,
@@ -92,11 +90,10 @@ class MisskeyPagePage extends ConsumerWidget {
                         alignment: Alignment.centerRight,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text("作成日: ${page.createdAt.format}"),
-                            Text("更新日: ${page.updatedAt.format}")
+                            Text("更新日: ${page.updatedAt.format}"),
                           ],
                         ),
                       ),
@@ -106,7 +103,7 @@ class MisskeyPagePage extends ConsumerWidget {
               ),
             ),
           ),
-        ));
+        ),);
   }
 }
 
@@ -137,9 +134,9 @@ class PageContent extends ConsumerWidget {
             onTap: () => showDialog(
                 context: context,
                 builder: (context) =>
-                    ImageDialog(imageUrlList: [url], initialPage: 0)),
+                    ImageDialog(imageUrlList: [url], initialPage: 0),),
             child: NetworkImageView(
-                url: thumbnailUrl ?? url, type: ImageType.image));
+                url: thumbnailUrl ?? url, type: ImageType.image,),);
       } else {
         return const SizedBox.shrink();
       }
@@ -162,25 +159,23 @@ class PageContent extends ConsumerWidget {
         } else {
           return const Center(
             child: SizedBox(
-                width: 20, height: 20, child: CircularProgressIndicator()),
+                width: 20, height: 20, child: CircularProgressIndicator(),),
           );
         }
-      });
+      },);
     }
     if (content is misskey.PageSection) {
       return Padding(
         padding: const EdgeInsets.only(left: 5, right: 5),
         child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
             children: [
               MfmText(
                   mfmText: content.title ?? "",
-                  style: Theme.of(context).textTheme.titleLarge),
+                  style: Theme.of(context).textTheme.titleLarge,),
               for (final child in content.children)
-                PageContent(content: child, page: page)
-            ]),
+                PageContent(content: child, page: page),
+            ],),
       );
     }
 
@@ -192,7 +187,7 @@ class PageContent extends ConsumerWidget {
             padding: EdgeInsets.all(8.0),
             child: Text("Miriaが対応していないページやわ　ブラウザで見てな"),
           ),
-        ]),
+        ],),
       ),
     );
   }
@@ -236,7 +231,7 @@ class PageLikeButtonState extends ConsumerState<PageLikeButton> {
         }.expectFailure(context),
         icon: Icon(Icons.favorite,
             size: (Theme.of(context).textTheme.bodyMedium?.fontSize ?? 22) *
-                MediaQuery.of(context).textScaleFactor),
+                MediaQuery.of(context).textScaleFactor,),
         label: Text(likeCount.format()),
       );
     } else {
@@ -257,8 +252,8 @@ class PageLikeButtonState extends ConsumerState<PageLikeButton> {
           }.expectFailure(context),
           icon: Icon(Icons.favorite,
               size: (Theme.of(context).textTheme.bodyMedium?.fontSize ?? 22) *
-                  MediaQuery.of(context).textScaleFactor),
-          label: Text(likeCount.format()));
+                  MediaQuery.of(context).textScaleFactor,),
+          label: Text(likeCount.format()),);
     }
   }
 }

@@ -21,9 +21,9 @@ enum ExploreUserType {
 
 class ExploreUsersState extends ConsumerState<ExploreUsers> {
   final List<User> pinnedUser = [];
-  var exploreUserType = ExploreUserType.pinned;
-  var sortType = UsersSortType.followerDescendant;
-  var isDetailOpen = false;
+  ExploreUserType exploreUserType = ExploreUserType.pinned;
+  UsersSortType sortType = UsersSortType.followerDescendant;
+  bool isDetailOpen = false;
 
   @override
   void didChangeDependencies() {
@@ -45,7 +45,6 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
@@ -63,20 +62,20 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
                                             .toggleButtonsTheme
                                             .borderWidth!
                                             .toInt() *
-                                        3),
+                                        3,),
                             onPressed: (index) => setState(() {
                                   exploreUserType =
                                       ExploreUserType.values[index];
                                 }),
                             isSelected: [
                               for (final element in ExploreUserType.values)
-                                element == exploreUserType
+                                element == exploreUserType,
                             ],
                             children: const [
                               Text("ピンどめ"),
                               Text("ローカル"),
                               Text("リモート"),
-                            ]),
+                            ],),
                       ),
                     ),
                   ),
@@ -90,7 +89,7 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
                             },
                       icon: Icon(isDetailOpen
                           ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down)),
+                          : Icons.keyboard_arrow_down,),),
                 ],
               ),
               if (isDetailOpen) ...[
@@ -103,15 +102,15 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
                             for (final sortType in UsersSortType.values)
                               DropdownMenuItem(
                                   value: sortType,
-                                  child: Text(sortType.displayName))
+                                  child: Text(sortType.displayName),),
                           ],
                           value: sortType,
                           onChanged: (e) {
                             setState(() {
                               sortType = e ?? UsersSortType.followerDescendant;
                             });
-                          }),
-                    )
+                          },),
+                    ),
                   ],
                 ),
               ],
@@ -140,7 +139,7 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
                         origin: exploreUserType == ExploreUserType.remote
                             ? Origin.remote
                             : Origin.local,
-                      ));
+                      ),);
                   return response.toList();
                 },
                 nextFuture: (_, index) async {
@@ -154,12 +153,12 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
                         origin: exploreUserType == ExploreUserType.remote
                             ? Origin.remote
                             : Origin.local,
-                      ));
+                      ),);
                   return response.toList();
                 },
                 itemBuilder: (context, user) => UserListItem(user: user),
               ),
-            )
+            ),
         ],
       ),
     );

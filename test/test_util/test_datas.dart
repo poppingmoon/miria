@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
+import 'package:json5/json5.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/misskey_emoji_data.dart';
 import 'package:miria/repository/emoji_repository.dart';
 import 'package:misskey_dart/misskey_dart.dart';
-import 'package:json5/json5.dart';
 
 class TestData {
   static Account account =
@@ -332,12 +332,12 @@ class TestData {
   securityKeysList: [],
 }
 
-"""));
+"""),);
 
   // note
 
   /// 自身のノート（藍ちゃん）１
-  static Note note1 = Note.fromJson(JSON5.parse(r'''
+  static Note note1 = Note.fromJson(JSON5.parse('''
 {
   id: '9g3rcngj3e',
   createdAt: '2023-06-17T16:08:52.675Z',
@@ -378,7 +378,7 @@ class TestData {
   renoteId: null,
 }  
   
-  '''));
+  '''),);
 
   static Note note2 = Note.fromJson(JSON5.parse(r'''
 {
@@ -416,10 +416,10 @@ class TestData {
   replyId: null,
   renoteId: null,
 }  
-  '''));
+  '''),);
 
   /// 自身でないノート１
-  static Note note3AsAnotherUser = Note.fromJson(JSON5.parse(r'''
+  static Note note3AsAnotherUser = Note.fromJson(JSON5.parse('''
 {
   id: '9g2ja0y8ix',
   createdAt: '2023-06-16T19:35:07.088Z',
@@ -461,7 +461,7 @@ class TestData {
   replyId: null,
   renoteId: null,
 }  
-  '''));
+  '''),);
 
   /// 自身のノート（投票込みのノート）
   static Note note4AsVote = Note.fromJson(JSON5.parse('''
@@ -530,7 +530,7 @@ class TestData {
   },
 }
 
-'''));
+'''),);
 
   /// 自身でないノート２
   static Note note5AsAnotherUser = Note.fromJson(JSON5.parse(r'''
@@ -642,7 +642,7 @@ class TestData {
   renoteId: null,
   myReaction: ':ultra_igyo@.:',
 }  
-  '''));
+  '''),);
 
   /// Renote
   static Note note6AsRenote = Note.fromJson(JSON5.parse('''
@@ -735,24 +735,24 @@ class TestData {
       myReaction: ':miria@.:',
     },
   }
-'''));
+'''),);
 
   // ドライブ（フォルダ）
-  static DriveFolder folder1 = DriveFolder.fromJson(JSON5.parse(r'''
+  static DriveFolder folder1 = DriveFolder.fromJson(JSON5.parse('''
   {
     id: '9ettn0mv95',
     createdAt: '2023-05-16T12:35:31.447Z',
     name: '秘蔵の藍ちゃんフォルダ',
     parentId: null,
-  }'''));
+  }'''),);
 
-  static DriveFolder folder1Child = DriveFolder.fromJson(JSON5.parse(r'''
+  static DriveFolder folder1Child = DriveFolder.fromJson(JSON5.parse('''
   {
     id: '9ettn0mv95',
     createdAt: '2023-05-16T12:35:31.447Z',
     name: 'えっちなやつ',
     parentId: '9ettn0mv95',
-  }'''));
+  }'''),);
 
   // ドライブ（ファイル）
   static DriveFile drive1 = DriveFile.fromJson(JSON5.parse(r'''
@@ -777,9 +777,9 @@ class TestData {
     userId: null,
     user: null,
   }  
-  '''));
+  '''),);
 
-  static DriveFile drive2AsVideo = DriveFile.fromJson(JSON5.parse(r'''
+  static DriveFile drive2AsVideo = DriveFile.fromJson(JSON5.parse('''
 {
   id: '9g0kvlw8d3',
   createdAt: '2023-06-15T10:44:21.272Z',
@@ -798,18 +798,18 @@ class TestData {
   userId: null,
   user: null,
 }
-  '''));
+  '''),);
 
   static Future<Uint8List> get binaryImage async => Uint8List.fromList(
-      (await rootBundle.load("assets/images/icon.png")).buffer.asUint8List());
+      (await rootBundle.load("assets/images/icon.png")).buffer.asUint8List(),);
 
   static Future<Response<Uint8List>> get binaryImageResponse async => Response(
       requestOptions: RequestOptions(),
       statusCode: 200,
-      data: await binaryImage);
+      data: await binaryImage,);
 
   // ユーザー情報
-  static User user1 = User.fromJson(JSON5.parse(r'''
+  static User user1 = User.fromJson(JSON5.parse('''
 {
   id: '7rkr3b1c1c',
   name: '藍',
@@ -822,7 +822,7 @@ class TestData {
   emojis: {},
   onlineStatus: 'online',
   badgeRoles: [],
-}'''));
+}'''),);
   static String user1ExpectId = "7rkr3b1c1c";
 
   static User detailedUser1 = User.fromJson(JSON5.parse(r'''
@@ -992,7 +992,7 @@ class TestData {
   isBlocked: false,
   isMuted: false,
   isRenoteMuted: false,
-}  '''));
+}  '''),);
 
   static User detailedUser2 = User.fromJson(JSON5.parse(r'''
 {
@@ -1101,7 +1101,7 @@ class TestData {
   isBlocked: false,
   isMuted: false,
   isRenoteMuted: false,
-}'''));
+}'''),);
 
   static String detailedUser2ExpectedId = "9gbzuv2cze";
 
@@ -1216,7 +1216,7 @@ class TestData {
   isRenoteMuted: false,
 }  
   
-  '''));
+  '''),);
 
   static UsersShowResponse usersShowResponse2 =
       UsersShowResponse.fromJson(JSON5.parse(r'''
@@ -1390,7 +1390,7 @@ class TestData {
   isRenoteMuted: false,
 }  
   
-  '''));
+  '''),);
 
   static UsersShowResponse usersShowResponse3AsRemoteUser =
       UsersShowResponse.fromJson(JSON5.parse(r'''
@@ -1471,7 +1471,7 @@ class TestData {
   isMuted: false,
   isRenoteMuted: false,
 }
-'''));
+'''),);
 
   static UsersShowResponse usersShowResponse3AsLocalUser =
       UsersShowResponse.fromJson(JSON5.parse('''
@@ -1558,7 +1558,7 @@ class TestData {
   notify: 'none',
 }
 
-'''));
+'''),);
 
   // カスタム絵文字
   static UnicodeEmojiData unicodeEmoji1 = const UnicodeEmojiData(char: "♥");
@@ -1567,14 +1567,14 @@ class TestData {
       hostedName: "misskey.io",
       url: Uri.parse("https://s3.arkjp.net/emoji/ai_yay.apng"),
       isCurrentServer: true,
-      isSensitive: false);
+      isSensitive: false,);
 
   static EmojiRepositoryData unicodeEmojiRepositoryData1 = EmojiRepositoryData(
       emoji: unicodeEmoji1,
       category: "symbols",
       kanaName: "へあt",
       aliases: ["heart", "ハート"],
-      kanaAliases: ["へあt", "ハート"]);
+      kanaAliases: ["へあt", "ハート"],);
 
   static EmojiRepositoryData customEmojiRepositoryData1 = EmojiRepositoryData(
       emoji: customEmoji1,
@@ -1629,7 +1629,7 @@ class TestData {
         'やy',
         'あい',
         'pらいせ',
-      ]);
+      ],);
 
   // チャンネル
   static CommunityChannel channel1 = CommunityChannel.fromJson(JSON5.parse(r'''
@@ -1650,7 +1650,7 @@ class TestData {
     isFavorited: true,
     hasUnreadNote: false,
   }
-  '''));
+  '''),);
 
   static String expectChannel1DescriptionContaining = "ありがとうブルーアーカイブ";
 
@@ -1674,10 +1674,10 @@ class TestData {
   isFavorited: true,
   hasUnreadNote: false,
 }  
-  '''));
+  '''),);
 
   // アンテナ
-  static Antenna antenna = Antenna.fromJson(JSON5.parse(r'''
+  static Antenna antenna = Antenna.fromJson(JSON5.parse('''
 {
     id: '9f7kcbzcoe',
     createdAt: '2023-05-26T03:24:02.856Z',
@@ -1710,9 +1710,9 @@ class TestData {
     isActive: true,
     hasUnreadNote: false,
   }
-'''));
+'''),);
 
-  static Clip clip = Clip.fromJson(JSON5.parse(r'''
+  static Clip clip = Clip.fromJson(JSON5.parse('''
 {
     id: '9crm7l2n4k',
     createdAt: '2023-03-25T14:12:37.103Z',
@@ -1738,7 +1738,7 @@ class TestData {
     isFavorited: false,
   }
 
-'''));
+'''),);
 
   static RolesListResponse role = RolesListResponse.fromJson(JSON5.parse('''
 {
@@ -1896,10 +1896,10 @@ class TestData {
     },
     usersCount: 0,
   }
-'''));
+'''),);
 
   static HashtagsTrendResponse hashtagTrends =
-      HashtagsTrendResponse.fromJson(JSON5.parse(r'''
+      HashtagsTrendResponse.fromJson(JSON5.parse('''
 {
     tag: 'ろぐぼチャレンジ',
     chart: [
@@ -1926,9 +1926,9 @@ class TestData {
     ],
     usersCount: 15,
   }
-'''));
+'''),);
 
-  static Hashtag hashtag = Hashtag.fromJson(JSON5.parse(r'''
+  static Hashtag hashtag = Hashtag.fromJson(JSON5.parse('''
 {
     tag: 'アークナイツ',
     mentionedUsersCount: 531,
@@ -1938,11 +1938,10 @@ class TestData {
     attachedLocalUsersCount: 2,
     attachedRemoteUsersCount: 65,
   }
-'''));
+'''),);
 
   // Dio
   static DioError response404 = DioError(
       requestOptions: RequestOptions(),
-      response: Response(requestOptions: RequestOptions(), statusCode: 404),
-      type: DioErrorType.unknown);
+      response: Response(requestOptions: RequestOptions(), statusCode: 404),);
 }

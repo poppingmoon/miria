@@ -57,8 +57,8 @@ class UserListSelectDialogState extends ConsumerState<UserListSelectDialog> {
                           onTap: () {
                             Navigator.of(context).pop(userLists[index]);
                           },
-                          title: Text(userLists[index].name ?? ""));
-                    }),
+                          title: Text(userLists[index].name ?? ""),);
+                    },),
               ],
             ),
           ),

@@ -20,7 +20,7 @@ class FederationCustomEmojis extends ConsumerStatefulWidget {
 
 class FederationCustomEmojisState
     extends ConsumerState<FederationCustomEmojis> {
-  var isLoading = false;
+  bool isLoading = false;
   (Object?, StackTrace)? error;
 
   Map<String, List<Emoji>> emojis = {};
@@ -62,14 +62,12 @@ class FederationCustomEmojisState
                 width: double.infinity,
                 child: Padding(
                   padding: const EdgeInsets.only(
-                      left: 10, right: 10, top: 5, bottom: 5),
+                      left: 10, right: 10, top: 5, bottom: 5,),
                   child: Card(
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          left: 10, right: 10, bottom: 10),
+                          left: 10, right: 10, bottom: 10,),
                       child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text.rich(TextSpan(children: [
@@ -80,13 +78,13 @@ class FederationCustomEmojisState
                                       hostedName: widget.host,
                                       url: element.url,
                                       isCurrentServer: false,
-                                      isSensitive: element.isSensitive),
+                                      isSensitive: element.isSensitive,),
                                   fontSizeRatio: 2,
                                 ),
-                                alignment: PlaceholderAlignment.middle),
+                                alignment: PlaceholderAlignment.middle,),
                             const WidgetSpan(
                                 child: Padding(
-                                    padding: EdgeInsets.only(left: 10))),
+                                    padding: EdgeInsets.only(left: 10),),),
                             TextSpan(
                               text: ":${element.name}:",
                               style: Theme.of(context).textTheme.titleMedium,
@@ -95,7 +93,7 @@ class FederationCustomEmojisState
                               WidgetSpan(
                                   child: Container(
                                 decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColor),
+                                    color: Theme.of(context).primaryColor,),
                                 child: Padding(
                                   padding:
                                       const EdgeInsets.only(left: 3, right: 3),
@@ -107,21 +105,21 @@ class FederationCustomEmojisState
                                         ?.copyWith(color: Colors.white),
                                   ),
                                 ),
-                              )),
-                          ])),
+                              ),),
+                          ],),),
                           if (element.aliases.isNotEmpty) ...[
                             const Padding(padding: EdgeInsets.only(top: 10)),
                             Text(
                               element.aliases.join(" "),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
-                          ]
+                          ],
                         ],
                       ),
                     ),
                   ),
                 ),
-              )
+              ),
           ],
         );
       },

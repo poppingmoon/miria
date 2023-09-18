@@ -19,13 +19,13 @@ void main() {
         final misskey = MockMisskey();
         when(misskey.channels).thenReturn(channel);
         when(channel.search(any)).thenAnswer(
-            (_) async => [TestData.channel1.copyWith(bannerUrl: null)]);
+            (_) async => [TestData.channel1.copyWith(bannerUrl: null)],);
 
         await tester.pumpWidget(ProviderScope(
             overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
             child: DefaultRootWidget(
               initialRoute: ChannelsRoute(account: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.text("検索"));
@@ -37,11 +37,11 @@ void main() {
 
         expect(find.text(TestData.channel1.name), findsOneWidget);
         verify(channel.search(
-            argThat(equals(const ChannelsSearchRequest(query: "ゲーム開発部")))));
+            argThat(equals(const ChannelsSearchRequest(query: "ゲーム開発部"))),),);
 
         await tester.pageNation();
         verify(channel.search(argThat(equals(ChannelsSearchRequest(
-            query: "ゲーム開発部", untilId: TestData.channel1.id)))));
+            query: "ゲーム開発部", untilId: TestData.channel1.id,),),),),);
       });
     });
 
@@ -51,13 +51,13 @@ void main() {
         final misskey = MockMisskey();
         when(misskey.channels).thenReturn(channel);
         when(channel.featured()).thenAnswer(
-            (_) async => [TestData.channel1.copyWith(bannerUrl: null)]);
+            (_) async => [TestData.channel1.copyWith(bannerUrl: null)],);
 
         await tester.pumpWidget(ProviderScope(
             overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
             child: DefaultRootWidget(
               initialRoute: ChannelsRoute(account: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.text("トレンド"));
@@ -73,13 +73,13 @@ void main() {
         final misskey = MockMisskey();
         when(misskey.channels).thenReturn(channel);
         when(channel.myFavorite(any)).thenAnswer(
-            (_) async => [TestData.channel1.copyWith(bannerUrl: null)]);
+            (_) async => [TestData.channel1.copyWith(bannerUrl: null)],);
 
         await tester.pumpWidget(ProviderScope(
             overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
             child: DefaultRootWidget(
               initialRoute: ChannelsRoute(account: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.text("お気に入り"));
@@ -87,7 +87,7 @@ void main() {
 
         expect(find.text(TestData.channel1.name), findsOneWidget);
         verify(channel
-            .myFavorite(argThat(equals(const ChannelsMyFavoriteRequest()))));
+            .myFavorite(argThat(equals(const ChannelsMyFavoriteRequest()))),);
       });
     });
 
@@ -97,13 +97,13 @@ void main() {
         final misskey = MockMisskey();
         when(misskey.channels).thenReturn(channel);
         when(channel.followed(any)).thenAnswer(
-            (_) async => [TestData.channel1.copyWith(bannerUrl: null)]);
+            (_) async => [TestData.channel1.copyWith(bannerUrl: null)],);
 
         await tester.pumpWidget(ProviderScope(
             overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
             child: DefaultRootWidget(
               initialRoute: ChannelsRoute(account: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.text("フォロー中"));
@@ -111,10 +111,10 @@ void main() {
 
         expect(find.text(TestData.channel1.name), findsOneWidget);
         verify(
-            channel.followed(argThat(equals(const ChannelsFollowedRequest()))));
+            channel.followed(argThat(equals(const ChannelsFollowedRequest()))),);
         await tester.pageNation();
         verify(channel.followed(argThat(
-            equals(ChannelsFollowedRequest(untilId: TestData.channel1.id)))));
+            equals(ChannelsFollowedRequest(untilId: TestData.channel1.id)),),),);
       });
     });
   });

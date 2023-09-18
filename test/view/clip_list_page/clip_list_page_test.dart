@@ -20,7 +20,7 @@ void main() {
           overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
           child: DefaultRootWidget(
             initialRoute: ClipListRoute(account: TestData.account),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text(TestData.clip.name!), findsOneWidget);

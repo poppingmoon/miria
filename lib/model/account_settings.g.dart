@@ -16,12 +16,11 @@ _$AccountSettingsImpl _$$AccountSettingsImplFromJson(
               .toList() ??
           const [],
       defaultNoteVisibility: $enumDecodeNullable(
-              _$NoteVisibilityEnumMap, json['defaultNoteVisibility']) ??
+              _$NoteVisibilityEnumMap, json['defaultNoteVisibility'],) ??
           NoteVisibility.public,
       defaultIsLocalOnly: json['defaultIsLocalOnly'] as bool? ?? false,
       defaultReactionAcceptance: $enumDecodeNullable(
-              _$ReactionAcceptanceEnumMap, json['defaultReactionAcceptance']) ??
-          null,
+              _$ReactionAcceptanceEnumMap, json['defaultReactionAcceptance'],),
     );
 
 Map<String, dynamic> _$$AccountSettingsImplToJson(
@@ -31,7 +30,7 @@ Map<String, dynamic> _$$AccountSettingsImplToJson(
       'host': instance.host,
       'reactions': instance.reactions,
       'defaultNoteVisibility':
-          _$NoteVisibilityEnumMap[instance.defaultNoteVisibility]!,
+          _$NoteVisibilityEnumMap[instance.defaultNoteVisibility],
       'defaultIsLocalOnly': instance.defaultIsLocalOnly,
       'defaultReactionAcceptance':
           _$ReactionAcceptanceEnumMap[instance.defaultReactionAcceptance],

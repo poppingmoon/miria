@@ -45,7 +45,7 @@ class ReactionPickerContentState extends ConsumerState<ReactionPickerContent> {
               .toSet()
               .toList()
               .whereNotNull() ??
-          []);
+          [],);
   }
 
   @override
@@ -73,7 +73,6 @@ class ReactionPickerContentState extends ConsumerState<ReactionPickerContent> {
             child: Wrap(
               spacing: 5,
               runSpacing: 5,
-              crossAxisAlignment: WrapCrossAlignment.start,
               children: [
                 for (final emoji in emojis)
                   EmojiButton(
@@ -81,7 +80,7 @@ class ReactionPickerContentState extends ConsumerState<ReactionPickerContent> {
                     onTap: widget.onTap,
                     isForceVisible: true,
                     isAcceptSensitive: widget.isAcceptSensitive,
-                  )
+                  ),
               ],
             ),
           ),
@@ -99,23 +98,22 @@ class ReactionPickerContentState extends ConsumerState<ReactionPickerContent> {
                     child: Wrap(
                       spacing: 5,
                       runSpacing: 5,
-                      crossAxisAlignment: WrapCrossAlignment.start,
                       children: [
                         for (final emoji in (emojiRepository.emoji ?? []).where(
                             (element) =>
-                                element.category == categoryList[index]))
+                                element.category == categoryList[index],))
                           EmojiButton(
                             emoji: emoji.emoji,
                             onTap: widget.onTap,
                             isAcceptSensitive: widget.isAcceptSensitive,
-                          )
+                          ),
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -141,8 +139,8 @@ class EmojiButton extends ConsumerStatefulWidget {
 }
 
 class EmojiButtonState extends ConsumerState<EmojiButton> {
-  late var isVisibility = widget.isForceVisible;
-  late var isVisibilityOnceMore = widget.isForceVisible;
+  late bool isVisibility = widget.isForceVisible;
+  late bool isVisibilityOnceMore = widget.isForceVisible;
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +171,7 @@ class EmojiButtonState extends ConsumerState<EmojiButton> {
                   if (!isVisibility) return;
                   if (disabled) {
                     SimpleMessageDialog.show(
-                        context, "ここでセンシティブなカスタム絵文字を使われへんねやわ");
+                        context, "ここでセンシティブなカスタム絵文字を使われへんねやわ",);
                   } else {
                     widget.onTap.call(widget.emoji);
                   }
@@ -181,9 +179,9 @@ class EmojiButtonState extends ConsumerState<EmojiButton> {
                 child: isVisibility
                     ? SizedBox(
                         height: 32 * MediaQuery.of(context).textScaleFactor,
-                        child: CustomEmoji(emojiData: widget.emoji))
+                        child: CustomEmoji(emojiData: widget.emoji),)
                     : SizedBox(
                         width: 32 * MediaQuery.of(context).textScaleFactor,
-                        height: 32 * MediaQuery.of(context).textScaleFactor))));
+                        height: 32 * MediaQuery.of(context).textScaleFactor,),),),);
   }
 }

@@ -38,7 +38,7 @@ class ExploreRoleUsersPage extends ConsumerWidget {
                 .read(misskeyProvider(account))
                 .roles
                 .users(
-                    RolesUsersRequest(roleId: item.id, untilId: lastItem.id));
+                    RolesUsersRequest(roleId: item.id, untilId: lastItem.id),);
             return response.toList();
           },
           itemBuilder: (context, item) => UserListItem(user: item.user),

@@ -72,7 +72,7 @@ class EmojiRepositoryImpl extends EmojiRepository {
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
-        "emojis@${account.host}", jsonEncode(serverFetchData));
+        "emojis@${account.host}", jsonEncode(serverFetchData),);
     isNeedLoading = true;
   }
 
@@ -105,7 +105,7 @@ class EmojiRepositoryImpl extends EmojiRepository {
                       .toList(),
                   aliases: [e.name, ...e.keywords],
                   category: e.category,
-                ));
+                ),);
 
     emoji = response.emojis
         .map((e) => EmojiRepositoryData(
@@ -120,13 +120,13 @@ class EmojiRepositoryImpl extends EmojiRepository {
               kanaName: toH(format(e.name)),
               aliases: e.aliases,
               kanaAliases: e.aliases.map((e2) => format(toH(e2))).toList(),
-            ))
+            ),)
         .toList();
     emoji!.addAll(unicodeEmojis);
   }
 
   bool emojiSearchCondition(
-      String query, String convertedQuery, EmojiRepositoryData element) {
+      String query, String convertedQuery, EmojiRepositoryData element,) {
     if (query.length == 1) {
       return element.emoji.baseName == query ||
           element.aliases.any((element2) => element2 == query) ||
@@ -142,7 +142,7 @@ class EmojiRepositoryImpl extends EmojiRepository {
 
   @override
   Future<List<MisskeyEmojiData>> searchEmojis(String name,
-      {int limit = 30}) async {
+      {int limit = 30,}) async {
     if (name == "") {
       return defaultEmojis(limit: limit);
     }
@@ -156,16 +156,16 @@ class EmojiRepositoryImpl extends EmojiRepository {
                 if (a.emoji.baseName.contains(name)) a.emoji.baseName,
                 ...a.aliases.where((e2) => e2.contains(name)),
                 if (a.kanaName.contains(converted)) a.kanaName,
-                ...a.kanaAliases.where((e2) => e2.contains(converted))
+                ...a.kanaAliases.where((e2) => e2.contains(converted)),
               ].map((e) => e.length);
               final bValue = [
                 if (b.emoji.baseName.contains(name)) b.emoji.baseName,
                 ...b.aliases.where((element2) => element2.contains(name)),
                 if (b.kanaName.contains(converted)) b.kanaName,
-                ...b.kanaAliases.where((e2) => e2.contains(converted))
+                ...b.kanaAliases.where((e2) => e2.contains(converted)),
               ].map((e) => e.length);
 
-              var ret = aValue.min.compareTo(bValue.min);
+              final ret = aValue.min.compareTo(bValue.min);
               if (ret != 0) return ret;
               if (a.emoji is CustomEmojiData) return -1;
               return 0;
@@ -185,7 +185,7 @@ class EmojiRepositoryImpl extends EmojiRepository {
     } else {
       return reactionDeck
           .map((e) =>
-              emoji?.firstWhereOrNull((element) => element.emoji.baseName == e))
+              emoji?.firstWhereOrNull((element) => element.emoji.baseName == e),)
           .whereNotNull()
           .map((e) => e.emoji)
           .toList();

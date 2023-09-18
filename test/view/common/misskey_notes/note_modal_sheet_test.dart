@@ -17,7 +17,7 @@ void main() {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       final misskeyFavorites = MockMisskeyNotesFavorites();
       when(misskeyNotes.favorites).thenAnswer((e) => misskeyFavorites);
       when(misskey.notes).thenReturn(misskeyNotes);
@@ -29,22 +29,22 @@ void main() {
                   baseNote: TestData.note1,
                   targetNote: TestData.note1,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       await tester.tap(find.text("お気に入り"));
 
       verify(misskeyFavorites.create(argThat(
-          equals(NotesFavoritesCreateRequest(noteId: TestData.note1.id)))));
+          equals(NotesFavoritesCreateRequest(noteId: TestData.note1.id)),),),);
     });
 
     testWidgets("該当のノートがお気に入り済みの場合、お気に入り解除ができること", (tester) async {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: true, isMutedThread: false));
+          const NotesStateResponse(isFavorited: true, isMutedThread: false),);
       final misskeyFavorites = MockMisskeyNotesFavorites();
       when(misskeyNotes.favorites).thenAnswer((e) => misskeyFavorites);
       when(misskey.notes).thenReturn(misskeyNotes);
@@ -56,15 +56,15 @@ void main() {
                   baseNote: TestData.note1,
                   targetNote: TestData.note1,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       await tester.tap(find.text("お気に入り解除"));
 
       verify(misskeyFavorites.delete(argThat(
-          equals(NotesFavoritesDeleteRequest(noteId: TestData.note1.id)))));
+          equals(NotesFavoritesDeleteRequest(noteId: TestData.note1.id)),),),);
     });
   });
 
@@ -73,7 +73,7 @@ void main() {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       when(misskey.notes).thenReturn(misskeyNotes);
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
@@ -83,9 +83,9 @@ void main() {
                   baseNote: TestData.note1,
                   targetNote: TestData.note1,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       await tester.ensureVisible(find.text("削除する", skipOffstage: false));
@@ -97,14 +97,14 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(misskeyNotes.delete(
-          argThat(equals(NotesDeleteRequest(noteId: TestData.note1.id)))));
+          argThat(equals(NotesDeleteRequest(noteId: TestData.note1.id))),),);
     });
 
     testWidgets("Renoteのみのノートは削除できないこと", (tester) async {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       when(misskey.notes).thenReturn(misskeyNotes);
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
@@ -115,9 +115,9 @@ void main() {
                       .copyWith(text: null, renote: TestData.note2),
                   targetNote: TestData.note2,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text("削除する", skipOffstage: false), findsNothing);
@@ -128,7 +128,7 @@ void main() {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       when(misskey.notes).thenReturn(misskeyNotes);
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
@@ -139,9 +139,9 @@ void main() {
                       .copyWith(text: null, renote: TestData.note1),
                   targetNote: TestData.note1,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text("削除する", skipOffstage: false), findsNothing);
@@ -152,7 +152,7 @@ void main() {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       when(misskey.notes).thenReturn(misskeyNotes);
       final testNote = TestData.note1.copyWith(
         text: null,
@@ -167,9 +167,9 @@ void main() {
                   baseNote: testNote,
                   targetNote: testNote,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text("削除する", skipOffstage: false), findsOneWidget);
@@ -179,14 +179,14 @@ void main() {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       when(misskey.notes).thenReturn(misskeyNotes);
       final testNote = TestData.note1.copyWith(
           text: null,
           poll: NotePoll(choices: const [
             NotePollChoice(text: ":ai_yay:", votes: 1, isVoted: false),
-            NotePollChoice(text: ":ai_yay_superfast:", votes: 2, isVoted: false)
-          ], multiple: false, expiresAt: DateTime.now()));
+            NotePollChoice(text: ":ai_yay_superfast:", votes: 2, isVoted: false),
+          ], multiple: false, expiresAt: DateTime.now(),),);
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
           child: DefaultRootNoRouterWidget(
@@ -195,9 +195,9 @@ void main() {
                   baseNote: testNote,
                   targetNote: testNote,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text("削除する", skipOffstage: false), findsOneWidget);
@@ -207,7 +207,7 @@ void main() {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       when(misskey.notes).thenReturn(misskeyNotes);
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
@@ -218,9 +218,9 @@ void main() {
                       .copyWith(text: "やっほー", renote: TestData.note2),
                   targetNote: TestData.note2,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text("削除する", skipOffstage: false), findsOneWidget);
@@ -231,13 +231,13 @@ void main() {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       when(misskey.notes).thenReturn(misskeyNotes);
       final note = TestData.note1.copyWith(
           text: null,
           renote: TestData.note2,
           fileIds: [TestData.drive1.id],
-          files: [TestData.drive1]);
+          files: [TestData.drive1],);
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
           child: MaterialApp(
@@ -246,9 +246,9 @@ void main() {
                   baseNote: note,
                   targetNote: TestData.note2,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text("削除する", skipOffstage: false), findsOneWidget);
@@ -259,15 +259,15 @@ void main() {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       when(misskey.notes).thenReturn(misskeyNotes);
       final note = TestData.note1.copyWith(
           text: null,
           renote: TestData.note2,
           poll: NotePoll(choices: const [
             NotePollChoice(text: ":ai_yay:", votes: 1, isVoted: false),
-            NotePollChoice(text: ":ai_yay_superfast:", votes: 2, isVoted: false)
-          ], multiple: false, expiresAt: DateTime.now()));
+            NotePollChoice(text: ":ai_yay_superfast:", votes: 2, isVoted: false),
+          ], multiple: false, expiresAt: DateTime.now(),),);
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
           child: MaterialApp(
@@ -276,9 +276,9 @@ void main() {
                   baseNote: note,
                   targetNote: TestData.note2,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text("削除する", skipOffstage: false), findsOneWidget);
@@ -291,7 +291,7 @@ void main() {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       when(misskey.notes).thenReturn(misskeyNotes);
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
@@ -302,9 +302,9 @@ void main() {
                       .copyWith(text: null, renote: TestData.note2),
                   targetNote: TestData.note2,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       await tester.ensureVisible(find.text("リノートを解除する", skipOffstage: false));
@@ -313,14 +313,14 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(misskeyNotes.delete(
-          argThat(equals(NotesDeleteRequest(noteId: TestData.note1.id)))));
+          argThat(equals(NotesDeleteRequest(noteId: TestData.note1.id))),),);
     });
 
     testWidgets("自分がした引用Renoteをリノート解除できないこと", (tester) async {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       when(misskey.notes).thenReturn(misskeyNotes);
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
@@ -331,9 +331,9 @@ void main() {
                       .copyWith(text: "やっほー", renote: TestData.note2),
                   targetNote: TestData.note2,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text("リノートを解除する", skipOffstage: false), findsOneWidget);
@@ -343,13 +343,13 @@ void main() {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       when(misskey.notes).thenReturn(misskeyNotes);
       final note = TestData.note1.copyWith(
           text: null,
           renote: TestData.note2,
           fileIds: [TestData.drive1.id],
-          files: [TestData.drive1]);
+          files: [TestData.drive1],);
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
           child: MaterialApp(
@@ -358,9 +358,9 @@ void main() {
                   baseNote: note,
                   targetNote: TestData.note2,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text("リノートを解除する", skipOffstage: false), findsNothing);
@@ -370,15 +370,15 @@ void main() {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       when(misskey.notes).thenReturn(misskeyNotes);
       final note = TestData.note1.copyWith(
           text: null,
           renote: TestData.note2,
           poll: NotePoll(choices: const [
             NotePollChoice(text: ":ai_yay:", votes: 1, isVoted: false),
-            NotePollChoice(text: ":ai_yay_superfast:", votes: 2, isVoted: false)
-          ], multiple: false, expiresAt: DateTime.now()));
+            NotePollChoice(text: ":ai_yay_superfast:", votes: 2, isVoted: false),
+          ], multiple: false, expiresAt: DateTime.now(),),);
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
           child: MaterialApp(
@@ -387,9 +387,9 @@ void main() {
                   baseNote: note,
                   targetNote: TestData.note2,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text("リノートを解除する", skipOffstage: false), findsNothing);
@@ -399,7 +399,7 @@ void main() {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       when(misskey.notes).thenReturn(misskeyNotes);
       final note = TestData.note3AsAnotherUser
           .copyWith(text: null, renote: TestData.note1);
@@ -411,9 +411,9 @@ void main() {
                   baseNote: note,
                   targetNote: TestData.note1,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text("リノートを解除する", skipOffstage: false), findsNothing);
@@ -425,7 +425,7 @@ void main() {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       final misskeyUsers = MockMisskeyUsers();
       when(misskey.notes).thenReturn(misskeyNotes);
       when(misskey.users).thenReturn(misskeyUsers);
@@ -437,9 +437,9 @@ void main() {
                   baseNote: TestData.note3AsAnotherUser,
                   targetNote: TestData.note3AsAnotherUser,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       await tester.ensureVisible(find.text("通報する", skipOffstage: false));
@@ -456,14 +456,14 @@ void main() {
 
       verify(misskeyUsers.reportAbuse(argThat(equals(UsersReportAbuseRequest(
           userId: TestData.note3AsAnotherUser.userId,
-          comment: "このひとわるものです！")))));
+          comment: "このひとわるものです！",),),),),);
     });
 
     testWidgets("自分のノートを通報できないこと", (tester) async {
       final misskey = MockMisskey();
       final misskeyNotes = MockMisskeyNotes();
       when(misskeyNotes.state(any)).thenAnswer((_) async =>
-          const NotesStateResponse(isFavorited: false, isMutedThread: false));
+          const NotesStateResponse(isFavorited: false, isMutedThread: false),);
       when(misskey.notes).thenReturn(misskeyNotes);
       await tester.pumpWidget(ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
@@ -473,9 +473,9 @@ void main() {
                   baseNote: TestData.note1,
                   targetNote: TestData.note1,
                   account: TestData.account,
-                  noteBoundaryKey: GlobalKey()),
+                  noteBoundaryKey: GlobalKey(),),
             ),
-          )));
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text("通報する", skipOffstage: false), findsNothing);

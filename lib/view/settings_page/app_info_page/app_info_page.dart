@@ -40,7 +40,7 @@ class AppInfoPageState extends ConsumerState<AppInfoPage> {
                 MfmText(mfmText: '''
 <center>\$[x3 Miria]</center>
 パッケージ名：${packageInfo?.packageName ?? ""}
-バージョン:${packageInfo?.version ?? ""}+${packageInfo?.buildNumber.toString() ?? ""}
+バージョン:${packageInfo?.version ?? ""}+${packageInfo?.buildNumber ?? ""}
 
 開発者：@shiosyakeyakini@misskey.io
 
@@ -49,19 +49,19 @@ class AppInfoPageState extends ConsumerState<AppInfoPage> {
 [GitHub](https://github.com/shiosyakeyakini-info/miria)
 
 \$[x2 **オープンソースライセンス**]
-                '''),
+                ''',),
                 ElevatedButton(
                   onPressed: () async {
                     showLicensePage(
                       context: context,
-                      applicationName: packageInfo?.appName.toString(),
+                      applicationName: packageInfo?.appName,
                       applicationIcon: Image.asset("assets/images/icon.png"),
                       applicationVersion:
-                          "${packageInfo?.version ?? ""}+${packageInfo?.buildNumber.toString() ?? ""}",
+                          "${packageInfo?.version ?? ""}+${packageInfo?.buildNumber ?? ""}",
                     );
                   },
                   child: const Text("ライセンスを表示する"),
-                )
+                ),
               ],
             ),
           ),

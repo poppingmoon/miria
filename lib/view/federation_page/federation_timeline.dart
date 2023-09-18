@@ -6,7 +6,7 @@ import 'package:miria/view/common/misskey_notes/misskey_note.dart';
 import 'package:miria/view/common/pushable_listview.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
-import '../../model/account.dart';
+import 'package:miria/model/account.dart';
 
 class FederationTimeline extends ConsumerStatefulWidget {
   final String host;
@@ -51,7 +51,7 @@ class FederationTimelineState extends ConsumerState<FederationTimeline> {
               child: MisskeyNote(
                 note: item,
                 loginAs: AccountScope.of(context),
-              ))),
+              ),),),
     );
   }
 }

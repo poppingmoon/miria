@@ -28,10 +28,8 @@ class ReactionUserDialog extends ConsumerWidget {
     switch (handled) {
       case CustomEmojiData():
         type = handled.hostedName;
-        break;
       case UnicodeEmojiData():
         type = handled.char;
-        break;
       default:
         type = "";
     }
@@ -40,8 +38,6 @@ class ReactionUserDialog extends ConsumerWidget {
       account: account,
       child: AlertDialog(
         title: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomEmoji(
@@ -50,7 +46,7 @@ class ReactionUserDialog extends ConsumerWidget {
             Text(
               emojiData.baseName,
               style: Theme.of(context).textTheme.bodySmall,
-            )
+            ),
           ],
         ),
         content: SizedBox(
@@ -65,7 +61,7 @@ class ReactionUserDialog extends ConsumerWidget {
                       .notes
                       .reactions
                       .reactions(
-                          NotesReactionsRequest(noteId: noteId, type: type));
+                          NotesReactionsRequest(noteId: noteId, type: type),);
                   return response.toList();
                 },
                 nextFuture: (item, index) async {
@@ -78,11 +74,11 @@ class ReactionUserDialog extends ConsumerWidget {
                           noteId: noteId,
                           type: type,
                           offset: index,
-                          untilId: item.id));
+                          untilId: item.id,),);
                   return response.toList();
                 },
                 itemBuilder: (context, item) => UserListItem(user: item.user),
-              )),
+              ),),
         ),
       ),
     );

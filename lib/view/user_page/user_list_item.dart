@@ -19,12 +19,10 @@ class UserListItem extends ConsumerWidget {
     return InkWell(
       onTap: onTap ??
           () => context.pushRoute(
-              UserRoute(userId: user.id, account: AccountScope.of(context))),
+              UserRoute(userId: user.id, account: AccountScope.of(context)),),
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AvatarIcon(user: user),
@@ -32,8 +30,6 @@ class UserListItem extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     UserInformation(user: user),
@@ -44,7 +40,7 @@ class UserListItem extends ConsumerWidget {
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

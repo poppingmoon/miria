@@ -85,7 +85,7 @@ class AvatarIcon extends StatelessWidget {
         padding: EdgeInsets.only(
             top: 3,
             left: 10 * MediaQuery.of(context).textScaleFactor,
-            right: 5 * MediaQuery.of(context).textScaleFactor),
+            right: 5 * MediaQuery.of(context).textScaleFactor,),
         child: Stack(
           children: [
             if (user.isCat)
@@ -150,7 +150,6 @@ class AvatarIcon extends StatelessWidget {
                   scaleY: 2,
                   child: Transform.rotate(
                     angle: (decoration.angle ?? 0) * 2 * pi,
-                    alignment: Alignment.center,
                     child: decoration.flipH
                         ? Transform.flip(
                             flipX: true,
@@ -158,15 +157,15 @@ class AvatarIcon extends StatelessWidget {
                               width: MediaQuery.of(context).textScaleFactor *
                                   height,
                               child: NetworkImageView(
-                                  url: decoration.url, type: ImageType.other),
+                                  url: decoration.url, type: ImageType.other,),
                             ),
                           )
                         : SizedBox(
                             width:
                                 MediaQuery.of(context).textScaleFactor * height,
                             child: NetworkImageView(
-                                url: decoration.url, type: ImageType.other)),
-                  )),
+                                url: decoration.url, type: ImageType.other,),),
+                  ),),
           ],
         ),
       ),

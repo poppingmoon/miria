@@ -40,6 +40,6 @@ class RoleTimelineRepository extends SocketTimelineRepository {
       roleId: tabSetting.roleId!,
       limit: 30,
       untilId: untilId,
-    ));
+    ),);
   }
 }

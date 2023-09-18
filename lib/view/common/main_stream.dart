@@ -17,7 +17,7 @@ class MainStreamState extends ConsumerState<MainStream> {
     super.didChangeDependencies();
   }
 
-  var isConnected = false;
+  bool isConnected = false;
 
   @override
   Widget build(BuildContext context) {

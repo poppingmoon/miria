@@ -126,21 +126,19 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                       .read(tabSettingsRepositoryProvider)
                       .tabSettings
                       .toList()
-                    ..removeAt(widget.tabIndex!));
+                    ..removeAt(widget.tabIndex!),);
 
                   if (!mounted) return;
                   Navigator.of(context).pop();
                 },
-                icon: const Icon(Icons.delete_outline_outlined))
+                icon: const Icon(Icons.delete_outline_outlined),),
         ],
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 10, right: 10),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
             children: [
               const Text("アカウント"),
               DropdownButton<Account>(
@@ -149,7 +147,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                     DropdownMenuItem(
                       value: account,
                       child: Text("${account.userId}@${account.host}"),
-                    )
+                    ),
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -195,15 +193,15 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                           selectedRole = await showDialog<RolesListResponse>(
                               context: context,
                               builder: (context) =>
-                                  RoleSelectDialog(account: selected));
+                                  RoleSelectDialog(account: selected),);
                           setState(() {
                             nameController.text =
                                 selectedRole?.name ?? nameController.text;
                           });
                         },
-                        icon: const Icon(Icons.navigate_next))
+                        icon: const Icon(Icons.navigate_next),),
                   ],
-                )
+                ),
               ],
               if (selectedTabType == TabType.channel) ...[
                 const Text("チャンネル"),
@@ -218,15 +216,15 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                           selectedChannel = await showDialog<CommunityChannel>(
                               context: context,
                               builder: (context) =>
-                                  ChannelSelectDialog(account: selected));
+                                  ChannelSelectDialog(account: selected),);
                           setState(() {
                             nameController.text =
                                 selectedChannel?.name ?? nameController.text;
                           });
                         },
-                        icon: const Icon(Icons.navigate_next))
+                        icon: const Icon(Icons.navigate_next),),
                   ],
-                )
+                ),
               ],
               if (selectedTabType == TabType.userList) ...[
                 const Text("リスト"),
@@ -241,15 +239,15 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                           selectedUserList = await showDialog<UsersList>(
                               context: context,
                               builder: (context) =>
-                                  UserListSelectDialog(account: selected));
+                                  UserListSelectDialog(account: selected),);
                           setState(() {
                             nameController.text =
                                 selectedUserList?.name ?? nameController.text;
                           });
                         },
-                        icon: const Icon(Icons.navigate_next))
+                        icon: const Icon(Icons.navigate_next),),
                   ],
-                )
+                ),
               ],
               if (selectedTabType == TabType.antenna) ...[
                 const Text("アンテナ"),
@@ -264,15 +262,15 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                           selectedAntenna = await showDialog<Antenna>(
                               context: context,
                               builder: (context) =>
-                                  AntennaSelectDialog(account: selected));
+                                  AntennaSelectDialog(account: selected),);
                           setState(() {
                             nameController.text =
                                 selectedAntenna?.name ?? nameController.text;
                           });
                         },
-                        icon: const Icon(Icons.navigate_next))
+                        icon: const Icon(Icons.navigate_next),),
                   ],
-                )
+                ),
               ],
               const Padding(padding: EdgeInsets.all(10)),
               const Text("タブの名前"),
@@ -293,8 +291,8 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                                 height: 32,
                                 child: TabIconView(
                                     icon: selectedIcon,
-                                    size: IconTheme.of(context).size),
-                              ))),
+                                    size: IconTheme.of(context).size,),
+                              ),),),
                   IconButton(
                       onPressed: () async {
                         if (selectedAccount == null) return;
@@ -302,10 +300,10 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                             context: context,
                             builder: (context) => IconSelectDialog(
                                   account: selectedAccount!,
-                                ));
+                                ),);
                         setState(() {});
                       },
-                      icon: const Icon(Icons.navigate_next))
+                      icon: const Icon(Icons.navigate_next),),
                 ],
               ),
               CheckboxListTile(
@@ -331,7 +329,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
               CheckboxListTile(
                 title: const Text("リアクションや投票数を自動更新する"),
                 subtitle: const Text(
-                    "オフにすると、リアクションや投票数が自動更新されませんが、バッテリー消費を抑えられることがあります。"),
+                    "オフにすると、リアクションや投票数が自動更新されませんが、バッテリー消費を抑えられることがあります。",),
                 value: isSubscribe,
                 onChanged: (value) =>
                     setState(() => isSubscribe = !isSubscribe),
@@ -405,7 +403,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                   },
                   child: const Text("ほい"),
                 ),
-              )
+              ),
             ],
           ),
         ),

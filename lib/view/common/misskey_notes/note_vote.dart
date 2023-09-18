@@ -28,7 +28,7 @@ class NoteVote extends ConsumerStatefulWidget {
 }
 
 class NoteVoteState extends ConsumerState<NoteVote> {
-  var isOpened = false;
+  bool isOpened = false;
 
   bool isAnyVotable() {
     if (widget.loginAs != null) return false;
@@ -72,10 +72,10 @@ class NoteVoteState extends ConsumerState<NoteVote> {
               secondary: "やっぱせえへん",
               isMfm: true,
               account: AccountScope.of(context),
-            ));
+            ),);
     if (dialogValue == true) {
       await ref.read(misskeyProvider(account)).notes.polls.vote(
-          NotesPollsVoteRequest(noteId: widget.displayNote.id, choice: choice));
+          NotesPollsVoteRequest(noteId: widget.displayNote.id, choice: choice),);
       await ref.read(notesProvider(account)).refresh(widget.displayNote.id);
       if (!widget.poll.multiple) {
         if (!mounted) return;
@@ -96,12 +96,10 @@ class NoteVoteState extends ConsumerState<NoteVote> {
         : widget.poll.expiresAt?.difference(DateTime.now()).format;
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
       children: [
         for (final choice in widget.poll.choices.mapIndexed(
-            (index, element) => (index: index, element: element))) ...[
+            (index, element) => (index: index, element: element),)) ...[
           SizedBox(
               width: double.infinity,
               child: DecoratedBox(
@@ -119,7 +117,7 @@ class NoteVoteState extends ConsumerState<NoteVote> {
                           stops: [
                             0,
                             choice.element.votes / totalVotes,
-                            choice.element.votes / totalVotes
+                            choice.element.votes / totalVotes,
                           ],
                         )
                       : null,
@@ -143,7 +141,7 @@ class NoteVoteState extends ConsumerState<NoteVote> {
                           borderRadius: BorderRadius.circular(3),
                           color: Theme.of(context)
                               .scaffoldBackgroundColor
-                              .withAlpha(215)),
+                              .withAlpha(215),),
                       child: Padding(
                         padding: const EdgeInsets.only(left: 3, right: 3),
                         child: SimpleMfmText(
@@ -172,18 +170,18 @@ class NoteVoteState extends ConsumerState<NoteVote> {
                             const WidgetSpan(
                                 child: Padding(
                               padding: EdgeInsets.only(left: 5),
-                            )),
+                            ),),
                             if (isOpened)
                               TextSpan(
                                   text: "(${choice.element.votes}票)",
-                                  style: Theme.of(context).textTheme.bodySmall),
+                                  style: Theme.of(context).textTheme.bodySmall,),
                           ],
                         ),
                       ),
                     ),
                   ),
                 ),
-              )),
+              ),),
           const Padding(padding: EdgeInsets.only(bottom: 10)),
         ],
         Text.rich(TextSpan(
@@ -207,11 +205,11 @@ class NoteVoteState extends ConsumerState<NoteVote> {
             const WidgetSpan(
                 child: Padding(
               padding: EdgeInsets.only(left: 10),
-            )),
+            ),),
             TextSpan(text: differ == null ? "" : "あと$differ"),
           ],
           style: Theme.of(context).textTheme.bodySmall,
-        ))
+        ),),
       ],
     );
   }

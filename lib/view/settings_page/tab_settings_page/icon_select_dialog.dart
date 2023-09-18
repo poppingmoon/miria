@@ -92,9 +92,9 @@ class IconSelectDialog extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 5),
                     child: DecoratedBox(
                         decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor),
+                            color: Theme.of(context).primaryColor,),
                         child: const TabBar(
-                            tabs: [Tab(text: "標準"), Tab(text: "カスタム絵文字")])),
+                            tabs: [Tab(text: "標準"), Tab(text: "カスタム絵文字")],),),
                   ),
                   Expanded(
                     child: TabBarView(children: [
@@ -105,7 +105,7 @@ class IconSelectDialog extends StatelessWidget {
                               IconButton(
                                   onPressed: () => Navigator.of(context)
                                       .pop(TabIcon(codePoint: icon.codePoint)),
-                                  icon: Icon(icon)),
+                                  icon: Icon(icon),),
                           ],
                         ),
                       ),
@@ -116,11 +116,11 @@ class IconSelectDialog extends StatelessWidget {
                           onTap: (emoji) => Navigator.of(context)
                               .pop(TabIcon(customEmojiName: emoji.baseName)),
                         ),
-                      )
-                    ]),
-                  )
+                      ),
+                    ],),
+                  ),
                 ],
               ),
-            )));
+            ),),);
   }
 }

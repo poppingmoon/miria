@@ -45,7 +45,7 @@ class ReactionDeckPageState extends ConsumerState<ReactionDeckPage> {
     reactions
       ..clear()
       ..addAll(
-          ref.read(emojiRepositoryProvider(widget.account)).defaultEmojis());
+          ref.read(emojiRepositoryProvider(widget.account)).defaultEmojis(),);
   }
 
   @override
@@ -76,7 +76,7 @@ class ReactionDeckPageState extends ConsumerState<ReactionDeckPage> {
                 child: Text("コピー"),
               ),
             ],
-          )
+          ),
         ],
       ),
       body: Padding(
@@ -106,7 +106,7 @@ class ReactionDeckPageState extends ConsumerState<ReactionDeckPage> {
                               fontSizeRatio: 2,
                               isAttachTooltip: false,
                             ),
-                          )
+                          ),
                       ],
                       onReorder: (int oldIndex, int newIndex) {
                         setState(() {
@@ -114,7 +114,7 @@ class ReactionDeckPageState extends ConsumerState<ReactionDeckPage> {
                           reactions.insert(newIndex, element);
                           save();
                         });
-                      }),
+                      },),
                 ),
               ),
               Row(
@@ -140,10 +140,10 @@ class ReactionDeckPageState extends ConsumerState<ReactionDeckPage> {
                           save();
                         });
                       },
-                      icon: const Icon(Icons.add)),
-                  const Expanded(child: Text("長押しして並び変え、押して削除、＋を押して追加します。"))
+                      icon: const Icon(Icons.add),),
+                  const Expanded(child: Text("長押しして並び変え、押して削除、＋を押して追加します。")),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -205,7 +205,7 @@ class ReactionDeckPageState extends ConsumerState<ReactionDeckPage> {
             context: context,
             message: "すでに設定済みのリアクションデッキをいったんすべてクリアしますか？",
             primary: "クリアする",
-            secondary: "やっぱりやめる") ==
+            secondary: "やっぱりやめる",) ==
         true) {
       setState(() {
         reactions.clear();

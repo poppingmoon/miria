@@ -28,7 +28,7 @@ void main() {
 
       verify(timelineTester.mockMisskeyNotes.hybridTimeline(argThat(equals(
           const NotesHybridTimelineRequest(
-              withFiles: false, withRenotes: false, withReplies: false)))));
+              withFiles: false, withRenotes: false, withReplies: false,),),),),);
     });
   });
 }

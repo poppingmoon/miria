@@ -31,18 +31,18 @@ class ChannelDetailPage extends ConsumerWidget {
             title: const Text("チャンネル"),
             bottom: const TabBar(tabs: [
               Tab(child: Text("チャンネル情報")),
-              Tab(child: Text("タイムライン"))
-            ]),
+              Tab(child: Text("タイムライン")),
+            ],),
           ),
           body: TabBarView(
             children: [
               SingleChildScrollView(
                   child: Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: ChannelDetailInfo(channelId: channelId))),
+                      child: ChannelDetailInfo(channelId: channelId),),),
               Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: ChannelTimeline(channelId: channelId)),
+                  child: ChannelTimeline(channelId: channelId),),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -55,7 +55,7 @@ class ChannelDetailPage extends ConsumerWidget {
               context.pushRoute(NoteCreateRoute(
                 initialAccount: account,
                 channel: communityChannel,
-              ));
+              ),);
             },
           ),
         ),

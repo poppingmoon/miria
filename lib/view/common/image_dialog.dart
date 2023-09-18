@@ -25,10 +25,10 @@ class ImageDialog extends ConsumerStatefulWidget {
 }
 
 class ImageDialogState extends ConsumerState<ImageDialog> {
-  var scale = 1.0;
+  double scale = 1.0;
   late final pageController = PageController(initialPage: widget.initialPage);
-  var verticalDragX = 0.0;
-  var verticalDragY = 0.0;
+  double verticalDragX = 0.0;
+  double verticalDragY = 0.0;
   int? listeningId;
   final TransformationController _transformationController =
       TransformationController();
@@ -82,9 +82,9 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                       },
                       onPointerUp: (event) {
                         final angle =
-                            (atan2(verticalDragY, verticalDragX).abs() /
+                            atan2(verticalDragY, verticalDragX).abs() /
                                 pi *
-                                180);
+                                180;
                         if (listeningId != null &&
                             verticalDragY.abs() > 10 &&
                             (angle > 60 && angle < 120)) {
@@ -128,7 +128,7 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                                   ),
                               ],
                             ),
-                          )))),
+                          ),),),),
               Positioned(
                 left: 10,
                 top: 10,
@@ -137,9 +137,8 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                       Navigator.of(context).pop();
                     },
                     constraints:
-                        const BoxConstraints(minWidth: 0, minHeight: 0),
+                        const BoxConstraints(),
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    padding: EdgeInsets.zero,
                     fillColor: Theme.of(context)
                         .scaffoldBackgroundColor
                         .withAlpha(200),
@@ -151,7 +150,7 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                                 .textTheme
                                 .bodyMedium
                                 ?.color
-                                ?.withAlpha(200)))),
+                                ?.withAlpha(200),),),),
               ),
               if (defaultTargetPlatform == TargetPlatform.android ||
                   defaultTargetPlatform == TargetPlatform.iOS)
@@ -165,7 +164,7 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                           final response = await ref.read(dioProvider).get(
                               widget.imageUrlList[page],
                               options:
-                                  Options(responseType: ResponseType.bytes));
+                                  Options(responseType: ResponseType.bytes),);
 
                           if (defaultTargetPlatform == TargetPlatform.android) {
                             final androidInfo =
@@ -188,12 +187,11 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                           await ImageGallerySaver.saveImage(response.data);
                           if (!mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("画像保存したで")));
+                              const SnackBar(content: Text("画像保存したで")),);
                         },
                         constraints:
-                            const BoxConstraints(minWidth: 0, minHeight: 0),
+                            const BoxConstraints(),
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        padding: EdgeInsets.zero,
                         fillColor: Theme.of(context)
                             .scaffoldBackgroundColor
                             .withAlpha(200),
@@ -205,10 +203,10 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                                     .textTheme
                                     .bodyMedium
                                     ?.color
-                                    ?.withAlpha(200))))),
+                                    ?.withAlpha(200),),),),),
             ],
           ),
-        ));
+        ),);
   }
 }
 
@@ -230,7 +228,7 @@ class ScaleNotifierInteractiveViewer extends StatefulWidget {
 
 class ScaleNotifierInteractiveViewerState
     extends State<ScaleNotifierInteractiveViewer> {
-  var scale = 1.0;
+  double scale = 1.0;
 
   @override
   Widget build(BuildContext context) {
@@ -248,6 +246,6 @@ class ScaleNotifierInteractiveViewerState
             url: widget.imageUrl,
             type: ImageType.image,
           ),
-        ));
+        ),);
   }
 }

@@ -31,7 +31,7 @@ class SettingsPage extends StatelessWidget {
           ListTile(
             title: const Text("このアプリについて"),
             onTap: () => context.pushRoute(const AppInfoRoute()),
-          )
+          ),
         ],
       ),
     );

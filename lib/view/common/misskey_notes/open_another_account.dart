@@ -32,7 +32,7 @@ class OpenAnotherAccountState extends ConsumerState<OpenAnotherAccount> {
       onTap: () async {
         final account = await showDialog<Account?>(
             context: context,
-            builder: (context2) => const AccountSelectDialog());
+            builder: (context2) => const AccountSelectDialog(),);
 
         if (account == null) return;
 
@@ -44,7 +44,7 @@ class OpenAnotherAccountState extends ConsumerState<OpenAnotherAccount> {
               .showByName(UsersShowByUserNameRequest(
                   userName: widget.note.user.username,
                   host:
-                      widget.note.user.host ?? widget.beforeOpenAccount.host));
+                      widget.note.user.host ?? widget.beforeOpenAccount.host,),);
 
           final myHostUserNotes = await ref
               .read(misskeyProvider(account))
@@ -52,14 +52,14 @@ class OpenAnotherAccountState extends ConsumerState<OpenAnotherAccount> {
               .notes(UsersNotesRequest(
                 userId: myHostUserData.id,
                 untilDate: widget.note.createdAt.millisecondsSinceEpoch + 1,
-              ));
+              ),);
 
           final foundMyHostNote = myHostUserNotes.firstWhereOrNull(
-              (e) => e.uri?.pathSegments.lastOrNull == widget.note.id);
+              (e) => e.uri?.pathSegments.lastOrNull == widget.note.id,);
           if (foundMyHostNote != null) {
             if (!mounted) return;
             context.pushRoute(
-                NoteDetailRoute(note: foundMyHostNote, account: account));
+                NoteDetailRoute(note: foundMyHostNote, account: account),);
             return;
           }
           throw Exception();
@@ -71,7 +71,7 @@ class OpenAnotherAccountState extends ConsumerState<OpenAnotherAccount> {
                       Uri(
                           scheme: "https",
                           host: widget.beforeOpenAccount.host,
-                          pathSegments: ["notes", widget.note.id])));
+                          pathSegments: ["notes", widget.note.id],),),);
           // よくかんがえたら無駄
           final resultNote = await ref
               .read(misskeyProvider(account))
@@ -106,7 +106,7 @@ class AccountSelectDialog extends ConsumerWidget {
                 child: ListTile(
                   leading: AvatarIcon.fromIResponse(account.i),
                   title: SimpleMfmText(account.i.name ?? account.i.username,
-                      style: Theme.of(context).textTheme.titleMedium),
+                      style: Theme.of(context).textTheme.titleMedium,),
                   subtitle: Text(
                     "@${account.userId}@${account.host}",
                     style: Theme.of(context).textTheme.bodySmall,
@@ -115,7 +115,7 @@ class AccountSelectDialog extends ConsumerWidget {
                     Navigator.of(context).pop(account);
                   },
                 ),
-              )
+              ),
           ],
         ),
       ),

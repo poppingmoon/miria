@@ -36,7 +36,7 @@ class APiKeyLoginState extends ConsumerState<ApiKeyLogin> {
       if (!mounted) return;
       context.pushRoute(TimeLineRoute(
           initialTabSetting:
-              ref.read(tabSettingsRepositoryProvider).tabSettings.first));
+              ref.read(tabSettingsRepositoryProvider).tabSettings.first,),);
     } catch (e) {
       rethrow;
     } finally {
@@ -68,18 +68,18 @@ class APiKeyLoginState extends ConsumerState<ApiKeyLogin> {
                             final url = await showDialog<String?>(
                                 context: context,
                                 builder: (context) =>
-                                    const MisskeyServerListDialog());
+                                    const MisskeyServerListDialog(),);
                             if (url != null && url.isNotEmpty) {
                               serverController.text = url;
                             }
                           },
-                          icon: const Icon(Icons.search))),
+                          icon: const Icon(Icons.search),),),
                 ),
-              ]),
+              ],),
               TableRow(children: [
                 const Padding(padding: EdgeInsets.only(bottom: 10)),
-                Container()
-              ]),
+                Container(),
+              ],),
               TableRow(children: [
                 const Padding(
                   padding: EdgeInsets.only(right: 20),
@@ -89,8 +89,8 @@ class APiKeyLoginState extends ConsumerState<ApiKeyLogin> {
                   controller: apiKeyController,
                   decoration:
                       const InputDecoration(prefixIcon: Icon(Icons.key)),
-                )
-              ]),
+                ),
+              ],),
               // ],
               TableRow(children: [
                 Container(),
@@ -100,9 +100,9 @@ class APiKeyLoginState extends ConsumerState<ApiKeyLogin> {
                       onPressed: () {
                         login().expectFailure(context);
                       },
-                      child: const Text("ログイン")),
-                )
-              ])
+                      child: const Text("ログイン"),),
+                ),
+              ],),
             ],
           ),
         ],

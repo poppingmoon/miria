@@ -25,7 +25,7 @@ class TabSettingsListPageState extends ConsumerState<TabSettingsListPage> {
   Widget build(BuildContext context) {
     final tabSettings = ref
         .watch(tabSettingsRepositoryProvider
-            .select((repository) => repository.tabSettings))
+            .select((repository) => repository.tabSettings),)
         .toList();
     return Scaffold(
       appBar: AppBar(
@@ -36,11 +36,10 @@ class TabSettingsListPageState extends ConsumerState<TabSettingsListPage> {
               onPressed: () {
                 context.pushRoute(TabSettingsRoute());
               },
-              icon: const Icon(Icons.add)),
+              icon: const Icon(Icons.add),),
         ],
       ),
       body: Column(
-        mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
             child: ReorderableListView.builder(
@@ -71,10 +70,9 @@ class TabSettingsListPageState extends ConsumerState<TabSettingsListPage> {
                     tabSettings.insert(newIndex, item);
                     save(tabSettings);
                   });
-                }),
+                },),
           ),
           Align(
-            alignment: Alignment.center,
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: ElevatedButton(
@@ -83,9 +81,9 @@ class TabSettingsListPageState extends ConsumerState<TabSettingsListPage> {
                       ..removeWhere((route) => true)
                       ..push(const SplashRoute());
                   },
-                  child: const Text("反映する")),
+                  child: const Text("反映する"),),
             ),
-          )
+          ),
         ],
       ),
     );

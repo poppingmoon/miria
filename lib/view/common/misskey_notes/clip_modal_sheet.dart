@@ -23,7 +23,7 @@ class ClipModalSheet extends ConsumerStatefulWidget {
 }
 
 class ClipModalSheetState extends ConsumerState<ClipModalSheet> {
-  var isLoading = false;
+  bool isLoading = false;
 
   List<Clip> userClips = [];
   List<Clip> noteClips = [];
@@ -53,7 +53,7 @@ class ClipModalSheetState extends ConsumerState<ClipModalSheet> {
 
   Future<void> remove(Clip clip) async {
     await ref.read(misskeyProvider(widget.account)).clips.removeNote(
-        ClipsRemoveNoteRequest(clipId: clip.id, noteId: widget.noteId));
+        ClipsRemoveNoteRequest(clipId: clip.id, noteId: widget.noteId),);
     setState(() {
       noteClips.remove(clip);
     });
@@ -77,7 +77,7 @@ class ClipModalSheetState extends ConsumerState<ClipModalSheet> {
               context: context,
               message: "すでにクリップに追加されたノートのようです。",
               primary: "クリップから削除する",
-              secondary: "なにもしない");
+              secondary: "なにもしない",);
           if (result == true) {
             await remove(clip);
           }
@@ -112,6 +112,6 @@ class ClipModalSheetState extends ConsumerState<ClipModalSheet> {
             title: Text(userClips[index].name ?? ""),
             subtitle: Text(userClips[index].description ?? ""),
           );
-        });
+        },);
   }
 }

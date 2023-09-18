@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/view/settings_page/tab_settings_page/channel_select_dialog.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
-import 'local_only_icon.dart';
+import 'package:miria/view/common/misskey_notes/local_only_icon.dart';
 
 class RenoteModalSheet extends ConsumerStatefulWidget {
   final Note note;
@@ -26,7 +26,7 @@ class RenoteModalSheet extends ConsumerStatefulWidget {
 
 class RenoteModalSheetState extends ConsumerState<RenoteModalSheet> {
   bool isLocalOnly = false;
-  var visibility = NoteVisibility.public;
+  NoteVisibility visibility = NoteVisibility.public;
 
   @override
   void didChangeDependencies() {
@@ -56,7 +56,7 @@ class RenoteModalSheetState extends ConsumerState<RenoteModalSheet> {
                   renoteId: widget.note.id,
                   localOnly: isLocalOnly,
                   visibility: visibility,
-                ));
+                ),);
             scaffoldMessenger
                 .showSnackBar(const SnackBar(content: Text("Renoteしました。")));
             navigator.pop();
@@ -73,7 +73,7 @@ class RenoteModalSheetState extends ConsumerState<RenoteModalSheet> {
                   for (final element in NoteVisibility.values
                       .where((element) => element != NoteVisibility.specified))
                     DropdownMenuItem(
-                        value: element, child: Text(element.displayName))
+                        value: element, child: Text(element.displayName),),
                 ],
                 value: visibility,
                 onChanged: (value) => setState(() {
@@ -87,17 +87,17 @@ class RenoteModalSheetState extends ConsumerState<RenoteModalSheet> {
                     }),
                 icon: isLocalOnly
                     ? const LocalOnlyIcon()
-                    : const Icon(Icons.rocket)),
-          ]),
+                    : const Icon(Icons.rocket),),
+          ],),
         ),
         ListTile(
             onTap: () {
               final navigator = Navigator.of(context);
               context.pushRoute(NoteCreateRoute(
-                  renote: widget.note, initialAccount: widget.account));
+                  renote: widget.note, initialAccount: widget.account,),);
               navigator.pop();
             },
-            title: const Text("引用Renote")),
+            title: const Text("引用Renote"),),
         ListTile(
             onTap: () async {
               final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -105,35 +105,35 @@ class RenoteModalSheetState extends ConsumerState<RenoteModalSheet> {
               final selected = await showDialog<CommunityChannel?>(
                   context: context,
                   builder: (context) =>
-                      ChannelSelectDialog(account: widget.account));
+                      ChannelSelectDialog(account: widget.account),);
               if (selected != null) {
                 await ref.read(misskeyProvider(widget.account)).notes.create(
                     NotesCreateRequest(
-                        renoteId: widget.note.id, channelId: selected.id));
+                        renoteId: widget.note.id, channelId: selected.id,),);
 
                 scaffoldMessenger
                     .showSnackBar(const SnackBar(content: Text("Renoteしました。")));
                 navigator.pop();
               }
             },
-            title: const Text("チャンネルへRenote")),
+            title: const Text("チャンネルへRenote"),),
         ListTile(
             onTap: () async {
               final navigator = Navigator.of(context);
               final selected = await showDialog<CommunityChannel?>(
                   context: context,
                   builder: (context) =>
-                      ChannelSelectDialog(account: widget.account));
+                      ChannelSelectDialog(account: widget.account),);
               if (!mounted) return;
               if (selected != null) {
                 context.pushRoute(NoteCreateRoute(
                     renote: widget.note,
                     initialAccount: widget.account,
-                    channel: selected));
+                    channel: selected,),);
                 navigator.pop();
               }
             },
-            title: const Text("チャンネルへ引用Renote")),
+            title: const Text("チャンネルへ引用Renote"),),
       ],
     );
   }

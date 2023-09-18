@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/misskey_notes/misskey_note.dart';
 import 'package:miria/view/common/pushable_listview.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/view/user_page/user_page.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
@@ -88,7 +88,7 @@ class UserNotesState extends ConsumerState<UserNotes> {
                         Padding(
                           padding: EdgeInsets.only(left: 5, right: 5),
                           child: Text("ハイライト"),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -129,7 +129,7 @@ class UserNotesState extends ConsumerState<UserNotes> {
         Expanded(
           child: PushableListView<Note>(
             listKey: Object.hashAll(
-                [isFileOnly, withReply, renote, untilDate, highlight]),
+                [isFileOnly, withReply, renote, untilDate, highlight],),
             additionalErrorInfo: highlight
                 ? (context, e) => const Text("ハイライトはMisskey 2023.10.0以降の機能です。")
                 : null,
@@ -138,7 +138,7 @@ class UserNotesState extends ConsumerState<UserNotes> {
               if (highlight) {
                 notes = await misskey.users.featuredNotes(
                   UsersFeaturedNotesRequest(
-                      userId: widget.remoteUserId ?? widget.userId),
+                      userId: widget.remoteUserId ?? widget.userId,),
                 );
               } else {
                 notes = await misskey.users.notes(

@@ -65,10 +65,8 @@ class PhotoEditStateNotifier extends StateNotifier<PhotoEdit> {
     switch (file) {
       case ImageFile():
         initialImage = file.data;
-        break;
       case ImageFileAlreadyPostedFile():
         initialImage = file.data;
-        break;
       default:
         throw UnsupportedError("$file is unsupported.");
     }
@@ -361,7 +359,6 @@ class PhotoEditStateNotifier extends StateNotifier<PhotoEdit> {
           _acceptReactions.add(reaction.baseName);
         }
 
-        break;
       case UnicodeEmojiData():
         break;
       default:

@@ -7,7 +7,6 @@ part 'account_settings.g.dart';
 
 @freezed
 class AccountSettings with _$AccountSettings {
-  const AccountSettings._();
 
   const factory AccountSettings({
     required String userId,
@@ -17,6 +16,7 @@ class AccountSettings with _$AccountSettings {
     @Default(false) bool defaultIsLocalOnly,
     @Default(null) ReactionAcceptance? defaultReactionAcceptance,
   }) = _AccountSettings;
+  const AccountSettings._();
 
   factory AccountSettings.fromJson(Map<String, dynamic> json) =>
       _$AccountSettingsFromJson(json);

@@ -31,6 +31,6 @@ class FederationUsers extends ConsumerWidget {
               .users(FederationUsersRequest(host: host, untilId: lastItem.id));
           return response.toList();
         },
-        itemBuilder: (context, user) => UserListItem(user: user));
+        itemBuilder: (context, user) => UserListItem(user: user),);
   }
 }

@@ -17,6 +17,6 @@ class ChannelFavorited extends ConsumerWidget {
             .read(misskeyProvider(account))
             .channels
             .myFavorite(const ChannelsMyFavoriteRequest()),
-        builder: (context, item) => CommunityChannelView(channel: item));
+        builder: (context, item) => CommunityChannelView(channel: item),);
   }
 }

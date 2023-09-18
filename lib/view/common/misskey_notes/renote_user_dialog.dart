@@ -46,7 +46,7 @@ class RenoteUserDialog extends ConsumerWidget {
                           .read(misskeyProvider(account))
                           .notes
                           .renotes(NotesRenoteRequest(
-                              noteId: noteId, untilId: lastItem.id));
+                              noteId: noteId, untilId: lastItem.id,),);
                       ref
                           .read(notesProvider(account))
                           .registerAll(response.where((e) => e.text != null));
@@ -55,7 +55,7 @@ class RenoteUserDialog extends ConsumerWidget {
                     itemBuilder: (context, note) {
                       return UserListItem(user: note.user);
                     },
-                  )),
-            )));
+                  ),),
+            ),),);
   }
 }

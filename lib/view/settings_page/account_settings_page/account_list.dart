@@ -48,7 +48,7 @@ class AccountListPageState extends ConsumerState<AccountListPage> {
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: const Text("やっぱりせえへん")),
+                                  child: const Text("やっぱりせえへん"),),
                               ElevatedButton(
                                   onPressed: () async {
                                     await ref
@@ -58,13 +58,13 @@ class AccountListPageState extends ConsumerState<AccountListPage> {
                                     setState(() {});
                                     Navigator.of(context).pop();
                                   },
-                                  child: const Text("ええで"))
+                                  child: const Text("ええで"),),
                             ],
-                          ));
+                          ),);
                 },
                 title: Text(
                     accounts[index].i.name ?? accounts[index].i.username,
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 subtitle: Text(
                   "@${accounts[index].userId}@${accounts[index].host}",
                   style: Theme.of(context).textTheme.bodySmall,
@@ -73,7 +73,6 @@ class AccountListPageState extends ConsumerState<AccountListPage> {
             ),
           ),
           Align(
-            alignment: Alignment.center,
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: ElevatedButton(
@@ -82,9 +81,9 @@ class AccountListPageState extends ConsumerState<AccountListPage> {
                       ..removeWhere((route) => true)
                       ..push(const SplashRoute());
                   },
-                  child: const Text("アカウント設定をおわる")),
+                  child: const Text("アカウント設定をおわる"),),
             ),
-          )
+          ),
         ],
       ),
     );

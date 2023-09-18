@@ -14,7 +14,7 @@ class FederationAdsState extends ConsumerState<FederationAds> {
   @override
   Widget build(BuildContext context) {
     final ads = ref.watch(
-        federationPageFederationDataProvider.select((value) => value?.ads));
+        federationPageFederationDataProvider.select((value) => value?.ads),);
     if (ads == null) return const SizedBox.shrink();
     return ListView.builder(
       itemCount: ads.length,
@@ -25,7 +25,7 @@ class FederationAdsState extends ConsumerState<FederationAds> {
           child: GestureDetector(
               onTap: () => launchUrl(ad.url),
               child: NetworkImageView(
-                  url: ad.imageUrl.toString(), type: ImageType.ad)),
+                  url: ad.imageUrl.toString(), type: ImageType.ad,),),
         );
       },
     );

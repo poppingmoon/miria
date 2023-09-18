@@ -28,7 +28,7 @@ class UsersListTimeline extends ConsumerWidget {
             .read(misskeyProvider(account))
             .notes
             .userListTimeline(
-                UserListTimelineRequest(listId: listId, untilId: lastItem.id));
+                UserListTimelineRequest(listId: listId, untilId: lastItem.id),);
         ref.read(notesProvider(account)).registerAll(response);
         return response.toList();
       },

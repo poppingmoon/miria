@@ -68,8 +68,8 @@ class ChannelSelectDialogState extends ConsumerState<ChannelSelectDialog> {
                           onTap: () {
                             Navigator.of(context).pop(followedChannels[index]);
                           },
-                          title: Text(followedChannels[index].name));
-                    }),
+                          title: Text(followedChannels[index].name),);
+                    },),
                 const Padding(padding: EdgeInsets.only(top: 30)),
                 Text(
                   "お気に入り",
@@ -84,8 +84,8 @@ class ChannelSelectDialogState extends ConsumerState<ChannelSelectDialog> {
                           onTap: () {
                             Navigator.of(context).pop(favoritedChannels[index]);
                           },
-                          title: Text(favoritedChannels[index].name));
-                    }),
+                          title: Text(favoritedChannels[index].name),);
+                    },),
               ],
             ),
           ),

@@ -6,7 +6,7 @@ class SimpleMessageDialog extends StatelessWidget {
   static Future<void> show(BuildContext context, String message) async =>
       await showDialog(
           context: context,
-          builder: (context) => SimpleMessageDialog(message: message));
+          builder: (context) => SimpleMessageDialog(message: message),);
 
   const SimpleMessageDialog({
     super.key,
@@ -22,7 +22,7 @@ class SimpleMessageDialog extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text("ほい"))
+            child: const Text("ほい"),),
       ],
     );
   }

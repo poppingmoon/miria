@@ -355,5 +355,5 @@ const builtInColorThemes = [
     buttonBackground: Color(0x0cffffff),
     panel: Color(0xff1d2d30),
     panelBackground: Color(0xff23363a),
-  )
+  ),
 ];

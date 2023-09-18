@@ -67,7 +67,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
 
   Future<Expire?> getExpire() async {
     return await showDialog<Expire?>(
-        context: context, builder: (context) => const ExpireSelectDialog());
+        context: context, builder: (context) => const ExpireSelectDialog(),);
   }
 
   Future<void> renoteMuteCreate() async {
@@ -95,7 +95,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
         ? null
         : DateTime.now().add(expires.expires!);
     await ref.read(misskeyProvider(widget.account)).mute.create(
-        MuteCreateRequest(userId: widget.response.id, expiresAt: expiresDate));
+        MuteCreateRequest(userId: widget.response.id, expiresAt: expiresDate),);
     if (!mounted) return;
     Navigator.of(context).pop(UserControl.createMute);
   }
@@ -114,7 +114,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
             context: context,
             message: "ブロックしてもええか？",
             primary: "ブロックする",
-            secondary: "やっぱりやめる") !=
+            secondary: "やっぱりやめる",) !=
         true) {
       return;
     }
@@ -232,9 +232,9 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
           ListTile(
             onTap: blockingCreate,
             title: const Text("ブロックする"),
-          )
+          ),
       ],
-    ]);
+    ],);
   }
 }
 
@@ -439,7 +439,7 @@ class ExpireSelectDialogState extends State<ExpireSelectDialog> {
               DropdownMenuItem<Expire>(
                 value: value,
                 child: Text(value.name),
-              )
+              ),
           ],
           onChanged: (value) => setState(() => selectedExpire = value),
           value: selectedExpire,
@@ -450,7 +450,7 @@ class ExpireSelectDialogState extends State<ExpireSelectDialog> {
             onPressed: () {
               Navigator.of(context).pop(selectedExpire);
             },
-            child: const Text("ほい"))
+            child: const Text("ほい"),),
       ],
     );
   }

@@ -7,7 +7,6 @@ part 'account.g.dart';
 
 @Freezed(equal: false)
 class Account with _$Account {
-  const Account._();
 
   const factory Account({
     required String host,
@@ -15,6 +14,7 @@ class Account with _$Account {
     String? token,
     required IResponse i,
   }) = _Account;
+  const Account._();
 
   factory Account.fromJson(Map<String, Object?> json) =>
       _$AccountFromJson(json);
@@ -40,7 +40,6 @@ class Account with _$Account {
   factory Account.demoAccount(String host) => Account(
       host: host,
       userId: "",
-      token: null,
       i: IResponse(
           id: "",
           username: "",
@@ -101,5 +100,5 @@ class Account with _$Account {
               noteEachClipsLimit: 0,
               userListLimit: 0,
               userEachUserListsLimit: 0,
-              rateLimitFactor: 0)));
+              rateLimitFactor: 0,),),);
 }

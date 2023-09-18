@@ -17,13 +17,11 @@ class CommunityChannelView extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: GestureDetector(
           onTap: () => context.pushRoute(ChannelDetailRoute(
-              account: AccountScope.of(context), channelId: channel.id)),
+              account: AccountScope.of(context), channelId: channel.id,),),
           child: Container(
             decoration: BoxDecoration(
-                border: Border.all(color: Theme.of(context).dividerColor)),
+                border: Border.all(color: Theme.of(context).dividerColor),),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (channel.bannerUrl != null)
@@ -38,9 +36,7 @@ class CommunityChannelView extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: Column(
-                      mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
                           channel.name,
@@ -56,20 +52,20 @@ class CommunityChannelView extends StatelessWidget {
                           child: Container(
                               decoration: BoxDecoration(
                                   border: Border.all(
-                                      color: Theme.of(context).dividerColor)),
+                                      color: Theme.of(context).dividerColor,),),
                               child: Padding(
                                   padding: const EdgeInsets.all(5),
                                   child: Text(
                                     "${channel.notesCount.format()} 投稿 / ${channel.usersCount.format()} 人が参加 / ${channel.lastNotedAt?.differenceNow ?? channel.createdAt.differenceNow} に更新",
                                     style:
                                         Theme.of(context).textTheme.bodySmall,
-                                  ))),
+                                  ),),),
                         ),
-                      ]),
+                      ],),
                 ),
               ],
             ),
           ),
-        ));
+        ),);
   }
 }

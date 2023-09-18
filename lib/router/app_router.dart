@@ -43,11 +43,11 @@ import 'package:miria/view/users_list_page/users_list_timeline_page.dart';
 import 'package:miria/view/splash_page/splash_page.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
-import '../view/antenna_page/antenna_notes_page.dart';
-import '../view/channels_page/channel_detail_page.dart';
-import '../view/login_page/login_page.dart';
-import '../view/settings_page/settings_page.dart';
-import '../view/settings_page/tab_settings_page/tab_settings_page.dart';
+import 'package:miria/view/antenna_page/antenna_notes_page.dart';
+import 'package:miria/view/channels_page/channel_detail_page.dart';
+import 'package:miria/view/login_page/login_page.dart';
+import 'package:miria/view/settings_page/settings_page.dart';
+import 'package:miria/view/settings_page/tab_settings_page/tab_settings_page.dart';
 
 part 'app_router.gr.dart';
 

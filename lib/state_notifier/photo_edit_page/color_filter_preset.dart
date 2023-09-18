@@ -9,130 +9,130 @@ class ColorFilterPresets {
       : presets = [
           ColorFilterPreset(
               name: "clarendon",
-              option: [_brightness(.1), _contrast(.1), _saturation(.15)]),
+              option: [_brightness(.1), _contrast(.1), _saturation(.15)],),
           ColorFilterPreset(
-              name: "addictiveRed", option: [_addictiveColor(50, 0, 0)]),
+              name: "addictiveRed", option: [_addictiveColor(50, 0, 0)],),
           ColorFilterPreset(
-              name: "addictiveGreen", option: [_addictiveColor(0, 50, 0)]),
+              name: "addictiveGreen", option: [_addictiveColor(0, 50, 0)],),
           ColorFilterPreset(
-              name: "addictiveBlue", option: [_addictiveColor(0, 0, 50)]),
+              name: "addictiveBlue", option: [_addictiveColor(0, 0, 50)],),
           ColorFilterPreset(
-              name: "gingham", option: [_sepia(.04), _contrast(-.15)]),
+              name: "gingham", option: [_sepia(.04), _contrast(-.15)],),
           ColorFilterPreset(
               name: "moon",
-              option: [_grayscale(), _contrast(-.04), _brightness(0.1)]),
+              option: [_grayscale(), _contrast(-.04), _brightness(0.1)],),
           ColorFilterPreset(name: "lark", option: [
             _brightness(0.08),
             _grayscale(),
             _contrast(-.04),
-          ]),
+          ],),
           ColorFilterPreset(
               name: "Reyes",
-              option: [_sepia(0.4), _brightness(0.13), _contrast(-.06)]),
+              option: [_sepia(0.4), _brightness(0.13), _contrast(-.06)],),
           ColorFilterPreset(
               name: "Juno",
-              option: [_rgbScale(1.01, 1.04, 1), _saturation(0.3)]),
+              option: [_rgbScale(1.01, 1.04, 1), _saturation(0.3)],),
           ColorFilterPreset(
-              name: "Slumber", option: [_brightness(.1), _saturation(-0.5)]),
+              name: "Slumber", option: [_brightness(.1), _saturation(-0.5)],),
           ColorFilterPreset(
               name: "Crema",
-              option: [_rgbScale(1.04, 1, 1.02), _saturation(-0.05)]),
+              option: [_rgbScale(1.04, 1, 1.02), _saturation(-0.05)],),
           ColorFilterPreset(
-              name: "Ludwig", option: [_brightness(.05), _saturation(-0.03)]),
+              name: "Ludwig", option: [_brightness(.05), _saturation(-0.03)],),
           ColorFilterPreset(
               name: "Aden",
-              option: [_colorOverlay(228, 130, 225, 0.13), _saturation(-0.2)]),
+              option: [_colorOverlay(228, 130, 225, 0.13), _saturation(-0.2)],),
           ColorFilterPreset(
-              name: "Perpetua", option: [_rgbScale(1.05, 1.1, 1)]),
+              name: "Perpetua", option: [_rgbScale(1.05, 1.1, 1)],),
           ColorFilterPreset(name: "Amaro", option: [
             _saturation(0.3),
             _brightness(0.15),
-          ]),
+          ],),
           ColorFilterPreset(
               name: "Mayfair",
-              option: [_colorOverlay(230, 115, 108, 0.05), _saturation(0.15)]),
+              option: [_colorOverlay(230, 115, 108, 0.05), _saturation(0.15)],),
           ColorFilterPreset(name: "Rise", option: [
             _colorOverlay(255, 170, 0, 0.1),
             _brightness(0.09),
-            _saturation(0.1)
-          ]),
+            _saturation(0.1),
+          ],),
           ColorFilterPreset(name: "Hudson", option: [
             _rgbScale(1, 1, 1.25),
             _contrast(0.1),
-            _brightness(0.15)
-          ]),
+            _brightness(0.15),
+          ],),
           ColorFilterPreset(name: "Valencia", option: [
             _colorOverlay(255, 255, 80, 0.8),
             _saturation(0.1),
             _contrast(0.05),
-          ]),
+          ],),
           ColorFilterPreset(name: "X-Pro II", option: [
             _colorOverlay(255, 255, 0, 0.7),
             _saturation(0.2),
-            _contrast(0.15)
-          ]),
+            _contrast(0.15),
+          ],),
           ColorFilterPreset(
-              name: "Sierra", option: [_contrast(-0.15), _saturation(0.1)]),
+              name: "Sierra", option: [_contrast(-0.15), _saturation(0.1)],),
           ColorFilterPreset(
-              name: "Lo-Fi", option: [_contrast(0.15), _saturation(0.2)]),
+              name: "Lo-Fi", option: [_contrast(0.15), _saturation(0.2)],),
           ColorFilterPreset(name: "InkWell", option: [_grayscale()]),
           ColorFilterPreset(
-              name: "Hefe", option: [_contrast(0.1), _saturation(0.15)]),
+              name: "Hefe", option: [_contrast(0.1), _saturation(0.15)],),
           ColorFilterPreset(
               name: "Nashville",
-              option: [_colorOverlay(220, 115, 188, 0.12), _contrast(-0.05)]),
+              option: [_colorOverlay(220, 115, 188, 0.12), _contrast(-0.05)],),
           ColorFilterPreset(
-              name: "Stinson", option: [_brightness(0.1), _sepia(0.3)]),
+              name: "Stinson", option: [_brightness(0.1), _sepia(0.3)],),
           ColorFilterPreset(name: "Vesper", option: [
             _colorOverlay(225, 225, 0, 0.5),
             _brightness(0.06),
-            _contrast(0.06)
-          ]),
+            _contrast(0.06),
+          ],),
           ColorFilterPreset(
               name: "Earlybird",
-              option: [_colorOverlay(255, 165, 40, 0.2), _saturation(0.15)]),
+              option: [_colorOverlay(255, 165, 40, 0.2), _saturation(0.15)],),
           ColorFilterPreset(
               name: "Brannan",
-              option: [_contrast(0.2), _colorOverlay(140, 10, 185, 0.1)]),
+              option: [_contrast(0.2), _colorOverlay(140, 10, 185, 0.1)],),
           ColorFilterPreset(
-              name: "Sutro", option: [_brightness(-0.1), _saturation(-0.1)]),
+              name: "Sutro", option: [_brightness(-0.1), _saturation(-0.1)],),
           ColorFilterPreset(
               name: "Toaster",
-              option: [_sepia(0.1), _colorOverlay(255, 145, 0, 0.2)]),
+              option: [_sepia(0.1), _colorOverlay(255, 145, 0, 0.2)],),
           ColorFilterPreset(
               name: "Walden",
-              option: [_brightness(0.1), _colorOverlay(255, 255, 0, 0.2)]),
+              option: [_brightness(0.1), _colorOverlay(255, 255, 0, 0.2)],),
           ColorFilterPreset(
               name: "1997",
-              option: [_colorOverlay(255, 25, 0, 0.15), _brightness(0.1)]),
+              option: [_colorOverlay(255, 25, 0, 0.15), _brightness(0.1)],),
           ColorFilterPreset(name: "Kelvin", option: [
             _colorOverlay(255, 140, 0, 0.1),
             _rgbScale(1.15, 1.05, 1),
-            _saturation(0.35)
-          ]),
+            _saturation(0.35),
+          ],),
           ColorFilterPreset(name: "Maven", option: [
             _colorOverlay(225, 240, 0, 0.1),
             _saturation(0.25),
-            _contrast(0.05)
-          ]),
+            _contrast(0.05),
+          ],),
           ColorFilterPreset(
-              name: "Ginza", option: [_sepia(0.06), _brightness(0.1)]),
+              name: "Ginza", option: [_sepia(0.06), _brightness(0.1)],),
           ColorFilterPreset(
-              name: "Skyline", option: [_saturation(0.35), _brightness(0.1)]),
+              name: "Skyline", option: [_saturation(0.35), _brightness(0.1)],),
           ColorFilterPreset(
-              name: "Dogpatch", option: [_contrast(0.15), _brightness(0.1)]),
+              name: "Dogpatch", option: [_contrast(0.15), _brightness(0.1)],),
           ColorFilterPreset(
               name: "Brooklyn",
-              option: [_colorOverlay(25, 240, 252, 0.05), _sepia(0.3)]),
+              option: [_colorOverlay(25, 240, 252, 0.05), _sepia(0.3)],),
           ColorFilterPreset(
               name: "Helena",
-              option: [_colorOverlay(208, 208, 86, 0.2), _contrast(0.15)]),
+              option: [_colorOverlay(208, 208, 86, 0.2), _contrast(0.15)],),
           ColorFilterPreset(
               name: "Ashby",
-              option: [_colorOverlay(255, 160, 25, 0.1), _brightness(0.1)]),
+              option: [_colorOverlay(255, 160, 25, 0.1), _brightness(0.1)],),
           ColorFilterPreset(
               name: "Charmes",
-              option: [_colorOverlay(255, 50, 80, 0.12), _contrast(0.05)])
+              option: [_colorOverlay(255, 50, 80, 0.12), _contrast(0.05)],),
         ];
 }
 
@@ -164,8 +164,8 @@ ColorOption _colorOverlay(double red, double green, double blue, double scale) {
     0,
     0,
     1,
-    0
-  ]);
+    0,
+  ],);
 }
 
 ColorOption _rgbScale(double r, double g, double b) {
@@ -190,7 +190,7 @@ ColorOption _rgbScale(double r, double g, double b) {
     0,
     1,
     0,
-  ]);
+  ],);
 }
 
 ColorOption _addictiveColor(double r, double g, double b) {
@@ -215,7 +215,7 @@ ColorOption _addictiveColor(double r, double g, double b) {
     0,
     1,
     0,
-  ]);
+  ],);
 }
 
 ColorOption _grayscale() {
@@ -240,7 +240,7 @@ ColorOption _grayscale() {
     0,
     1,
     0,
-  ]);
+  ],);
 }
 
 ColorOption _sepia(double value) {
@@ -265,7 +265,7 @@ ColorOption _sepia(double value) {
     0,
     1,
     0,
-  ]);
+  ],);
 }
 
 ColorOption _invert() {
@@ -290,7 +290,7 @@ ColorOption _invert() {
     0,
     1,
     0,
-  ]);
+  ],);
 }
 
 ColorOption _hue(double value) {
@@ -318,14 +318,14 @@ ColorOption _hue(double value) {
       0,
       1,
       0,
-    ]);
+    ],);
   }
 
-  var cosVal = cos(value);
-  var sinVal = sin(value);
-  var lumR = 0.213;
-  var lumG = 0.715;
-  var lumB = 0.072;
+  final cosVal = cos(value);
+  final sinVal = sin(value);
+  const lumR = 0.213;
+  const lumG = 0.715;
+  const lumB = 0.072;
 
   return ColorOption(
       matrix: List<double>.from(<double>[
@@ -349,7 +349,7 @@ ColorOption _hue(double value) {
     0,
     1,
     0,
-  ]).map((i) => i.toDouble()).toList());
+  ]).map((i) => i).toList(),);
 }
 
 ColorOption _brightness(double value) {
@@ -381,7 +381,7 @@ ColorOption _brightness(double value) {
       0,
       1,
       0,
-    ]);
+    ],);
   }
 
   return ColorOption(
@@ -405,8 +405,8 @@ ColorOption _brightness(double value) {
     0,
     0,
     1,
-    0
-  ]).map((i) => i.toDouble()).toList());
+    0,
+  ]).map((i) => i).toList(),);
 }
 
 ColorOption _contrast(double value) {
@@ -420,8 +420,8 @@ ColorOption _contrast(double value) {
 //     alpha: color.alpha,
 //   );
 // }
-  double adj = value * 255;
-  double factor = (259 * (adj + 255)) / (255 * (259 - adj));
+  final double adj = value * 255;
+  final double factor = (259 * (adj + 255)) / (255 * (259 - adj));
 
   return ColorOption(matrix: [
     factor,
@@ -444,7 +444,7 @@ ColorOption _contrast(double value) {
     0,
     1,
     0,
-  ]);
+  ],);
 }
 
 ColorOption _saturation(double value) {
@@ -472,14 +472,14 @@ ColorOption _saturation(double value) {
       0,
       1,
       0,
-    ]);
+    ],);
   }
 
-  var x =
-      ((1 + ((value > 0) ? ((3 * value) / 100) : (value / 100)))).toDouble();
-  var lumR = 0.3086;
-  var lumG = 0.6094;
-  var lumB = 0.082;
+  final x =
+      1 + ((value > 0) ? ((3 * value) / 100) : (value / 100));
+  const lumR = 0.3086;
+  const lumG = 0.6094;
+  const lumB = 0.082;
 
   return ColorOption(
       matrix: List<double>.from(<double>[
@@ -503,5 +503,5 @@ ColorOption _saturation(double value) {
     0,
     1,
     0,
-  ]).map((i) => i.toDouble()).toList());
+  ]).map((i) => i).toList(),);
 }

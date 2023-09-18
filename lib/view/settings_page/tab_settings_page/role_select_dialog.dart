@@ -59,8 +59,8 @@ class RoleSelectDialogState extends ConsumerState<RoleSelectDialog> {
                           onTap: () {
                             Navigator.of(context).pop(roles[index]);
                           },
-                          title: Text(roles[index].name));
-                    }),
+                          title: Text(roles[index].name),);
+                    },),
               ],
             ),
           ),

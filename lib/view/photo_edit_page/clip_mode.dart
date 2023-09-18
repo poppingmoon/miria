@@ -74,8 +74,8 @@ class ClipModeState extends ConsumerState<ClipMode> {
                         decoration: BoxDecoration(
                             border: Border.all(
                                 color: Colors.white.withAlpha(150),
-                                width: 2 * ratio)),
-                      )),
+                                width: 2 * ratio,),),
+                      ),),
 
                   //left top-down
                   Positioned(
@@ -86,7 +86,7 @@ class ClipModeState extends ConsumerState<ClipMode> {
                       child: DecoratedBox(
                         decoration:
                             BoxDecoration(color: Colors.black87.withAlpha(150)),
-                      )),
+                      ),),
                   //right top-down
                   Positioned(
                       left:
@@ -96,7 +96,7 @@ class ClipModeState extends ConsumerState<ClipMode> {
                       height: defaultSize.height,
                       child: DecoratedBox(
                           decoration: BoxDecoration(
-                              color: Colors.black87.withAlpha(150)))),
+                              color: Colors.black87.withAlpha(150),),),),
                   //left over crop
                   Positioned(
                       left: basePadding * ratio + cropOffset.dx,
@@ -105,7 +105,7 @@ class ClipModeState extends ConsumerState<ClipMode> {
                       height: cropOffset.dy,
                       child: DecoratedBox(
                           decoration: BoxDecoration(
-                              color: Colors.black87.withAlpha(150)))),
+                              color: Colors.black87.withAlpha(150),),),),
 
                   //left under crop
                   Positioned(
@@ -117,7 +117,7 @@ class ClipModeState extends ConsumerState<ClipMode> {
                           defaultSize.height - cropSize.height - cropOffset.dy,
                       child: DecoratedBox(
                           decoration: BoxDecoration(
-                              color: Colors.black87.withAlpha(150)))),
+                              color: Colors.black87.withAlpha(150),),),),
 
                   Positioned(
                     left: cropOffset.dx - (iconSize / 2 - basePadding) * ratio,
@@ -201,7 +201,7 @@ class ClipModeState extends ConsumerState<ClipMode> {
                         decoration: BoxDecoration(
                             border: reaction.$1 == selectedReaction
                                 ? Border.all(color: Colors.white)
-                                : null),
+                                : null,),
                         child: SizedBox(
                           width: reaction.$2.scale,
                           height: reaction.$2.scale,
@@ -218,7 +218,7 @@ class ClipModeState extends ConsumerState<ClipMode> {
                         ),
                       ),
                     ),
-                  )
+                  ),
               ],
             ),
           ),

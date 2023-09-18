@@ -57,7 +57,7 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                   // 自分のサーバーが非対応ということはない
                   isSupportedAnnouncement: true,
                   isSupportedEmoji: true,
-                  isSupportedLocalTimeline: true);
+                  isSupportedLocalTimeline: true,);
         } else {
           final federation = await ref
               .read(misskeyProvider(AccountScope.of(context)))
@@ -94,7 +94,6 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
 
               misskeyMeta = await misskeyServer.meta();
             } catch (e) {}
-            ;
           }
 
           ref.read(federationPageFederationDataProvider.notifier).state =
@@ -137,20 +136,18 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
           padding:
               const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 20),
           child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (data.bannerUrl != null)
                 NetworkImageView(
-                    url: data.bannerUrl!.toString(), type: ImageType.other),
+                    url: data.bannerUrl!, type: ImageType.other,),
               Row(
                 children: [
                   if (data.faviconUrl != null)
                     SizedBox(
                       width: 32,
                       child: NetworkImageView(
-                        url: data.faviconUrl!.toString(),
+                        url: data.faviconUrl!,
                         type: ImageType.serverIcon,
                       ),
                     ),
@@ -160,7 +157,7 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                       data.name,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
-                  )
+                  ),
                 ],
               ),
               const Padding(padding: EdgeInsets.only(top: 5)),
@@ -209,7 +206,7 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                       ),
                       Text(
                         "${data.softwareName} ${data.softwareVersion}",
-                      )
+                      ),
                     ],
                   ),
                   if (data.languages.isNotEmpty)
@@ -217,8 +214,8 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                       const Text("言語", textAlign: TextAlign.center),
                       Text(
                         data.languages.join(", "),
-                      )
-                    ]),
+                      ),
+                    ],),
                   if (data.tosUrl != null)
                     TableRow(children: [
                       const Text(
@@ -228,11 +225,11 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                       GestureDetector(
                         onTap: () => launchUrl(Uri.parse(data.tosUrl!)),
                         child: Text(
-                          data.tosUrl!.toString().tight,
+                          data.tosUrl!.tight,
                           style: AppTheme.of(context).linkStyle,
                         ),
-                      )
-                    ])
+                      ),
+                    ],),
                 ],
               ),
             ],

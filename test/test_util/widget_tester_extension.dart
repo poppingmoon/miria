@@ -15,8 +15,8 @@ extension WidgetTestExtension on WidgetTester {
     await tap(find.descendant(
         of: find.descendant(
             of: find.byType(Center),
-            matching: find.byType(IconButton).hitTestable()),
-        matching: find.byIcon(Icons.keyboard_arrow_down)));
+            matching: find.byType(IconButton).hitTestable(),),
+        matching: find.byIcon(Icons.keyboard_arrow_down),),);
     await pumpAndSettle();
   }
 }

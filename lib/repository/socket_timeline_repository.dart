@@ -118,7 +118,7 @@ abstract class SocketTimelineRepository extends TimelineRepository {
             reactionEmojis: reactionEmojis,
             myReaction: value.userId == account.i.id
                 ? (emoji?.name != null ? ":${emoji?.name}:" : null)
-                : registeredNote.myReaction));
+                : registeredNote.myReaction,),);
       },
       onUnreacted: (id, value) {
         final registeredNote = noteRepository.notes[id];
@@ -137,7 +137,7 @@ abstract class SocketTimelineRepository extends TimelineRepository {
             reactions: reaction,
             reactionEmojis: reactionEmojis,
             myReaction:
-                value.userId == account.i.id ? "" : registeredNote.myReaction));
+                value.userId == account.i.id ? "" : registeredNote.myReaction,),);
       },
       onVoted: (id, value) {
         final registeredNote = noteRepository.notes[id];
@@ -150,13 +150,13 @@ abstract class SocketTimelineRepository extends TimelineRepository {
         choices[value.choice] = choices[value.choice]
             .copyWith(votes: choices[value.choice].votes + 1);
         noteRepository.registerNote(
-            registeredNote.copyWith(poll: poll.copyWith(choices: choices)));
+            registeredNote.copyWith(poll: poll.copyWith(choices: choices)),);
       },
       onUpdated: (id, value) {
         final note = noteRepository.notes[id];
         if (note == null) return;
         noteRepository.registerNote(note.copyWith(
-            text: value.text, cw: value.cw, updatedAt: DateTime.now()));
+            text: value.text, cw: value.cw, updatedAt: DateTime.now(),),);
       },
     );
     await misskey.startStreaming();
@@ -227,7 +227,7 @@ abstract class SocketTimelineRepository extends TimelineRepository {
     final isSubscribed = subscribedList.indexWhere((element) =>
         element.noteId == item.noteId ||
         element.renoteId == item.noteId ||
-        element.replyId == item.noteId);
+        element.replyId == item.noteId,);
 
     if (index == -1) {
       subscribedList.add(item);
@@ -244,7 +244,7 @@ abstract class SocketTimelineRepository extends TimelineRepository {
       final isRenoteSubscribed = subscribedList.indexWhere((element) =>
           element.noteId == renoteId ||
           element.renoteId == renoteId ||
-          element.replyId == renoteId);
+          element.replyId == renoteId,);
       if (isRenoteSubscribed == -1) {
         socketController?.subNote(renoteId);
       }
@@ -256,7 +256,7 @@ abstract class SocketTimelineRepository extends TimelineRepository {
       final isRenoteSubscribed = subscribedList.indexWhere((element) =>
           element.noteId == replyId ||
           element.renoteId == replyId ||
-          element.replyId == replyId);
+          element.replyId == replyId,);
       if (isRenoteSubscribed == -1) {
         socketController?.subNote(replyId);
       }

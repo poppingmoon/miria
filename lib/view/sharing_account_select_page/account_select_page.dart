@@ -34,11 +34,11 @@ class SharingAccountSelectPageState
                 initialAccount: account,
                 initialText: widget.sharingText,
                 initialMediaFiles: widget.filePath,
-              ));
+              ),);
             },
             leading: AvatarIcon.fromIResponse(account.i),
             title: Text(account.i.name ?? account.i.username,
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             subtitle: Text(
               "@${account.userId}@${account.host}",
               style: Theme.of(context).textTheme.bodySmall,

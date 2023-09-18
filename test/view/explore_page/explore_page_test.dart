@@ -23,14 +23,14 @@ void main() {
             overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
             child: DefaultRootWidget(
               initialRoute: ExploreRoute(account: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
 
         expect(find.text(TestData.note1.text!), findsOneWidget);
         verify(notes.featured(argThat(equals(const NotesFeaturedRequest()))));
         await tester.pageNation();
         verify(notes.featured(argThat(equals(
-            NotesFeaturedRequest(untilId: TestData.note1.id, offset: 1)))));
+            NotesFeaturedRequest(untilId: TestData.note1.id, offset: 1),),),),);
       });
 
       testWidgets("アンケートのノートを表示できること", (tester) async {
@@ -46,18 +46,18 @@ void main() {
             overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
             child: DefaultRootWidget(
               initialRoute: ExploreRoute(account: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
         await tester.tap(find.text("アンケート"));
         await tester.pumpAndSettle();
 
         expect(find.text(TestData.note1.text!), findsOneWidget);
         verify(polls.recommendation(
-            argThat(equals(const NotesPollsRecommendationRequest()))));
+            argThat(equals(const NotesPollsRecommendationRequest())),),);
         await tester.pageNation();
 
         verify(polls.recommendation(
-            argThat(equals(const NotesPollsRecommendationRequest(offset: 1)))));
+            argThat(equals(const NotesPollsRecommendationRequest(offset: 1))),),);
       });
     });
 
@@ -73,7 +73,7 @@ void main() {
             overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
             child: DefaultRootWidget(
               initialRoute: ExploreRoute(account: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
         await tester.tap(find.text("ユーザー"));
         await tester.pumpAndSettle();
@@ -94,7 +94,7 @@ void main() {
             overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
             child: DefaultRootWidget(
               initialRoute: ExploreRoute(account: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
         await tester.tap(find.text("ユーザー"));
         await tester.pumpAndSettle();
@@ -105,14 +105,14 @@ void main() {
         verify(users.users(argThat(equals(const UsersUsersRequest(
             state: UsersState.alive,
             origin: Origin.local,
-            sort: UsersSortType.followerDescendant)))));
+            sort: UsersSortType.followerDescendant,),),),),);
         await tester.pageNation();
         verify(users.users(argThat(equals(const UsersUsersRequest(
           state: UsersState.alive,
           origin: Origin.local,
           sort: UsersSortType.followerDescendant,
           offset: 1,
-        )))));
+        ),),),),);
       });
 
       testWidgets("リモートのユーザーを表示できること", (tester) async {
@@ -128,7 +128,7 @@ void main() {
             overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
             child: DefaultRootWidget(
               initialRoute: ExploreRoute(account: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
         await tester.tap(find.text("ユーザー"));
         await tester.pumpAndSettle();
@@ -139,14 +139,14 @@ void main() {
         verify(users.users(argThat(equals(const UsersUsersRequest(
             state: UsersState.alive,
             origin: Origin.remote,
-            sort: UsersSortType.followerDescendant)))));
+            sort: UsersSortType.followerDescendant,),),),),);
         await tester.pageNation();
         verify(users.users(argThat(equals(const UsersUsersRequest(
           state: UsersState.alive,
           origin: Origin.remote,
           sort: UsersSortType.followerDescendant,
           offset: 1,
-        )))));
+        ),),),),);
       });
     });
 
@@ -163,13 +163,13 @@ void main() {
             overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
             child: DefaultRootWidget(
               initialRoute: ExploreRoute(account: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
         await tester.tap(find.text("ロール"));
         await tester.pumpAndSettle();
 
         expect(find.textContaining(TestData.role.name, findRichText: true),
-            findsOneWidget);
+            findsOneWidget,);
       });
     });
 
@@ -186,7 +186,7 @@ void main() {
             overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
             child: DefaultRootWidget(
               initialRoute: ExploreRoute(account: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
         await tester.tap(find.text("ハッシュタグ"));
         await tester.pumpAndSettle();
@@ -205,7 +205,7 @@ void main() {
             overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
             child: DefaultRootWidget(
               initialRoute: ExploreRoute(account: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
         await tester.tap(find.text("ハッシュタグ"));
         await tester.pumpAndSettle();
@@ -217,7 +217,7 @@ void main() {
         verify(hashtags.list(argThat(predicate<HashtagsListRequest>((request) =>
             request.attachedToLocalUserOnly == true &&
             request.sort ==
-                HashtagsListSortType.attachedLocalUsersDescendant))));
+                HashtagsListSortType.attachedLocalUsersDescendant,),),),);
       });
 
       testWidgets("リモートのハッシュタグを表示できること", (tester) async {
@@ -231,7 +231,7 @@ void main() {
             overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
             child: DefaultRootWidget(
               initialRoute: ExploreRoute(account: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
         await tester.tap(find.text("ハッシュタグ"));
         await tester.pumpAndSettle();
@@ -243,7 +243,7 @@ void main() {
         verify(hashtags.list(argThat(predicate<HashtagsListRequest>((request) =>
             request.attachedToRemoteUserOnly == true &&
             request.sort ==
-                HashtagsListSortType.attachedRemoteUsersDescendant))));
+                HashtagsListSortType.attachedRemoteUsersDescendant,),),),);
       });
     });
 

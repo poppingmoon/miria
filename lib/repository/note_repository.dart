@@ -50,7 +50,7 @@ class NoteRepository extends ChangeNotifier {
 
   void updateNoteStatus(
       String id, NoteStatus Function(NoteStatus status) statusPredicate,
-      {bool isNotify = true}) {
+      {bool isNotify = true,}) {
     _noteStatuses[id] = statusPredicate.call(_noteStatuses[id]!);
     if (isNotify) notifyListeners();
   }
@@ -73,10 +73,10 @@ class NoteRepository extends ChangeNotifier {
         isLongVisibleInitialized: false,
         isIncludeMuteWord: muteWordContents.any((e) => e.every((e2) =>
                 note.text?.contains(e2) == true ||
-                note.cw?.contains(e2) == true)) ||
+                note.cw?.contains(e2) == true,),) ||
             muteWordRegExps.any((e) =>
-                note.text?.contains(e) == true || note.cw?.contains(e) == true),
-        isMuteOpened: false);
+                note.text?.contains(e) == true || note.cw?.contains(e) == true,),
+        isMuteOpened: false,);
     final renote = note.renote;
     final reply = note.reply;
     if (renote != null) {

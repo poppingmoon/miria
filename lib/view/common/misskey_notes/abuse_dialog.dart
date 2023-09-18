@@ -40,13 +40,13 @@ class AbuseDialogState extends ConsumerState<AbuseDialog> {
         .reportAbuse(UsersReportAbuseRequest(
           userId: widget.targetUser.id,
           comment: controller.text,
-        ));
+        ),);
     if (!mounted) return;
     Navigator.of(context).pop();
     showDialog(
         context: context,
         builder: (context) =>
-            const SimpleMessageDialog(message: "内容が送信されました。ご報告ありがとうございました。"));
+            const SimpleMessageDialog(message: "内容が送信されました。ご報告ありがとうございました。"),);
   }
 
   @override
@@ -55,7 +55,7 @@ class AbuseDialogState extends ConsumerState<AbuseDialog> {
       account: widget.account,
       child: AlertDialog(
         title: SimpleMfmText(
-            "${widget.targetUser.name ?? widget.targetUser.username} を通報する"),
+            "${widget.targetUser.name ?? widget.targetUser.username} を通報する",),
         content: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +77,7 @@ class AbuseDialogState extends ConsumerState<AbuseDialog> {
         actions: [
           ElevatedButton(
               onPressed: abuse.expectFailure(context),
-              child: const Text("通報する"))
+              child: const Text("通報する"),),
         ],
       ),
     );

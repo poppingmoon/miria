@@ -33,7 +33,7 @@ void main() {
       verify(mockMisskeyRoles.notes(argThat(equals(const RolesNotesRequest(
         roleId: "abcdefg",
         limit: 30,
-      )))));
+      ),),),),);
     });
   });
 }
