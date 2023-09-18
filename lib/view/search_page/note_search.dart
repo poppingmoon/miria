@@ -29,7 +29,7 @@ class NoteSearch extends ConsumerStatefulWidget {
 }
 
 class NoteSearchState extends ConsumerState<NoteSearch> {
-  var isDetail = false;
+  bool isDetail = false;
   late final controller = TextEditingController(
     text: widget.initialCondition?.query,
   );
@@ -99,9 +99,7 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
                         "これらはハッシュタグでは機能しません。",
@@ -119,9 +117,6 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                             children: [
                               const Text("ユーザー"),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Expanded(
                                     child: selectedUser == null
@@ -154,9 +149,6 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                             children: [
                               const Text("チャンネル"),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Expanded(
                                     child: selectedChannel == null

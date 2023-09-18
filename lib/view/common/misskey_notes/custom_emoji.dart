@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/model/misskey_emoji_data.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/misskey_notes/network_image.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/view/themes/app_theme.dart';
 import 'package:twemoji_v2/twemoji_v2.dart';
 
@@ -88,7 +88,6 @@ class CustomEmojiState extends ConsumerState<CustomEmoji> {
             height: scopedFontSize,
           ),
         );
-        break;
       case UnicodeEmojiData():
         switch (
             ref.read(generalSettingsRepositoryProvider).settings.emojiType) {
@@ -98,27 +97,24 @@ class CustomEmojiState extends ConsumerState<CustomEmoji> {
               child: Text(
                 emojiData.char,
                 strutStyle: StrutStyle(
-                    height: 1.0,
-                    forceStrutHeight: true,
-                    fontSize: scopedFontSize),
+                  height: 1.0,
+                  forceStrutHeight: true,
+                  fontSize: scopedFontSize,
+                ),
                 style: style.merge(AppTheme.of(context).unicodeEmojiStyle),
               ),
             );
-            break;
           case EmojiType.twemoji:
             cachedImage = Twemoji(
               height: scopedFontSize,
               emoji: emojiData.char,
             );
-            break;
         }
-        break;
       case NotEmojiData():
         cachedImage = Text(
           emojiData.name,
           style: style,
         );
-        break;
     }
     return cachedImage!;
   }

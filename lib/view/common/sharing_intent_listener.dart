@@ -4,8 +4,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:miria/router/app_router.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 class SharingIntentListener extends ConsumerStatefulWidget {
   final AppRouter router;
@@ -35,14 +35,18 @@ class SharingIntentListenerState extends ConsumerState<SharingIntentListener> {
         ReceiveSharingIntent.getMediaStream().listen((event) {
       final items = event.map((e) => e.path).toList();
       if (account.length == 1) {
-        widget.router.push(NoteCreateRoute(
-          initialMediaFiles: items,
-          initialAccount: account.first,
-        ));
+        widget.router.push(
+          NoteCreateRoute(
+            initialMediaFiles: items,
+            initialAccount: account.first,
+          ),
+        );
       } else {
-        widget.router.push(SharingAccountSelectRoute(
-          filePath: items,
-        ));
+        widget.router.push(
+          SharingAccountSelectRoute(
+            filePath: items,
+          ),
+        );
       }
     });
     intentDataTextStreamSubscription =
@@ -58,14 +62,18 @@ class SharingIntentListenerState extends ConsumerState<SharingIntentListener> {
       }
 
       if (account.length == 1) {
-        widget.router.push(NoteCreateRoute(
-          initialText: event,
-          initialAccount: account.first,
-        ));
+        widget.router.push(
+          NoteCreateRoute(
+            initialText: event,
+            initialAccount: account.first,
+          ),
+        );
       } else {
-        widget.router.push(SharingAccountSelectRoute(
-          sharingText: event,
-        ));
+        widget.router.push(
+          SharingAccountSelectRoute(
+            sharingText: event,
+          ),
+        );
       }
     });
   }

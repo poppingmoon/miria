@@ -5,9 +5,9 @@ import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -102,12 +102,14 @@ class AccountRepository extends Notifier<List<Account>> {
     final Uri uri;
     try {
       uri = Uri(
-          scheme: "https",
-          host: server,
-          pathSegments: [".well-known", "nodeinfo"]);
+        scheme: "https",
+        host: server,
+        pathSegments: [".well-known", "nodeinfo"],
+      );
     } catch (e) {
       throw SpecifiedException(
-          "$server はサーバーとして認識できませんでした。\nサーバーには、「misskey.io」などを入力してください。");
+        "$server はサーバーとして認識できませんでした。\nサーバーには、「misskey.io」などを入力してください。",
+      );
     }
 
     try {
@@ -134,7 +136,10 @@ class AccountRepository extends Notifier<List<Account>> {
   }
 
   Future<void> loginAsPassword(
-      String server, String userId, String password) async {
+    String server,
+    String userId,
+    String password,
+  ) async {
     final token =
         await MisskeyServer().loginAsPassword(server, userId, password);
     final i = await Misskey(token: token, host: server).i.i();

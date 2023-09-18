@@ -75,7 +75,7 @@ class _AddReactionsDialogState extends State<AddReactionsDialog> {
                           text: //
                               " にアクセスして「値 (JSON)」の内容をすべて選択して"
                               "コピーしてください",
-                        )
+                        ),
                       ],
                     ),
                   ),

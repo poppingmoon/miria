@@ -19,8 +19,10 @@ class AccountSettingsRepository extends ChangeNotifier {
     try {
       _accountSettings
         ..clear()
-        ..addAll((jsonDecode(storedData) as List)
-            .map((e) => AccountSettings.fromJson(e)));
+        ..addAll(
+          (jsonDecode(storedData) as List)
+              .map((e) => AccountSettings.fromJson(e)),
+        );
     } catch (e) {
       if (kDebugMode) print(e);
     }
@@ -28,8 +30,10 @@ class AccountSettingsRepository extends ChangeNotifier {
 
   Future<void> save(AccountSettings settings) async {
     _accountSettings = _accountSettings
-      ..removeWhere((element) =>
-          element.userId == settings.userId && element.host == settings.host)
+      ..removeWhere(
+        (element) =>
+            element.userId == settings.userId && element.host == settings.host,
+      )
       ..add(settings)
       ..toList();
     await _saveAsList(_accountSettings);
@@ -37,21 +41,26 @@ class AccountSettingsRepository extends ChangeNotifier {
 
   Future<void> _saveAsList(List<AccountSettings> settings) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("account_settings",
-        jsonEncode(settings.map((e) => e.toJson()).toList()));
+    await prefs.setString(
+      "account_settings",
+      jsonEncode(settings.map((e) => e.toJson()).toList()),
+    );
     notifyListeners();
   }
 
   Future<void> removeAccount(Account account) async {
-    _accountSettings.removeWhere((element) =>
-        element.host == account.host && element.userId == account.userId);
+    _accountSettings.removeWhere(
+      (element) =>
+          element.host == account.host && element.userId == account.userId,
+    );
     await _saveAsList(_accountSettings);
     notifyListeners();
   }
 
   AccountSettings fromAccount(Account account) {
     return _accountSettings.firstWhereOrNull(
-            (e) => e.host == account.host && e.userId == account.userId) ??
+          (e) => e.host == account.host && e.userId == account.userId,
+        ) ??
         AccountSettings(
           userId: account.userId,
           host: account.host,

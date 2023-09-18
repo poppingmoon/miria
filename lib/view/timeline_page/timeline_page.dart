@@ -207,9 +207,7 @@ class TimelinePage extends ConsumerWidget {
                   return AccountScope(
                     account: tabSetting.account,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
                       children: [
                         BannerArea(tabSetting: tabSetting),
                         Expanded(
@@ -257,7 +255,6 @@ class TimelinePage extends ConsumerWidget {
         ),
       ),
       resizeToAvoidBottomInset: true,
-      drawerEnableOpenDragGesture: true,
       drawer: CommonDrawer(
         initialOpenAccount: page.tabSetting.account,
       ),
@@ -276,7 +273,8 @@ class BannerArea extends ConsumerWidget {
       accountRepositoryProvider.select((accounts) {
         return accounts
             .firstWhereOrNull(
-                (element) => element.acct == tabSetting.account.acct)
+              (element) => element.acct == tabSetting.account.acct,
+            )
             ?.i
             .unreadAnnouncements;
       }),
@@ -284,9 +282,11 @@ class BannerArea extends ConsumerWidget {
 
     // ダイアログの実装が大変なので（状態管理とか）いったんバナーと一緒に扱う
     final bannerData = bannerAnnouncement
-        ?.where((element) =>
-            element.display == AnnouncementDisplayType.banner ||
-            element.display == AnnouncementDisplayType.dialog)
+        ?.where(
+          (element) =>
+              element.display == AnnouncementDisplayType.banner ||
+              element.display == AnnouncementDisplayType.dialog,
+        )
         .lastOrNull;
 
     if (bannerData == null) return const SizedBox.shrink();
@@ -332,7 +332,8 @@ class AnnoucementInfo extends ConsumerWidget {
       accountRepositoryProvider.select((accounts) {
         return accounts
             .firstWhereOrNull(
-                (element) => element.acct == tabSetting.account.acct)
+              (element) => element.acct == tabSetting.account.acct,
+            )
             ?.i
             .unreadAnnouncements
             .isNotEmpty;
@@ -340,27 +341,32 @@ class AnnoucementInfo extends ConsumerWidget {
     );
     if (hasUnread == true) {
       return IconButton(
-          onPressed: () => announcementsRoute(context, ref),
-          icon: Stack(children: [
+        onPressed: () => announcementsRoute(context, ref),
+        icon: Stack(
+          children: [
             const Icon(Icons.campaign),
             Transform.translate(
-                offset: const Offset(12, 12),
-                child: SizedBox(
-                  width: 14,
-                  height: 14,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white, width: 1.5),
-                      borderRadius: BorderRadius.circular(20),
-                      color: Theme.of(context).primaryColor,
-                    ),
+              offset: const Offset(12, 12),
+              child: SizedBox(
+                width: 14,
+                height: 14,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 1.5),
+                    borderRadius: BorderRadius.circular(20),
+                    color: Theme.of(context).primaryColor,
                   ),
-                )),
-          ]));
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
     } else {
       return IconButton(
-          onPressed: () => announcementsRoute(context, ref),
-          icon: const Icon(Icons.campaign));
+        onPressed: () => announcementsRoute(context, ref),
+        icon: const Icon(Icons.campaign),
+      );
     }
   }
 }

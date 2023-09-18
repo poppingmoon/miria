@@ -66,9 +66,11 @@ class ImportExportRepository extends ChangeNotifier {
     final accounts = reader(accountRepositoryProvider);
     for (final accountSetting in importedAccountSettings) {
       // この端末でログイン済みのアカウントであれば
-      if (accounts.any((element) =>
-          element.host == accountSetting.host &&
-          element.userId == accountSetting.userId)) {
+      if (accounts.any(
+        (element) =>
+            element.host == accountSetting.host &&
+            element.userId == accountSetting.userId,
+      )) {
         reader(accountSettingsRepositoryProvider).save(accountSetting);
       }
     }

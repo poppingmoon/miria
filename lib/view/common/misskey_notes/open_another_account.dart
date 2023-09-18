@@ -31,8 +31,9 @@ class OpenAnotherAccountState extends ConsumerState<OpenAnotherAccount> {
       title: const Text("別のアカウントで開く"),
       onTap: () async {
         final account = await showDialog<Account?>(
-            context: context,
-            builder: (context2) => const AccountSelectDialog());
+          context: context,
+          builder: (context2) => const AccountSelectDialog(),
+        );
 
         if (account == null) return;
 
@@ -41,37 +42,46 @@ class OpenAnotherAccountState extends ConsumerState<OpenAnotherAccount> {
           final myHostUserData = await ref
               .read(misskeyProvider(account))
               .users
-              .showByName(UsersShowByUserNameRequest(
+              .showByName(
+                UsersShowByUserNameRequest(
                   userName: widget.note.user.username,
-                  host:
-                      widget.note.user.host ?? widget.beforeOpenAccount.host));
+                  host: widget.note.user.host ?? widget.beforeOpenAccount.host,
+                ),
+              );
 
           final myHostUserNotes = await ref
               .read(misskeyProvider(account))
               .users
-              .notes(UsersNotesRequest(
-                userId: myHostUserData.id,
-                untilDate: widget.note.createdAt.millisecondsSinceEpoch + 1,
-              ));
+              .notes(
+                UsersNotesRequest(
+                  userId: myHostUserData.id,
+                  untilDate: widget.note.createdAt.millisecondsSinceEpoch + 1,
+                ),
+              );
 
           final foundMyHostNote = myHostUserNotes.firstWhereOrNull(
-              (e) => e.uri?.pathSegments.lastOrNull == widget.note.id);
+            (e) => e.uri?.pathSegments.lastOrNull == widget.note.id,
+          );
           if (foundMyHostNote != null) {
             if (!mounted) return;
             context.pushRoute(
-                NoteDetailRoute(note: foundMyHostNote, account: account));
+              NoteDetailRoute(note: foundMyHostNote, account: account),
+            );
             return;
           }
           throw Exception();
         } catch (e) {
           // 最終手段として、連合で照会する
           final result = await ref.read(misskeyProvider(account)).ap.show(
-              ApShowRequest(
+                ApShowRequest(
                   uri: widget.note.uri ??
                       Uri(
-                          scheme: "https",
-                          host: widget.beforeOpenAccount.host,
-                          pathSegments: ["notes", widget.note.id])));
+                        scheme: "https",
+                        host: widget.beforeOpenAccount.host,
+                        pathSegments: ["notes", widget.note.id],
+                      ),
+                ),
+              );
           // よくかんがえたら無駄
           final resultNote = await ref
               .read(misskeyProvider(account))
@@ -104,8 +114,10 @@ class AccountSelectDialog extends ConsumerWidget {
                 account: account,
                 child: ListTile(
                   leading: AvatarIcon.fromIResponse(account.i),
-                  title: SimpleMfmText(account.i.name ?? account.i.username,
-                      style: Theme.of(context).textTheme.titleMedium),
+                  title: SimpleMfmText(
+                    account.i.name ?? account.i.username,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   subtitle: Text(
                     account.acct,
                     style: Theme.of(context).textTheme.bodySmall,
@@ -114,7 +126,7 @@ class AccountSelectDialog extends ConsumerWidget {
                     Navigator.of(context).pop(account);
                   },
                 ),
-              )
+              ),
           ],
         ),
       ),

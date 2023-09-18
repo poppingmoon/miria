@@ -9,8 +9,6 @@ part 'tab_setting.g.dart';
 
 @freezed
 class TabSetting with _$TabSetting {
-  const TabSetting._();
-
   const factory TabSetting({
     @IconDataConverter() required TabIcon icon,
 
@@ -41,6 +39,7 @@ class TabSetting with _$TabSetting {
     /// ファイル付きのノートのみを表示するかどうか
     @Default(false) bool withFiles,
   }) = _TabSetting;
+  const TabSetting._();
 
   factory TabSetting.fromJson(Map<String, Object?> json) =>
       _$TabSettingFromJson(json);

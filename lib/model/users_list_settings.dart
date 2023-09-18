@@ -5,12 +5,11 @@ part 'users_list_settings.freezed.dart';
 
 @freezed
 class UsersListSettings with _$UsersListSettings {
-  const UsersListSettings._();
-
   const factory UsersListSettings({
     @Default("") String name,
     @Default(false) bool isPublic,
   }) = _UsersListSettings;
+  const UsersListSettings._();
 
   static UsersListSettings fromUsersList(UsersList list) {
     return UsersListSettings(

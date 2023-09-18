@@ -28,7 +28,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
   // プラグインとか
   MockSpec<Dio>(),
-  MockSpec<FakeFilePickerPlatform>(as: #MockFilePickerPlatform)
+  MockSpec<FakeFilePickerPlatform>(as: #MockFilePickerPlatform),
 ])
 // ignore: unused_import
 import 'mock.mocks.dart';

@@ -23,7 +23,7 @@ class _FilteredEmojis
     return ref.read(emojiRepositoryProvider(arg)).defaultEmojis();
   }
 
-  void _updateEmojis(InputCompletionType type) async {
+  Future<void> _updateEmojis(InputCompletionType type) async {
     if (type is Emoji) {
       state =
           await ref.read(emojiRepositoryProvider(arg)).searchEmojis(type.query);
@@ -62,7 +62,6 @@ class EmojiKeyboard extends ConsumerWidget {
             offset: beforeSearchText.length + emoji.baseName.length + 2,
           ),
         );
-        break;
       case UnicodeEmojiData():
         controller.value = TextEditingValue(
           text: "$beforeSearchText${emoji.char}$after",
@@ -70,7 +69,6 @@ class EmojiKeyboard extends ConsumerWidget {
             offset: beforeSearchText.length + emoji.char.length,
           ),
         );
-        break;
       default:
         return;
     }
@@ -82,9 +80,6 @@ class EmojiKeyboard extends ConsumerWidget {
     final filteredEmojis = ref.watch(_filteredEmojisProvider(account));
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         for (final emoji in filteredEmojis)
           GestureDetector(

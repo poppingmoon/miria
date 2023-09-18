@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/common/modal_indicator.dart';
 import 'package:miria/view/login_page/centraing_widget.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/view/login_page/misskey_server_list_dialog.dart';
 
 class ApiKeyLogin extends ConsumerStatefulWidget {
@@ -55,52 +55,64 @@ class APiKeyLoginState extends ConsumerState<ApiKeyLogin> {
               1: FlexColumnWidth(),
             },
             children: [
-              TableRow(children: [
-                const Text("サーバー"),
-                TextField(
-                  controller: serverController,
-                  decoration: InputDecoration(
+              TableRow(
+                children: [
+                  const Text("サーバー"),
+                  TextField(
+                    controller: serverController,
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.dns),
                       suffixIcon: IconButton(
-                          onPressed: () async {
-                            final url = await showDialog<String?>(
-                                context: context,
-                                builder: (context) =>
-                                    const MisskeyServerListDialog());
-                            if (url != null && url.isNotEmpty) {
-                              serverController.text = url;
-                            }
-                          },
-                          icon: const Icon(Icons.search))),
-                ),
-              ]),
-              TableRow(children: [
-                const Padding(padding: EdgeInsets.only(bottom: 10)),
-                Container()
-              ]),
-              TableRow(children: [
-                const Padding(
-                  padding: EdgeInsets.only(right: 20),
-                  child: Text("APIキー"),
-                ),
-                TextField(
-                  controller: apiKeyController,
-                  decoration:
-                      const InputDecoration(prefixIcon: Icon(Icons.key)),
-                )
-              ]),
+                        onPressed: () async {
+                          final url = await showDialog<String?>(
+                            context: context,
+                            builder: (context) =>
+                                const MisskeyServerListDialog(),
+                          );
+                          if (url != null && url.isNotEmpty) {
+                            serverController.text = url;
+                          }
+                        },
+                        icon: const Icon(Icons.search),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              TableRow(
+                children: [
+                  const Padding(padding: EdgeInsets.only(bottom: 10)),
+                  Container(),
+                ],
+              ),
+              TableRow(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 20),
+                    child: Text("APIキー"),
+                  ),
+                  TextField(
+                    controller: apiKeyController,
+                    decoration:
+                        const InputDecoration(prefixIcon: Icon(Icons.key)),
+                  ),
+                ],
+              ),
               // ],
-              TableRow(children: [
-                Container(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: ElevatedButton(
+              TableRow(
+                children: [
+                  Container(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: ElevatedButton(
                       onPressed: () {
                         login().expectFailure(context);
                       },
-                      child: const Text("ログイン")),
-                )
-              ])
+                      child: const Text("ログイン"),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ],

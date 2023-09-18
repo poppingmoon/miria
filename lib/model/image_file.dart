@@ -5,8 +5,11 @@ sealed class MisskeyPostFile {
   final bool isNsfw;
   final String caption;
 
-  const MisskeyPostFile(
-      {required this.fileName, required this.isNsfw, required this.caption});
+  const MisskeyPostFile({
+    required this.fileName,
+    required this.isNsfw,
+    required this.caption,
+  });
 }
 
 class ImageFile extends MisskeyPostFile {

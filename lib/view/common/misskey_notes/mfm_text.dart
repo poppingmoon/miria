@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_highlighting/flutter_highlighting.dart';
 import 'package:flutter_highlighting/themes/github-dark.dart';
 import 'package:flutter_highlighting/themes/github.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:highlighting/languages/all.dart';
 import 'package:mfm_parser/mfm_parser.dart';
+import 'package:mfm_renderer/mfm_renderer.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/model/misskey_emoji_data.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
+import 'package:miria/view/common/misskey_notes/custom_emoji.dart';
 import 'package:miria/view/common/misskey_notes/network_image.dart';
 import 'package:miria/view/themes/app_theme.dart';
-import 'package:miria/view/common/misskey_notes/custom_emoji.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mfm_renderer/mfm_renderer.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 import 'package:twemoji_v2/twemoji_v2.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -67,8 +67,10 @@ class MfmTextState extends ConsumerState<MfmText> {
     //TODO: nodeinfoから相手先サーバーがMisskeyの場合はそこで解決する
     if (uri.host != AccountScope.of(context).host) {
       if (await canLaunchUrl(uri)) {
-        if (!await launchUrl(uri,
-            mode: LaunchMode.externalNonBrowserApplication)) {
+        if (!await launchUrl(
+          uri,
+          mode: LaunchMode.externalNonBrowserApplication,
+        )) {
           await launchUrl(uri, mode: LaunchMode.externalApplication);
         }
       }
@@ -76,11 +78,13 @@ class MfmTextState extends ConsumerState<MfmText> {
         uri.pathSegments.first == "clips") {
       // クリップはクリップの画面で開く
       context.pushRoute(
-          ClipDetailRoute(account: account, id: uri.pathSegments[1]));
+        ClipDetailRoute(account: account, id: uri.pathSegments[1]),
+      );
     } else if (uri.pathSegments.length == 2 &&
         uri.pathSegments.first == "channels") {
       context.pushRoute(
-          ChannelDetailRoute(account: account, channelId: uri.pathSegments[1]));
+        ChannelDetailRoute(account: account, channelId: uri.pathSegments[1]),
+      );
     } else if (uri.pathSegments.length == 2 &&
         uri.pathSegments.first == "notes") {
       final note = await ref
@@ -125,26 +129,33 @@ class MfmTextState extends ConsumerState<MfmText> {
     final response = await ref
         .read(misskeyProvider(AccountScope.of(context)))
         .users
-        .showByName(UsersShowByUserNameRequest(
-            userName: regResult?.group(1) ?? "", host: finalHost));
+        .showByName(
+          UsersShowByUserNameRequest(
+            userName: regResult?.group(1) ?? "",
+            host: finalHost,
+          ),
+        );
 
     if (!mounted) return;
     context.pushRoute(
-        UserRoute(userId: response.id, account: AccountScope.of(context)));
+      UserRoute(userId: response.id, account: AccountScope.of(context)),
+    );
   }
 
   Future<void> onSearch(String query) async {
     final uri = Uri(
-        scheme: "https",
-        host: "google.com",
-        pathSegments: ["search"],
-        queryParameters: {"q": query});
+      scheme: "https",
+      host: "google.com",
+      pathSegments: ["search"],
+      queryParameters: {"q": query},
+    );
     launchUrl(uri);
   }
 
   void onHashtagTap(String hashtag) {
     context.pushRoute(
-        HashtagRoute(account: AccountScope.of(context), hashtag: hashtag));
+      HashtagRoute(account: AccountScope.of(context), hashtag: hashtag),
+    );
   }
 
   @override
@@ -154,10 +165,11 @@ class MfmTextState extends ConsumerState<MfmText> {
       mfmNode: widget.mfmNode,
       emojiBuilder: (builderContext, emojiName, style) {
         final emojiData = MisskeyEmojiData.fromEmojiName(
-            emojiName: ":$emojiName:",
-            repository: ref
-                .read(emojiRepositoryProvider(AccountScope.of(builderContext))),
-            emojiInfo: widget.emoji);
+          emojiName: ":$emojiName:",
+          repository: ref
+              .read(emojiRepositoryProvider(AccountScope.of(builderContext))),
+          emojiInfo: widget.emoji,
+        );
         return DefaultTextStyle(
           style: style ?? DefaultTextStyle.of(builderContext).style,
           child: GestureDetector(
@@ -179,13 +191,14 @@ class MfmTextState extends ConsumerState<MfmText> {
         if (ref.read(generalSettingsRepositoryProvider).settings.emojiType ==
             EmojiType.system) {
           return TextSpan(
-              text: emoji,
-              style: style,
-              recognizer: MfmBlurScope.of(builderContext)
-                  ? null
-                  : (TapGestureRecognizer()
-                    ..onTap = () => widget.onEmojiTap
-                        ?.call(UnicodeEmojiData(char: emoji))));
+            text: emoji,
+            style: style,
+            recognizer: MfmBlurScope.of(builderContext)
+                ? null
+                : (TapGestureRecognizer()
+                  ..onTap = () =>
+                      widget.onEmojiTap?.call(UnicodeEmojiData(char: emoji))),
+          );
         } else {
           return WidgetSpan(
             child: GestureDetector(
@@ -250,20 +263,23 @@ class CodeBlock extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: HighlightView(
-            code,
-            languageId: resolvedLanguage,
-            theme:
-                AppTheme.of(context).isDarkMode ? githubDarkTheme : githubTheme,
-            padding: const EdgeInsets.all(10),
-            textStyle: const TextStyle(fontFamilyFallback: [
+        scrollDirection: Axis.horizontal,
+        child: HighlightView(
+          code,
+          languageId: resolvedLanguage,
+          theme:
+              AppTheme.of(context).isDarkMode ? githubDarkTheme : githubTheme,
+          padding: const EdgeInsets.all(10),
+          textStyle: const TextStyle(
+            fontFamilyFallback: [
               "Monaco",
               "Menlo",
               "Consolas",
-              "Noto Mono"
-            ]),
-          )),
+              "Noto Mono",
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -275,8 +291,10 @@ class EmojiInk extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isEnabled = ref.watch(generalSettingsRepositoryProvider
-        .select((value) => value.settings.enableDirectReaction));
+    final isEnabled = ref.watch(
+      generalSettingsRepositoryProvider
+          .select((value) => value.settings.enableDirectReaction),
+    );
     if (isEnabled) {
       return InkWell(child: child);
     } else {
@@ -314,7 +332,6 @@ class SimpleMfmText extends ConsumerWidget {
                 ref.read(emojiRepositoryProvider(AccountScope.of(context))),
             emojiInfo: emojis,
           ),
-          fontSizeRatio: 1,
           style: style,
         ),
       ),
@@ -365,10 +382,10 @@ class UserInformationState extends ConsumerState<UserInformation> {
                 child: NetworkImageView(
                   type: ImageType.role,
                   url: resolveIconUrl(badge.iconUrl!),
-                  height: (DefaultTextStyle.of(context).style.fontSize ?? 22),
+                  height: DefaultTextStyle.of(context).style.fontSize ?? 22,
                 ),
               ),
-            )
+            ),
       ],
     );
   }

@@ -1,5 +1,5 @@
-import 'package:miria/repository/emoji_repository.dart';
 import 'package:collection/collection.dart';
+import 'package:miria/repository/emoji_repository.dart';
 
 sealed class MisskeyEmojiData {
   final String baseName;
@@ -19,8 +19,8 @@ sealed class MisskeyEmojiData {
       return UnicodeEmojiData(char: emojiName);
     }
 
-    final customEmojiRegExp = RegExp(r":(.+?)@(.+?):");
-    final hostIncludedRegExp = RegExp(r":(.+?):");
+    final customEmojiRegExp = RegExp(":(.+?)@(.+?):");
+    final hostIncludedRegExp = RegExp(":(.+?):");
 
     // よそのサーバー
     if (emojiInfo != null && emojiInfo.isNotEmpty) {
@@ -32,12 +32,12 @@ sealed class MisskeyEmojiData {
       final found = emojiInfo[hostIncludedBaseName];
       if (found != null) {
         return CustomEmojiData(
-            baseName: baseName,
-            hostedName: emojiName,
-            url: Uri.parse(found),
-            isCurrentServer: false,
-            isSensitive: false //TODO: 要検証
-            );
+          baseName: baseName,
+          hostedName: emojiName,
+          url: Uri.parse(found),
+          isCurrentServer: false,
+          isSensitive: false, //TODO: 要検証
+        );
       }
     }
 
@@ -45,9 +45,10 @@ sealed class MisskeyEmojiData {
     if (customEmojiRegExp.hasMatch(emojiName)) {
       assert(repository != null);
       final EmojiRepositoryData? found = repository!.emoji?.firstWhereOrNull(
-          (e) =>
-              e.emoji.baseName ==
-              (customEmojiRegExp.firstMatch(emojiName)?.group(1) ?? emojiName));
+        (e) =>
+            e.emoji.baseName ==
+            (customEmojiRegExp.firstMatch(emojiName)?.group(1) ?? emojiName),
+      );
       if (found != null) {
         return found.emoji;
       } else {
@@ -60,10 +61,10 @@ sealed class MisskeyEmojiData {
     if (customEmojiRegExp2.hasMatch(emojiName)) {
       assert(repository != null);
       final EmojiRepositoryData? found = repository!.emoji?.firstWhereOrNull(
-          (e) =>
-              e.emoji.baseName ==
-              (customEmojiRegExp2.firstMatch(emojiName)?.group(1) ??
-                  emojiName));
+        (e) =>
+            e.emoji.baseName ==
+            (customEmojiRegExp2.firstMatch(emojiName)?.group(1) ?? emojiName),
+      );
 
       if (found != null) {
         return found.emoji;

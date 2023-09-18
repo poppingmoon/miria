@@ -56,14 +56,14 @@ class InstanceMutePageState extends ConsumerState<InstanceMutePage> {
             complete: (context, data) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
                 children: [
                   const Card(
                     child: Padding(
                       padding: EdgeInsets.all(10),
                       child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text("設定したサーバーのノートを隠します。")),
+                        alignment: Alignment.topLeft,
+                        child: Text("設定したサーバーのノートを隠します。"),
+                      ),
                     ),
                   ),
                   const Padding(
@@ -74,16 +74,16 @@ class InstanceMutePageState extends ConsumerState<InstanceMutePage> {
                     minLines: 5,
                     controller: controller,
                     autofocus: true,
-                    textCapitalization: TextCapitalization.none,
                   ),
                   Text(
                     "ミュートしたサーバーのユーザーへの返信を含めて、設定したサーバーの全てのノートとRenoteをミュートします。\n改行で区切って設定します。",
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   ElevatedButton.icon(
-                      onPressed: save,
-                      icon: const Icon(Icons.save),
-                      label: const Text("保存"))
+                    onPressed: save,
+                    icon: const Icon(Icons.save),
+                    label: const Text("保存"),
+                  ),
                 ],
               );
             },

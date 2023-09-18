@@ -25,8 +25,8 @@ class SeveralAccountGeneralSettingsPage extends ConsumerStatefulWidget {
 
 class SeveralAccountGeneralSettingsPageState
     extends ConsumerState<SeveralAccountGeneralSettingsPage> {
-  var defaultIsLocalOnly = false;
-  var defaultNoteVisibility = NoteVisibility.public;
+  bool defaultIsLocalOnly = false;
+  NoteVisibility defaultNoteVisibility = NoteVisibility.public;
   ReactionAcceptance? defaultReactionAppearance;
   AccountSettings? accountSettings;
 
@@ -37,9 +37,11 @@ class SeveralAccountGeneralSettingsPageState
       final loadedSettings = ref
           .read(accountSettingsRepositoryProvider)
           .accountSettings
-          .firstWhereOrNull((element) =>
-              element.userId == widget.account.userId &&
-              element.host == widget.account.host);
+          .firstWhereOrNull(
+            (element) =>
+                element.userId == widget.account.userId &&
+                element.host == widget.account.host,
+          );
       if (loadedSettings != null) {
         accountSettings = loadedSettings;
         if (!mounted) return;
@@ -53,14 +55,16 @@ class SeveralAccountGeneralSettingsPageState
   }
 
   Future<void> save() async {
-    await ref.read(accountSettingsRepositoryProvider).save(AccountSettings(
-          userId: widget.account.userId,
-          host: widget.account.host,
-          reactions: accountSettings?.reactions ?? [],
-          defaultNoteVisibility: defaultNoteVisibility,
-          defaultIsLocalOnly: defaultIsLocalOnly,
-          defaultReactionAcceptance: defaultReactionAppearance,
-        ));
+    await ref.read(accountSettingsRepositoryProvider).save(
+          AccountSettings(
+            userId: widget.account.userId,
+            host: widget.account.host,
+            reactions: accountSettings?.reactions ?? [],
+            defaultNoteVisibility: defaultNoteVisibility,
+            defaultIsLocalOnly: defaultIsLocalOnly,
+            defaultReactionAcceptance: defaultReactionAppearance,
+          ),
+        );
   }
 
   @override
@@ -69,13 +73,13 @@ class SeveralAccountGeneralSettingsPageState
       account: widget.account,
       child: Scaffold(
         appBar: AppBar(
-            title: SimpleMfm(
-                "${widget.account.i.name ?? widget.account.i.username} 全般設定")),
+          title: SimpleMfm(
+            "${widget.account.i.name ?? widget.account.i.username} 全般設定",
+          ),
+        ),
         body: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
                 padding: const EdgeInsets.all(10),
@@ -83,67 +87,72 @@ class SeveralAccountGeneralSettingsPageState
                   child: Padding(
                     padding: const EdgeInsets.all(15),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
                       children: [
-                        Text("プライバシー",
-                            style: Theme.of(context).textTheme.titleLarge),
+                        Text(
+                          "プライバシー",
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
                         const Text("デフォルトの公開範囲を設定します。"),
                         const Padding(padding: EdgeInsets.only(top: 10)),
                         const Text("ノート公開範囲"),
                         DropdownButton<NoteVisibility>(
-                            items: [
-                              for (final noteVisibility
-                                  in NoteVisibility.values)
-                                DropdownMenuItem(
-                                    value: noteVisibility,
-                                    child: Text(noteVisibility.displayName))
-                            ],
-                            value: defaultNoteVisibility,
-                            onChanged: (value) {
-                              setState(() {
-                                defaultNoteVisibility =
-                                    value ?? NoteVisibility.public;
-                                save();
-                              });
-                            }),
+                          items: [
+                            for (final noteVisibility in NoteVisibility.values)
+                              DropdownMenuItem(
+                                value: noteVisibility,
+                                child: Text(noteVisibility.displayName),
+                              ),
+                          ],
+                          value: defaultNoteVisibility,
+                          onChanged: (value) {
+                            setState(() {
+                              defaultNoteVisibility =
+                                  value ?? NoteVisibility.public;
+                              save();
+                            });
+                          },
+                        ),
                         const Padding(padding: EdgeInsets.only(top: 10)),
                         CheckboxListTile(
-                            value: defaultIsLocalOnly,
-                            title: const Text("連合をなしにします"),
-                            subtitle: const Text(
-                                "連合をなしにしても、非公開になりません。ほとんどの場合、連合なしにする必要はありません。"),
-                            onChanged: (value) {
-                              setState(() {
-                                defaultIsLocalOnly = !defaultIsLocalOnly;
-                                save();
-                              });
-                            }),
+                          value: defaultIsLocalOnly,
+                          title: const Text("連合をなしにします"),
+                          subtitle: const Text(
+                            "連合をなしにしても、非公開になりません。ほとんどの場合、連合なしにする必要はありません。",
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              defaultIsLocalOnly = !defaultIsLocalOnly;
+                              save();
+                            });
+                          },
+                        ),
                         const Padding(padding: EdgeInsets.only(top: 10)),
                         const Text("リアクションの受け入れ"),
                         DropdownButton<ReactionAcceptance?>(
-                            items: [
-                              const DropdownMenuItem(
-                                  value: null, child: Text("全部")),
-                              for (final acceptance
-                                  in ReactionAcceptance.values)
-                                DropdownMenuItem(
-                                    value: acceptance,
-                                    child: Text(acceptance.displayName))
-                            ],
-                            value: defaultReactionAppearance,
-                            onChanged: (value) {
-                              setState(() {
-                                defaultReactionAppearance = value;
-                                save();
-                              });
-                            }),
+                          items: [
+                            const DropdownMenuItem(
+                              child: Text("全部"),
+                            ),
+                            for (final acceptance in ReactionAcceptance.values)
+                              DropdownMenuItem(
+                                value: acceptance,
+                                child: Text(acceptance.displayName),
+                              ),
+                          ],
+                          value: defaultReactionAppearance,
+                          onChanged: (value) {
+                            setState(() {
+                              defaultReactionAppearance = value;
+                              save();
+                            });
+                          },
+                        ),
                       ],
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

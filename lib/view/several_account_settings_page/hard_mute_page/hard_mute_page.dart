@@ -77,11 +77,13 @@ class HardMutePageState extends ConsumerState<HardMutePage> {
               return Column(
                 children: [
                   const Card(
-                      child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                        "指定した条件のノートをタイムラインに追加しないようにします。追加されなかったノートは、条件を変更しても除外されたままになります。反映されるまでに時間がかかる場合があります。"),
-                  )),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        "指定した条件のノートをタイムラインに追加しないようにします。追加されなかったノートは、条件を変更しても除外されたままになります。反映されるまでに時間がかかる場合があります。",
+                      ),
+                    ),
+                  ),
                   const Padding(
                     padding: EdgeInsets.only(top: 10),
                   ),
@@ -96,9 +98,10 @@ class HardMutePageState extends ConsumerState<HardMutePage> {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   ElevatedButton.icon(
-                      onPressed: save,
-                      icon: const Icon(Icons.save),
-                      label: const Text("保存"))
+                    onPressed: save,
+                    icon: const Icon(Icons.save),
+                    label: const Text("保存"),
+                  ),
                 ],
               );
             },

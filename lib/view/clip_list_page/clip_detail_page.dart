@@ -1,9 +1,9 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/view/clip_list_page/clip_detail_note_list.dart';
 import 'package:miria/view/common/account_scope.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 @RoutePage()
 class ClipDetailPage extends ConsumerStatefulWidget {
@@ -24,8 +24,9 @@ class ClipDetailPageState extends ConsumerState<ClipDetailPage> {
       child: Scaffold(
         appBar: AppBar(),
         body: Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: ClipDetailNoteList(id: widget.id)),
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: ClipDetailNoteList(id: widget.id),
+        ),
       ),
     );
   }

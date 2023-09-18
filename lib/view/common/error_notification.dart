@@ -14,17 +14,16 @@ class ErrorNotification extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
-              border: Border.all(color: Theme.of(context).dividerColor)),
+            border: Border.all(color: Theme.of(context).dividerColor),
+          ),
           child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 "エラーが発生しました",
                 style: Theme.of(context).textTheme.titleMedium,
               ),
-              ErrorDetail(error: error)
+              ErrorDetail(error: error),
             ],
           ),
         ),

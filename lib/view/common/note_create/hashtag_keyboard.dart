@@ -51,7 +51,7 @@ class _FilteredHashtags
     return [];
   }
 
-  void _updateHashtags(InputCompletionType type) async {
+  Future<void> _updateHashtags(InputCompletionType type) async {
     if (type is Hashtag) {
       final query = type.query;
       if (query.isEmpty) {
@@ -98,9 +98,6 @@ class HashtagKeyboard extends ConsumerWidget {
     }
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         for (final hashtag in filteredHashtags)
           CustomKeyboardButton(

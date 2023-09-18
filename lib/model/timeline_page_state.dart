@@ -6,11 +6,10 @@ part 'timeline_page_state.freezed.dart';
 
 @freezed
 class TimelinePageState with _$TimelinePageState {
-  const TimelinePageState._();
-
   const factory TimelinePageState({
     required PageController pageController,
     required int index,
     required TabSetting tabSetting,
   }) = _TimelinePageState;
+  const TimelinePageState._();
 }

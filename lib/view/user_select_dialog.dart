@@ -61,9 +61,7 @@ class UserSelectContentState extends ConsumerState<UserSelectContent> {
   Widget build(BuildContext context) {
     final origin = ref.watch(usersSelectDialogOriginProvider);
     return Column(
-      mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         TextField(
           controller: queryController,
@@ -79,15 +77,13 @@ class UserSelectContentState extends ConsumerState<UserSelectContent> {
           builder: (context, constraints) {
             return ToggleButtons(
               isSelected: [
-                for (final element in Origin.values) element == origin
+                for (final element in Origin.values) element == origin,
               ],
               constraints: BoxConstraints.expand(
-                  width: constraints.maxWidth / Origin.values.length -
-                      Theme.of(context)
-                              .toggleButtonsTheme
-                              .borderWidth!
-                              .toInt() *
-                          Origin.values.length),
+                width: constraints.maxWidth / Origin.values.length -
+                    Theme.of(context).toggleButtonsTheme.borderWidth!.toInt() *
+                        Origin.values.length,
+              ),
               onPressed: (index) {
                 ref.read(usersSelectDialogOriginProvider.notifier).state =
                     Origin.values[index];
@@ -95,8 +91,9 @@ class UserSelectContentState extends ConsumerState<UserSelectContent> {
               children: [
                 for (final element in Origin.values)
                   Padding(
-                      padding: const EdgeInsets.only(top: 5, bottom: 5),
-                      child: Text(element.displayName))
+                    padding: const EdgeInsets.only(top: 5, bottom: 5),
+                    child: Text(element.displayName),
+                  ),
               ],
             );
           },
@@ -105,7 +102,7 @@ class UserSelectContentState extends ConsumerState<UserSelectContent> {
           child: UsersSelectContentList(
             onSelected: widget.onSelected,
           ),
-        )
+        ),
       ],
     );
   }
@@ -125,10 +122,12 @@ class UsersSelectContentList extends ConsumerWidget {
     }
 
     return PushableListView(
-      listKey: ObjectKey(Object.hashAll([
-        query,
-        origin,
-      ])),
+      listKey: ObjectKey(
+        Object.hashAll([
+          query,
+          origin,
+        ]),
+      ),
       initializeFuture: () async {
         final response = await ref
             .read(misskeyProvider(AccountScope.of(context)))
@@ -140,11 +139,13 @@ class UsersSelectContentList extends ConsumerWidget {
         final response = await ref
             .read(misskeyProvider(AccountScope.of(context)))
             .users
-            .search(UsersSearchRequest(
-              query: query,
-              origin: origin,
-              offset: length,
-            ));
+            .search(
+              UsersSearchRequest(
+                query: query,
+                origin: origin,
+                offset: length,
+              ),
+            );
         return response.toList();
       },
       itemBuilder: (context2, item) => UserListItem(

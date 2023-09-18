@@ -28,7 +28,8 @@ final dioProvider = Provider((ref) => Dio());
 final fileSystemProvider =
     Provider<FileSystem>((ref) => const LocalFileSystem());
 final misskeyProvider = Provider.family<Misskey, Account>(
-    (ref, account) => Misskey(token: account.token, host: account.host));
+  (ref, account) => Misskey(token: account.token, host: account.host),
+);
 
 final timelineRepositoryProvider =
     NotifierProvider.family<TimelineRepository, TimelineState, TabSetting>(
@@ -47,27 +48,35 @@ final timelinePageControllerProvider =
 
 final mainStreamRepositoryProvider =
     ChangeNotifierProvider.family<MainStreamRepository, Account>(
-        (ref, account) => MainStreamRepository(
-            ref.read(misskeyProvider(account)),
-            ref.read(emojiRepositoryProvider(account)),
-            account,
-            ref.read(accountRepositoryProvider.notifier)));
+  (ref, account) => MainStreamRepository(
+    ref.read(misskeyProvider(account)),
+    ref.read(emojiRepositoryProvider(account)),
+    account,
+    ref.read(accountRepositoryProvider.notifier),
+  ),
+);
 
-final favoriteProvider = ChangeNotifierProvider.autoDispose
-    .family<FavoriteRepository, Account>((ref, account) => FavoriteRepository(
-        ref.read(misskeyProvider(account)), ref.read(notesProvider(account))));
+final favoriteProvider =
+    ChangeNotifierProvider.autoDispose.family<FavoriteRepository, Account>(
+  (ref, account) => FavoriteRepository(
+    ref.read(misskeyProvider(account)),
+    ref.read(notesProvider(account)),
+  ),
+);
 
 final notesProvider = ChangeNotifierProvider.family<NoteRepository, Account>(
-    (ref, account) => NoteRepository(ref.read(misskeyProvider(account))));
+  (ref, account) => NoteRepository(ref.read(misskeyProvider(account))),
+);
 
 //TODO: アカウント毎である必要はない ホスト毎
 //TODO: のつもりだったけど、絵文字にロールが関係するようになるとアカウント毎になる
 final emojiRepositoryProvider = Provider.family<EmojiRepository, Account>(
-    (ref, account) => EmojiRepositoryImpl(
-        misskey: ref.read(misskeyProvider(account)),
-        account: account,
-        accountSettingsRepository:
-            ref.read(accountSettingsRepositoryProvider)));
+  (ref, account) => EmojiRepositoryImpl(
+    misskey: ref.read(misskeyProvider(account)),
+    account: account,
+    accountSettingsRepository: ref.read(accountSettingsRepositoryProvider),
+  ),
+);
 
 final accountRepositoryProvider =
     NotifierProvider<AccountRepository, List<Account>>(AccountRepository.new);
@@ -83,7 +92,8 @@ final generalSettingsRepositoryProvider =
 
 final errorEventProvider =
     StateProvider<(Object? error, BuildContext? context)>(
-        (ref) => (null, null));
+  (ref) => (null, null),
+);
 
 final photoEditProvider =
     StateNotifierProvider.autoDispose<PhotoEditStateNotifier, PhotoEdit>(
@@ -97,24 +107,26 @@ final importExportRepository =
 final noteCreateProvider = StateNotifierProvider.family
     .autoDispose<NoteCreateNotifier, NoteCreate, Account>(
   (ref, account) => NoteCreateNotifier(
-      NoteCreate(
-          account: account,
-          noteVisibility: ref
-              .read(accountSettingsRepositoryProvider)
-              .fromAccount(account)
-              .defaultNoteVisibility,
-          localOnly: ref
-              .read(accountSettingsRepositoryProvider)
-              .fromAccount(account)
-              .defaultIsLocalOnly,
-          reactionAcceptance: ref
-              .read(accountSettingsRepositoryProvider)
-              .fromAccount(account)
-              .defaultReactionAcceptance),
-      ref.read(fileSystemProvider),
-      ref.read(dioProvider),
-      ref.read(misskeyProvider(account)),
-      ref.read(errorEventProvider.notifier)),
+    NoteCreate(
+      account: account,
+      noteVisibility: ref
+          .read(accountSettingsRepositoryProvider)
+          .fromAccount(account)
+          .defaultNoteVisibility,
+      localOnly: ref
+          .read(accountSettingsRepositoryProvider)
+          .fromAccount(account)
+          .defaultIsLocalOnly,
+      reactionAcceptance: ref
+          .read(accountSettingsRepositoryProvider)
+          .fromAccount(account)
+          .defaultReactionAcceptance,
+    ),
+    ref.read(fileSystemProvider),
+    ref.read(dioProvider),
+    ref.read(misskeyProvider(account)),
+    ref.read(errorEventProvider.notifier),
+  ),
 );
 
 final miAuthCallbackProvider = StateProvider.autoDispose<Uri?>(

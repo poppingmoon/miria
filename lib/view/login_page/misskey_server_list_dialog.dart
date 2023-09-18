@@ -19,11 +19,12 @@ class MisskeyServerListDialogState
     return AlertDialog(
       title: const Text("ログインするサーバーをえらんでください"),
       content: SizedBox(
-          width: double.maxFinite,
-          child: MisskeyServerList(
-            isDisableUnloginable: true,
-            onTap: (item) => Navigator.of(context).pop(item.url),
-          )),
+        width: double.maxFinite,
+        child: MisskeyServerList(
+          isDisableUnloginable: true,
+          onTap: (item) => Navigator.of(context).pop(item.url),
+        ),
+      ),
     );
   }
 }
@@ -42,7 +43,6 @@ class MisskeyServerList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Align(
-      alignment: Alignment.center,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 800),
         child: FutureListView<JoinMisskeyInstanceInfo>(
@@ -50,8 +50,10 @@ class MisskeyServerList extends ConsumerWidget {
             final instances =
                 await JoinMisskey(host: "instanceapp.misskey.page").instances();
             return instances.instancesInfos.toList()
-              ..sort((a, b) => (b.nodeInfo?.usage?.users?.total ?? 0)
-                  .compareTo((a.nodeInfo?.usage?.users?.total ?? 0)));
+              ..sort(
+                (a, b) => (b.nodeInfo?.usage?.users?.total ?? 0)
+                    .compareTo(a.nodeInfo?.usage?.users?.total ?? 0),
+              );
           }(),
           builder: (context, item) {
             final description =
@@ -70,13 +72,11 @@ class MisskeyServerList extends ConsumerWidget {
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        color: available ? null : Colors.grey.withAlpha(160),
-                        border:
-                            Border.all(color: Theme.of(context).dividerColor)),
+                      color: available ? null : Colors.grey.withAlpha(160),
+                      border: Border.all(color: Theme.of(context).dividerColor),
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
                       children: [
                         Row(
                           children: [
@@ -92,7 +92,8 @@ class MisskeyServerList extends ConsumerWidget {
                                       MediaQuery.of(context).textScaleFactor *
                                       2,
                                   child: Image.network(
-                                      "https://instanceapp.misskey.page/instance-icons/${item.url}.webp"),
+                                    "https://instanceapp.misskey.page/instance-icons/${item.url}.webp",
+                                  ),
                                 ),
                               ),
                             Expanded(child: Text(item.name)),
@@ -118,12 +119,13 @@ class MisskeyServerList extends ConsumerWidget {
                         ),
                         if (!available)
                           Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                "非対応のサーバーです",
-                                style: Theme.of(context).textTheme.bodySmall,
-                                textAlign: TextAlign.right,
-                              ))
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "非対応のサーバーです",
+                              style: Theme.of(context).textTheme.bodySmall,
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
                       ],
                     ),
                   ),

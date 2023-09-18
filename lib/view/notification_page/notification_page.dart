@@ -1,23 +1,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/misskey_emoji_data.dart';
 import 'package:miria/providers.dart';
-import 'package:miria/router/app_router.dart';
-import 'package:miria/view/notification_page/notification_page_data.dart';
 import 'package:miria/view/common/account_scope.dart';
-import 'package:miria/view/common/avatar_icon.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/common/misskey_notes/custom_emoji.dart';
-import 'package:miria/view/common/misskey_notes/mfm_text.dart' as mfm_text;
 import 'package:miria/view/common/misskey_notes/mfm_text.dart';
 import 'package:miria/view/common/misskey_notes/misskey_note.dart'
     as misskey_note;
 import 'package:miria/view/common/pushable_listview.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/view/notification_page/notification_page_data.dart';
 import 'package:miria/view/user_page/user_list_item.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
@@ -41,10 +37,11 @@ class NotificationPageState extends ConsumerState<NotificationPage> {
         account: widget.account,
         child: PushableListView<NotificationData>(
           initializeFuture: () async {
-            final result =
-                await misskey.i.notifications(const INotificationsRequest(
-              limit: 50,
-            ));
+            final result = await misskey.i.notifications(
+              const INotificationsRequest(
+                limit: 50,
+              ),
+            );
             ref
                 .read(notesProvider(widget.account))
                 .registerAll(result.map((e) => e.note).whereNotNull());
@@ -57,14 +54,14 @@ class NotificationPageState extends ConsumerState<NotificationPage> {
           },
           nextFuture: (lastElement, _) async {
             final result = await misskey.i.notifications(
-                INotificationsRequest(limit: 50, untilId: lastElement.id));
+              INotificationsRequest(limit: 50, untilId: lastElement.id),
+            );
             ref
                 .read(notesProvider(widget.account))
                 .registerAll(result.map((e) => e.note).whereNotNull());
             return result.toNotificationData();
           },
           itemBuilder: (context, notification) => Align(
-            alignment: Alignment.center,
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 800),
               child: NotificationItem(
@@ -116,8 +113,6 @@ class NotificationItem extends ConsumerWidget {
           padding:
               const EdgeInsets.only(left: 10, top: 10, bottom: 30, right: 10),
           child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -125,11 +120,13 @@ class NotificationItem extends ConsumerWidget {
                   if (hasReaction && hasRenote)
                     Expanded(
                       child: SimpleMfmText(
-                          "${notification.reactionUsers.first.$2?.name ?? notification.reactionUsers.first.$2?.username}さんたちがリアクションしはって、${notification.renoteUsers.first?.name ?? notification.renoteUsers.first?.username}さんたちがリノートしはったで",
-                          emojis: Map.of(
-                              notification.reactionUsers.first.$2?.emojis ?? {})
-                            ..addAll(
-                                notification.renoteUsers.first?.emojis ?? {})),
+                        "${notification.reactionUsers.first.$2?.name ?? notification.reactionUsers.first.$2?.username}さんたちがリアクションしはって、${notification.renoteUsers.first?.name ?? notification.renoteUsers.first?.username}さんたちがリノートしはったで",
+                        emojis: Map.of(
+                          notification.reactionUsers.first.$2?.emojis ?? {},
+                        )..addAll(
+                            notification.renoteUsers.first?.emojis ?? {},
+                          ),
+                      ),
                     ),
                   if (hasReaction && !hasRenote)
                     Expanded(
@@ -142,10 +139,11 @@ class NotificationItem extends ConsumerWidget {
                   if (hasRenote && !hasReaction)
                     Expanded(
                       child: SimpleMfmText(
-                          "${notification.renoteUsers.first?.name ?? notification.renoteUsers.first?.username}さんたちがリノートしはったで",
-                          emojis: notification.renoteUsers.first?.emojis ?? {}),
+                        "${notification.renoteUsers.first?.name ?? notification.renoteUsers.first?.username}さんたちがリノートしはったで",
+                        emojis: notification.renoteUsers.first?.emojis ?? {},
+                      ),
                     ),
-                  Text(notification.createdAt.differenceNow)
+                  Text(notification.createdAt.differenceNow),
                 ],
               ),
               if (notification.note != null)
@@ -161,11 +159,12 @@ class NotificationItem extends ConsumerWidget {
                     if (hasRenote)
                       Container(
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Theme.of(context).primaryColor)),
+                          border: Border.all(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                         padding: const EdgeInsets.all(5),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text("リノートしてくれはった人"),
@@ -173,7 +172,7 @@ class NotificationItem extends ConsumerWidget {
                               children: [
                                 for (final user
                                     in notification.renoteUsers.whereNotNull())
-                                  UserListItem(user: user)
+                                  UserListItem(user: user),
                               ],
                             ),
                           ],
@@ -184,16 +183,19 @@ class NotificationItem extends ConsumerWidget {
                     if (hasReaction)
                       Container(
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Theme.of(context).primaryColor)),
+                          border: Border.all(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                         padding: const EdgeInsets.all(5),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text("リアクションしてくれはった人"),
-                            for (final reaction in notification.reactionUsers
-                                .mapIndexed(
-                                    (index, element) => (index, element))) ...[
+                            for (final reaction
+                                in notification.reactionUsers.mapIndexed(
+                              (index, element) => (index, element),
+                            )) ...[
                               if (reaction.$2.$1 != null &&
                                       (reaction.$1 > 0 &&
                                           notification
@@ -206,8 +208,10 @@ class NotificationItem extends ConsumerWidget {
                                   emojiData: MisskeyEmojiData.fromEmojiName(
                                     emojiName: reaction.$2.$1!,
                                     repository: ref.read(
-                                        emojiRepositoryProvider(
-                                            AccountScope.of(context))),
+                                      emojiRepositoryProvider(
+                                        AccountScope.of(context),
+                                      ),
+                                    ),
                                     emojiInfo:
                                         notification.note?.reactionEmojis,
                                   ),
@@ -215,15 +219,16 @@ class NotificationItem extends ConsumerWidget {
                                 ),
                               if (reaction.$2.$2 != null)
                                 Padding(
-                                    padding: EdgeInsets.only(left: 20),
-                                    child: UserListItem(user: reaction.$2.$2!)),
-                            ]
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: UserListItem(user: reaction.$2.$2!),
+                                ),
+                            ],
                           ],
                         ),
-                      )
+                      ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         );
@@ -235,7 +240,7 @@ class NotificationItem extends ConsumerWidget {
           child: Column(
             children: [
               if (notification.note != null)
-                misskey_note.MisskeyNote(note: notification.note!)
+                misskey_note.MisskeyNote(note: notification.note!),
             ],
           ),
         );
@@ -246,7 +251,6 @@ class NotificationItem extends ConsumerWidget {
           padding:
               const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 10),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(

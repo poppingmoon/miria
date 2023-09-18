@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/providers.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/view/common/error_notification.dart';
 
 class PushableListView<T> extends ConsumerStatefulWidget {
@@ -33,9 +33,9 @@ class PushableListView<T> extends ConsumerStatefulWidget {
 }
 
 class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
-  var isLoading = false;
+  bool isLoading = false;
   Object? error;
-  var isFinalPage = false;
+  bool isFinalPage = false;
   final scrollController = ScrollController();
 
   final items = <T>[];
@@ -53,8 +53,11 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
           isLoading = false;
           if (result.isEmpty) isFinalPage = true;
         });
-        scrollController.animateTo(-scrollController.position.pixels,
-            duration: const Duration(milliseconds: 100), curve: Curves.easeIn);
+        scrollController.animateTo(
+          -scrollController.position.pixels,
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.easeIn,
+        );
       } catch (e) {
         if (kDebugMode) print(e);
         if (mounted) {
@@ -135,8 +138,10 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
             return Container();
           }
 
-          if (ref.read(generalSettingsRepositoryProvider
-                  .select((value) => value.settings.automaticPush)) ==
+          if (ref.read(
+                generalSettingsRepositoryProvider
+                    .select((value) => value.settings.automaticPush),
+              ) ==
               AutomaticPush.automatic) {
             nextLoad();
           }
@@ -145,12 +150,11 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
             children: [
               if (error != null)
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ErrorNotification(error: error),
                     widget.additionalErrorInfo?.call(context, error) ??
-                        const SizedBox.shrink()
+                        const SizedBox.shrink(),
                   ],
                 ),
               Center(
@@ -164,8 +168,9 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
                       )
                     : const Padding(
                         padding: EdgeInsets.all(20),
-                        child: CircularProgressIndicator()),
-              )
+                        child: CircularProgressIndicator(),
+                      ),
+              ),
             ],
           );
         }

@@ -22,7 +22,7 @@ class ClipModalSheet extends ConsumerStatefulWidget {
 }
 
 class ClipModalSheetState extends ConsumerState<ClipModalSheet> {
-  var isLoading = false;
+  bool isLoading = false;
 
   List<Clip> userClips = [];
   List<Clip> noteClips = [];
@@ -54,7 +54,8 @@ class ClipModalSheetState extends ConsumerState<ClipModalSheet> {
 
   Future<void> remove(Clip clip) async {
     await ref.read(misskeyProvider(widget.account)).clips.removeNote(
-        ClipsRemoveNoteRequest(clipId: clip.id, noteId: widget.noteId));
+          ClipsRemoveNoteRequest(clipId: clip.id, noteId: widget.noteId),
+        );
     setState(() {
       noteClips.remove(clip);
     });
@@ -75,10 +76,11 @@ class ClipModalSheetState extends ConsumerState<ClipModalSheet> {
         if ((e.response?.data as Map?)?["error"]?["code"] ==
             "ALREADY_CLIPPED") {
           final result = await SimpleConfirmDialog.show(
-              context: context,
-              message: "すでにクリップに追加されたノートのようです。",
-              primary: "クリップから削除する",
-              secondary: "なにもしない");
+            context: context,
+            message: "すでにクリップに追加されたノートのようです。",
+            primary: "クリップから削除する",
+            secondary: "なにもしない",
+          );
           if (result == true) {
             await remove(clip);
           }
@@ -95,24 +97,25 @@ class ClipModalSheetState extends ConsumerState<ClipModalSheet> {
     if (isLoading) return const Center(child: CircularProgressIndicator());
 
     return ListView.builder(
-        itemCount: userClips.length,
-        itemBuilder: (context, index) {
-          final isCliped =
-              noteClips.any((element) => element.id == userClips[index].id);
-          return ListTile(
-            leading: isCliped
-                ? const Icon(Icons.check)
-                : SizedBox(width: Theme.of(context).iconTheme.size),
-            onTap: () {
-              if (isCliped) {
-                remove(userClips[index]).expectFailure(context);
-              } else {
-                add(userClips[index]).expectFailure(context);
-              }
-            },
-            title: Text(userClips[index].name ?? ""),
-            subtitle: Text(userClips[index].description ?? ""),
-          );
-        });
+      itemCount: userClips.length,
+      itemBuilder: (context, index) {
+        final isCliped =
+            noteClips.any((element) => element.id == userClips[index].id);
+        return ListTile(
+          leading: isCliped
+              ? const Icon(Icons.check)
+              : SizedBox(width: Theme.of(context).iconTheme.size),
+          onTap: () {
+            if (isCliped) {
+              remove(userClips[index]).expectFailure(context);
+            } else {
+              add(userClips[index]).expectFailure(context);
+            }
+          },
+          title: Text(userClips[index].name ?? ""),
+          subtitle: Text(userClips[index].description ?? ""),
+        );
+      },
+    );
   }
 }

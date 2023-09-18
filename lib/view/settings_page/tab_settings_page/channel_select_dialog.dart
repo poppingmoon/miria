@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 class ChannelSelectDialog extends ConsumerStatefulWidget {
@@ -61,32 +61,36 @@ class ChannelSelectDialogState extends ConsumerState<ChannelSelectDialog> {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: followedChannels.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                          onTap: () {
-                            Navigator.of(context).pop(followedChannels[index]);
-                          },
-                          title: Text(followedChannels[index].name));
-                    }),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: followedChannels.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      onTap: () {
+                        Navigator.of(context).pop(followedChannels[index]);
+                      },
+                      title: Text(followedChannels[index].name),
+                    );
+                  },
+                ),
                 const Padding(padding: EdgeInsets.only(top: 30)),
                 Text(
                   "お気に入り",
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: favoritedChannels.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                          onTap: () {
-                            Navigator.of(context).pop(favoritedChannels[index]);
-                          },
-                          title: Text(favoritedChannels[index].name));
-                    }),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: favoritedChannels.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      onTap: () {
+                        Navigator.of(context).pop(favoritedChannels[index]);
+                      },
+                      title: Text(favoritedChannels[index].name),
+                    );
+                  },
+                ),
               ],
             ),
           ),

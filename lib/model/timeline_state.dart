@@ -5,8 +5,6 @@ part 'timeline_state.freezed.dart';
 
 @freezed
 class TimelineState with _$TimelineState {
-  const TimelineState._();
-
   const factory TimelineState({
     /// ストリーミングで受け取ったノート. 最後尾が最新
     @Default(<Note>[]) List<Note> newerNotes,
@@ -26,6 +24,7 @@ class TimelineState with _$TimelineState {
     /// 初期化中のエラー
     Object? error,
   }) = _TimelineState;
+  const TimelineState._();
 
   Note? get oldestNote {
     return olderNotes.lastOrNull ?? newerNotes.firstOrNull;

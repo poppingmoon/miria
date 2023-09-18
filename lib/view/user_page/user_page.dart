@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
@@ -8,7 +9,6 @@ import 'package:miria/view/common/misskey_notes/mfm_text.dart';
 import 'package:miria/view/user_page/user_clips.dart';
 import 'package:miria/view/user_page/user_detail.dart';
 import 'package:miria/view/user_page/user_notes.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/view/user_page/user_plays.dart';
 import 'package:miria/view/user_page/user_reactions.dart';
 import 'package:misskey_dart/misskey_dart.dart';
@@ -74,7 +74,7 @@ class UserPageState extends ConsumerState<UserPage> {
                 if (isRemoteUser) const Tab(text: "ノート（リモート）"),
                 const Tab(text: "クリップ"),
                 if (isReactionAvailable) const Tab(text: "リアクション"),
-                const Tab(text: "Play")
+                const Tab(text: "Play"),
               ],
               isScrollable: true,
             ),
