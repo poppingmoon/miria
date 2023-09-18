@@ -231,6 +231,11 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
   }
 
   void reconnect() {
+    state = state.copyWith(
+      isDownDirectionLoading: false,
+      isLastLoaded: false,
+      error: null,
+    );
     try {
       _socketController.reconnect();
     } catch (e) {
