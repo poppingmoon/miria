@@ -1,9 +1,12 @@
-
-include: package:flutter_lints/flutter.yaml
+include: package:lint/strict.yaml
 
 linter:
 
 analyzer:
   exclude:
-    - /**/*.freezed.dart
-    - /**/*.g.dart
+    - "**/*.freezed.dart"
+    - "**/*.g.dart"
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
