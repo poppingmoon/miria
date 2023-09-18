@@ -18,6 +18,9 @@ final _noteFilterProvider =
   if (nsfwInherit == NSFWInherit.removeNsfw && note.containsSensitiveFile) {
     return false;
   }
+  if (tabSetting.withFiles && note.files.isEmpty) {
+    return false;
+  }
   return true;
 });
 

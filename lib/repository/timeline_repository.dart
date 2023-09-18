@@ -48,21 +48,25 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onVoted: onVoted,
+          withFiles: _tabSetting.withFiles,
         ),
       TabType.homeTimeline => misskey.homeTimelineStream(
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onVoted: onVoted,
+          withFiles: _tabSetting.withFiles,
         ),
       TabType.globalTimeline => misskey.globalTimelineStream(
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onVoted: onVoted,
+          withFiles: _tabSetting.withFiles,
         ),
       TabType.hybridTimeline => misskey.hybridTimelineStream(
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onVoted: onVoted,
+          withFiles: _tabSetting.withFiles,
         ),
       TabType.channel => misskey.channelStream(
           channelId: _tabSetting.channelId!,
@@ -96,24 +100,28 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           NotesLocalTimelineRequest(
             limit: limit,
             untilId: untilId,
+            withFiles: _tabSetting.withFiles,
           ),
         ),
       TabType.homeTimeline => misskey.notes.homeTimeline(
           NotesTimelineRequest(
             limit: limit ?? 30,
             untilId: untilId,
+            withFiles: _tabSetting.withFiles,
           ),
         ),
       TabType.globalTimeline => misskey.notes.globalTimeline(
           NotesGlobalTimelineRequest(
             limit: limit,
             untilId: untilId,
+            withFiles: _tabSetting.withFiles,
           ),
         ),
       TabType.hybridTimeline => misskey.notes.hybridTimeline(
           NotesHybridTimelineRequest(
             limit: limit,
             untilId: untilId,
+            withFiles: _tabSetting.withFiles,
           ),
         ),
       TabType.channel => misskey.channels.timeline(
@@ -128,6 +136,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
             listId: _tabSetting.listId!,
             limit: limit,
             untilId: untilId,
+            withFiles: _tabSetting.withFiles,
           ),
         ),
       TabType.antenna => misskey.antennas.notes(

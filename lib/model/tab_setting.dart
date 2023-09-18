@@ -34,7 +34,12 @@ class TabSetting with _$TabSetting {
 
     /// アカウント情報
     required Account account,
+
+    /// Renoteを表示するかどうか
     @Default(true) bool renoteDisplay,
+
+    /// ファイル付きのノートのみを表示するかどうか
+    @Default(false) bool withFiles,
   }) = _TabSetting;
 
   factory TabSetting.fromJson(Map<String, Object?> json) =>

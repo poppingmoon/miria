@@ -17,6 +17,7 @@ _$_TabSetting _$$_TabSettingFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       account: Account.fromJson(json['account'] as Map<String, dynamic>),
       renoteDisplay: json['renoteDisplay'] as bool? ?? true,
+      withFiles: json['withFiles'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_TabSettingToJson(_$_TabSetting instance) =>
@@ -30,6 +31,7 @@ Map<String, dynamic> _$$_TabSettingToJson(_$_TabSetting instance) =>
       'name': instance.name,
       'account': instance.account.toJson(),
       'renoteDisplay': instance.renoteDisplay,
+      'withFiles': instance.withFiles,
     };
 
 const _$TabTypeEnumMap = {

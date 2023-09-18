@@ -18,7 +18,7 @@ dependencies:
   misskey_dart:
     git:
       url: https://github.com/poppingmoon/misskey_dart.git
-      ref: next
+      ref: 3609cad7e7dad4e5f26a5cd3cd9a09b63aaaef1a
   mfm_renderer:
     git:
       url: https://github.com/poppingmoon/mfm_renderer.git

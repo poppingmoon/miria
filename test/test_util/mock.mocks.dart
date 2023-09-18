@@ -1421,6 +1421,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
       String,
       _i6.TimelineVoted,
     )? onVoted,
+    bool? withReplies,
+    bool? withFiles,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1432,6 +1434,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
             #onUnreacted: onUnreacted,
             #onDeleted: onDeleted,
             #onVoted: onVoted,
+            #withReplies: withReplies,
+            #withFiles: withFiles,
           },
         ),
         returnValue: _FakeSocketController_26(
@@ -1445,6 +1449,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #withReplies: withReplies,
+              #withFiles: withFiles,
             },
           ),
         ),
@@ -1459,6 +1465,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #withReplies: withReplies,
+              #withFiles: withFiles,
             },
           ),
         ),
@@ -1482,6 +1490,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
       String,
       _i6.TimelineVoted,
     )? onVoted,
+    bool? withReplies,
+    bool? withFiles,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1493,6 +1503,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
             #onUnreacted: onUnreacted,
             #onDeleted: onDeleted,
             #onVoted: onVoted,
+            #withReplies: withReplies,
+            #withFiles: withFiles,
           },
         ),
         returnValue: _FakeSocketController_26(
@@ -1506,6 +1518,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #withReplies: withReplies,
+              #withFiles: withFiles,
             },
           ),
         ),
@@ -1520,6 +1534,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #withReplies: withReplies,
+              #withFiles: withFiles,
             },
           ),
         ),
@@ -1543,6 +1559,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
       String,
       _i6.TimelineVoted,
     )? onVoted,
+    bool? withReplies,
+    bool? withFiles,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1554,6 +1572,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
             #onUnreacted: onUnreacted,
             #onDeleted: onDeleted,
             #onVoted: onVoted,
+            #withReplies: withReplies,
+            #withFiles: withFiles,
           },
         ),
         returnValue: _FakeSocketController_26(
@@ -1567,6 +1587,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #withReplies: withReplies,
+              #withFiles: withFiles,
             },
           ),
         ),
@@ -1581,6 +1603,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #withReplies: withReplies,
+              #withFiles: withFiles,
             },
           ),
         ),
@@ -1604,6 +1628,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
       String,
       _i6.TimelineVoted,
     )? onVoted,
+    bool? withReplies,
+    bool? withFiles,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1615,6 +1641,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
             #onUnreacted: onUnreacted,
             #onDeleted: onDeleted,
             #onVoted: onVoted,
+            #withReplies: withReplies,
+            #withFiles: withFiles,
           },
         ),
         returnValue: _FakeSocketController_26(
@@ -1628,6 +1656,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #withReplies: withReplies,
+              #withFiles: withFiles,
             },
           ),
         ),
@@ -1642,6 +1672,8 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #withReplies: withReplies,
+              #withFiles: withFiles,
             },
           ),
         ),

@@ -43,7 +43,12 @@ mixin _$TabSetting {
 
   /// アカウント情報
   Account get account => throw _privateConstructorUsedError;
+
+  /// Renoteを表示するかどうか
   bool get renoteDisplay => throw _privateConstructorUsedError;
+
+  /// ファイル付きのノートのみを表示するかどうか
+  bool get withFiles => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -66,7 +71,8 @@ abstract class $TabSettingCopyWith<$Res> {
       dynamic isSubscribe,
       String name,
       Account account,
-      bool renoteDisplay});
+      bool renoteDisplay,
+      bool withFiles});
 
   $TabIconCopyWith<$Res> get icon;
   $AccountCopyWith<$Res> get account;
@@ -94,6 +100,7 @@ class _$TabSettingCopyWithImpl<$Res, $Val extends TabSetting>
     Object? name = null,
     Object? account = null,
     Object? renoteDisplay = null,
+    Object? withFiles = null,
   }) {
     return _then(_value.copyWith(
       icon: null == icon
@@ -132,6 +139,10 @@ class _$TabSettingCopyWithImpl<$Res, $Val extends TabSetting>
           ? _value.renoteDisplay
           : renoteDisplay // ignore: cast_nullable_to_non_nullable
               as bool,
+      withFiles: null == withFiles
+          ? _value.withFiles
+          : withFiles // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 
@@ -169,7 +180,8 @@ abstract class _$$_TabSettingCopyWith<$Res>
       dynamic isSubscribe,
       String name,
       Account account,
-      bool renoteDisplay});
+      bool renoteDisplay,
+      bool withFiles});
 
   @override
   $TabIconCopyWith<$Res> get icon;
@@ -197,6 +209,7 @@ class __$$_TabSettingCopyWithImpl<$Res>
     Object? name = null,
     Object? account = null,
     Object? renoteDisplay = null,
+    Object? withFiles = null,
   }) {
     return _then(_$_TabSetting(
       icon: null == icon
@@ -232,6 +245,10 @@ class __$$_TabSettingCopyWithImpl<$Res>
           ? _value.renoteDisplay
           : renoteDisplay // ignore: cast_nullable_to_non_nullable
               as bool,
+      withFiles: null == withFiles
+          ? _value.withFiles
+          : withFiles // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -248,7 +265,8 @@ class _$_TabSetting extends _TabSetting {
       this.isSubscribe = true,
       required this.name,
       required this.account,
-      this.renoteDisplay = true})
+      this.renoteDisplay = true,
+      this.withFiles = false})
       : super._();
 
   factory _$_TabSetting.fromJson(Map<String, dynamic> json) =>
@@ -286,13 +304,20 @@ class _$_TabSetting extends _TabSetting {
   /// アカウント情報
   @override
   final Account account;
+
+  /// Renoteを表示するかどうか
   @override
   @JsonKey()
   final bool renoteDisplay;
 
+  /// ファイル付きのノートのみを表示するかどうか
+  @override
+  @JsonKey()
+  final bool withFiles;
+
   @override
   String toString() {
-    return 'TabSetting(icon: $icon, tabType: $tabType, channelId: $channelId, listId: $listId, antennaId: $antennaId, isSubscribe: $isSubscribe, name: $name, account: $account, renoteDisplay: $renoteDisplay)';
+    return 'TabSetting(icon: $icon, tabType: $tabType, channelId: $channelId, listId: $listId, antennaId: $antennaId, isSubscribe: $isSubscribe, name: $name, account: $account, renoteDisplay: $renoteDisplay, withFiles: $withFiles)';
   }
 
   @override
@@ -312,7 +337,9 @@ class _$_TabSetting extends _TabSetting {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.account, account) || other.account == account) &&
             (identical(other.renoteDisplay, renoteDisplay) ||
-                other.renoteDisplay == renoteDisplay));
+                other.renoteDisplay == renoteDisplay) &&
+            (identical(other.withFiles, withFiles) ||
+                other.withFiles == withFiles));
   }
 
   @JsonKey(ignore: true)
@@ -327,7 +354,8 @@ class _$_TabSetting extends _TabSetting {
       const DeepCollectionEquality().hash(isSubscribe),
       name,
       account,
-      renoteDisplay);
+      renoteDisplay,
+      withFiles);
 
   @JsonKey(ignore: true)
   @override
@@ -353,7 +381,8 @@ abstract class _TabSetting extends TabSetting {
       final dynamic isSubscribe,
       required final String name,
       required final Account account,
-      final bool renoteDisplay}) = _$_TabSetting;
+      final bool renoteDisplay,
+      final bool withFiles}) = _$_TabSetting;
   const _TabSetting._() : super._();
 
   factory _TabSetting.fromJson(Map<String, dynamic> json) =
@@ -391,7 +420,13 @@ abstract class _TabSetting extends TabSetting {
   /// アカウント情報
   Account get account;
   @override
+
+  /// Renoteを表示するかどうか
   bool get renoteDisplay;
+  @override
+
+  /// ファイル付きのノートのみを表示するかどうか
+  bool get withFiles;
   @override
   @JsonKey(ignore: true)
   _$$_TabSettingCopyWith<_$_TabSetting> get copyWith =>
