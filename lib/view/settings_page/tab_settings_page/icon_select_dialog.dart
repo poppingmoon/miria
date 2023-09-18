@@ -69,6 +69,12 @@ class IconSelectDialog extends StatelessWidget {
     Icons.dataset_outlined,
     Icons.diamond,
     Icons.diamond_outlined,
+    Icons.photo,
+    Icons.photo_outlined,
+    Icons.movie,
+    Icons.movie_outlined,
+    Icons.music_note,
+    Icons.music_note_outlined,
   ];
 
   final Account account;

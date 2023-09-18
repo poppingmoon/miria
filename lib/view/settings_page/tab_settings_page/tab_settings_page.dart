@@ -37,6 +37,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
   TabIcon? selectedIcon;
   bool renoteDisplay = true;
   bool isSubscribe = true;
+  bool withFiles = false;
 
   @override
   void didChangeDependencies() {
@@ -55,6 +56,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
       selectedIcon = tabSetting.icon;
       renoteDisplay = tabSetting.renoteDisplay;
       isSubscribe = tabSetting.isSubscribe;
+      withFiles = tabSetting.withFiles;
       if (channelId != null) {
         Future(() async {
           selectedChannel = await ref
@@ -283,6 +285,15 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                 onChanged: (value) =>
                     setState(() => isSubscribe = !isSubscribe),
               ),
+              CheckboxListTile(
+                title: const Text("ファイル付きのノートのみ表示する"),
+                value: withFiles,
+                onChanged: (value) {
+                  setState(() {
+                    withFiles = value!;
+                  });
+                },
+              ),
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
@@ -334,6 +345,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                       antennaId: selectedAntenna?.id,
                       renoteDisplay: renoteDisplay,
                       isSubscribe: isSubscribe,
+                      withFiles: withFiles,
                     );
                     if (widget.tabIndex == null) {
                       await ref
