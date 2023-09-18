@@ -120,7 +120,7 @@ class ImportExportRepository extends ChangeNotifier {
   }
 
   Future<void> export(BuildContext context, Account account) async {
-    final folders = await showDialog<List<DriveFolder>>(
+    final result = await showDialog<FolderResult>(
       context: context,
       builder: (context2) => FolderSelectDialog(
         account: account,
@@ -128,9 +128,9 @@ class ImportExportRepository extends ChangeNotifier {
         confirmationText: "このフォルダーに保存する",
       ),
     );
-    if (folders == null) return;
+    if (result == null) return;
 
-    final folder = folders.lastOrNull;
+    final folder = result.folder;
 
     final alreadyExists =
         await reader(misskeyProvider(account)).drive.files.find(
