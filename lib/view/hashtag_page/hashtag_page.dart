@@ -42,7 +42,7 @@ class HashtagPage extends ConsumerWidget {
                     .read(misskeyProvider(account))
                     .notes
                     .searchByTag(NotesSearchByTagRequest(
-                        tag: hashtag, untilId: lastItem.id));
+                        tag: hashtag, untilId: lastItem.id,),);
                 ref.read(notesProvider(account)).registerAll(response);
                 return response.toList();
               },
@@ -52,10 +52,10 @@ class HashtagPage extends ConsumerWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               context.pushRoute(NoteCreateRoute(
-                  initialAccount: account, initialText: "#$hashtag"));
+                  initialAccount: account, initialText: "#$hashtag",),);
             },
             child: const Icon(Icons.edit),
           ),
-        ));
+        ),);
   }
 }

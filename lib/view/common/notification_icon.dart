@@ -13,7 +13,7 @@ class NotificationIcon extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final hasUnread = ref.watch(
         mainStreamRepositoryProvider(AccountScope.of(context))
-            .select((repository) => repository.hasUnreadNotification));
+            .select((repository) => repository.hasUnreadNotification),);
 
     if (hasUnread) {
       return IconButton(
@@ -33,13 +33,13 @@ class NotificationIcon extends ConsumerWidget {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                )),
-          ]));
+                ),),
+          ],),);
     } else {
       return IconButton(
           onPressed: () => context
               .pushRoute(NotificationRoute(account: AccountScope.of(context))),
-          icon: const Icon(Icons.notifications));
+          icon: const Icon(Icons.notifications),);
     }
   }
 }

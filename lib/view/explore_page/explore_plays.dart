@@ -31,13 +31,13 @@ class ExplorePagesState extends ConsumerState<ExplorePlay> {
                 Uri(
                     scheme: "https",
                     host: AccountScope.of(context).host,
-                    pathSegments: ["play", item.id]),
-                mode: LaunchMode.externalApplication);
+                    pathSegments: ["play", item.id],),
+                mode: LaunchMode.externalApplication,);
           },
           title: MfmText(mfmText: item.title),
           subtitle: MfmText(mfmText: item.summary),
         );
-      }),
+      },),
     );
   }
 }

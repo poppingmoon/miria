@@ -43,10 +43,10 @@ class NoteDetailDialogState extends ConsumerState<NoteDetailDialog> {
                   ?.where((element) =>
                       element.emoji.baseName.contains(reactionTextField.text) ||
                       element.aliases
-                          .any((e) => e.contains(reactionTextField.text)))
+                          .any((e) => e.contains(reactionTextField.text)),)
                   .take(10)
                   .map((e) => e.emoji) ??
-              []);
+              [],);
         }
       });
     });

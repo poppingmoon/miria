@@ -28,7 +28,7 @@ void main() {
 
       verify(timelineTester.mockMisskeyNotes.homeTimeline(argThat(equals(
           const NotesTimelineRequest(
-              limit: 30, withFiles: false, withRenotes: false)))));
+              limit: 30, withFiles: false, withRenotes: false,),),),),);
     });
   });
 }

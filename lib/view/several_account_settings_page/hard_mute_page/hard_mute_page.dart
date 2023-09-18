@@ -92,7 +92,7 @@ class HardMutePageState extends ConsumerState<HardMutePage> {
                   ElevatedButton.icon(
                       onPressed: save,
                       icon: const Icon(Icons.save),
-                      label: const Text("保存"))
+                      label: const Text("保存"),),
                 ],
               );
             },

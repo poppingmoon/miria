@@ -64,7 +64,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
             context: context,
             message: "フォロー解除してもええか？",
             primary: "解除する",
-            secondary: "やっぱりやめる") !=
+            secondary: "やっぱりやめる",) !=
         true) {
       return;
     }
@@ -106,7 +106,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
               account: widget.account,
               response: response,
               isMe: isMe,
-            ));
+            ),);
     if (result == null) return;
 
     switch (result) {
@@ -114,32 +114,26 @@ class UserDetailState extends ConsumerState<UserDetail> {
         setState(() {
           response = response.copyWith(isMuted: true);
         });
-        break;
       case UserControl.deleteMute:
         setState(() {
           response = response.copyWith(isMuted: false);
         });
-        break;
       case UserControl.createRenoteMute:
         setState(() {
           response = response.copyWith(isRenoteMuted: true);
         });
-        break;
       case UserControl.deleteRenoteMute:
         setState(() {
           response = response.copyWith(isRenoteMuted: false);
         });
-        break;
       case UserControl.createBlock:
         setState(() {
           response = response.copyWith(isBlocked: true);
         });
-        break;
       case UserControl.deleteBlock:
         setState(() {
           response = response.copyWith(isBlocked: false);
         });
-        break;
     }
   }
 
@@ -153,15 +147,14 @@ class UserDetailState extends ConsumerState<UserDetail> {
   Widget buildContent() {
     final userName =
         "${response.username}${response.host != null ? "@${response.host ?? ""}" : ""}";
-    final isMe = (widget.response.host == null &&
-        widget.response.username == AccountScope.of(context).userId);
+    final isMe = widget.response.host == null &&
+        widget.response.username == AccountScope.of(context).userId;
 
     return Column(children: [
       if (widget.controlAccount == null)
         Padding(
             padding: const EdgeInsets.only(right: 10),
             child: Row(
-              mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (isMe)
@@ -180,27 +173,27 @@ class UserDetailState extends ConsumerState<UserDetail> {
                                   child: Padding(
                                 padding: EdgeInsets.all(10),
                                 child: Text("Renoteのミュート中"),
-                              )),
+                              ),),
                             if (response.isMuted ?? false)
                               const Card(
                                   child: Padding(
                                 padding: EdgeInsets.all(10),
                                 child: Text("ミュート中"),
-                              )),
+                              ),),
                             if (response.isBlocked ?? false)
                               const Card(
                                   child: Padding(
                                 padding: EdgeInsets.all(10),
                                 child: Text("ブロック中"),
-                              )),
-                            if ((response.isFollowed ?? false))
+                              ),),
+                            if (response.isFollowed ?? false)
                               const Padding(
                                 padding: EdgeInsets.only(right: 8.0),
                                 child: Card(
                                     child: Padding(
                                   padding: EdgeInsets.all(10),
                                   child: Text("フォローされています"),
-                                )),
+                                ),),
                               ),
                             if (!isFollowEditing)
                               (response.isFollowing ?? false)
@@ -239,8 +232,8 @@ class UserDetailState extends ConsumerState<UserDetail> {
                                                 ?.fontSize ??
                                             22,
                                         child:
-                                            const CircularProgressIndicator()),
-                                    label: const Text("更新中")),
+                                            const CircularProgressIndicator(),),
+                                    label: const Text("更新中"),),
                               ),
                           ],
                         ),
@@ -248,13 +241,12 @@ class UserDetailState extends ConsumerState<UserDetail> {
                     ),
                   ),
                 Align(
-                  alignment: Alignment.center,
                   child: IconButton(
                       onPressed: () => userControl(isMe),
-                      icon: const Icon(Icons.more_vert)),
-                )
+                      icon: const Icon(Icons.more_vert),),
+                ),
               ],
-            )),
+            ),),
       const Divider(),
       Padding(
         padding: const EdgeInsets.only(left: 10, right: 10, top: 12),
@@ -269,8 +261,6 @@ class UserDetailState extends ConsumerState<UserDetail> {
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       MfmText(
@@ -281,11 +271,11 @@ class UserDetailState extends ConsumerState<UserDetail> {
                       Text(
                         "@$userName",
                         style: Theme.of(context).textTheme.bodyLarge,
-                      )
+                      ),
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
           const Padding(padding: EdgeInsets.only(top: 5)),
@@ -294,7 +284,6 @@ class UserDetailState extends ConsumerState<UserDetail> {
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Text(
@@ -312,14 +301,14 @@ class UserDetailState extends ConsumerState<UserDetail> {
                                     account: widget.account,
                                     initialMemo: memo,
                                     userId: response.id,
-                                  ));
+                                  ),);
                           if (result != null) {
                             setState(() {
                               memo = result;
                             });
                           }
                         },
-                        icon: const Icon(Icons.edit)),
+                        icon: const Icon(Icons.edit),),
                   ],
                 ),
               ),
@@ -333,9 +322,9 @@ class UserDetailState extends ConsumerState<UserDetail> {
                 Container(
                     decoration: BoxDecoration(
                         border:
-                            Border.all(color: Theme.of(context).dividerColor)),
+                            Border.all(color: Theme.of(context).dividerColor),),
                     padding: const EdgeInsets.all(5),
-                    child: Text(role.name)),
+                    child: Text(role.name),),
             ],
           ),
           const Padding(padding: EdgeInsets.only(top: 5)),
@@ -344,20 +333,18 @@ class UserDetailState extends ConsumerState<UserDetail> {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Row(
                       children: [
                         Icon(Icons.warning_amber_rounded),
-                        Text("リモートユーザーのため、情報が不完全です。")
+                        Text("リモートユーザーのため、情報が不完全です。"),
                       ],
                     ),
                     GestureDetector(
                       onTap: () => context.pushRoute(FederationRoute(
                           account: AccountScope.of(context),
-                          host: response.host!)),
+                          host: response.host!,),),
                       child: Text(
                         "サーバー情報を表示",
                         style: AppTheme.of(context).linkStyle,
@@ -368,7 +355,6 @@ class UserDetailState extends ConsumerState<UserDetail> {
               ),
             ),
           Align(
-            alignment: Alignment.center,
             child: MfmText(
               mfmText: response.description ?? "",
               emoji: response.emojis ?? {},
@@ -377,8 +363,8 @@ class UserDetailState extends ConsumerState<UserDetail> {
           const Padding(padding: EdgeInsets.only(top: 20)),
           Table(
             columnWidths: const {
-              1: FlexColumnWidth(1),
-              2: FlexColumnWidth(1),
+              1: FlexColumnWidth(),
+              2: FlexColumnWidth(),
             },
             children: [
               TableRow(children: [
@@ -388,8 +374,8 @@ class UserDetailState extends ConsumerState<UserDetail> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                TableCell(child: Text(response.location ?? ""))
-              ]),
+                TableCell(child: Text(response.location ?? "")),
+              ],),
               TableRow(children: [
                 const TableCell(
                   child: Text(
@@ -398,15 +384,15 @@ class UserDetailState extends ConsumerState<UserDetail> {
                   ),
                 ),
                 TableCell(child: Text(response.createdAt.format)), //FIXME
-              ]),
+              ],),
               TableRow(children: [
                 const TableCell(
                     child: Text(
                   "誕生日",
                   textAlign: TextAlign.center,
-                )),
-                TableCell(child: Text(response.birthday?.format ?? ""))
-              ])
+                ),),
+                TableCell(child: Text(response.birthday?.format ?? "")),
+              ],),
             ],
           ),
           const Padding(padding: EdgeInsets.only(top: 20)),
@@ -429,8 +415,8 @@ class UserDetailState extends ConsumerState<UserDetail> {
                         child: MfmText(
                       mfmText: field.value,
                       emoji: response.emojis ?? {},
-                    )),
-                  ])
+                    ),),
+                  ],),
               ],
             ),
             const Padding(padding: EdgeInsets.only(top: 20)),
@@ -439,46 +425,45 @@ class UserDetailState extends ConsumerState<UserDetail> {
             Column(
               children: [
                 Text(response.notesCount.format(),
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 Text(
                   "ノート",
                   style: Theme.of(context).textTheme.bodyMedium,
-                )
+                ),
               ],
             ),
             InkWell(
               onTap: () => context.pushRoute(UserFolloweeRoute(
-                  userId: response.id, account: AccountScope.of(context))),
+                  userId: response.id, account: AccountScope.of(context),),),
               child: Column(
                 children: [
                   Text(response.followingCount.format(),
-                      style: Theme.of(context).textTheme.titleMedium),
+                      style: Theme.of(context).textTheme.titleMedium,),
                   Text(
                     "フォロー",
                     style: Theme.of(context).textTheme.bodyMedium,
-                  )
+                  ),
                 ],
               ),
             ),
             InkWell(
               onTap: () => context.pushRoute(UserFollowerRoute(
-                  userId: response.id, account: AccountScope.of(context))),
+                  userId: response.id, account: AccountScope.of(context),),),
               child: Column(
-                mainAxisSize: MainAxisSize.max,
                 children: [
                   Text(response.followersCount.format(),
-                      style: Theme.of(context).textTheme.titleMedium),
+                      style: Theme.of(context).textTheme.titleMedium,),
                   Text(
                     "フォロワー",
                     style: Theme.of(context).textTheme.bodyMedium,
-                  )
+                  ),
                 ],
               ),
             ),
-          ]),
-        ]),
+          ],),
+        ],),
       ),
-    ]);
+    ],);
   }
 
   @override
@@ -490,10 +475,9 @@ class UserDetailState extends ConsumerState<UserDetail> {
           if (response.bannerUrl != null)
             Image.network(response.bannerUrl.toString()),
           Align(
-            alignment: Alignment.center,
             child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 800),
-                child: buildContent()),
+                child: buildContent(),),
           ),
           const Padding(padding: EdgeInsets.only(top: 20)),
           Padding(
@@ -509,7 +493,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                   ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -532,7 +516,7 @@ class BirthdayConfetti extends StatefulWidget {
 
 class BirthdayConfettiState extends State<BirthdayConfetti> {
   final confettiController =
-      ConfettiController(duration: const Duration(seconds: 30));
+      ConfettiController();
 
   @override
   void initState() {
@@ -555,7 +539,7 @@ class BirthdayConfettiState extends State<BirthdayConfetti> {
           confettiController: confettiController,
           blastDirection: 0,
           numberOfParticles: 40,
-          child: widget.child);
+          child: widget.child,);
     }
 
     return widget.child;

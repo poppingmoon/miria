@@ -115,7 +115,7 @@ abstract class TimelineRepository extends ChangeNotifier {
       for (final item in subscribedList.where(condition)) {
         // 他に参照がなければ、購読を解除する
         if (subscribedList.every(
-            (e) => e.renoteId != item.noteId && e.replyId != item.noteId)) {
+            (e) => e.renoteId != item.noteId && e.replyId != item.noteId,)) {
           describe(item.noteId);
         }
 
@@ -125,7 +125,7 @@ abstract class TimelineRepository extends ChangeNotifier {
               (e.noteId != item.renoteId &&
                   e.replyId != item.renoteId &&
                   (e.noteId != item.noteId && e.renoteId != item.renoteId)) ||
-              e.noteId == item.noteId)) {
+              e.noteId == item.noteId,)) {
             describe(renoteId);
           }
         }
@@ -136,7 +136,7 @@ abstract class TimelineRepository extends ChangeNotifier {
               (e.noteId != item.replyId &&
                   e.replyId != item.replyId &&
                   (e.noteId != item.noteId && e.replyId != item.replyId)) ||
-              e.noteId == item.noteId)) {
+              e.noteId == item.noteId,)) {
             describe(replyId);
           }
         }

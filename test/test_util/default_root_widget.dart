@@ -52,7 +52,7 @@ class DefaultRootWidgetState extends State<DefaultRootWidget> {
       routerConfig: router.config(
           deepLinkBuilder: widget.initialRoute != null
               ? (_) => DeepLink([widget.initialRoute!])
-              : null),
+              : null,),
     );
   }
 }

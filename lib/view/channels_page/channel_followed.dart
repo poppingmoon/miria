@@ -27,6 +27,6 @@ class ChannelFollowed extends ConsumerWidget {
               .followed(ChannelsFollowedRequest(untilId: lastItem.id));
           return response.toList();
         },
-        itemBuilder: (context, item) => CommunityChannelView(channel: item));
+        itemBuilder: (context, item) => CommunityChannelView(channel: item),);
   }
 }

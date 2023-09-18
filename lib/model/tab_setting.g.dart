@@ -18,14 +18,14 @@ _$TabSettingImpl _$$TabSettingImplFromJson(Map<String, dynamic> json) =>
       isIncludeReplies: json['isIncludeReplies'] as bool? ?? true,
       isMediaOnly: json['isMediaOnly'] as bool? ?? false,
       name: json['name'] as String,
-      acct: Acct.fromJson(_readAcct(json, 'acct') as Map<String, dynamic>),
+      acct: Acct.fromJson(_readAcct(json, 'acct')),
       renoteDisplay: json['renoteDisplay'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$$TabSettingImplToJson(_$TabSettingImpl instance) =>
     <String, dynamic>{
       'icon': const IconDataConverter().toJson(instance.icon),
-      'tabType': _$TabTypeEnumMap[instance.tabType]!,
+      'tabType': _$TabTypeEnumMap[instance.tabType],
       'roleId': instance.roleId,
       'channelId': instance.channelId,
       'listId': instance.listId,

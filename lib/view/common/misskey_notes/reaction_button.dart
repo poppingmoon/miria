@@ -71,7 +71,7 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
                     context: context,
                     message: "リアクション取り消してもええか？",
                     primary: "取り消す",
-                    secondary: "やっぱりやめる") !=
+                    secondary: "やっぱりやめる",) !=
                 true) {
               return;
             }
@@ -83,7 +83,7 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
                 .delete(NotesReactionsDeleteRequest(noteId: widget.noteId));
             if (account.host == "misskey.io") {
               await Future.delayed(
-                  const Duration(milliseconds: misskeyIOReactionDelay));
+                  const Duration(milliseconds: misskeyIOReactionDelay),);
             }
 
             await ref.read(notesProvider(account)).refresh(widget.noteId);
@@ -99,23 +99,21 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
           switch (emojiData) {
             case UnicodeEmojiData():
               reactionString = emojiData.char;
-              break;
             case CustomEmojiData():
               if (!emojiData.isCurrentServer) return;
               reactionString = ":${emojiData.baseName}:";
-              break;
             case NotEmojiData():
               return;
           }
 
           await ref.read(misskeyProvider(account)).notes.reactions.create(
               NotesReactionsCreateRequest(
-                  noteId: widget.noteId, reaction: reactionString));
+                  noteId: widget.noteId, reaction: reactionString,),);
 
           // misskey.ioはただちにリアクションを反映してくれない
           if (account.host == "misskey.io") {
             await Future.delayed(
-                const Duration(milliseconds: misskeyIOReactionDelay));
+                const Duration(milliseconds: misskeyIOReactionDelay),);
           }
 
           await ref.read(notesProvider(account)).refresh(widget.noteId);
@@ -127,15 +125,14 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
                 return ReactionUserDialog(
                     account: AccountScope.of(context),
                     emojiData: widget.emojiData,
-                    noteId: widget.noteId);
-              });
+                    noteId: widget.noteId,);
+              },);
         },
         style: AppTheme.of(context).reactionButtonStyle.copyWith(
-            backgroundColor: MaterialStatePropertyAll(backgroundColor)),
+            backgroundColor: MaterialStatePropertyAll(backgroundColor),),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ConstrainedBox(
                 constraints: BoxConstraints(
@@ -146,11 +143,11 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
                 child: CustomEmoji(
                   emojiData: widget.emojiData,
                   isAttachTooltip: false,
-                )),
+                ),),
             const Padding(padding: EdgeInsets.only(left: 5)),
             Text(widget.reactionCount.toString(),
-                style: TextStyle(color: foreground)),
+                style: TextStyle(color: foreground),),
           ],
-        ));
+        ),);
   }
 }

@@ -18,7 +18,7 @@ class ErrorDialogListener extends ConsumerWidget {
       if (error is Exception) {
         if (error is DioError) {
           SimpleMessageDialog.show(next.$2!,
-              "エラーが起きたみたいや\n${error.type} [${error.response?.statusCode ?? "---"}] ${error.response?.data ?? ""}");
+              "エラーが起きたみたいや\n${error.type} [${error.response?.statusCode ?? "---"}] ${error.response?.data ?? ""}",);
         } else if (error is SpecifiedException) {
           SimpleMessageDialog.show(next.$2!, error.message);
         } else {

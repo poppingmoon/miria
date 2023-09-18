@@ -43,7 +43,7 @@ class FutureListViewState<T> extends State<FutureListView<T>> {
               physics: widget.physics,
               itemCount: data.length,
               itemBuilder: (context, index) =>
-                  widget.builder(context, list[index]));
+                  widget.builder(context, list[index]),);
         } else if (snapshot.hasError) {
           if (kDebugMode) {
             print(snapshot.error);

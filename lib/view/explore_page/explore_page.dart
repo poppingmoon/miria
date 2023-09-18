@@ -59,6 +59,6 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
               ],
             ),
           ),
-        ));
+        ),);
   }
 }

@@ -57,8 +57,8 @@ class AntennaSelectDialogState extends ConsumerState<AntennaSelectDialog> {
                           onTap: () {
                             Navigator.of(context).pop(antennas[index]);
                           },
-                          title: Text(antennas[index].name));
-                    }),
+                          title: Text(antennas[index].name),);
+                    },),
               ],
             ),
           ),

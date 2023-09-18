@@ -25,7 +25,7 @@ void main() {
         child: DefaultRootWidget(
           initialRoute: SearchRoute(account: TestData.account),
         ),
-      ));
+      ),);
       await tester.pumpAndSettle();
 
       await tester.enterText(find.byType(TextField), "Misskey");
@@ -33,7 +33,7 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(mockNote.search(
-              argThat(equals(const NotesSearchRequest(query: "Misskey")))))
+              argThat(equals(const NotesSearchRequest(query: "Misskey"))),),)
           .called(1);
       expect(find.text(TestData.note1.text!), findsOneWidget);
 
@@ -42,7 +42,7 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(mockNote.search(argThat(equals(NotesSearchRequest(
-              query: "Misskey", untilId: TestData.note1.id)))))
+              query: "Misskey", untilId: TestData.note1.id,),),),),)
           .called(1);
       expect(find.text(TestData.note2.text!), findsOneWidget);
     });
@@ -61,7 +61,7 @@ void main() {
         child: DefaultRootWidget(
           initialRoute: SearchRoute(account: TestData.account),
         ),
-      ));
+      ),);
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.keyboard_arrow_down));
@@ -79,12 +79,12 @@ void main() {
 
       // 指定したユーザーが表示されていること
       expect(find.descendant(of: find.byType(Card), matching: find.text("@ai")),
-          findsOneWidget);
+          findsOneWidget,);
 
       // ノートが表示されていること
       expect(find.text(TestData.note1.text!), findsOneWidget);
       verify(mockNote.search(argThat(equals(
-              NotesSearchRequest(query: "", userId: TestData.user1ExpectId)))))
+              NotesSearchRequest(query: "", userId: TestData.user1ExpectId),),),),)
           .called(1);
     });
 
@@ -105,7 +105,7 @@ void main() {
         child: DefaultRootWidget(
           initialRoute: SearchRoute(account: TestData.account),
         ),
-      ));
+      ),);
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.keyboard_arrow_down));
@@ -121,13 +121,13 @@ void main() {
       expect(
           find.descendant(
               of: find.byType(Card),
-              matching: find.text(TestData.channel1.name)),
-          findsOneWidget);
+              matching: find.text(TestData.channel1.name),),
+          findsOneWidget,);
 
       // ノートが表示されていること
       expect(find.text(TestData.note1.text!), findsOneWidget);
       verify(mockNote.search(argThat(equals(
-              NotesSearchRequest(query: "", channelId: TestData.channel1.id)))))
+              NotesSearchRequest(query: "", channelId: TestData.channel1.id),),),),)
           .called(1);
     });
 
@@ -142,7 +142,7 @@ void main() {
         child: DefaultRootWidget(
           initialRoute: SearchRoute(account: TestData.account),
         ),
-      ));
+      ),);
       await tester.pumpAndSettle();
 
       await tester.enterText(find.byType(TextField), "#藍ちゃん大食いチャレンジ");
@@ -150,7 +150,7 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(mockNote.searchByTag(argThat(
-              equals(const NotesSearchByTagRequest(tag: "藍ちゃん大食いチャレンジ")))))
+              equals(const NotesSearchByTagRequest(tag: "藍ちゃん大食いチャレンジ")),),),)
           .called(1);
       expect(find.text(TestData.note1.text!), findsOneWidget);
 
@@ -159,7 +159,7 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(mockNote.searchByTag(argThat(equals(NotesSearchByTagRequest(
-              tag: "藍ちゃん大食いチャレンジ", untilId: TestData.note1.id)))))
+              tag: "藍ちゃん大食いチャレンジ", untilId: TestData.note1.id,),),),),)
           .called(1);
       expect(find.text(TestData.note2.text!), findsOneWidget);
     });
@@ -179,7 +179,7 @@ void main() {
         child: DefaultRootWidget(
           initialRoute: SearchRoute(account: TestData.account),
         ),
-      ));
+      ),);
       await tester.pumpAndSettle();
 
       await tester.tap(find.text("ユーザー"));
@@ -190,7 +190,7 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(mockUser.search(argThat(equals(const UsersSearchRequest(
-              query: "常駐AI", origin: Origin.combined)))))
+              query: "常駐AI", origin: Origin.combined,),),),),)
           .called(1);
       expect(find.text("藍"), findsOneWidget);
     });
@@ -206,7 +206,7 @@ void main() {
         child: DefaultRootWidget(
           initialRoute: SearchRoute(account: TestData.account),
         ),
-      ));
+      ),);
       await tester.pumpAndSettle();
 
       await tester.tap(find.text("ユーザー"));
@@ -220,7 +220,7 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(mockUser.search(argThat(equals(
-              const UsersSearchRequest(query: "常駐AI", origin: Origin.local)))))
+              const UsersSearchRequest(query: "常駐AI", origin: Origin.local),),),),)
           .called(1);
     });
 
@@ -235,7 +235,7 @@ void main() {
         child: DefaultRootWidget(
           initialRoute: SearchRoute(account: TestData.account),
         ),
-      ));
+      ),);
       await tester.pumpAndSettle();
 
       await tester.tap(find.text("ユーザー"));
@@ -249,7 +249,7 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(mockUser.search(argThat(equals(
-              const UsersSearchRequest(query: "常駐AI", origin: Origin.remote)))))
+              const UsersSearchRequest(query: "常駐AI", origin: Origin.remote),),),),)
           .called(1);
     });
   });
@@ -260,12 +260,12 @@ void main() {
         child: DefaultRootWidget(
           initialRoute: SearchRoute(account: TestData.account),
         ),
-      ));
+      ),);
       await tester.pumpAndSettle();
       expect(
           find.descendant(
-              of: find.byType(Card), matching: find.text("ユーザー").hitTestable()),
-          findsNothing);
+              of: find.byType(Card), matching: find.text("ユーザー").hitTestable(),),
+          findsNothing,);
       expect(find.text("チャンネル").hitTestable(), findsNothing);
 
       await tester.tap(find.byIcon(Icons.keyboard_arrow_down));
@@ -273,8 +273,8 @@ void main() {
 
       expect(
           find.descendant(
-              of: find.byType(Card), matching: find.text("ユーザー").hitTestable()),
-          findsOneWidget);
+              of: find.byType(Card), matching: find.text("ユーザー").hitTestable(),),
+          findsOneWidget,);
       expect(find.text("チャンネル").hitTestable(), findsOneWidget);
 
       await tester.tap(find.byIcon(Icons.keyboard_arrow_up));
@@ -282,8 +282,8 @@ void main() {
 
       expect(
           find.descendant(
-              of: find.byType(Card), matching: find.text("ユーザー").hitTestable()),
-          findsNothing);
+              of: find.byType(Card), matching: find.text("ユーザー").hitTestable(),),
+          findsNothing,);
       expect(find.text("チャンネル").hitTestable(), findsNothing);
     });
 
@@ -297,14 +297,14 @@ void main() {
         overrides: [misskeyProvider.overrideWith((ref, arg) => mockMisskey)],
         child: DefaultRootWidget(
           initialRoute: SearchRoute(
-              account: TestData.account, initialSearchText: "Misskey"),
+              account: TestData.account, initialSearchText: "Misskey",),
         ),
-      ));
+      ),);
       await tester.pumpAndSettle();
 
       expect(find.text(TestData.note1.text!), findsOneWidget);
       verify(mockNote.search(
-              argThat(equals(const NotesSearchRequest(query: "Misskey")))))
+              argThat(equals(const NotesSearchRequest(query: "Misskey"))),),)
           .called(1);
     });
   });

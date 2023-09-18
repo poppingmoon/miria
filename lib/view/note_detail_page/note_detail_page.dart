@@ -82,17 +82,16 @@ class NoteDetailPageState extends ConsumerState<NoteDetailPage> {
                               isForceUnvisibleRenote: true,
                               isForceUnvisibleReply: true,
                             );
-                          }),
+                          },),
                       MisskeyNote(
                         note: actualShow!,
-                        recursive: 1,
                         isForceUnvisibleReply: true,
                         isDisplayBorder: false,
                         isForceVisibleLong: true,
                       ),
                       const Padding(padding: EdgeInsets.only(top: 5)),
                       Text(
-                          "投稿時間: ${actualShow!.createdAt.formatUntilMilliSeconds}"),
+                          "投稿時間: ${actualShow!.createdAt.formatUntilMilliSeconds}",),
                       const Padding(padding: EdgeInsets.only(top: 5)),
                       const Divider(),
                       const Padding(padding: EdgeInsets.only(top: 5)),
@@ -106,7 +105,7 @@ class NoteDetailPageState extends ConsumerState<NoteDetailPage> {
                                   .read(misskeyProvider(widget.account))
                                   .notes
                                   .children(NotesChildrenRequest(
-                                      noteId: widget.note.id));
+                                      noteId: widget.note.id,),);
                               ref
                                   .read(notesProvider(widget.account))
                                   .registerAll(repliesResult);
@@ -118,7 +117,7 @@ class NoteDetailPageState extends ConsumerState<NoteDetailPage> {
                                   .notes
                                   .children(NotesChildrenRequest(
                                       noteId: widget.note.id,
-                                      untilId: lastItem.id));
+                                      untilId: lastItem.id,),);
                               ref
                                   .read(notesProvider(widget.account))
                                   .registerAll(repliesResult);
@@ -127,11 +126,10 @@ class NoteDetailPageState extends ConsumerState<NoteDetailPage> {
                             itemBuilder: (context, item) {
                               return MisskeyNote(
                                 note: item,
-                                recursive: 1,
                                 isForceUnvisibleRenote: true,
                                 isForceUnvisibleReply: true,
                               );
-                            }),
+                            },),
                       ),
                     ],
                   ),

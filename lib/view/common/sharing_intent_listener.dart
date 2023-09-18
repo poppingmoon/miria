@@ -38,11 +38,11 @@ class SharingIntentListenerState extends ConsumerState<SharingIntentListener> {
         widget.router.push(NoteCreateRoute(
           initialMediaFiles: items,
           initialAccount: account.first,
-        ));
+        ),);
       } else {
         widget.router.push(SharingAccountSelectRoute(
           filePath: items,
-        ));
+        ),);
       }
     });
     intentDataTextStreamSubscription =
@@ -51,11 +51,11 @@ class SharingIntentListenerState extends ConsumerState<SharingIntentListener> {
         widget.router.push(NoteCreateRoute(
           initialText: event,
           initialAccount: account.first,
-        ));
+        ),);
       } else {
         widget.router.push(SharingAccountSelectRoute(
           sharingText: event,
-        ));
+        ),);
       }
     });
   }

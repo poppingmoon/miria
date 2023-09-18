@@ -22,10 +22,6 @@ Map<String, dynamic> _readAcct(Map<dynamic, dynamic> json, String name) {
 
 @freezed
 class TabSetting with _$TabSetting {
-  const TabSetting._();
-
-  ChangeNotifierProvider<TimelineRepository> get timelineProvider =>
-      tabType.timelineProvider(this);
 
   const factory TabSetting({
     @IconDataConverter() required TabIcon icon,
@@ -65,6 +61,10 @@ class TabSetting with _$TabSetting {
     /// Renoteを表示するかどうか
     @Default(true) bool renoteDisplay,
   }) = _TabSetting;
+  const TabSetting._();
+
+  ChangeNotifierProvider<TimelineRepository> get timelineProvider =>
+      tabType.timelineProvider(this);
 
   factory TabSetting.fromJson(Map<String, Object?> json) =>
       _$TabSettingFromJson(json);

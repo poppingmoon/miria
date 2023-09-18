@@ -22,14 +22,14 @@ void main() {
           overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
           child: DefaultRootWidget(
             initialRoute: ClipDetailRoute(
-                id: TestData.clip.id, account: TestData.account),
-          )));
+                id: TestData.clip.id, account: TestData.account,),
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text(TestData.note1.text!), findsOneWidget);
       await tester.pageNation();
       verify(clip.notes(argThat(equals(ClipsNotesRequest(
-              clipId: TestData.clip.id, untilId: TestData.note1.id)))))
+              clipId: TestData.clip.id, untilId: TestData.note1.id,),),),),)
           .called(1);
     });
   });

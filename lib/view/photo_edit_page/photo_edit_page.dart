@@ -62,7 +62,7 @@ class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
                         context: context,
                         message: "保存しよる？",
                         primary: "保存する",
-                        secondary: "もうちょっと続ける");
+                        secondary: "もうちょっと続ける",);
 
                     final result =
                         await photoEdit.createSaveData(renderingAreaKey);
@@ -74,29 +74,26 @@ class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
                       context.back();
                     }
                   },
-                  icon: const Icon(Icons.save))
+                  icon: const Icon(Icons.save),),
             ],
           ),
           body: Column(
-            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
                 child: LayoutBuilder(builder: (context, constraints) {
                   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                     photoEdit.decideDrawArea(
-                        Size(constraints.maxWidth, constraints.maxHeight));
+                        Size(constraints.maxWidth, constraints.maxHeight),);
                   });
                   return SizedBox(
                       width: constraints.maxWidth,
                       height: constraints.maxHeight,
                       child: FittedBox(
-                          fit: BoxFit.contain,
                           child: ClipMode(
                             renderingGlobalKey: renderingAreaKey,
-                          )));
-                }),
+                          ),),);
+                },),
               ),
               const ColorFilterImagePreview(),
             ],

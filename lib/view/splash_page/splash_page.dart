@@ -42,7 +42,7 @@ class SplashPageState extends ConsumerState<SplashPage> {
       }
 
       LicenseRegistry.addLicense(
-          () => Stream.fromIterable(miriaInheritedLicenses));
+          () => Stream.fromIterable(miriaInheritedLicenses),);
     }
 
     _isFirst = false;
@@ -66,7 +66,7 @@ class SplashPageState extends ConsumerState<SplashPage> {
                     initialTabSetting: ref
                         .read(tabSettingsRepositoryProvider)
                         .tabSettings
-                        .first));
+                        .first,),);
                 if (initialSharingMedias.isNotEmpty ||
                     initialSharingText.isNotEmpty) {
                   final accounts = ref.read(accountRepository).account;
@@ -75,12 +75,12 @@ class SplashPageState extends ConsumerState<SplashPage> {
                       initialMediaFiles: initialSharingMedias,
                       initialText: initialSharingText,
                       initialAccount: accounts.first,
-                    ));
+                    ),);
                   } else {
                     context.pushRoute(SharingAccountSelectRoute(
                       filePath: initialSharingMedias,
                       sharingText: initialSharingText,
-                    ));
+                    ),);
                   }
                 }
               } else if (isSigned && !hasTabSetting) {
@@ -101,7 +101,7 @@ class SplashPageState extends ConsumerState<SplashPage> {
             }
 
             return const Center(child: CircularProgressIndicator());
-          }),
+          },),
     );
   }
 }

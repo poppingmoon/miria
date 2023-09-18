@@ -31,9 +31,9 @@ class PushableListView<T> extends ConsumerStatefulWidget {
 }
 
 class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
-  var isLoading = false;
+  bool isLoading = false;
   (Object?, StackTrace)? error;
-  var isFinalPage = false;
+  bool isFinalPage = false;
   final scrollController = ScrollController();
 
   final items = <T>[];
@@ -49,7 +49,7 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
           isLoading = false;
         });
         scrollController.animateTo(-scrollController.position.pixels,
-            duration: const Duration(milliseconds: 100), curve: Curves.easeIn);
+            duration: const Duration(milliseconds: 100), curve: Curves.easeIn,);
       } catch (e, s) {
         if (kDebugMode) print(e);
         setState(() {
@@ -117,7 +117,7 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
           }
 
           if (ref.read(generalSettingsRepositoryProvider
-                  .select((value) => value.settings.automaticPush)) ==
+                  .select((value) => value.settings.automaticPush),) ==
               AutomaticPush.automatic) {
             nextLoad();
           }
@@ -126,7 +126,6 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
             children: [
               if (error != null)
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ErrorNotification(
@@ -134,7 +133,7 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
                       stackTrace: error?.$2,
                     ),
                     widget.additionalErrorInfo?.call(context, error) ??
-                        const SizedBox.shrink()
+                        const SizedBox.shrink(),
                   ],
                 ),
               Center(
@@ -148,8 +147,8 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
                       )
                     : const Padding(
                         padding: EdgeInsets.all(20),
-                        child: CircularProgressIndicator()),
-              )
+                        child: CircularProgressIndicator(),),
+              ),
             ],
           );
         }

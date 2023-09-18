@@ -30,7 +30,7 @@ Widget buildTestWidget({
     overrides: [
       ...overrides,
       cacheManagerProvider.overrideWith((ref) => mockCacheManager),
-      notesProvider.overrideWith((ref, arg) => notesRepository)
+      notesProvider.overrideWith((ref, arg) => notesRepository),
     ],
     child: DefaultRootNoRouterWidget(
       child: Scaffold(
@@ -50,7 +50,7 @@ void main() {
         await tester.pumpWidget(buildTestWidget(note: TestData.note1));
         await tester.pumpAndSettle();
         expect(find.textContaining(TestData.note1.text!, findRichText: true),
-            findsOneWidget);
+            findsOneWidget,);
       });
 
       testWidgets("Renoteの場合、Renoteの表示が行われること", (tester) async {
@@ -58,31 +58,31 @@ void main() {
         await tester.pumpAndSettle();
         expect(
             find.textContaining(TestData.note6AsRenote.renote!.text!,
-                findRichText: true),
-            findsOneWidget);
+                findRichText: true,),
+            findsOneWidget,);
         expect(find.textContaining("が Renote", findRichText: true),
-            findsOneWidget);
+            findsOneWidget,);
       });
 
       testWidgets("引用Renoteの場合、引用Renoteの表示が行われること", (tester) async {
         await tester.pumpWidget(buildTestWidget(
-            note: TestData.note6AsRenote.copyWith(text: "こころがふたつある〜")));
+            note: TestData.note6AsRenote.copyWith(text: "こころがふたつある〜"),),);
         await tester.pumpAndSettle();
         expect(
             find.textContaining(TestData.note6AsRenote.renote!.text!,
-                findRichText: true),
-            findsOneWidget);
+                findRichText: true,),
+            findsOneWidget,);
         expect(find.textContaining("こころがふたつある〜", findRichText: true),
-            findsOneWidget);
+            findsOneWidget,);
         expect(
-            find.textContaining("が Renote", findRichText: true), findsNothing);
+            find.textContaining("が Renote", findRichText: true), findsNothing,);
       });
     });
 
     group("MFM", () {
       testWidgets("コードブロックがあった場合、コードブロックで表示されること", (tester) async {
         await tester
-            .pumpWidget(buildTestWidget(note: TestData.note1.copyWith(text: r'''
+            .pumpWidget(buildTestWidget(note: TestData.note1.copyWith(text: '''
 ```js
 window.ai = "@ai uneune";
 ```
@@ -92,7 +92,7 @@ printf("@ai uneune");
 ```java
 System.out.println("@ai uneune");
 ```
-''')));
+''',),),);
         await tester.pumpAndSettle();
         expect(find.byType(HighlightView), findsNWidgets(3));
       });
@@ -101,16 +101,16 @@ System.out.println("@ai uneune");
         final mockUrlLauncher = MockUrlLauncherPlatform();
         UrlLauncherPlatform.instance = mockUrlLauncher;
         await tester.pumpWidget(buildTestWidget(
-            note: TestData.note1.copyWith(text: "藍ちゃんやっほー 検索")));
+            note: TestData.note1.copyWith(text: "藍ちゃんやっほー 検索"),),);
         await tester.pumpAndSettle();
         expect(tester.textEditingController(find.byType(TextField)).text,
-            "藍ちゃんやっほー");
+            "藍ちゃんやっほー",);
         await tester.tap(find.text("検索"));
         await tester.pumpAndSettle();
         verify(mockUrlLauncher.launchUrl(
                 argThat(equals(
-                    "https://google.com/search?q=%E8%97%8D%E3%81%A1%E3%82%83%E3%82%93%E3%82%84%E3%81%A3%E3%81%BB%E3%83%BC")),
-                any))
+                    "https://google.com/search?q=%E8%97%8D%E3%81%A1%E3%82%83%E3%82%93%E3%82%84%E3%81%A3%E3%81%BB%E3%83%BC",),),
+                any,),)
             .called(1);
       });
     });
@@ -118,31 +118,31 @@ System.out.println("@ai uneune");
     group("注釈", () {
       testWidgets("注釈が設定されている場合、注釈が表示されること", (tester) async {
         await tester.pumpWidget(
-            buildTestWidget(note: TestData.note1.copyWith(cw: "えっちなやつ")));
+            buildTestWidget(note: TestData.note1.copyWith(cw: "えっちなやつ")),);
         await tester.pumpAndSettle();
         expect(
-            find.textContaining("えっちなやつ", findRichText: true), findsOneWidget);
+            find.textContaining("えっちなやつ", findRichText: true), findsOneWidget,);
         expect(find.textContaining(TestData.note1.text!, findRichText: true),
-            findsNothing);
+            findsNothing,);
       });
 
       testWidgets("続きを見るをタップすると、本文が表示されること", (tester) async {
         await tester.pumpWidget(
-            buildTestWidget(note: TestData.note1.copyWith(cw: "えっちなやつ")));
+            buildTestWidget(note: TestData.note1.copyWith(cw: "えっちなやつ")),);
         await tester.pumpAndSettle();
         await tester.tap(find.text("続きを見る"));
         await tester.pumpAndSettle();
         expect(
-            find.textContaining("えっちなやつ", findRichText: true), findsOneWidget);
+            find.textContaining("えっちなやつ", findRichText: true), findsOneWidget,);
         expect(find.textContaining(TestData.note1.text!, findRichText: true),
-            findsOneWidget);
+            findsOneWidget,);
 
         await tester.tap(find.text("隠す"));
         await tester.pumpAndSettle();
         expect(
-            find.textContaining("えっちなやつ", findRichText: true), findsOneWidget);
+            find.textContaining("えっちなやつ", findRichText: true), findsOneWidget,);
         expect(find.textContaining(TestData.note1.text!, findRichText: true),
-            findsNothing);
+            findsNothing,);
       });
     });
 
@@ -154,32 +154,32 @@ System.out.println("@ai uneune");
         await tester.pumpWidget(buildTestWidget(
             overrides: [
               generalSettingsRepositoryProvider
-                  .overrideWith((ref) => generalSettingsRepository)
+                  .overrideWith((ref) => generalSettingsRepository),
             ],
             note: TestData.note1.copyWith(
-                text: Iterable.generate(500, (index) => "あ").join(""))));
+                text: Iterable.generate(500, (index) => "あ").join(),),),);
         await tester.pumpAndSettle();
         expect(find.text("続きを表示"), findsOneWidget);
       });
 
       testWidgets("長いノートの省略が有効な場合、続きを表示をタップすると全てが表示されること", (tester) async {
-        final longText = Iterable.generate(2000, (index) => "あ").join("");
+        final longText = Iterable.generate(2000, (index) => "あ").join();
         final generalSettingsRepository = MockGeneralSettingsRepository();
         when(generalSettingsRepository.settings)
             .thenReturn(const GeneralSettings(enableLongTextElipsed: true));
         await tester.pumpWidget(buildTestWidget(
           overrides: [
             generalSettingsRepositoryProvider
-                .overrideWith((ref) => generalSettingsRepository)
+                .overrideWith((ref) => generalSettingsRepository),
           ],
           note: TestData.note1.copyWith(text: longText),
-        ));
+        ),);
         await tester.pumpAndSettle();
         expect(find.textContaining(longText, findRichText: true), findsNothing);
         await tester.tap(find.text("続きを表示"));
         await tester.pumpAndSettle();
         expect(
-            find.textContaining(longText, findRichText: true), findsOneWidget);
+            find.textContaining(longText, findRichText: true), findsOneWidget,);
       });
     });
 
@@ -189,9 +189,9 @@ System.out.println("@ai uneune");
         await tester.pumpAndSettle();
         for (final choice in TestData.note4AsVote.poll!.choices) {
           expect(find.textContaining(choice.text, findRichText: true),
-              findsOneWidget);
+              findsOneWidget,);
           expect(find.textContaining("${choice.votes}票", findRichText: true),
-              findsOneWidget);
+              findsOneWidget,);
         }
       });
     });
@@ -202,7 +202,7 @@ System.out.println("@ai uneune");
           await tester.pumpWidget(buildTestWidget(
               note: TestData.note1.copyWith(
                   fileIds: [TestData.drive1.id],
-                  files: [TestData.drive1.copyWith(isSensitive: false)])));
+                  files: [TestData.drive1.copyWith(isSensitive: false)],),),);
 
           await tester.pumpAndSettle();
           await Future.delayed(const Duration(seconds: 1));
@@ -210,8 +210,8 @@ System.out.println("@ai uneune");
 
           expect(
               find.byWidgetPredicate((e) =>
-                  e is NetworkImageView && e.type == ImageType.imageThumbnail),
-              findsOneWidget);
+                  e is NetworkImageView && e.type == ImageType.imageThumbnail,),
+              findsOneWidget,);
         });
       });
 
@@ -221,7 +221,7 @@ System.out.println("@ai uneune");
           await tester.pumpWidget(buildTestWidget(
               note: TestData.note1.copyWith(
                   fileIds: [TestData.drive1.id],
-                  files: [TestData.drive1.copyWith(isSensitive: true)])));
+                  files: [TestData.drive1.copyWith(isSensitive: true)],),),);
 
           await tester.pumpAndSettle();
 
@@ -229,8 +229,8 @@ System.out.println("@ai uneune");
 
           expect(
               find.byWidgetPredicate((e) =>
-                  e is NetworkImageView && e.type == ImageType.imageThumbnail),
-              findsNothing);
+                  e is NetworkImageView && e.type == ImageType.imageThumbnail,),
+              findsNothing,);
 
           await tester.tap(find.text("閲覧注意"));
           await tester.pumpAndSettle();
@@ -239,8 +239,8 @@ System.out.println("@ai uneune");
 
           expect(
               find.byWidgetPredicate((e) =>
-                  e is NetworkImageView && e.type == ImageType.imageThumbnail),
-              findsOneWidget);
+                  e is NetworkImageView && e.type == ImageType.imageThumbnail,),
+              findsOneWidget,);
         });
       });
     });
@@ -258,20 +258,20 @@ System.out.println("@ai uneune");
                 id: "reaction1",
                 createdAt: DateTime.now(),
                 user: TestData.detailedUser2,
-                type: ":ai_yay:")
-          ]);
+                type: ":ai_yay:",),
+          ],);
       await tester.pumpWidget(buildTestWidget(
           overrides: [misskeyProvider.overrideWith((ref, arg) => mockMisskey)],
-          note: TestData.note1));
+          note: TestData.note1,),);
       await tester.pumpAndSettle();
       await tester.longPress(find.byType(ReactionButton).at(1));
       await tester.pumpAndSettle();
       expect(find.text(TestData.detailedUser2.name!, findRichText: true),
-          findsOneWidget);
+          findsOneWidget,);
       await tester.pageNation();
 
       expect(find.text(TestData.detailedUser2.name!, findRichText: true),
-          findsNWidgets(2));
+          findsNWidgets(2),);
     });
   });
 
@@ -284,20 +284,20 @@ System.out.println("@ai uneune");
           .thenAnswer((_) async => [TestData.note6AsRenote]);
       await tester.pumpWidget(buildTestWidget(
           overrides: [misskeyProvider.overrideWith((ref, arg) => mockMisskey)],
-          note: TestData.note1));
+          note: TestData.note1,),);
       await tester.pumpAndSettle();
       await tester.longPress(find.byType(RenoteButton));
       await tester.pumpAndSettle();
       expect(
           find.textContaining(TestData.note6AsRenote.user.username,
-              findRichText: true),
-          findsOneWidget);
+              findRichText: true,),
+          findsOneWidget,);
       await tester.pageNation();
 
       expect(
           find.textContaining(TestData.note6AsRenote.user.username,
-              findRichText: true),
-          findsNWidgets(2));
+              findRichText: true,),
+          findsNWidgets(2),);
     });
   });
 }

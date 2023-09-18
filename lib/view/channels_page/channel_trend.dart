@@ -16,6 +16,6 @@ class ChannelTrend extends ConsumerWidget {
             .read(misskeyProvider(AccountScope.of(context)))
             .channels
             .featured(),
-        builder: (context, item) => CommunityChannelView(channel: item));
+        builder: (context, item) => CommunityChannelView(channel: item),);
   }
 }

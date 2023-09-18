@@ -26,11 +26,11 @@ class ChannelSearchState extends ConsumerState<ChannelSearch> {
             textInputAction: TextInputAction.done,
             onSubmitted: (value) {
               ref.read(channelSearchProvider.notifier).state = value;
-            }),
+            },),
         const Expanded(
             child: Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
-                child: ChannelSearchList()))
+                child: ChannelSearchList(),),),
       ],
     );
   }
@@ -61,11 +61,11 @@ class ChannelSearchList extends ConsumerWidget {
               .read(misskeyProvider(AccountScope.of(context)))
               .channels
               .search(ChannelsSearchRequest(
-                  query: searchValue, untilId: lastItem.id));
+                  query: searchValue, untilId: lastItem.id,),);
           return channels.toList();
         },
         itemBuilder: (context, item) {
           return CommunityChannelView(channel: item);
-        });
+        },);
   }
 }

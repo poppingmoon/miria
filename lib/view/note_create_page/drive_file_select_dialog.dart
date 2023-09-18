@@ -73,7 +73,7 @@ class DriveFileSelectDialogState extends ConsumerState<DriveFileSelectDialog> {
                     final misskey = ref.read(misskeyProvider(widget.account));
                     final response = await misskey.drive.folders.folders(
                         DriveFoldersRequest(
-                            folderId: path.isEmpty ? null : path.last.id));
+                            folderId: path.isEmpty ? null : path.last.id,),);
                     return response.toList();
                   },
                   nextFuture: (lastItem, _) async {
@@ -81,7 +81,7 @@ class DriveFileSelectDialogState extends ConsumerState<DriveFileSelectDialog> {
                     final response = await misskey.drive.folders.folders(
                         DriveFoldersRequest(
                             untilId: lastItem.id,
-                            folderId: path.isEmpty ? null : path.last.id));
+                            folderId: path.isEmpty ? null : path.last.id,),);
                     return response.toList();
                   },
                   listKey: path.map((e) => e.id).join("/"),
@@ -95,7 +95,7 @@ class DriveFileSelectDialogState extends ConsumerState<DriveFileSelectDialog> {
                         });
                       },
                     );
-                  }),
+                  },),
               PushableListView(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),

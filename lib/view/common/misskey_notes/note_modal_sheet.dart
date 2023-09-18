@@ -121,7 +121,7 @@ class NoteModalSheet extends ConsumerWidget {
               Future(() async {
                 final box = context.findRenderObject() as RenderBox?;
                 final boundary = noteBoundaryKey.currentContext
-                    ?.findRenderObject() as RenderRepaintBoundary;
+                    !.findRenderObject()! as RenderRepaintBoundary;
                 final image = await boundary.toImage(
                   pixelRatio: View.of(context).devicePixelRatio,
                 );
@@ -232,7 +232,7 @@ class NoteModalSheet extends ConsumerWidget {
                       noteCreationMode: NoteCreationMode.update,
                     ),
                   );
-                }),
+                },),
           ListTile(
             title: const Text("削除する"),
             onTap: () async {

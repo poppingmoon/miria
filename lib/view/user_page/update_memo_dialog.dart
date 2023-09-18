@@ -27,7 +27,7 @@ class UpdateMemoDialogState extends ConsumerState<UpdateMemoDialog> {
 
   Future<void> memoSave() async {
     await ref.read(misskeyProvider(widget.account)).users.updateMemo(
-        UsersUpdateMemoRequest(userId: widget.userId, memo: controller.text));
+        UsersUpdateMemoRequest(userId: widget.userId, memo: controller.text),);
     if (!mounted) return;
     Navigator.of(context).pop(controller.text);
   }
@@ -60,9 +60,9 @@ class UpdateMemoDialogState extends ConsumerState<UpdateMemoDialog> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text("やめる")),
+            child: const Text("やめる"),),
         ElevatedButton(
-            onPressed: memoSave.expectFailure(context), child: const Text("保存する"))
+            onPressed: memoSave.expectFailure(context), child: const Text("保存する"),),
       ],
     );
   }

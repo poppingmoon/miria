@@ -19,8 +19,8 @@ sealed class MisskeyEmojiData {
       return UnicodeEmojiData(char: emojiName);
     }
 
-    final customEmojiRegExp = RegExp(r":(.+?)@(.+?):");
-    final hostIncludedRegExp = RegExp(r":(.+?):");
+    final customEmojiRegExp = RegExp(":(.+?)@(.+?):");
+    final hostIncludedRegExp = RegExp(":(.+?):");
 
     // よそのサーバー
     if (emojiInfo != null && emojiInfo.isNotEmpty) {
@@ -36,7 +36,7 @@ sealed class MisskeyEmojiData {
             hostedName: emojiName,
             url: Uri.parse(found),
             isCurrentServer: false,
-            isSensitive: false //TODO: 要検証
+            isSensitive: false, //TODO: 要検証
             );
       }
     }
@@ -47,7 +47,7 @@ sealed class MisskeyEmojiData {
       final EmojiRepositoryData? found = repository!.emoji?.firstWhereOrNull(
           (e) =>
               e.emoji.baseName ==
-              (customEmojiRegExp.firstMatch(emojiName)?.group(1) ?? emojiName));
+              (customEmojiRegExp.firstMatch(emojiName)?.group(1) ?? emojiName),);
       if (found != null) {
         return found.emoji;
       } else {
@@ -63,7 +63,7 @@ sealed class MisskeyEmojiData {
           (e) =>
               e.emoji.baseName ==
               (customEmojiRegExp2.firstMatch(emojiName)?.group(1) ??
-                  emojiName));
+                  emojiName),);
 
       if (found != null) {
         return found.emoji;

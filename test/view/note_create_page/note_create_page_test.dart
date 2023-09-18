@@ -40,23 +40,23 @@ void main() {
         await tester.pumpWidget(ProviderScope(
             overrides: [
               misskeyProvider.overrideWith((ref, arg) => mockMisskey),
-              inputComplementDelayedProvider.overrideWithValue(1)
+              inputComplementDelayedProvider.overrideWithValue(1),
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
-                  initialAccount: TestData.account, channel: TestData.channel1),
-            )));
+                  initialAccount: TestData.account, channel: TestData.channel1,),
+            ),),);
         await tester.pumpAndSettle();
 
         expect(find.text(TestData.channel1.name), findsOneWidget);
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.channelId == TestData.channel1.id)))));
+            (arg) => arg.channelId == TestData.channel1.id,),),),),);
       });
 
       testWidgets("削除されたノートを直す場合で、そのノートがチャンネルのノートの場合、チャンネルのノートになること",
@@ -67,7 +67,7 @@ void main() {
         await tester.pumpWidget(ProviderScope(
             overrides: [
               misskeyProvider.overrideWith((ref, arg) => mockMisskey),
-              inputComplementDelayedProvider.overrideWithValue(1)
+              inputComplementDelayedProvider.overrideWithValue(1),
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
@@ -76,19 +76,19 @@ void main() {
                       channelId: TestData.channel1.id,
                       channel: NoteChannelInfo(
                           id: TestData.channel1.id,
-                          name: TestData.channel1.name))),
-            )));
+                          name: TestData.channel1.name,),),),
+            ),),);
         await tester.pumpAndSettle();
 
         expect(find.text(TestData.channel1.name), findsOneWidget);
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.channelId == TestData.channel1.id)))));
+            (arg) => arg.channelId == TestData.channel1.id,),),),),);
       });
 
       testWidgets("チャンネルのノートにリプライをする場合、そのノートもチャンネルのノートになること", (tester) async {
@@ -98,7 +98,7 @@ void main() {
         await tester.pumpWidget(ProviderScope(
             overrides: [
               misskeyProvider.overrideWith((ref, arg) => mockMisskey),
-              inputComplementDelayedProvider.overrideWithValue(1)
+              inputComplementDelayedProvider.overrideWithValue(1),
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
@@ -107,19 +107,19 @@ void main() {
                       channelId: TestData.channel1.id,
                       channel: NoteChannelInfo(
                           id: TestData.channel1.id,
-                          name: TestData.channel1.name))),
-            )));
+                          name: TestData.channel1.name,),),),
+            ),),);
         await tester.pumpAndSettle();
 
         expect(find.text(TestData.channel1.name), findsOneWidget);
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.channelId == TestData.channel1.id)))));
+            (arg) => arg.channelId == TestData.channel1.id,),),),),);
       });
 
       testWidgets("チャンネルのノートに引用リノートをする場合、引数のチャンネル先が選択されること", (tester) async {
@@ -129,7 +129,7 @@ void main() {
         await tester.pumpWidget(ProviderScope(
             overrides: [
               misskeyProvider.overrideWith((ref, arg) => mockMisskey),
-              inputComplementDelayedProvider.overrideWithValue(1)
+              inputComplementDelayedProvider.overrideWithValue(1),
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
@@ -139,19 +139,19 @@ void main() {
                       channelId: TestData.channel1.id,
                       channel: NoteChannelInfo(
                           id: TestData.channel1.id,
-                          name: TestData.channel1.name))),
-            )));
+                          name: TestData.channel1.name,),),),
+            ),),);
         await tester.pumpAndSettle();
 
         expect(find.text(TestData.channel2.name), findsOneWidget);
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.channelId == TestData.channel2.id)))));
+            (arg) => arg.channelId == TestData.channel2.id,),),),),);
       });
     });
 
@@ -164,26 +164,26 @@ void main() {
         when(accountSettings.fromAccount(any)).thenReturn(AccountSettings(
             userId: TestData.account.userId,
             host: TestData.account.host,
-            defaultNoteVisibility: NoteVisibility.followers));
+            defaultNoteVisibility: NoteVisibility.followers,),);
         await tester.pumpWidget(ProviderScope(
             overrides: [
               misskeyProvider.overrideWith((ref, arg) => mockMisskey),
               inputComplementDelayedProvider.overrideWithValue(1),
               accountSettingsRepositoryProvider
-                  .overrideWith((ref) => accountSettings)
+                  .overrideWith((ref) => accountSettings),
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.visibility == NoteVisibility.followers)))));
+            (arg) => arg.visibility == NoteVisibility.followers,),),),),);
       });
 
       testWidgets("削除されたノートを直す場合、削除されたノートの公開範囲設定が適用されること", (tester) async {
@@ -199,14 +199,14 @@ void main() {
               initialRoute: NoteCreateRoute(
                   initialAccount: TestData.account,
                   note: TestData.note1
-                      .copyWith(visibility: NoteVisibility.specified)),
-            )));
+                      .copyWith(visibility: NoteVisibility.specified),),
+            ),),);
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.visibility == NoteVisibility.specified)))));
+            (arg) => arg.visibility == NoteVisibility.specified,),),),),);
       });
 
       testWidgets("引用リノートの場合、リノート元の公開範囲設定が適用されること", (tester) async {
@@ -222,14 +222,14 @@ void main() {
                 initialRoute: NoteCreateRoute(
               initialAccount: TestData.account,
               renote: TestData.note1.copyWith(visibility: NoteVisibility.home),
-            ))));
+            ),),),);
         await tester.pumpAndSettle();
         await tester.enterText(find.byType(TextField), ":ai_yay:");
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.visibility == NoteVisibility.home)))));
+            (arg) => arg.visibility == NoteVisibility.home,),),),),);
       });
 
       testWidgets("リプライの場合、リプライ元の公開範囲設定が適用されること", (tester) async {
@@ -245,14 +245,14 @@ void main() {
                 initialRoute: NoteCreateRoute(
               initialAccount: TestData.account,
               reply: TestData.note1.copyWith(visibility: NoteVisibility.home),
-            ))));
+            ),),),);
         await tester.pumpAndSettle();
         await tester.enterText(find.byType(TextField), ":ai_yay:");
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.visibility == NoteVisibility.home)))));
+            (arg) => arg.visibility == NoteVisibility.home,),),),),);
       });
 
       testWidgets("ユーザーがサイレンスの場合で、デフォルトの公開範囲設定がパブリックの場合、強制ホームになること",
@@ -263,29 +263,28 @@ void main() {
         final accountSettings = MockAccountSettingsRepository();
         when(accountSettings.fromAccount(any)).thenReturn(AccountSettings(
             userId: TestData.account.userId,
-            host: TestData.account.host,
-            defaultNoteVisibility: NoteVisibility.public));
+            host: TestData.account.host,),);
         await tester.pumpWidget(ProviderScope(
             overrides: [
               misskeyProvider.overrideWith((ref, arg) => mockMisskey),
               inputComplementDelayedProvider.overrideWithValue(1),
               accountSettingsRepositoryProvider
-                  .overrideWith((ref) => accountSettings)
+                  .overrideWith((ref) => accountSettings),
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                   initialAccount: TestData.account.copyWith(
-                      i: TestData.account.i.copyWith(isSilenced: true))),
-            )));
+                      i: TestData.account.i.copyWith(isSilenced: true),),),
+            ),),);
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.visibility == NoteVisibility.home)))));
+            (arg) => arg.visibility == NoteVisibility.home,),),),),);
       });
 
       testWidgets("ユーザーがサイレンスの場合、デフォルトの公開範囲設定がフォロワーのみの場合、デフォルトの公開範囲設定が反映されること",
@@ -297,28 +296,28 @@ void main() {
         when(accountSettings.fromAccount(any)).thenReturn(AccountSettings(
             userId: TestData.account.userId,
             host: TestData.account.host,
-            defaultNoteVisibility: NoteVisibility.followers));
+            defaultNoteVisibility: NoteVisibility.followers,),);
         await tester.pumpWidget(ProviderScope(
             overrides: [
               misskeyProvider.overrideWith((ref, arg) => mockMisskey),
               inputComplementDelayedProvider.overrideWithValue(1),
               accountSettingsRepositoryProvider
-                  .overrideWith((ref) => accountSettings)
+                  .overrideWith((ref) => accountSettings),
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                   initialAccount: TestData.account.copyWith(
-                      i: TestData.account.i.copyWith(isSilenced: true))),
-            )));
+                      i: TestData.account.i.copyWith(isSilenced: true),),),
+            ),),);
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.visibility == NoteVisibility.followers)))));
+            (arg) => arg.visibility == NoteVisibility.followers,),),),),);
       });
     });
 
@@ -331,26 +330,26 @@ void main() {
         when(accountSettings.fromAccount(any)).thenReturn(AccountSettings(
             userId: TestData.account.userId,
             host: TestData.account.host,
-            defaultIsLocalOnly: true));
+            defaultIsLocalOnly: true,),);
         await tester.pumpWidget(ProviderScope(
             overrides: [
               misskeyProvider.overrideWith((ref, arg) => mockMisskey),
               inputComplementDelayedProvider.overrideWithValue(1),
               accountSettingsRepositoryProvider
-                  .overrideWith((ref) => accountSettings)
+                  .overrideWith((ref) => accountSettings),
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(
-            predicate<NotesCreateRequest>((arg) => arg.localOnly == true)))));
+            predicate<NotesCreateRequest>((arg) => arg.localOnly == true),),),),);
       });
 
       testWidgets("削除されたノートを直す場合、削除されたノートの連合範囲が適用されること", (tester) async {
@@ -365,14 +364,14 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                   initialAccount: TestData.account,
-                  note: TestData.note1.copyWith(localOnly: true)),
-            )));
+                  note: TestData.note1.copyWith(localOnly: true),),
+            ),),);
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(
-            predicate<NotesCreateRequest>((arg) => arg.localOnly == true)))));
+            predicate<NotesCreateRequest>((arg) => arg.localOnly == true),),),),);
       });
 
       testWidgets("引用リノートの場合、リノート元の連合範囲が適用されること", (tester) async {
@@ -387,16 +386,16 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                   initialAccount: TestData.account,
-                  renote: TestData.note1.copyWith(localOnly: true)),
-            )));
+                  renote: TestData.note1.copyWith(localOnly: true),),
+            ),),);
         await tester.pumpAndSettle();
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(
-            predicate<NotesCreateRequest>((arg) => arg.localOnly == true)))));
+            predicate<NotesCreateRequest>((arg) => arg.localOnly == true),),),),);
       });
 
       testWidgets("リプライの場合、リプライ元の連合範囲が適用されること", (tester) async {
@@ -412,14 +411,14 @@ void main() {
                 initialRoute: NoteCreateRoute(
               initialAccount: TestData.account,
               reply: TestData.note1.copyWith(localOnly: true),
-            ))));
+            ),),),);
         await tester.pumpAndSettle();
         await tester.enterText(find.byType(TextField), ":ai_yay:");
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(
-            predicate<NotesCreateRequest>((arg) => arg.localOnly == true)))));
+            predicate<NotesCreateRequest>((arg) => arg.localOnly == true),),),),);
       });
 
       group("チャンネル", () {
@@ -429,28 +428,28 @@ void main() {
           when(mockMisskey.notes).thenReturn(mockNote);
           final accountSettings = MockAccountSettingsRepository();
           when(accountSettings.fromAccount(any)).thenReturn(AccountSettings(
-              userId: TestData.account.userId, host: TestData.account.host));
+              userId: TestData.account.userId, host: TestData.account.host,),);
           await tester.pumpWidget(ProviderScope(
               overrides: [
                 misskeyProvider.overrideWith((ref, arg) => mockMisskey),
                 inputComplementDelayedProvider.overrideWithValue(1),
                 accountSettingsRepositoryProvider
-                    .overrideWith((ref) => accountSettings)
+                    .overrideWith((ref) => accountSettings),
               ],
               child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(
                     initialAccount: TestData.account,
-                    channel: TestData.channel1),
-              )));
+                    channel: TestData.channel1,),
+              ),),);
           await tester.pumpAndSettle();
 
           await tester.enterText(
-              find.byType(TextField).hitTestable(), ":ai_yay:");
+              find.byType(TextField).hitTestable(), ":ai_yay:",);
           await tester.tap(find.byIcon(Icons.send));
           await tester.pumpAndSettle();
 
           verify(mockNote.create(argThat(equals(
-              predicate<NotesCreateRequest>((arg) => arg.localOnly == true)))));
+              predicate<NotesCreateRequest>((arg) => arg.localOnly == true),),),),);
         });
       });
     });
@@ -464,28 +463,28 @@ void main() {
         when(accountSettings.fromAccount(any)).thenReturn(AccountSettings(
             userId: TestData.account.userId,
             host: TestData.account.host,
-            defaultReactionAcceptance: ReactionAcceptance.nonSensitiveOnly));
+            defaultReactionAcceptance: ReactionAcceptance.nonSensitiveOnly,),);
         await tester.pumpWidget(ProviderScope(
             overrides: [
               misskeyProvider.overrideWith((ref, arg) => mockMisskey),
               inputComplementDelayedProvider.overrideWithValue(1),
               accountSettingsRepositoryProvider
-                  .overrideWith((ref) => accountSettings)
+                  .overrideWith((ref) => accountSettings),
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
             (arg) =>
                 arg.reactionAcceptance ==
-                ReactionAcceptance.nonSensitiveOnly)))));
+                ReactionAcceptance.nonSensitiveOnly,),),),),);
       });
 
       testWidgets("削除されたノートを直す場合、削除されたノートのリアクション受け入れ設定が適用されること",
@@ -495,29 +494,29 @@ void main() {
         when(mockMisskey.notes).thenReturn(mockNote);
         final accountSettings = MockAccountSettingsRepository();
         when(accountSettings.fromAccount(any)).thenReturn(AccountSettings(
-            userId: TestData.account.userId, host: TestData.account.host));
+            userId: TestData.account.userId, host: TestData.account.host,),);
         await tester.pumpWidget(ProviderScope(
             overrides: [
               misskeyProvider.overrideWith((ref, arg) => mockMisskey),
               inputComplementDelayedProvider.overrideWithValue(1),
               accountSettingsRepositoryProvider
-                  .overrideWith((ref) => accountSettings)
+                  .overrideWith((ref) => accountSettings),
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                   initialAccount: TestData.account,
                   note: TestData.note1.copyWith(
-                      reactionAcceptance: ReactionAcceptance.likeOnly)),
-            )));
+                      reactionAcceptance: ReactionAcceptance.likeOnly,),),
+            ),),);
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.reactionAcceptance == ReactionAcceptance.likeOnly)))));
+            (arg) => arg.reactionAcceptance == ReactionAcceptance.likeOnly,),),),),);
       });
 
       testWidgets("引用リノートの場合、リノート元のリアクション受け入れ設定が反映され**ない**こと", (tester) async {
@@ -533,16 +532,16 @@ void main() {
               initialRoute: NoteCreateRoute(
                   initialAccount: TestData.account,
                   renote: TestData.note1.copyWith(
-                      reactionAcceptance: ReactionAcceptance.likeOnly)),
-            )));
+                      reactionAcceptance: ReactionAcceptance.likeOnly,),),
+            ),),);
         await tester.pumpAndSettle();
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.reactionAcceptance == null)))));
+            (arg) => arg.reactionAcceptance == null,),),),),);
       });
 
       testWidgets("リプライの場合、リプライ元のリアクション受け入れ設定が反映され**ない**こと", (tester) async {
@@ -558,16 +557,16 @@ void main() {
               initialRoute: NoteCreateRoute(
                   initialAccount: TestData.account,
                   reply: TestData.note1.copyWith(
-                      reactionAcceptance: ReactionAcceptance.likeOnly)),
-            )));
+                      reactionAcceptance: ReactionAcceptance.likeOnly,),),
+            ),),);
         await tester.pumpAndSettle();
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.reactionAcceptance == null)))));
+            (arg) => arg.reactionAcceptance == null,),),),),);
       });
     });
 
@@ -583,11 +582,11 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
 
         expect(tester.textEditingController(find.byType(TextField).at(0)).text,
-            "");
+            "",);
       });
 
       testWidgets("削除したノートを直す場合、削除したノートの注釈が適用されること", (tester) async {
@@ -602,12 +601,12 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                   initialAccount: TestData.account,
-                  note: TestData.note1.copyWith(cw: "えっちなやつ")),
-            )));
+                  note: TestData.note1.copyWith(cw: "えっちなやつ"),),
+            ),),);
         await tester.pumpAndSettle();
 
         expect(tester.textEditingController(find.byType(TextField).at(0)).text,
-            "えっちなやつ");
+            "えっちなやつ",);
       });
 
       testWidgets("リプライを送る場合で、リプライ元が注釈ありの場合、その注釈が適用されること", (tester) async {
@@ -622,12 +621,12 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                   initialAccount: TestData.account,
-                  reply: TestData.note1.copyWith(cw: "えっちなやつ")),
-            )));
+                  reply: TestData.note1.copyWith(cw: "えっちなやつ"),),
+            ),),);
         await tester.pumpAndSettle();
 
         expect(tester.textEditingController(find.byType(TextField).at(0)).text,
-            "えっちなやつ");
+            "えっちなやつ",);
       });
 
       testWidgets("引用リノートをする場合で、リノート元が注釈ありの場合、その注釈が適用され**ない**こと",
@@ -643,12 +642,12 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                   initialAccount: TestData.account,
-                  renote: TestData.note1.copyWith(cw: "えっちなやつ")),
-            )));
+                  renote: TestData.note1.copyWith(cw: "えっちなやつ"),),
+            ),),);
         await tester.pumpAndSettle();
 
         expect(tester.textEditingController(find.byType(TextField).at(0)).text,
-            "");
+            "",);
       });
     });
 
@@ -664,7 +663,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
 
         expect(tester.textEditingController(find.byType(TextField)).text, "");
@@ -681,12 +680,12 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
-                  initialAccount: TestData.account, note: TestData.note1),
-            )));
+                  initialAccount: TestData.account, note: TestData.note1,),
+            ),),);
         await tester.pumpAndSettle();
 
         expect(tester.textEditingController(find.byType(TextField)).text,
-            TestData.note1.text);
+            TestData.note1.text,);
       });
 
       testWidgets("テキスト共有からノート投稿をする場合、共有のテキストが適用されること", (tester) async {
@@ -701,12 +700,12 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                   initialAccount: TestData.account,
-                  initialText: ":ai_yaysuperfast:"),
-            )));
+                  initialText: ":ai_yaysuperfast:",),
+            ),),);
         await tester.pumpAndSettle();
 
         expect(tester.textEditingController(find.byType(TextField)).text,
-            ":ai_yaysuperfast:");
+            ":ai_yaysuperfast:",);
       });
     });
 
@@ -722,14 +721,14 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
         await tester.enterText(find.byType(TextField), ":ai_yay:");
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(
-                predicate<NotesCreateRequest>((arg) => arg.mediaIds == null)))))
+                predicate<NotesCreateRequest>((arg) => arg.mediaIds == null),),),),)
             .called(1);
       });
 
@@ -752,15 +751,15 @@ void main() {
               initialRoute: NoteCreateRoute(
                   initialAccount: TestData.account,
                   note: TestData.note1.copyWith(
-                      files: [TestData.drive1], fileIds: [TestData.drive1.id])),
-            )));
+                      files: [TestData.drive1], fileIds: [TestData.drive1.id],),),
+            ),),);
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
             (arg) => const DeepCollectionEquality()
-                .equals(arg.fileIds, [TestData.drive1.id])))))).called(1);
+                .equals(arg.fileIds, [TestData.drive1.id]),),),),),).called(1);
       });
 
       testWidgets("画像共有からノートを投稿する場合、共有の画像が適用されること", (tester) async {
@@ -773,7 +772,7 @@ void main() {
         when(mockDrive.files).thenReturn(mockDriveFiles);
 
         when(mockDriveFiles.createAsBinary(any, any)).thenAnswer(
-            (_) async => TestData.drive1.copyWith(name: "test.png"));
+            (_) async => TestData.drive1.copyWith(name: "test.png"),);
 
         final mockDio = MockDio();
         when(mockDio.get(any, options: anyNamed("options")))
@@ -793,9 +792,9 @@ void main() {
           child: DefaultRootWidget(
             initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
-                initialMediaFiles: const ["/test.png"]),
+                initialMediaFiles: const ["/test.png"],),
           ),
-        ));
+        ),);
         await tester.pumpAndSettle();
         await tester.enterText(find.byType(TextField), ":ai_yay:");
         await tester.tap(find.byIcon(Icons.send));
@@ -812,10 +811,10 @@ void main() {
               ),
             ),
             argThat(equals(predicate<Uint8List>((value) =>
-                const DeepCollectionEquality().equals(value, binaryImage))))));
+                const DeepCollectionEquality().equals(value, binaryImage),),),),),);
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
             (arg) => const DeepCollectionEquality()
-                .equals([TestData.drive1.id], arg.fileIds))))));
+                .equals([TestData.drive1.id], arg.fileIds),),),),),);
       });
 
       testWidgets("共有したファイルが画像でない場合でも、ファイルの投稿ができること", (tester) async {
@@ -828,7 +827,7 @@ void main() {
         when(mockDrive.files).thenReturn(mockDriveFiles);
 
         when(mockDriveFiles.createAsBinary(any, any)).thenAnswer(
-            (_) async => TestData.drive1.copyWith(name: "test.txt"));
+            (_) async => TestData.drive1.copyWith(name: "test.txt"),);
 
         final mockDio = MockDio();
         when(mockDio.get(any, options: anyNamed("options")))
@@ -849,9 +848,9 @@ void main() {
           child: DefaultRootWidget(
             initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
-                initialMediaFiles: const ["/test.txt"]),
+                initialMediaFiles: const ["/test.txt"],),
           ),
-        ));
+        ),);
         await tester.pumpAndSettle();
         expect(find.text("test.txt"), findsOneWidget);
 
@@ -870,10 +869,10 @@ void main() {
               ),
             ),
             argThat(equals(predicate<Uint8List>((value) =>
-                const DeepCollectionEquality().equals(value, binaryData))))));
+                const DeepCollectionEquality().equals(value, binaryData),),),),),);
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
             (arg) => const DeepCollectionEquality()
-                .equals([TestData.drive1.id], arg.fileIds))))));
+                .equals([TestData.drive1.id], arg.fileIds),),),),),);
       });
     });
 
@@ -888,7 +887,7 @@ void main() {
                 initialAccount: TestData.account,
                 reply: TestData.note3AsAnotherUser,
               ),
-            )));
+            ),),);
         await tester.pumpAndSettle();
         expect(find.text("返信先："), findsOneWidget);
         expect(
@@ -896,8 +895,8 @@ void main() {
                 of: find.byType(ReplyToArea),
                 matching: find.textContaining(
                     TestData.note3AsAnotherUser.user.username,
-                    findRichText: true)),
-            findsOneWidget);
+                    findRichText: true,),),
+            findsOneWidget,);
       });
 
       testWidgets("リプライにメンションが含まれている場合、両方の返信先が表示されていること", (tester) async {
@@ -919,7 +918,7 @@ void main() {
                   mentions: [TestData.detailedUser1.username],
                 ),
               ),
-            )));
+            ),),);
         await tester.pumpAndSettle();
         expect(find.text("返信先："), findsOneWidget);
         expect(
@@ -927,14 +926,14 @@ void main() {
                 of: find.byType(ReplyToArea),
                 matching: find.text(
                     "@${TestData.note5AsAnotherUser.user.username}",
-                    findRichText: true)),
-            findsOneWidget);
+                    findRichText: true,),),
+            findsOneWidget,);
         expect(
             find.descendant(
                 of: find.byType(ReplyToArea),
                 matching: find.text("@${TestData.usersShowResponse2.username}",
-                    findRichText: true)),
-            findsOneWidget);
+                    findRichText: true,),),
+            findsOneWidget,);
       });
 
       testWidgets("削除したノートがリプライの場合、そのユーザーの情報が表示されていること", (tester) async {
@@ -952,14 +951,14 @@ void main() {
                 initialRoute: NoteCreateRoute(
               initialAccount: TestData.account,
               note: TestData.note1.copyWith(mentions: ["@ai"]),
-            ))));
+            ),),),);
         await tester.pumpAndSettle();
         expect(find.text("返信先："), findsOneWidget);
         expect(
             find.descendant(
                 of: find.byType(ReplyToArea),
-                matching: find.text("@ai", findRichText: true)),
-            findsOneWidget);
+                matching: find.text("@ai", findRichText: true),),
+            findsOneWidget,);
       });
 
       testWidgets("自分自身はリプライの返信先に含まれていないこと", (tester) async {
@@ -969,7 +968,7 @@ void main() {
             ],
             child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(
-                    initialAccount: TestData.account, reply: TestData.note1))));
+                    initialAccount: TestData.account, reply: TestData.note1,),),),);
         await tester.pumpAndSettle();
         expect(find.text("返信先："), findsNothing);
       });
@@ -981,7 +980,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
         expect(find.text("返信先："), findsNothing);
       });
@@ -999,14 +998,14 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
         await tester.pumpAndSettle();
         await tester.enterText(find.byType(TextField), ":ai_yay:");
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(
-                predicate<NotesCreateRequest>((arg) => arg.poll == null)))))
+                predicate<NotesCreateRequest>((arg) => arg.poll == null),),),),)
             .called(1);
       });
 
@@ -1024,8 +1023,8 @@ void main() {
                 initialRoute: NoteCreateRoute(
               initialAccount: TestData.account,
               note: TestData.note4AsVote.copyWith(
-                  poll: TestData.note4AsVote.poll?.copyWith(multiple: false)),
-            ))));
+                  poll: TestData.note4AsVote.poll?.copyWith(multiple: false),),
+            ),),),);
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
@@ -1034,10 +1033,10 @@ void main() {
             (arg) =>
                 const DeepCollectionEquality().equals(
                     TestData.note4AsVote.poll!.choices.map((e) => e.text),
-                    arg.poll!.choices) &&
+                    arg.poll!.choices,) &&
                 TestData.note4AsVote.poll!.expiresAt == arg.poll!.expiresAt &&
                 arg.poll!.expiredAfter == null &&
-                TestData.note4AsVote.poll!.multiple == arg.poll!.multiple)))));
+                TestData.note4AsVote.poll!.multiple == arg.poll!.multiple,),),),),);
       });
 
       testWidgets("削除したノートが複数選択可能な場合、複数選択可能な状態が引き継がれていること", (tester) async {
@@ -1054,14 +1053,14 @@ void main() {
                 initialRoute: NoteCreateRoute(
               initialAccount: TestData.account,
               note: TestData.note4AsVote.copyWith(
-                  poll: TestData.note4AsVote.poll?.copyWith(multiple: true)),
-            ))));
+                  poll: TestData.note4AsVote.poll?.copyWith(multiple: true),),
+            ),),),);
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.poll!.multiple == true)))));
+            (arg) => arg.poll!.multiple == true,),),),),);
       });
     });
   });
@@ -1081,14 +1080,14 @@ void main() {
             child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(
               initialAccount: TestData.account,
-            ))));
+            ),),),);
         await tester.pumpAndSettle();
         await tester.enterText(find.byType(TextField), ":ai_bonk:");
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.text == ":ai_bonk:"))))).called(1);
+            (arg) => arg.text == ":ai_bonk:",),),),),).called(1);
       });
 
       testWidgets("ノートの内容が空で投稿することができないこと", (tester) async {
@@ -1104,7 +1103,7 @@ void main() {
             child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(
               initialAccount: TestData.account,
-            ))));
+            ),),),);
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.send));
         await tester.pump();
@@ -1124,7 +1123,7 @@ void main() {
         when(mockDrive.files).thenReturn(mockDriveFiles);
 
         when(mockDriveFiles.createAsBinary(any, any)).thenAnswer(
-            (_) async => TestData.drive1.copyWith(name: "test.txt"));
+            (_) async => TestData.drive1.copyWith(name: "test.txt"),);
 
         final mockDio = MockDio();
         when(mockDio.get(any, options: anyNamed("options")))
@@ -1145,9 +1144,9 @@ void main() {
           child: DefaultRootWidget(
             initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
-                initialMediaFiles: const ["/test.txt"]),
+                initialMediaFiles: const ["/test.txt"],),
           ),
-        ));
+        ),);
         await tester.pumpAndSettle();
         expect(find.text("test.txt"), findsOneWidget);
 
@@ -1165,12 +1164,12 @@ void main() {
               ),
             ),
             argThat(equals(predicate<Uint8List>((value) =>
-                const DeepCollectionEquality().equals(value, binaryData))))));
+                const DeepCollectionEquality().equals(value, binaryData),),),),),);
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
             (arg) =>
                 arg.text == null &&
                 const DeepCollectionEquality()
-                    .equals([TestData.drive1.id], arg.fileIds))))));
+                    .equals([TestData.drive1.id], arg.fileIds),),),),),);
       });
 
       group("入力補完", () {
@@ -1178,10 +1177,10 @@ void main() {
           final emojiRepository = MockEmojiRepository();
           when(emojiRepository.emoji).thenReturn([
             TestData.unicodeEmojiRepositoryData1,
-            TestData.customEmojiRepositoryData1
+            TestData.customEmojiRepositoryData1,
           ]);
           when(emojiRepository.defaultEmojis()).thenAnswer(
-              (_) => [TestData.unicodeEmoji1, TestData.customEmoji1]);
+              (_) => [TestData.unicodeEmoji1, TestData.customEmoji1],);
           final generalSettingsRepository = MockGeneralSettingsRepository();
           when(generalSettingsRepository.settings)
               .thenReturn(const GeneralSettings(emojiType: EmojiType.system));
@@ -1195,7 +1194,7 @@ void main() {
               ],
               child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-              )));
+              ),),);
           await tester.pumpAndSettle();
 
           await tester.tap(find.text(":"));
@@ -1204,8 +1203,8 @@ void main() {
           expect(
               find.byWidgetPredicate((widget) =>
                   widget is NetworkImageView &&
-                  widget.url == TestData.customEmoji1.url.toString()),
-              findsOneWidget);
+                  widget.url == TestData.customEmoji1.url.toString(),),
+              findsOneWidget,);
           expect(find.text(TestData.unicodeEmoji1.char), findsOneWidget);
 
           await tester.tap(find.byType(NetworkImageView).at(1));
@@ -1216,17 +1215,17 @@ void main() {
               TextEditingValue(
                   text: ":${TestData.customEmoji1.baseName}:",
                   selection: TextSelection.collapsed(
-                      offset: ":${TestData.customEmoji1.baseName}:".length)));
+                      offset: ":${TestData.customEmoji1.baseName}:".length,),),);
         });
 
         testWidgets("通常の絵文字の入力補完が可能なこと", (tester) async {
           final emojiRepository = MockEmojiRepository();
           when(emojiRepository.emoji).thenReturn([
             TestData.unicodeEmojiRepositoryData1,
-            TestData.customEmojiRepositoryData1
+            TestData.customEmojiRepositoryData1,
           ]);
           when(emojiRepository.defaultEmojis()).thenAnswer(
-              (_) => [TestData.unicodeEmoji1, TestData.customEmoji1]);
+              (_) => [TestData.unicodeEmoji1, TestData.customEmoji1],);
 
           final generalSettingsRepository = MockGeneralSettingsRepository();
           when(generalSettingsRepository.settings)
@@ -1241,7 +1240,7 @@ void main() {
               ],
               child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-              )));
+              ),),);
           await tester.pumpAndSettle();
 
           await tester.tap(find.text(":"));
@@ -1255,7 +1254,7 @@ void main() {
               TextEditingValue(
                   text: TestData.unicodeEmoji1.char,
                   selection: TextSelection.collapsed(
-                      offset: TestData.unicodeEmoji1.char.length)));
+                      offset: TestData.unicodeEmoji1.char.length,),),);
         });
 
         testWidgets(
@@ -1266,21 +1265,21 @@ void main() {
           final emojiRepository = MockEmojiRepository();
           when(emojiRepository.emoji).thenReturn([
             TestData.unicodeEmojiRepositoryData1,
-            TestData.customEmojiRepositoryData1
+            TestData.customEmojiRepositoryData1,
           ]);
           when(emojiRepository.searchEmojis(any)).thenAnswer(
-              (_) async => [TestData.unicodeEmoji1, TestData.customEmoji1]);
+              (_) async => [TestData.unicodeEmoji1, TestData.customEmoji1],);
           when(emojiRepository.defaultEmojis())
               .thenReturn([TestData.unicodeEmoji1, TestData.customEmoji1]);
 
           await tester.pumpWidget(ProviderScope(
               overrides: [
                 emojiRepositoryProvider
-                    .overrideWith((ref, arg) => emojiRepository)
+                    .overrideWith((ref, arg) => emojiRepository),
               ],
               child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-              )));
+              ),),);
           await tester.pumpAndSettle();
           await tester.enterText(find.byType(TextField).hitTestable(), ":");
           await tester.pumpAndSettle();
@@ -1293,7 +1292,7 @@ void main() {
               tester
                   .textEditingController(find.byType(TextField).hitTestable())
                   .text,
-              ":${TestData.customEmoji1.baseName}:");
+              ":${TestData.customEmoji1.baseName}:",);
         });
 
         testWidgets("MFMの関数名の入力補完が可能なこと", (tester) async {
@@ -1337,7 +1336,7 @@ void main() {
           await tester.pumpWidget(
             ProviderScope(
               overrides: [
-                misskeyProvider.overrideWith((ref, arg) => mockMisskey)
+                misskeyProvider.overrideWith((ref, arg) => mockMisskey),
               ],
               child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(initialAccount: TestData.account),
@@ -1372,10 +1371,10 @@ void main() {
                   initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account
                     .copyWith(i: TestData.account.i.copyWith(isCat: true)),
-              ))));
+              ),),),);
           await tester.pumpAndSettle();
           await tester.enterText(
-              find.byType(TextField).hitTestable(), "は？なんなん？");
+              find.byType(TextField).hitTestable(), "は？なんなん？",);
           await tester.pumpAndSettle();
           expect(find.text("は？にゃんにゃん？"), findsOneWidget);
         });
@@ -1389,10 +1388,10 @@ void main() {
                   initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account
                     .copyWith(i: TestData.account.i.copyWith(isCat: false)),
-              ))));
+              ),),),);
           await tester.pumpAndSettle();
           await tester.enterText(
-              find.byType(TextField).hitTestable(), "は？なんなん？");
+              find.byType(TextField).hitTestable(), "は？なんなん？",);
           await tester.pumpAndSettle();
           // 入力テキストとプレビューで2つになる
           expect(find.text("は？なんなん？"), findsNWidgets(2));
@@ -1406,16 +1405,16 @@ void main() {
               child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(
                     initialAccount: TestData.account,
-                    reply: TestData.note3AsAnotherUser),
-              )));
+                    reply: TestData.note3AsAnotherUser,),
+              ),),);
           await tester.pumpAndSettle();
           expect(
               find.descendant(
                   of: find.byType(MfmPreview),
                   matching: find.textContaining(
                       TestData.note3AsAnotherUser.user.username.tight,
-                      findRichText: true)),
-              findsOneWidget);
+                      findRichText: true,),),
+              findsOneWidget,);
         });
       });
     });
@@ -1426,7 +1425,7 @@ void main() {
             child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(
           initialAccount: TestData.account,
-        ))));
+        ),),),);
         await tester.pumpAndSettle();
         expect(find.byType(TextField), findsOneWidget);
 
@@ -1452,7 +1451,7 @@ void main() {
             child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(
               initialAccount: TestData.account,
-            ))));
+            ),),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.remove_red_eye));
@@ -1464,7 +1463,7 @@ void main() {
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(
-                predicate<NotesCreateRequest>((arg) => arg.cw == ":nsfw:")))))
+                predicate<NotesCreateRequest>((arg) => arg.cw == ":nsfw:"),),),),)
             .called(1);
       });
 
@@ -1481,7 +1480,7 @@ void main() {
             child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(
               initialAccount: TestData.account,
-            ))));
+            ),),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.remove_red_eye));
@@ -1494,7 +1493,7 @@ void main() {
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(
-                predicate<NotesCreateRequest>((arg) => arg.cw == null)))))
+                predicate<NotesCreateRequest>((arg) => arg.cw == null),),),),)
             .called(1);
       });
     });
@@ -1504,7 +1503,7 @@ void main() {
         "パブリック": (Icons.public, NoteVisibility.public),
         "ホーム": (Icons.home, NoteVisibility.home),
         "フォロワー": (Icons.lock_outline, NoteVisibility.followers),
-        "ダイレクト": (Icons.mail, NoteVisibility.specified)
+        "ダイレクト": (Icons.mail, NoteVisibility.specified),
       };
 
       for (final testCase in testCases.entries) {
@@ -1520,7 +1519,7 @@ void main() {
               ],
               child: DefaultRootWidget(
                   initialRoute:
-                      NoteCreateRoute(initialAccount: TestData.account))));
+                      NoteCreateRoute(initialAccount: TestData.account),),),);
           await tester.pumpAndSettle();
 
           await tester.enterText(find.byType(TextField).at(0), ":ai_yay:");
@@ -1535,7 +1534,7 @@ void main() {
           await tester.pumpAndSettle();
 
           verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-              (arg) => arg.visibility == testCase.value.$2))))).called(1);
+              (arg) => arg.visibility == testCase.value.$2,),),),),).called(1);
         });
       }
 
@@ -1552,7 +1551,7 @@ void main() {
             child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(
                     initialAccount: TestData.account.copyWith(
-                        i: TestData.account.i.copyWith(isSilenced: true))))));
+                        i: TestData.account.i.copyWith(isSilenced: true),),),),),);
         await tester.pumpAndSettle();
 
         await tester.enterText(find.byType(TextField).at(0), ":ai_yay:");
@@ -1587,8 +1586,8 @@ void main() {
               initialRoute: NoteCreateRoute(
                   initialAccount: TestData.account,
                   reply: TestData.note1
-                      .copyWith(visibility: NoteVisibility.followers)),
-            )));
+                      .copyWith(visibility: NoteVisibility.followers),),
+            ),),);
 
         await tester.pumpAndSettle();
 
@@ -1631,7 +1630,7 @@ void main() {
         "いいねのみ": (
           find.byIcon(Icons.favorite_border),
           ReactionAcceptance.likeOnly
-        )
+        ),
       };
 
       for (final testCase in testCases.entries) {
@@ -1647,7 +1646,7 @@ void main() {
               ],
               child: DefaultRootWidget(
                   initialRoute:
-                      NoteCreateRoute(initialAccount: TestData.account))));
+                      NoteCreateRoute(initialAccount: TestData.account),),),);
           await tester.pumpAndSettle();
 
           await tester.enterText(find.byType(TextField).at(0), ":ai_yay:");
@@ -1662,7 +1661,7 @@ void main() {
           await tester.pumpAndSettle();
 
           verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-                  (arg) => arg.reactionAcceptance == testCase.value.$2)))))
+                  (arg) => arg.reactionAcceptance == testCase.value.$2,),),),),)
               .called(1);
         });
       }
@@ -1676,7 +1675,7 @@ void main() {
             ],
             child: DefaultRootWidget(
                 initialRoute:
-                    NoteCreateRoute(initialAccount: TestData.account))));
+                    NoteCreateRoute(initialAccount: TestData.account),),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.rocket));
@@ -1700,14 +1699,14 @@ void main() {
             ],
             child: DefaultRootWidget(
                 initialRoute:
-                    NoteCreateRoute(initialAccount: TestData.account))));
+                    NoteCreateRoute(initialAccount: TestData.account),),),);
         await tester.pumpAndSettle();
         await tester.enterText(find.byType(TextField), ":ai_yay:");
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.localOnly == false))))).called(1);
+            (arg) => arg.localOnly == false,),),),),).called(1);
       });
 
       testWidgets("連合がオフに設定した場合、連合なしで投稿されること", (tester) async {
@@ -1722,7 +1721,7 @@ void main() {
             ],
             child: DefaultRootWidget(
                 initialRoute:
-                    NoteCreateRoute(initialAccount: TestData.account))));
+                    NoteCreateRoute(initialAccount: TestData.account),),),);
         await tester.pumpAndSettle();
         await tester.enterText(find.byType(TextField), ":ai_yay:");
         await tester.tap(find.byIcon(Icons.rocket));
@@ -1730,7 +1729,7 @@ void main() {
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
-            (arg) => arg.localOnly == true))))).called(1);
+            (arg) => arg.localOnly == true,),),),),).called(1);
       });
 
       testWidgets("チャンネルのノートを連合オンに設定できないこと", (tester) async {
@@ -1746,7 +1745,7 @@ void main() {
             child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(
                     initialAccount: TestData.account,
-                    channel: TestData.channel1))));
+                    channel: TestData.channel1,),),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byType(LocalOnlyIcon));
@@ -1772,7 +1771,7 @@ void main() {
             child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(
                     initialAccount: TestData.account,
-                    renote: TestData.note1.copyWith(localOnly: true)))));
+                    renote: TestData.note1.copyWith(localOnly: true),),),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byType(LocalOnlyIcon));
@@ -1798,7 +1797,7 @@ void main() {
             child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(
                     initialAccount: TestData.account,
-                    reply: TestData.note1.copyWith(localOnly: true)))));
+                    reply: TestData.note1.copyWith(localOnly: true),),),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byType(LocalOnlyIcon));
@@ -1827,20 +1826,20 @@ void main() {
             ],
             child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(
-                    initialAccount: TestData.account, reply: TestData.note1))));
+                    initialAccount: TestData.account, reply: TestData.note1,),),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.rocket));
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField), "@oishiibot :ai_yaysuperfast:");
+            find.byType(TextField), "@oishiibot :ai_yaysuperfast:",);
 
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(
-            predicate<NotesCreateRequest>((arg) => arg.localOnly == true))));
+            predicate<NotesCreateRequest>((arg) => arg.localOnly == true),),),);
       });
 
       testWidgets("メンション先がリモートユーザーを含む場合、連合オフで投稿できないこと", (tester) async {
@@ -1855,14 +1854,14 @@ void main() {
             ],
             child: DefaultRootWidget(
                 initialRoute: NoteCreateRoute(
-                    initialAccount: TestData.account, reply: TestData.note1))));
+                    initialAccount: TestData.account, reply: TestData.note1,),),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.rocket));
         await tester.pumpAndSettle();
 
         await tester.enterText(find.byType(TextField),
-            "@shiosyakeyakini@mi.taichan.site :ai_yaysuperfast:");
+            "@shiosyakeyakini@mi.taichan.site :ai_yaysuperfast:",);
 
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
@@ -1882,10 +1881,10 @@ void main() {
         final emojiRepository = MockEmojiRepository();
         when(emojiRepository.emoji).thenReturn([
           TestData.unicodeEmojiRepositoryData1,
-          TestData.customEmojiRepositoryData1
+          TestData.customEmojiRepositoryData1,
         ]);
         when(emojiRepository.searchEmojis(any)).thenAnswer(
-            (_) async => [TestData.unicodeEmoji1, TestData.customEmoji1]);
+            (_) async => [TestData.unicodeEmoji1, TestData.customEmoji1],);
         when(emojiRepository.defaultEmojis())
             .thenReturn([TestData.unicodeEmoji1, TestData.customEmoji1]);
 
@@ -1897,7 +1896,7 @@ void main() {
             ],
             child: DefaultRootWidget(
                 initialRoute:
-                    NoteCreateRoute(initialAccount: TestData.account))));
+                    NoteCreateRoute(initialAccount: TestData.account),),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.tag_faces));
@@ -1913,7 +1912,7 @@ void main() {
             TextEditingValue(
                 text: ":${TestData.customEmoji1.baseName}:",
                 selection: TextSelection.collapsed(
-                    offset: ":${TestData.customEmoji1.baseName}:".length)));
+                    offset: ":${TestData.customEmoji1.baseName}:".length,),),);
       });
 
       testWidgets("リアクションピッカーからUnicodeの絵文字が入力できること", (tester) async {
@@ -1921,10 +1920,10 @@ void main() {
         final emojiRepository = MockEmojiRepository();
         when(emojiRepository.emoji).thenReturn([
           TestData.unicodeEmojiRepositoryData1,
-          TestData.customEmojiRepositoryData1
+          TestData.customEmojiRepositoryData1,
         ]);
         when(emojiRepository.searchEmojis(any)).thenAnswer(
-            (_) async => [TestData.unicodeEmoji1, TestData.customEmoji1]);
+            (_) async => [TestData.unicodeEmoji1, TestData.customEmoji1],);
         when(emojiRepository.defaultEmojis())
             .thenReturn([TestData.unicodeEmoji1, TestData.customEmoji1]);
         final generalSettingsRepository = MockGeneralSettingsRepository();
@@ -1941,7 +1940,7 @@ void main() {
             ],
             child: DefaultRootWidget(
                 initialRoute:
-                    NoteCreateRoute(initialAccount: TestData.account))));
+                    NoteCreateRoute(initialAccount: TestData.account),),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.tag_faces));
@@ -1957,7 +1956,7 @@ void main() {
             TextEditingValue(
                 text: TestData.unicodeEmoji1.char,
                 selection: TextSelection.collapsed(
-                    offset: TestData.unicodeEmoji1.char.length)));
+                    offset: TestData.unicodeEmoji1.char.length,),),);
       });
     });
 
@@ -1979,7 +1978,7 @@ void main() {
             ],
             child: DefaultRootWidget(
                 initialRoute:
-                    NoteCreateRoute(initialAccount: TestData.account))));
+                    NoteCreateRoute(initialAccount: TestData.account),),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.mail_outline));
@@ -1994,11 +1993,11 @@ void main() {
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
 
         verify(note.create(argThat(equals(predicate<NotesCreateRequest>((arg) =>
-            arg.text == "@${TestData.detailedUser1.username} :ai_yay:")))));
+            arg.text == "@${TestData.detailedUser1.username} :ai_yay:",),),),),);
       });
 
       testWidgets("複数の返信先を追加できること", (tester) async {
@@ -2022,7 +2021,7 @@ void main() {
             ],
             child: DefaultRootWidget(
                 initialRoute:
-                    NoteCreateRoute(initialAccount: TestData.account))));
+                    NoteCreateRoute(initialAccount: TestData.account),),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.mail_outline));
@@ -2050,12 +2049,12 @@ void main() {
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
 
         verify(note.create(argThat(equals(predicate<NotesCreateRequest>((arg) =>
             arg.text ==
-            "@${TestData.detailedUser1.username} @${TestData.detailedUser2.username}@${TestData.detailedUser2.host} :ai_yay:")))));
+            "@${TestData.detailedUser1.username} @${TestData.detailedUser2.username}@${TestData.detailedUser2.host} :ai_yay:",),),),),);
       });
 
       testWidgets("追加した返信先を削除できること", (tester) async {
@@ -2075,7 +2074,7 @@ void main() {
             ],
             child: DefaultRootWidget(
                 initialRoute:
-                    NoteCreateRoute(initialAccount: TestData.account))));
+                    NoteCreateRoute(initialAccount: TestData.account),),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.mail_outline));
@@ -2093,11 +2092,11 @@ void main() {
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
 
         verify(note.create(argThat(equals(
-            predicate<NotesCreateRequest>((arg) => arg.text == ":ai_yay:")))));
+            predicate<NotesCreateRequest>((arg) => arg.text == ":ai_yay:"),),),),);
       });
     });
 
@@ -2131,7 +2130,7 @@ void main() {
               initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
               ),
-            )));
+            ),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.image));
@@ -2146,13 +2145,13 @@ void main() {
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
             (arg) => const DeepCollectionEquality()
-                .equals([TestData.drive1.id], arg.fileIds))))));
+                .equals([TestData.drive1.id], arg.fileIds),),),),),);
       });
 
       testWidgets("単一の画像のアップロードができること", (tester) async {
@@ -2165,7 +2164,7 @@ void main() {
         when(mockDrive.files).thenReturn(mockDriveFiles);
 
         when(mockDriveFiles.createAsBinary(any, any)).thenAnswer(
-            (_) async => TestData.drive1.copyWith(name: "test.png"));
+            (_) async => TestData.drive1.copyWith(name: "test.png"),);
 
         final binaryImage = await TestData.binaryImage;
         final filePicker = MockFilePickerPlatform();
@@ -2181,13 +2180,13 @@ void main() {
           withData: anyNamed("withData"),
           withReadStream: anyNamed("withReadStream"),
           lockParentWindow: anyNamed("lockParentWindow"),
-        )).thenAnswer(
+        ),).thenAnswer(
           (_) async => FilePickerResult([
             PlatformFile(
                 path: "/test.png",
                 name: "test.png",
                 size: binaryImage.length,
-                bytes: binaryImage)
+                bytes: binaryImage,),
           ]),
         );
         final fileSystem = MemoryFileSystem();
@@ -2203,7 +2202,7 @@ void main() {
               initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
               ),
-            )));
+            ),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.image));
@@ -2213,13 +2212,13 @@ void main() {
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(predicate<NotesCreateRequest>(
             (arg) => const DeepCollectionEquality()
-                .equals([TestData.drive1.id], arg.fileIds))))));
+                .equals([TestData.drive1.id], arg.fileIds),),),),),);
 
         verify(mockDriveFiles.createAsBinary(
             argThat(
@@ -2232,7 +2231,7 @@ void main() {
               ),
             ),
             argThat(equals(predicate<Uint8List>((value) =>
-                const DeepCollectionEquality().equals(value, binaryImage))))));
+                const DeepCollectionEquality().equals(value, binaryImage),),),),),);
       });
 
       testWidgets("画像を何も選択しなかった場合、何もアップロードされないこと", (tester) async {
@@ -2253,7 +2252,7 @@ void main() {
           withData: anyNamed("withData"),
           withReadStream: anyNamed("withReadStream"),
           lockParentWindow: anyNamed("lockParentWindow"),
-        )).thenAnswer((_) async => null);
+        ),).thenAnswer((_) async => null);
 
         await tester.pumpWidget(ProviderScope(
             overrides: [
@@ -2264,7 +2263,7 @@ void main() {
               initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
               ),
-            )));
+            ),),);
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(Icons.image));
@@ -2274,12 +2273,12 @@ void main() {
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), ":ai_yay:");
+            find.byType(TextField).hitTestable(), ":ai_yay:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
         verify(mockNote.create(argThat(equals(
-            predicate<NotesCreateRequest>((arg) => arg.fileIds == null)))));
+            predicate<NotesCreateRequest>((arg) => arg.fileIds == null),),),),);
       });
     });
 
@@ -2295,7 +2294,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
 
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.how_to_vote));
@@ -2310,9 +2309,7 @@ void main() {
                 arg.poll ==
                 const NotesCreatePollRequest(
                     choices: ["純金製ぬいぐるみ", "動くゼロ幅スペース"],
-                    multiple: false,
-                    expiresAt: null,
-                    expiredAfter: null)))))).called(1);
+                    multiple: false,),),),),),).called(1);
       });
 
       testWidgets("投票は10個まで追加できること", (tester) async {
@@ -2326,7 +2323,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
 
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.how_to_vote));
@@ -2356,11 +2353,9 @@ void main() {
                       "投票6",
                       "投票7",
                       "投票8",
-                      "投票9"
+                      "投票9",
                     ],
-                    multiple: false,
-                    expiresAt: null,
-                    expiredAfter: null)))))).called(1);
+                    multiple: false,),),),),),).called(1);
       });
 
       testWidgets("追加した投票の項目を削除できること、2つ以上削除することはできないこと", (tester) async {
@@ -2374,7 +2369,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
 
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.how_to_vote));
@@ -2395,11 +2390,11 @@ void main() {
 
         // 投票2が削除されていること
         expect(tester.textEditingController(find.byType(TextField).at(1)).text,
-            "投票0");
+            "投票0",);
         expect(tester.textEditingController(find.byType(TextField).at(2)).text,
-            "投票1");
+            "投票1",);
         expect(tester.textEditingController(find.byType(TextField).at(3)).text,
-            "投票3");
+            "投票3",);
 
         // 投票0を削除
         await tester.tap(find.byIcon(Icons.close).at(0));
@@ -2409,9 +2404,9 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(tester.textEditingController(find.byType(TextField).at(1)).text,
-            "投票1");
+            "投票1",);
         expect(tester.textEditingController(find.byType(TextField).at(2)).text,
-            "投票3");
+            "投票3",);
 
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
@@ -2421,9 +2416,7 @@ void main() {
                 arg.poll ==
                 const NotesCreatePollRequest(
                     choices: ["投票1", "投票3"],
-                    multiple: false,
-                    expiresAt: null,
-                    expiredAfter: null)))))).called(1);
+                    multiple: false,),),),),),).called(1);
       });
 
       testWidgets("2つ以上の投票がないと投稿できないこと", (tester) async {
@@ -2437,7 +2430,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
 
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.how_to_vote));
@@ -2459,7 +2452,7 @@ void main() {
 
         // 2個でエラーにならないこと
         await tester.enterText(
-            find.byType(TextField).at(2), ":ai_yay_superfast:");
+            find.byType(TextField).at(2), ":ai_yay_superfast:",);
         await tester.tap(find.byIcon(Icons.send));
         await tester.pumpAndSettle();
 
@@ -2468,9 +2461,7 @@ void main() {
                 arg.poll ==
                 const NotesCreatePollRequest(
                     choices: [":ai_yay:", ":ai_yay_superfast:"],
-                    multiple: false,
-                    expiresAt: null,
-                    expiredAfter: null)))))).called(1);
+                    multiple: false,),),),),),).called(1);
       });
 
       testWidgets("複数回答の投票をもとに戻せること", (tester) async {
@@ -2484,7 +2475,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
 
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.how_to_vote));
@@ -2494,7 +2485,7 @@ void main() {
 
         await tester.enterText(find.byType(TextField).at(1), ":ai_yay:");
         await tester.enterText(
-            find.byType(TextField).at(2), ":ai_yay_superfast:");
+            find.byType(TextField).at(2), ":ai_yay_superfast:",);
 
         await tester.tap(find.byType(Switch));
 
@@ -2506,9 +2497,7 @@ void main() {
                 arg.poll ==
                 const NotesCreatePollRequest(
                     choices: [":ai_yay:", ":ai_yay_superfast:"],
-                    multiple: false,
-                    expiresAt: null,
-                    expiredAfter: null)))))).called(1);
+                    multiple: false,),),),),),).called(1);
       });
 
       testWidgets("日時指定の投票を作成できること", (tester) async {
@@ -2522,7 +2511,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
 
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.how_to_vote));
@@ -2530,7 +2519,7 @@ void main() {
 
         await tester.enterText(find.byType(TextField).at(1), ":ai_yay:");
         await tester.enterText(
-            find.byType(TextField).at(2), ":ai_yay_superfast:");
+            find.byType(TextField).at(2), ":ai_yay_superfast:",);
 
         await tester.tap(find.text("無期限"));
         await tester.pumpAndSettle();
@@ -2547,7 +2536,7 @@ void main() {
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), "2099/12/31");
+            find.byType(TextField).hitTestable(), "2099/12/31",);
         await tester.tap(find.text("OK"));
         await tester.pumpAndSettle();
 
@@ -2556,7 +2545,7 @@ void main() {
 
         await tester.enterText(find.byType(TextField).hitTestable().at(0), "3");
         await tester.enterText(
-            find.byType(TextField).hitTestable().at(1), "34");
+            find.byType(TextField).hitTestable().at(1), "34",);
         await tester.tap(find.text("OK"));
         await tester.pumpAndSettle();
 
@@ -2569,8 +2558,7 @@ void main() {
                 NotesCreatePollRequest(
                     choices: [":ai_yay:", ":ai_yay_superfast:"],
                     multiple: false,
-                    expiresAt: DateTime(2099, 12, 31, 3, 34, 0, 0),
-                    expiredAfter: null)))))).called(1);
+                    expiresAt: DateTime(2099, 12, 31, 3, 34),),),),),),).called(1);
       });
 
       testWidgets("日時指定の投票で日時を未入力時、投稿ができないこと", (tester) async {
@@ -2584,7 +2572,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
 
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.how_to_vote));
@@ -2592,7 +2580,7 @@ void main() {
 
         await tester.enterText(find.byType(TextField).at(1), ":ai_yay:");
         await tester.enterText(
-            find.byType(TextField).at(2), ":ai_yay_superfast:");
+            find.byType(TextField).at(2), ":ai_yay_superfast:",);
 
         await tester.tap(find.text("無期限"));
         await tester.pumpAndSettle();
@@ -2616,7 +2604,7 @@ void main() {
         await tester.pumpAndSettle();
 
         await tester.enterText(
-            find.byType(TextField).hitTestable(), "2099/12/31");
+            find.byType(TextField).hitTestable(), "2099/12/31",);
         await tester.tap(find.text("OK"));
         await tester.pumpAndSettle();
 
@@ -2625,7 +2613,7 @@ void main() {
 
         await tester.enterText(find.byType(TextField).hitTestable().at(0), "3");
         await tester.enterText(
-            find.byType(TextField).hitTestable().at(1), "34");
+            find.byType(TextField).hitTestable().at(1), "34",);
         await tester.tap(find.text("OK"));
         await tester.pumpAndSettle();
 
@@ -2638,8 +2626,7 @@ void main() {
                 NotesCreatePollRequest(
                     choices: [":ai_yay:", ":ai_yay_superfast:"],
                     multiple: false,
-                    expiresAt: DateTime(2099, 12, 31, 3, 34, 0, 0),
-                    expiredAfter: null)))))).called(1);
+                    expiresAt: DateTime(2099, 12, 31, 3, 34),),),),),),).called(1);
       });
 
       testWidgets("経過指定の投票を「秒」で作成できること", (tester) async {
@@ -2653,7 +2640,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
 
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.how_to_vote));
@@ -2661,7 +2648,7 @@ void main() {
 
         await tester.enterText(find.byType(TextField).at(1), ":ai_yay:");
         await tester.enterText(
-            find.byType(TextField).at(2), ":ai_yay_superfast:");
+            find.byType(TextField).at(2), ":ai_yay_superfast:",);
 
         await tester.tap(find.text("無期限"));
         await tester.pumpAndSettle();
@@ -2680,8 +2667,7 @@ void main() {
                 const NotesCreatePollRequest(
                     choices: [":ai_yay:", ":ai_yay_superfast:"],
                     multiple: false,
-                    expiresAt: null,
-                    expiredAfter: Duration(seconds: 100))))))).called(1);
+                    expiredAfter: Duration(seconds: 100),),),),),),).called(1);
       });
 
       testWidgets("経過指定の投票を「分」で作成できること", (tester) async {
@@ -2695,7 +2681,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
 
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.how_to_vote));
@@ -2703,7 +2689,7 @@ void main() {
 
         await tester.enterText(find.byType(TextField).at(1), ":ai_yay:");
         await tester.enterText(
-            find.byType(TextField).at(2), ":ai_yay_superfast:");
+            find.byType(TextField).at(2), ":ai_yay_superfast:",);
 
         await tester.tap(find.text("無期限"));
         await tester.pumpAndSettle();
@@ -2728,8 +2714,7 @@ void main() {
                 const NotesCreatePollRequest(
                     choices: [":ai_yay:", ":ai_yay_superfast:"],
                     multiple: false,
-                    expiresAt: null,
-                    expiredAfter: Duration(minutes: 100))))))).called(1);
+                    expiredAfter: Duration(minutes: 100),),),),),),).called(1);
       });
 
       testWidgets("経過指定の投票を「時」で作成できること", (tester) async {
@@ -2743,7 +2728,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
 
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.how_to_vote));
@@ -2751,7 +2736,7 @@ void main() {
 
         await tester.enterText(find.byType(TextField).at(1), ":ai_yay:");
         await tester.enterText(
-            find.byType(TextField).at(2), ":ai_yay_superfast:");
+            find.byType(TextField).at(2), ":ai_yay_superfast:",);
 
         await tester.tap(find.text("無期限"));
         await tester.pumpAndSettle();
@@ -2776,8 +2761,7 @@ void main() {
                 const NotesCreatePollRequest(
                     choices: [":ai_yay:", ":ai_yay_superfast:"],
                     multiple: false,
-                    expiresAt: null,
-                    expiredAfter: Duration(hours: 100))))))).called(1);
+                    expiredAfter: Duration(hours: 100),),),),),),).called(1);
       });
 
       testWidgets("経過指定の投票を「日」で作成できること", (tester) async {
@@ -2791,7 +2775,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
 
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.how_to_vote));
@@ -2799,7 +2783,7 @@ void main() {
 
         await tester.enterText(find.byType(TextField).at(1), ":ai_yay:");
         await tester.enterText(
-            find.byType(TextField).at(2), ":ai_yay_superfast:");
+            find.byType(TextField).at(2), ":ai_yay_superfast:",);
 
         await tester.tap(find.text("無期限"));
         await tester.pumpAndSettle();
@@ -2824,8 +2808,7 @@ void main() {
                 const NotesCreatePollRequest(
                     choices: [":ai_yay:", ":ai_yay_superfast:"],
                     multiple: false,
-                    expiresAt: null,
-                    expiredAfter: Duration(days: 100))))))).called(1);
+                    expiredAfter: Duration(days: 100),),),),),),).called(1);
       });
 
       testWidgets("経過指定の投票の作成時、投票期間を未入力で投稿を作成できないこと", (tester) async {
@@ -2839,7 +2822,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(initialAccount: TestData.account),
-            )));
+            ),),);
 
         await tester.pumpAndSettle();
         await tester.tap(find.byIcon(Icons.how_to_vote));
@@ -2847,7 +2830,7 @@ void main() {
 
         await tester.enterText(find.byType(TextField).at(1), ":ai_yay:");
         await tester.enterText(
-            find.byType(TextField).at(2), ":ai_yay_superfast:");
+            find.byType(TextField).at(2), ":ai_yay_superfast:",);
 
         await tester.tap(find.text("無期限"));
         await tester.pumpAndSettle();
@@ -2878,8 +2861,7 @@ void main() {
                 const NotesCreatePollRequest(
                     choices: [":ai_yay:", ":ai_yay_superfast:"],
                     multiple: false,
-                    expiresAt: null,
-                    expiredAfter: Duration(days: 100))))))).called(1);
+                    expiredAfter: Duration(days: 100),),),),),),).called(1);
       });
     });
   });

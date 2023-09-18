@@ -57,7 +57,7 @@ class FederationPageState extends ConsumerState<FederationPage> {
                 if (adsAvailable) const Tab(text: "広告"),
                 if (isMisskey) const Tab(text: "お知らせ"),
                 if (isSupportedTimeline) const Tab(text: "カスタム絵文字"),
-                if (isSupportedTimeline) const Tab(text: "LTL")
+                if (isSupportedTimeline) const Tab(text: "LTL"),
               ],
             ),
           ),

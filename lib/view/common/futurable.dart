@@ -11,7 +11,7 @@ class CommonFuture<T> extends StatelessWidget {
       {super.key,
       required this.future,
       required this.complete,
-      this.futureFinished});
+      this.futureFinished,});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +36,6 @@ class CommonFuture<T> extends StatelessWidget {
       }
 
       return const Center(child: CircularProgressIndicator());
-    });
+    },);
   }
 }

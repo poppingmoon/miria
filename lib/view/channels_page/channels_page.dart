@@ -27,7 +27,7 @@ class ChannelsPage extends StatelessWidget {
               Tab(text: "トレンド"),
               Tab(text: "お気に入り"),
               Tab(text: "フォロー中"),
-              Tab(text: "管理中")
+              Tab(text: "管理中"),
             ],
             isScrollable: true,
           ),
@@ -37,19 +37,19 @@ class ChannelsPage extends StatelessWidget {
             child: const TabBarView(children: [
               Padding(
                   padding: EdgeInsets.only(left: 10, right: 10),
-                  child: ChannelSearch()),
+                  child: ChannelSearch(),),
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: ChannelTrend(),
               ),
               Padding(
                   padding: EdgeInsets.only(left: 10, right: 10),
-                  child: ChannelFavorited()),
+                  child: ChannelFavorited(),),
               Padding(
                   padding: EdgeInsets.only(left: 10, right: 10),
-                  child: ChannelFollowed()),
-              Text("作成中")
-            ])),
+                  child: ChannelFollowed(),),
+              Text("作成中"),
+            ],),),
       ),
     );
   }

@@ -32,7 +32,7 @@ class UserReactions extends ConsumerWidget {
             .read(misskeyProvider(account))
             .users
             .reactions(
-                UsersReactionsRequest(userId: userId, untilId: lastItem.id));
+                UsersReactionsRequest(userId: userId, untilId: lastItem.id),);
         ref
             .read(notesProvider(account))
             .registerAll(response.map((e) => e.note));
@@ -61,9 +61,7 @@ class UserReaction extends ConsumerWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
           children: [
             DecoratedBox(
               decoration: BoxDecoration(
@@ -71,7 +69,7 @@ class UserReaction extends ConsumerWidget {
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10),
-                  )),
+                  ),),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -81,7 +79,7 @@ class UserReaction extends ConsumerWidget {
                         emojiName: response.type,
                         emojiInfo: response.note.reactionEmojis,
                         repository: ref.read(
-                            emojiRepositoryProvider(AccountScope.of(context)))),
+                            emojiRepositoryProvider(AccountScope.of(context)),),),
                     fontSizeRatio: 2,
                   ),
                 ),
@@ -89,7 +87,7 @@ class UserReaction extends ConsumerWidget {
             ),
             Padding(
                 padding: const EdgeInsets.all(10),
-                child: MisskeyNote(note: response.note)),
+                child: MisskeyNote(note: response.note),),
             const Padding(padding: EdgeInsets.all(5)),
           ],
         ),

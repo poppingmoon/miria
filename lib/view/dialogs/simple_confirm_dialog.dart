@@ -26,7 +26,7 @@ class SimpleConfirmDialog extends StatelessWidget {
                 secondary: secondary,
                 isMfm: isMfm,
                 account: account,
-              ));
+              ),);
 
   const SimpleConfirmDialog({
     super.key,
@@ -47,12 +47,12 @@ class SimpleConfirmDialog extends StatelessWidget {
             actions: [
               OutlinedButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(secondary)),
+                  child: Text(secondary),),
               ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(primary))
+                  child: Text(primary),),
             ],
-          ));
+          ),);
     }
 
     return AlertDialog(
@@ -60,10 +60,10 @@ class SimpleConfirmDialog extends StatelessWidget {
       actions: [
         OutlinedButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text(secondary)),
+            child: Text(secondary),),
         ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text(primary))
+            child: Text(primary),),
       ],
     );
   }

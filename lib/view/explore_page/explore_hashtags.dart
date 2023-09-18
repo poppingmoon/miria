@@ -23,7 +23,7 @@ enum HashtagListType {
 }
 
 class ExploreHashtagsState extends ConsumerState<ExploreHashtags> {
-  var hashtagListType = HashtagListType.localTrend;
+  HashtagListType hashtagListType = HashtagListType.localTrend;
 
   @override
   Widget build(BuildContext context) {
@@ -39,19 +39,19 @@ class ExploreHashtagsState extends ConsumerState<ExploreHashtags> {
                                         .toggleButtonsTheme
                                         .borderWidth!
                                         .toInt() *
-                                    3),
+                                    3,),
                         onPressed: (index) => setState(() {
                               hashtagListType = HashtagListType.values[index];
                             }),
                         isSelected: [
                           for (final element in HashtagListType.values)
-                            element == hashtagListType
+                            element == hashtagListType,
                         ],
                         children: const [
                           Text("トレンド"),
                           Text("ローカル"),
                           Text("リモート"),
-                        ]))),
+                        ],),),),
         if (hashtagListType == HashtagListType.localTrend)
           Expanded(
             child: FutureListView(
@@ -60,7 +60,7 @@ class ExploreHashtagsState extends ConsumerState<ExploreHashtags> {
                     .hashtags
                     .trend(),
                 builder: (context, item) =>
-                    Hashtag(hashtag: item.tag, usersCount: item.usersCount)),
+                    Hashtag(hashtag: item.tag, usersCount: item.usersCount),),
           ),
         if (hashtagListType == HashtagListType.local)
           Expanded(
@@ -72,10 +72,10 @@ class ExploreHashtagsState extends ConsumerState<ExploreHashtags> {
                         limit: 50,
                         attachedToLocalUserOnly: true,
                         sort:
-                            HashtagsListSortType.attachedLocalUsersDescendant)),
+                            HashtagsListSortType.attachedLocalUsersDescendant,),),
                 builder: (context, item) => Hashtag(
                     hashtag: item.tag,
-                    usersCount: item.attachedLocalUsersCount)),
+                    usersCount: item.attachedLocalUsersCount,),),
           ),
         if (hashtagListType == HashtagListType.remote)
           Expanded(
@@ -87,10 +87,10 @@ class ExploreHashtagsState extends ConsumerState<ExploreHashtags> {
                         limit: 50,
                         attachedToRemoteUserOnly: true,
                         sort: HashtagsListSortType
-                            .attachedRemoteUsersDescendant)),
+                            .attachedRemoteUsersDescendant,),),
                 builder: (context, item) => Hashtag(
                     hashtag: item.tag,
-                    usersCount: item.attachedRemoteUsersCount)),
+                    usersCount: item.attachedRemoteUsersCount,),),
           ),
       ],
     );
@@ -107,7 +107,7 @@ class Hashtag extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () => context.pushRoute(
-          HashtagRoute(hashtag: hashtag, account: AccountScope.of(context))),
+          HashtagRoute(hashtag: hashtag, account: AccountScope.of(context)),),
       title: Text("#$hashtag", style: AppTheme.of(context).hashtagStyle),
       trailing: Text.rich(
         TextSpan(children: [
@@ -115,7 +115,7 @@ class Hashtag extends StatelessWidget {
             text: usersCount.format(),
           ),
           TextSpan(text: "人", style: Theme.of(context).textTheme.bodySmall),
-        ]),
+        ],),
         textScaleFactor: MediaQuery.of(context).textScaleFactor,
       ),
     );

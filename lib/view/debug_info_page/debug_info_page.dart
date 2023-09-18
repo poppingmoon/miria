@@ -14,6 +14,6 @@ class DebugInfoPageState extends State<DebugInfoPage> {
         appBar: AppBar(title: const Text("デバッグ")),
         body: ListView(
           children: const [ListTile()],
-        ));
+        ),);
   }
 }

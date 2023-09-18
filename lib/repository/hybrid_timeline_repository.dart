@@ -36,7 +36,7 @@ class HybridTimelineRepository extends SocketTimelineRepository {
         onReacted: onReacted,
         onUnreacted: onUnreacted,
         onVoted: onVoted,
-        onUpdated: onUpdated);
+        onUpdated: onUpdated,);
   }
 
   @override
@@ -46,6 +46,6 @@ class HybridTimelineRepository extends SocketTimelineRepository {
       withRenotes: tabSetting.renoteDisplay,
       withReplies: tabSetting.isIncludeReplies,
       withFiles: tabSetting.isMediaOnly,
-    ));
+    ),);
   }
 }

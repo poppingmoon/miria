@@ -90,7 +90,7 @@ class InputComplementState extends ConsumerState<InputComplement> {
     return DecoratedBox(
       decoration: BoxDecoration(
           border:
-              Border(top: BorderSide(color: Theme.of(context).primaryColor))),
+              Border(top: BorderSide(color: Theme.of(context).primaryColor)),),
       child: Row(
         children: [
           Expanded(
@@ -128,7 +128,7 @@ class InputComplementState extends ConsumerState<InputComplement> {
                 onPressed: () {
                   FocusManager.instance.primaryFocus?.unfocus();
                 },
-                icon: const Icon(Icons.keyboard_arrow_down)),
+                icon: const Icon(Icons.keyboard_arrow_down),),
         ],
       ),
     );

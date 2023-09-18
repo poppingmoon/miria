@@ -34,7 +34,7 @@ void main() {
           .timeline(argThat(equals(const ChannelsTimelineRequest(
         channelId: "abcdefg",
         limit: 30,
-      )))));
+      ),),),),);
     });
   });
 }

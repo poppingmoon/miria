@@ -15,7 +15,7 @@ class FavoriteRepository extends ChangeNotifier {
     final response = await misskey.i.favorites(IFavoritesRequest(
       untilId: _notes.isEmpty ? null : _notes.last.id,
       limit: 50,
-    ));
+    ),);
     final responseNotes = response.map((e) => e.note);
     _notes = [..._notes, ...responseNotes];
     noteRepository.registerAll(responseNotes);

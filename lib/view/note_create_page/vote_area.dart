@@ -5,7 +5,7 @@ import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
 
-import '../common/account_scope.dart';
+import 'package:miria/view/common/account_scope.dart';
 
 class VoteArea extends ConsumerStatefulWidget {
   const VoteArea({super.key});
@@ -18,16 +18,15 @@ class VoteAreaState extends ConsumerState<VoteArea> {
   @override
   Widget build(BuildContext context) {
     final expireType = ref.watch(noteCreateProvider(AccountScope.of(context))
-        .select((value) => value.voteExpireType));
+        .select((value) => value.voteExpireType),);
     final isVote = ref.watch(noteCreateProvider(AccountScope.of(context))
-        .select((value) => value.isVote));
+        .select((value) => value.isVote),);
 
     if (!isVote) {
       return Container();
     }
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const VoteContentList(),
@@ -37,7 +36,7 @@ class VoteAreaState extends ConsumerState<VoteArea> {
                   .read(noteCreateProvider(AccountScope.of(context)).notifier)
                   .addVoteContent();
             },
-            child: const Text("増やす")),
+            child: const Text("増やす"),),
         const MultipleVoteRadioButton(),
         const VoteDuration(),
         if (expireType == VoteExpireType.date) const VoteUntilDate(),
@@ -58,7 +57,7 @@ class VoteContentListState extends ConsumerState<VoteContentList> {
   @override
   Widget build(BuildContext context) {
     final contentCount = ref.watch(noteCreateProvider(AccountScope.of(context))
-        .select((value) => value.voteContentCount));
+        .select((value) => value.voteContentCount),);
     return ListView(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -136,7 +135,7 @@ class VoteContentListItemState extends ConsumerState<VoteContentListItem> {
                     .read(noteCreateProvider(AccountScope.of(context)).notifier)
                     .deleteVoteContent(widget.index);
               },
-              icon: const Icon(Icons.close)),
+              icon: const Icon(Icons.close),),
         ],
       ),
     );
@@ -152,13 +151,13 @@ class MultipleVoteRadioButton extends ConsumerWidget {
       children: [
         Switch(
             value: ref.watch(noteCreateProvider(AccountScope.of(context))
-                .select((value) => value.isVoteMultiple)),
+                .select((value) => value.isVoteMultiple),),
             onChanged: (value) {
               ref
                   .read(noteCreateProvider(AccountScope.of(context)).notifier)
                   .toggleVoteMultiple();
-            }),
-        const Expanded(child: Text("複数回答"))
+            },),
+        const Expanded(child: Text("複数回答")),
       ],
     );
   }
@@ -171,17 +170,17 @@ class VoteDuration extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return DropdownButton(
         value: ref.watch(noteCreateProvider(AccountScope.of(context))
-            .select((value) => value.voteExpireType)),
+            .select((value) => value.voteExpireType),),
         items: [
           for (final item in VoteExpireType.values)
-            DropdownMenuItem(value: item, child: Text(item.displayText))
+            DropdownMenuItem(value: item, child: Text(item.displayText)),
         ],
         onChanged: (item) {
           if (item == null) return;
           ref
               .read(noteCreateProvider(AccountScope.of(context)).notifier)
               .setVoteExpireType(item);
-        });
+        },);
   }
 }
 
@@ -196,7 +195,7 @@ class VoteUntilDateState extends ConsumerState<VoteUntilDate> {
   @override
   Widget build(BuildContext context) {
     final date = ref.watch(noteCreateProvider(AccountScope.of(context))
-        .select((value) => value.voteDate));
+        .select((value) => value.voteDate),);
 
     return Padding(
       padding: const EdgeInsets.only(top: 10),
@@ -208,29 +207,27 @@ class VoteUntilDateState extends ConsumerState<VoteUntilDate> {
               initialDate: date ?? DateTime.now(),
               firstDate: DateTime.now(),
               lastDate:
-                  DateTime(2999, 12, 31)); //TODO: ｍisskeyの日付のデータピッカーどこまで行く？
+                  DateTime(2999, 12, 31),); //TODO: ｍisskeyの日付のデータピッカーどこまで行く？
           if (resultDate == null) return;
           if (!mounted) return;
           final resultTime = await showTimePicker(
               context: context,
               initialTime: TimeOfDay(
                   hour: date?.hour ?? DateTime.now().hour,
-                  minute: date?.minute ?? DateTime.now().minute));
+                  minute: date?.minute ?? DateTime.now().minute,),);
           if (resultTime == null) return;
 
           ref.read(noteCreateProvider(account).notifier).setVoteExpireDate(
               DateTime(resultDate.year, resultDate.month, resultDate.day,
-                  resultTime.hour, resultTime.minute, 0));
+                  resultTime.hour, resultTime.minute,),);
         },
         child: DecoratedBox(
             decoration: BoxDecoration(
                 border: Border.all(color: Theme.of(context).primaryColor),
-                borderRadius: BorderRadius.circular(10)),
+                borderRadius: BorderRadius.circular(10),),
             child: Padding(
               padding: const EdgeInsets.all(5),
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
                   children: [
                     const Icon(Icons.date_range),
                     const Padding(padding: EdgeInsets.only(left: 10)),
@@ -239,8 +236,8 @@ class VoteUntilDateState extends ConsumerState<VoteUntilDate> {
                         date?.formatUntilSeconds ?? "",
                       ),
                     ),
-                  ]),
-            )),
+                  ],),
+            ),),
       ),
     );
   }
@@ -296,7 +293,7 @@ class VoteUntilDurationState extends ConsumerState<VoteUntilDuration> {
               controller: controller,
               decoration: const InputDecoration(prefixIcon: Icon(Icons.timer)),
               keyboardType: const TextInputType.numberWithOptions(),
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],),
         ),
         const Padding(
           padding: EdgeInsets.only(left: 10),
@@ -310,13 +307,13 @@ class VoteUntilDurationState extends ConsumerState<VoteUntilDuration> {
                 ),
             ],
             value: ref.watch(noteCreateProvider(AccountScope.of(context))
-                .select((value) => value.voteDurationType)),
+                .select((value) => value.voteDurationType),),
             onChanged: (value) {
               if (value == null) return;
               ref
                   .read(noteCreateProvider(AccountScope.of(context)).notifier)
                   .setVoteDurationType(value);
-            }),
+            },),
       ],
     );
   }

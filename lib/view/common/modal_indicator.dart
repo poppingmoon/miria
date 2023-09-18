@@ -68,7 +68,7 @@ class ModalOverlay extends ModalRoute<void> {
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
+      Animation<double> secondaryAnimation, Widget child,) {
     return FadeTransition(
       opacity: animation,
       child: ScaleTransition(

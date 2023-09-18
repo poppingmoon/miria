@@ -11,6 +11,6 @@ class CenteringWidget extends StatelessWidget {
         child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 600),
             child: Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10), child: child)));
+                padding: const EdgeInsets.only(left: 10, right: 10), child: child,),),);
   }
 }

@@ -9,7 +9,7 @@ class ChannelArea extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final channel = ref.watch(noteCreateProvider(AccountScope.of(context))
-        .select((value) => value.channel));
+        .select((value) => value.channel),);
     if (channel == null) return Container();
 
     return Align(

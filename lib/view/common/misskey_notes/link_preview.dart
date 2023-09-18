@@ -157,7 +157,7 @@ class _LinkPreviewItemState extends State<LinkPreviewItem> {
               icon: const Icon(Icons.close),
               label: Text(playerUrl != null ? "プレイヤーを閉じる" : "ツイートを閉じる"),
             ),
-          ]
+          ],
       ],
     );
   }

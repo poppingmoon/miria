@@ -58,13 +58,13 @@ class MfmTextState extends ConsumerState<MfmText> {
         scheme: "https",
         host: "google.com",
         pathSegments: ["search"],
-        queryParameters: {"q": query});
+        queryParameters: {"q": query},);
     launchUrl(uri);
   }
 
   void onHashtagTap(String hashtag) {
     context.pushRoute(
-        HashtagRoute(account: AccountScope.of(context), hashtag: hashtag));
+        HashtagRoute(account: AccountScope.of(context), hashtag: hashtag),);
   }
 
   @override
@@ -77,7 +77,7 @@ class MfmTextState extends ConsumerState<MfmText> {
             emojiName: ":$emojiName:",
             repository: ref
                 .read(emojiRepositoryProvider(AccountScope.of(builderContext))),
-            emojiInfo: widget.emoji);
+            emojiInfo: widget.emoji,);
         return DefaultTextStyle(
           style: style ?? DefaultTextStyle.of(builderContext).style,
           child: GestureDetector(
@@ -105,7 +105,7 @@ class MfmTextState extends ConsumerState<MfmText> {
                   ? null
                   : (TapGestureRecognizer()
                     ..onTap = () => widget.onEmojiTap
-                        ?.call(UnicodeEmojiData(char: emoji))));
+                        ?.call(UnicodeEmojiData(char: emoji))),);
         } else {
           return WidgetSpan(
             child: GestureDetector(
@@ -182,9 +182,9 @@ class CodeBlock extends StatelessWidget {
               "Monaco",
               "Menlo",
               "Consolas",
-              "Noto Mono"
-            ]),
-          )),
+              "Noto Mono",
+            ],),
+          ),),
     );
   }
 }
@@ -197,7 +197,7 @@ class EmojiInk extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEnabled = ref.watch(generalSettingsRepositoryProvider
-        .select((value) => value.settings.enableDirectReaction));
+        .select((value) => value.settings.enableDirectReaction),);
     if (isEnabled) {
       return InkWell(child: child);
     } else {
@@ -237,7 +237,6 @@ class SimpleMfmText extends ConsumerWidget {
                 ref.read(emojiRepositoryProvider(AccountScope.of(context))),
             emojiInfo: emojis,
           ),
-          fontSizeRatio: 1,
           style: style,
         ),
       ),
@@ -289,10 +288,10 @@ class UserInformationState extends ConsumerState<UserInformation> {
                 child: NetworkImageView(
                   type: ImageType.role,
                   url: resolveIconUrl(badge.iconUrl!),
-                  height: (DefaultTextStyle.of(context).style.fontSize ?? 22),
+                  height: DefaultTextStyle.of(context).style.fontSize ?? 22,
                 ),
               ),
-            )
+            ),
       ],
     );
   }

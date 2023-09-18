@@ -88,6 +88,6 @@ extension TextEditingControllerExtension on TextEditingController {
         text: "$before$insertText${afterText ?? ""}$after",
         selection: TextSelection.collapsed(
             offset: (currentPosition == -1 ? 0 : currentPosition) +
-                insertText.length));
+                insertText.length,),);
   }
 }

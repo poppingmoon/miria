@@ -37,7 +37,7 @@ class _ReactionPickerDialogState extends ConsumerState<ReactionPickerDialog> {
             child: ReactionPickerContent(
               isAcceptSensitive: widget.isAcceptSensitive,
               onTap: (emoji) => Navigator.of(context).pop(emoji),
-            )),
+            ),),
       ),
     );
   }

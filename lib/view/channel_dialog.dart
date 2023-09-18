@@ -8,7 +8,7 @@ class ChannelDialog extends ConsumerWidget {
   final String channelId;
   final Account account;
   const ChannelDialog(
-      {super.key, required this.channelId, required this.account});
+      {super.key, required this.channelId, required this.account,});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,7 +23,7 @@ class ChannelDialog extends ConsumerWidget {
                 child: const Text(
                   "チャンネル情報",
                   style: TextStyle(color: Colors.white),
-                )),
+                ),),
             content: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 height: MediaQuery.of(context).size.height * 0.8,
@@ -31,6 +31,6 @@ class ChannelDialog extends ConsumerWidget {
                   child: ChannelDetailInfo(
                     channelId: channelId,
                   ),
-                ))));
+                ),),),);
   }
 }

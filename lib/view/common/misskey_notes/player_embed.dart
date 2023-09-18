@@ -83,7 +83,7 @@ class _PlayerEmbedState extends State<PlayerEmbed> {
       );
     }
     return SizedBox(
-      height: height?.toDouble() ?? 200,
+      height: height ?? 200,
       child: WebViewWidget(controller: controller),
     );
   }

@@ -47,6 +47,6 @@ class LocalTimeLineRepository extends SocketTimelineRepository {
       withRenotes: tabSetting.renoteDisplay,
       withReplies: tabSetting.isIncludeReplies,
       withFiles: tabSetting.isMediaOnly,
-    ));
+    ),);
   }
 }

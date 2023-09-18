@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
@@ -7,7 +8,6 @@ import 'package:miria/view/common/error_detail.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/common/misskey_notes/mfm_text.dart';
 import 'package:miria/view/common/misskey_notes/misskey_note.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 class ChannelDetailInfo extends ConsumerStatefulWidget {
@@ -109,7 +109,7 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
           alignment: Alignment.centerRight,
           child: Container(
             decoration: BoxDecoration(
-                border: Border.all(color: Theme.of(context).primaryColor)),
+                border: Border.all(color: Theme.of(context).primaryColor),),
             padding: const EdgeInsets.all(10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -127,7 +127,7 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
                   Text(
                     "${data.lastNotedAt!.differenceNow} に更新",
                     style: Theme.of(context).textTheme.bodySmall,
-                  )
+                  ),
               ],
             ),
           ),
@@ -157,25 +157,25 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
                       ? ElevatedButton.icon(
                           onPressed: unfavorite.expectFailure(context),
                           icon: const Icon(Icons.favorite_border),
-                          label: const Text("お気に入り中"))
+                          label: const Text("お気に入り中"),)
                       : OutlinedButton(
                           onPressed: favorite.expectFailure(context),
-                          child: const Text("お気に入りにいれる")),
+                          child: const Text("お気に入りにいれる"),),
                 const Padding(padding: EdgeInsets.only(left: 10)),
                 if (isFollowing != null)
                   isFollowing
                       ? ElevatedButton.icon(
                           onPressed: unfollow.expectFailure(context),
                           icon: const Icon(Icons.check),
-                          label: const Text("フォローしています"))
+                          label: const Text("フォローしています"),)
                       : OutlinedButton(
                           onPressed: follow.expectFailure(context),
-                          child: const Text("フォローする"))
+                          child: const Text("フォローする"),),
               ],
-            )),
+            ),),
         MfmText(mfmText: data.description ?? ""),
         for (final pinnedNote in data.pinnedNotes ?? [])
-          MisskeyNote(note: pinnedNote)
+          MisskeyNote(note: pinnedNote),
       ],
     );
   }

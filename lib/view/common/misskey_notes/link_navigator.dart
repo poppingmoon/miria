@@ -11,7 +11,7 @@ class LinkNavigator {
   const LinkNavigator();
 
   Future<void> onTapLink(
-      BuildContext context, WidgetRef ref, String url, String? host) async {
+      BuildContext context, WidgetRef ref, String url, String? host,) async {
     final uri = Uri.tryParse(url);
     if (uri == null) {
       return; //TODO: なおす
@@ -23,7 +23,7 @@ class LinkNavigator {
     if (uri.host != AccountScope.of(context).host) {
       if (await canLaunchUrl(uri)) {
         if (!await launchUrl(uri,
-            mode: LaunchMode.externalNonBrowserApplication)) {
+            mode: LaunchMode.externalNonBrowserApplication,)) {
           await launchUrl(uri, mode: LaunchMode.externalApplication);
         }
       }
@@ -31,11 +31,11 @@ class LinkNavigator {
         uri.pathSegments.first == "clips") {
       // クリップはクリップの画面で開く
       context.pushRoute(
-          ClipDetailRoute(account: account, id: uri.pathSegments[1]));
+          ClipDetailRoute(account: account, id: uri.pathSegments[1]),);
     } else if (uri.pathSegments.length == 2 &&
         uri.pathSegments.first == "channels") {
       context.pushRoute(
-          ChannelDetailRoute(account: account, channelId: uri.pathSegments[1]));
+          ChannelDetailRoute(account: account, channelId: uri.pathSegments[1]),);
     } else if (uri.pathSegments.length == 2 &&
         uri.pathSegments.first == "notes") {
       final note = await ref
@@ -47,7 +47,7 @@ class LinkNavigator {
       final page = await ref.read(misskeyProvider(account)).pages.show(
           PagesShowRequest(
               name: uri.pathSegments[2],
-              username: uri.pathSegments[0].substring(1)));
+              username: uri.pathSegments[0].substring(1),),);
       context.pushRoute(MisskeyRouteRoute(account: account, page: page));
     } else if (uri.pathSegments.length == 1 &&
         uri.pathSegments.first.startsWith("@")) {
@@ -60,7 +60,7 @@ class LinkNavigator {
   }
 
   Future<void> onMentionTap(BuildContext context, WidgetRef ref,
-      String userName, String? host) async {
+      String userName, String? host,) async {
     // 自分のインスタンスの誰か
     // 本当は向こうで呼べばいいのでいらないのだけど
     final regResult = RegExp(r'^@?(.+?)(@(.+?))?$').firstMatch(userName);
@@ -86,9 +86,9 @@ class LinkNavigator {
         .read(misskeyProvider(AccountScope.of(context)))
         .users
         .showByName(UsersShowByUserNameRequest(
-            userName: regResult?.group(1) ?? "", host: finalHost));
+            userName: regResult?.group(1) ?? "", host: finalHost,),);
 
     context.pushRoute(
-        UserRoute(userId: response.id, account: AccountScope.of(context)));
+        UserRoute(userId: response.id, account: AccountScope.of(context)),);
   }
 }

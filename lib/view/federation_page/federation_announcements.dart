@@ -22,7 +22,7 @@ class FederationAnnouncements extends ConsumerStatefulWidget {
 
 class FederationAnnouncementsState
     extends ConsumerState<FederationAnnouncements> {
-  var isActive = true;
+  bool isActive = true;
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +52,10 @@ class FederationAnnouncementsState
                   children: const [
                     Padding(
                         padding: EdgeInsets.only(left: 5, right: 5),
-                        child: Text("いまの")),
+                        child: Text("いまの"),),
                     Padding(
                         padding: EdgeInsets.only(left: 5, right: 5),
-                        child: Text("前の")),
+                        child: Text("前の"),),
                   ],
                 ),
               ),
@@ -86,7 +86,7 @@ class FederationAnnouncementsState
                     untilId: lastItem.id,
                     isActive: isActive,
                     limit: 30,
-                    offset: offset);
+                    offset: offset,);
                 if (isCurrentServer) {
                   response = await ref
                       .read(misskeyProvider(account))
@@ -98,7 +98,7 @@ class FederationAnnouncementsState
                 return response.toList();
               },
               itemBuilder: (context, data) =>
-                  Announcement(data: data, host: widget.host)),
+                  Announcement(data: data, host: widget.host),),
         ),
       ],
     );
@@ -137,16 +137,14 @@ class AnnouncementState extends ConsumerState<Announcement> {
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
               children: [
                 if (data.forYou == true)
                   Text("あなた宛",
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
-                          ?.copyWith(color: Theme.of(context).primaryColor)),
+                          ?.copyWith(color: Theme.of(context).primaryColor),),
                 Row(
                   children: [
                     if (icon != null) AnnouncementIcon(iconType: icon),
@@ -179,7 +177,7 @@ class AnnouncementState extends ConsumerState<Announcement> {
                               context: context,
                               message: "「${data.title}」の内容ちゃんと読んだか？",
                               primary: "読んだ",
-                              secondary: "もうちょい待って");
+                              secondary: "もうちょい待って",);
                           if (isConfirmed != true) return;
                         }
 
@@ -187,16 +185,16 @@ class AnnouncementState extends ConsumerState<Announcement> {
                             .read(misskeyProvider(account))
                             .i
                             .readAnnouncement(IReadAnnouncementRequest(
-                                announcementId: data.id));
+                                announcementId: data.id,),);
                         setState(() {
                           data = data.copyWith(isRead: true);
                         });
                       },
-                      child: const Text("ほい"))
+                      child: const Text("ほい"),),
               ],
             ),
           ),
-        ));
+        ),);
   }
 }
 

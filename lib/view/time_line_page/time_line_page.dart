@@ -149,7 +149,7 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
       channel: channel,
       initialText: sendText,
       initialAccount: account,
-    ));
+    ),);
   }
 
   Widget buildAppbar() {
@@ -192,7 +192,7 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
       ],
       leading: IconButton(
           onPressed: () => scaffoldKey.currentState?.openDrawer(),
-          icon: const Icon(Icons.menu)),
+          icon: const Icon(Icons.menu),),
     );
   }
 
@@ -213,7 +213,7 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
           preferredSize: const Size.fromHeight(0),
           child: AppBar(
             automaticallyImplyLeading: false,
-          )),
+          ),),
       body: SafeArea(
         child: Column(
           children: [
@@ -298,9 +298,9 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                         .reconnect(),
                     icon:
                         socketTimeline != null && socketTimeline.isReconnecting
-                            ? CircularProgressIndicator()
+                            ? const CircularProgressIndicator()
                             : const Icon(Icons.refresh),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -325,9 +325,7 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                   return AccountScope(
                     account: account,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
                       children: [
                         BannerArea(index: currentIndex),
                         Expanded(
@@ -363,7 +361,7 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                   IconButton(
                     onPressed: noteCreateRoute,
                     icon: const Icon(Icons.keyboard_arrow_right),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -378,7 +376,6 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
         ),
       ),
       resizeToAvoidBottomInset: true,
-      drawerEnableOpenDragGesture: true,
       drawer: CommonDrawer(
         initialOpenAcct: currentTabSetting.acct,
       ),
@@ -407,7 +404,7 @@ class BannerArea extends ConsumerWidget {
     final bannerData = bannerAnnouncement
         .where((element) =>
             element.display == AnnouncementDisplayType.banner ||
-            element.display == AnnouncementDisplayType.dialog)
+            element.display == AnnouncementDisplayType.dialog,)
         .lastOrNull;
 
     if (bannerData == null) return const SizedBox.shrink();
@@ -480,12 +477,12 @@ class AnnoucementInfo extends ConsumerWidget {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                )),
-          ]));
+                ),),
+          ],),);
     } else {
       return IconButton(
           onPressed: () => announcementsRoute(context, ref),
-          icon: const Icon(Icons.campaign));
+          icon: const Icon(Icons.campaign),);
     }
   }
 }

@@ -53,7 +53,7 @@ class CustomEmojiState extends ConsumerState<CustomEmoji> {
       pathSegments: ["proxy", "image.webp"],
       queryParameters: {
         "url": Uri.encodeFull(emojiData.url.toString()),
-        "emoji": "1"
+        "emoji": "1",
       },
     );
   }
@@ -98,7 +98,6 @@ class CustomEmojiState extends ConsumerState<CustomEmoji> {
             height: scopedFontSize,
           ),
         );
-        break;
       case UnicodeEmojiData():
         switch (
             ref.read(generalSettingsRepositoryProvider).settings.emojiType) {
@@ -110,25 +109,21 @@ class CustomEmojiState extends ConsumerState<CustomEmoji> {
                 strutStyle: StrutStyle(
                     height: 1.0,
                     forceStrutHeight: true,
-                    fontSize: scopedFontSize),
+                    fontSize: scopedFontSize,),
                 style: style.merge(AppTheme.of(context).unicodeEmojiStyle),
               ),
             );
-            break;
           case EmojiType.twemoji:
             cachedImage = Twemoji(
               height: scopedFontSize,
               emoji: emojiData.char,
             );
-            break;
         }
-        break;
       case NotEmojiData():
         cachedImage = Text(
           emojiData.name,
           style: style,
         );
-        break;
     }
     return cachedImage!;
   }

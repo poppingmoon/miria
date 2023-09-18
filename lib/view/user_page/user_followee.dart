@@ -38,7 +38,7 @@ class UserFolloweePage extends ConsumerWidget {
                 .read(misskeyProvider(account))
                 .users
                 .following(UsersFollowingRequest(
-                    userId: userId, untilId: lastItem.id));
+                    userId: userId, untilId: lastItem.id,),);
             return response.toList();
           },
           itemBuilder: (context, item) => UserListItem(user: item.followee!),

@@ -28,7 +28,7 @@ class ExploreRole extends ConsumerWidget {
                 .where((element) => element.usersCount != 0)
                 .sorted((a, b) => b.displayOrder.compareTo(a.displayOrder));
           }(),
-          builder: (context, item) => RoleListItem(item: item)),
+          builder: (context, item) => RoleListItem(item: item),),
     );
   }
 }
@@ -46,7 +46,7 @@ class RoleListItem extends StatelessWidget {
     return ListTile(
       onTap: () {
         context.pushRoute(ExploreRoleUsersRoute(
-            item: item, account: AccountScope.of(context)));
+            item: item, account: AccountScope.of(context),),);
       },
       title: Text.rich(
         TextSpan(children: [
@@ -66,18 +66,18 @@ class RoleListItem extends StatelessWidget {
                             height: 1,
                           ),
                       url: item.iconUrl!.toString(),
-                      type: ImageType.avatarIcon),
-                )),
+                      type: ImageType.avatarIcon,),
+                ),),
           TextSpan(text: item.name),
-        ]),
+        ],),
         textScaleFactor: MediaQuery.of(context).textScaleFactor,
       ),
       subtitle: Text(item.description ?? ""),
       trailing: Text.rich(
         TextSpan(children: [
           TextSpan(text: item.usersCount.format()),
-          TextSpan(text: "人", style: Theme.of(context).textTheme.bodySmall)
-        ]),
+          TextSpan(text: "人", style: Theme.of(context).textTheme.bodySmall),
+        ],),
         textScaleFactor: MediaQuery.of(context).textScaleFactor,
       ),
     );

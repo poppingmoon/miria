@@ -8,7 +8,7 @@ import 'package:miria/view/common/misskey_notes/in_note_button.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'network_image.dart';
+import 'package:miria/view/common/misskey_notes/network_image.dart';
 
 class MisskeyFileView extends ConsumerStatefulWidget {
   final List<DriveFile> files;
@@ -39,21 +39,19 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
       return Center(
         child: ConstrainedBox(
             constraints: BoxConstraints(
-                maxHeight: widget.height, maxWidth: double.infinity),
+                maxHeight: widget.height,),
             child: MisskeyImage(
               isSensitive: targetFile.isSensitive,
               thumbnailUrl:
-                  (targetFile.thumbnailUrl ?? targetFile.url).toString(),
-              targetFiles: [targetFile.url.toString()],
+                  targetFile.thumbnailUrl ?? targetFile.url,
+              targetFiles: [targetFile.url],
               fileType: targetFile.type,
               name: targetFile.name,
               position: 0,
-            )),
+            ),),
       );
     } else {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GridView.count(
@@ -63,7 +61,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
             children: [
               for (final targetFile in targetFiles
                   .mapIndexed(
-                      (index, element) => (element: element, index: index))
+                      (index, element) => (element: element, index: index),)
                   .take(isElipsed ? 4 : targetFiles.length))
                 SizedBox(
                     height: widget.height,
@@ -75,7 +73,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
                       fileType: targetFile.element.type,
                       name: targetFile.element.name,
                       position: targetFile.index,
-                    ))
+                    ),),
             ],
           ),
           if (isElipsed)
@@ -83,7 +81,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
                 onPressed: () => setState(() {
                       isElipsed = !isElipsed;
                     }),
-                child: const Text("続きを表示"))
+                child: const Text("続きを表示"),),
         ],
       );
     }
@@ -113,7 +111,7 @@ class MisskeyImage extends ConsumerStatefulWidget {
 }
 
 class MisskeyImageState extends ConsumerState<MisskeyImage> {
-  var nsfwAccepted = false;
+  bool nsfwAccepted = false;
   Widget? cachedWidget;
 
   @override
@@ -130,7 +128,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
     super.didChangeDependencies();
 
     final nsfwSetting = ref.read(generalSettingsRepositoryProvider
-        .select((repository) => repository.settings.nsfwInherit));
+        .select((repository) => repository.settings.nsfwInherit),);
     if (nsfwSetting == NSFWInherit.allHidden) {
       // 強制的にNSFW表示
       setState(() {
@@ -156,7 +154,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
   @override
   Widget build(BuildContext context) {
     final nsfwSetting = ref.watch(generalSettingsRepositoryProvider
-        .select((repository) => repository.settings.nsfwInherit));
+        .select((repository) => repository.settings.nsfwInherit),);
     return Stack(
       children: [
         Align(
@@ -173,10 +171,10 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                     builder: (context) => ImageDialog(
                           imageUrlList: widget.targetFiles,
                           initialPage: widget.position,
-                        ));
+                        ),);
               } else {
                 launchUrl(Uri.parse(widget.targetFiles[widget.position]),
-                    mode: LaunchMode.externalApplication);
+                    mode: LaunchMode.externalApplication,);
               }
             }
           }, child: Builder(
@@ -192,7 +190,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(Icons.warning_rounded,
-                              color: Colors.white),
+                              color: Colors.white,),
                           const Padding(padding: EdgeInsets.only(left: 5)),
                           Column(
                             mainAxisSize: MainAxisSize.min,
@@ -208,8 +206,8 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                                     fontSize: Theme.of(context)
                                         .textTheme
                                         .bodySmall
-                                        ?.fontSize),
-                              )
+                                        ?.fontSize,),
+                              ),
                             ],
                           ),
                         ],
@@ -262,7 +260,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                           ),
                           const Positioned.fill(
                               child: Center(
-                                  child: Icon(Icons.play_circle, size: 60)))
+                                  child: Icon(Icons.play_circle, size: 60),),),
                         ],
                       );
                     } else {
@@ -270,10 +268,10 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                           onPressed: () {
                             launchUrl(
                                 Uri.parse(widget.targetFiles[widget.position]),
-                                mode: LaunchMode.externalApplication);
+                                mode: LaunchMode.externalApplication,);
                           },
                           icon: const Icon(Icons.file_download_outlined),
-                          label: Text(widget.name));
+                          label: Text(widget.name),);
                     }
 
                     return cachedWidget!;
@@ -283,7 +281,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
               );
               return cachedWidget!;
             },
-          )),
+          ),),
         ),
         if (widget.isSensitive &&
             (nsfwSetting == NSFWInherit.ignore ||
@@ -295,7 +293,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                 decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor.withAlpha(140),
                     border: Border.all(color: Colors.transparent),
-                    borderRadius: BorderRadius.circular(3)),
+                    borderRadius: BorderRadius.circular(3),),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 2, right: 2),
                   child: Text(
@@ -303,7 +301,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                     style: TextStyle(color: Colors.white.withAlpha(170)),
                   ),
                 ),
-              )),
+              ),),
       ],
     );
   }

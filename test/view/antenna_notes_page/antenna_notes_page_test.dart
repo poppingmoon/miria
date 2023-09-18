@@ -22,17 +22,17 @@ void main() {
           overrides: [misskeyProvider.overrideWith((_, __) => misskey)],
           child: DefaultRootWidget(
             initialRoute: AntennaNotesRoute(
-                account: TestData.account, antenna: TestData.antenna),
-          )));
+                account: TestData.account, antenna: TestData.antenna,),
+          ),),);
       await tester.pumpAndSettle();
 
       expect(find.text(TestData.note1.text!), findsOneWidget);
       verify(antennas.notes(argThat(
-          equals(AntennasNotesRequest(antennaId: TestData.antenna.id)))));
+          equals(AntennasNotesRequest(antennaId: TestData.antenna.id)),),),);
 
       await tester.pageNation();
       verify(antennas.notes(argThat(equals(AntennasNotesRequest(
-          antennaId: TestData.antenna.id, untilId: TestData.note1.id)))));
+          antennaId: TestData.antenna.id, untilId: TestData.note1.id,),),),),);
     });
   });
 }

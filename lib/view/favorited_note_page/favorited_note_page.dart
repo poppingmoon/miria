@@ -47,6 +47,6 @@ class FavoritedNotePage extends ConsumerWidget {
                 },
                 itemBuilder: (context, item) => MisskeyNote(note: item),
               ),
-            )));
+            ),),);
   }
 }

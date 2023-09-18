@@ -66,7 +66,7 @@ class ImageMetaDialogState extends ConsumerState<ImageMetaDialog> {
                 maxLines: null,
               ),
             ],
-          )),
+          ),),
     );
   }
 }

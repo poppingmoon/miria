@@ -21,7 +21,7 @@ class AccountSettingsRepository extends ChangeNotifier {
       _accountSettings
         ..clear()
         ..addAll((jsonDecode(storedData) as List)
-            .map((e) => AccountSettings.fromJson(e)));
+            .map((e) => AccountSettings.fromJson(e)),);
     } catch (e) {
       if (kDebugMode) print(e);
     }
@@ -38,7 +38,7 @@ class AccountSettingsRepository extends ChangeNotifier {
   Future<void> _saveAsList(List<AccountSettings> settings) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("account_settings",
-        jsonEncode(settings.map((e) => e.toJson()).toList()));
+        jsonEncode(settings.map((e) => e.toJson()).toList()),);
     notifyListeners();
   }
 

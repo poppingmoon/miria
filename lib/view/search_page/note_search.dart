@@ -26,7 +26,7 @@ class NoteSearch extends ConsumerStatefulWidget {
 }
 
 class NoteSearchState extends ConsumerState<NoteSearch> {
-  var isDetail = false;
+  bool isDetail = false;
   late final controller =
       TextEditingController(text: widget.initialSearchText ?? "");
 
@@ -68,7 +68,7 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                     textInputAction: TextInputAction.done,
                     onSubmitted: (value) {
                       ref.read(noteSearchProvider.notifier).state = value;
-                    }),
+                    },),
               ),
               IconButton(
                   onPressed: () {
@@ -78,7 +78,7 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                   },
                   icon: isDetail
                       ? const Icon(Icons.keyboard_arrow_up)
-                      : const Icon(Icons.keyboard_arrow_down))
+                      : const Icon(Icons.keyboard_arrow_down),),
             ],
           ),
         ),
@@ -91,9 +91,7 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
                         "これらはハッシュタグでは機能しません。",
@@ -110,14 +108,11 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                           TableRow(children: [
                             const Text("ユーザー"),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
                               children: [
                                 Expanded(
                                     child: selectedUser == null
                                         ? Container()
-                                        : UserListItem(user: selectedUser)),
+                                        : UserListItem(user: selectedUser),),
                                 IconButton(
                                     onPressed: () async {
                                       final selected = await showDialog<User?>(
@@ -126,28 +121,25 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                                               UserSelectDialog(
                                                 account:
                                                     AccountScope.of(context),
-                                              ));
+                                              ),);
 
                                       ref
                                           .read(noteSearchUserProvider.notifier)
                                           .state = selected;
                                     },
                                     icon:
-                                        const Icon(Icons.keyboard_arrow_right))
+                                        const Icon(Icons.keyboard_arrow_right),),
                               ],
-                            )
-                          ]),
+                            ),
+                          ],),
                           TableRow(children: [
                             const Text("チャンネル"),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
                               children: [
                                 Expanded(
                                     child: selectedChannel == null
                                         ? Container()
-                                        : Text(selectedChannel.name)),
+                                        : Text(selectedChannel.name),),
                                 IconButton(
                                     onPressed: () async {
                                       final selected =
@@ -156,18 +148,18 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                                               builder: (context2) =>
                                                   ChannelSelectDialog(
                                                     account: AccountScope.of(
-                                                        context),
-                                                  ));
+                                                        context,),
+                                                  ),);
                                       ref
                                           .read(noteSearchChannelProvider
-                                              .notifier)
+                                              .notifier,)
                                           .state = selected;
                                     },
                                     icon:
-                                        const Icon(Icons.keyboard_arrow_right))
+                                        const Icon(Icons.keyboard_arrow_right),),
                               ],
-                            )
-                          ]),
+                            ),
+                          ],),
                           TableRow(children: [
                             const Text("ローカルのみ"),
                             Row(
@@ -176,13 +168,13 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                                   value: ref.watch(noteSearchLocalOnlyProvider),
                                   onChanged: (value) => ref
                                           .read(noteSearchLocalOnlyProvider
-                                              .notifier)
+                                              .notifier,)
                                           .state =
                                       !ref.read(noteSearchLocalOnlyProvider),
                                 ),
                               ],
-                            )
-                          ])
+                            ),
+                          ],),
                         ],
                       ),
                     ],
@@ -194,7 +186,7 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
         const Expanded(
             child: Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
-                child: NoteSearchList()))
+                child: NoteSearchList(),),),
       ],
     );
   }
@@ -230,14 +222,14 @@ class NoteSearchList extends ConsumerWidget {
           if (isHashtagOnly) {
             notes = await ref.read(misskeyProvider(account)).notes.searchByTag(
                 NotesSearchByTagRequest(
-                    tag: (parsedSearchValue[0] as MfmHashTag).hashTag));
+                    tag: (parsedSearchValue[0] as MfmHashTag).hashTag,),);
           } else {
             notes = await ref.read(misskeyProvider(account)).notes.search(
                 NotesSearchRequest(
                     query: searchValue,
                     userId: user?.id,
                     channelId: channel?.id,
-                    host: localOnly ? "." : null));
+                    host: localOnly ? "." : null,),);
           }
 
           ref.read(notesProvider(account)).registerAll(notes);
@@ -259,13 +251,13 @@ class NoteSearchList extends ConsumerWidget {
                     userId: user?.id,
                     channelId: channel?.id,
                     untilId: lastItem.id,
-                    host: localOnly ? "." : null));
+                    host: localOnly ? "." : null,),);
           }
           ref.read(notesProvider(account)).registerAll(notes);
           return notes.toList();
         },
         itemBuilder: (context, item) {
           return MisskeyNote(note: item);
-        });
+        },);
   }
 }

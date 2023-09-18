@@ -67,18 +67,18 @@ class MiAuthLoginState extends ConsumerState<MiAuthLogin> {
                           final url = await showDialog<String?>(
                               context: context,
                               builder: (context) =>
-                                  const MisskeyServerListDialog());
+                                  const MisskeyServerListDialog(),);
                           if (url != null && url.isNotEmpty) {
                             serverController.text = url;
                           }
                         },
-                        icon: const Icon(Icons.search))),
+                        icon: const Icon(Icons.search),),),
               ),
-            ]),
+            ],),
             TableRow(children: [
               const Padding(padding: EdgeInsets.only(bottom: 10)),
-              Container()
-            ]),
+              Container(),
+            ],),
             TableRow(children: [
               Container(),
               ElevatedButton(
@@ -93,11 +93,11 @@ class MiAuthLoginState extends ConsumerState<MiAuthLogin> {
                 },
                 child: Text(isAuthed ? "再度認証をする" : "認証をする"),
               ),
-            ]),
+            ],),
             TableRow(children: [
               const Padding(padding: EdgeInsets.only(bottom: 10)),
-              Container()
-            ]),
+              Container(),
+            ],),
             if (isAuthed)
               TableRow(children: [
                 Container(),
@@ -105,10 +105,10 @@ class MiAuthLoginState extends ConsumerState<MiAuthLogin> {
                   onPressed: () => login().expectFailure(context),
                   child: const Text("認証してきた"),
                 ),
-              ]),
+              ],),
           ],
         ),
       ],
-    ));
+    ),);
   }
 }

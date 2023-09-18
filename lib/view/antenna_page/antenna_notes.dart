@@ -28,10 +28,10 @@ class AntennaNotes extends ConsumerWidget {
               .read(misskeyProvider(AccountScope.of(context)))
               .antennas
               .notes(AntennasNotesRequest(
-                  antennaId: antennaId, untilId: lastItem.id));
+                  antennaId: antennaId, untilId: lastItem.id,),);
           ref.read(notesProvider(account)).registerAll(response);
           return response.toList();
         },
-        itemBuilder: (context, item) => MisskeyNote(note: item));
+        itemBuilder: (context, item) => MisskeyNote(note: item),);
   }
 }

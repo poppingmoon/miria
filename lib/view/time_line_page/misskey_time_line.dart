@@ -114,7 +114,7 @@ class MisskeyTimelineState extends ConsumerState<MisskeyTimeline> {
             final correctedOlder = [
               if (timelineRepository.olderNotes.length > 5)
                 ...timelineRepository.olderNotes
-                    .slice(5, timelineRepository.olderNotes.length)
+                    .slice(5, timelineRepository.olderNotes.length),
             ];
 
             if (index > 0) {
@@ -138,11 +138,11 @@ class MisskeyTimelineState extends ConsumerState<MisskeyTimeline> {
                       0) {
                 return const Padding(
                     padding: EdgeInsets.only(top: 10, bottom: 10),
-                    child: Center(child: CircularProgressIndicator()));
+                    child: Center(child: CircularProgressIndicator()),);
               }
 
               if (ref.read(generalSettingsRepositoryProvider
-                      .select((value) => value.settings.automaticPush)) ==
+                      .select((value) => value.settings.automaticPush),) ==
                   AutomaticPush.automatic) {
                 downDirectionLoad();
               }
@@ -151,7 +151,7 @@ class MisskeyTimelineState extends ConsumerState<MisskeyTimeline> {
                   child: IconButton(
                 onPressed: downDirectionLoad.expectFailure(context),
                 icon: const Icon(Icons.keyboard_arrow_down),
-              ));
+              ),);
             }
 
             if (-index >= correctedOlder.length) {
@@ -163,7 +163,7 @@ class MisskeyTimelineState extends ConsumerState<MisskeyTimeline> {
               timeline: timelineRepository,
             );
           },
-        ));
+        ),);
   }
 }
 
@@ -190,13 +190,13 @@ class NoteWrapperState extends ConsumerState<NoteWrapper> {
         noteId: widget.targetNote.renoteId!,
         renoteId: null,
         replyId: null,
-      ));
+      ),);
     } else {
       widget.timeline.subscribe(SubscribeItem(
         noteId: widget.targetNote.id,
         renoteId: widget.targetNote.renoteId,
         replyId: widget.targetNote.replyId,
-      ));
+      ),);
     }
   }
 
@@ -209,11 +209,11 @@ class NoteWrapperState extends ConsumerState<NoteWrapper> {
   @override
   Widget build(BuildContext context) {
     final note = ref.watch(notesProvider(AccountScope.of(context))
-        .select((note) => note.notes[widget.targetNote.id]));
+        .select((note) => note.notes[widget.targetNote.id]),);
     if (note == null) {
       print("note was not found. ${widget.targetNote}");
       return MisskeyNote(
-          note: widget.targetNote, key: ValueKey<String>(widget.targetNote.id));
+          note: widget.targetNote, key: ValueKey<String>(widget.targetNote.id),);
     }
     return MisskeyNote(note: note, key: ValueKey<String>(note.id));
   }

@@ -21,7 +21,7 @@ class MisskeyServerListDialogState
           child: MisskeyServerList(
             isDisableUnloginable: true,
             onTap: (item) => Navigator.of(context).pop(item.url),
-          )),
+          ),),
     );
   }
 }

@@ -68,9 +68,6 @@ class MfmFnKeyboard extends ConsumerWidget {
     }
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         for (final mfmFn in filteredMfmFn)
           CustomKeyboardButton(

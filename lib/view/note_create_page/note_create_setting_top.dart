@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/avatar_icon.dart';
 import 'package:miria/view/common/misskey_notes/local_only_icon.dart';
 import 'package:miria/view/note_create_page/note_visibility_dialog.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/view/note_create_page/reaction_acceptance_dialog.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
@@ -26,7 +26,7 @@ class NoteCreateSettingTop extends ConsumerWidget {
   }
 
   Widget resolveAcceptanceIcon(
-      ReactionAcceptance? acceptance, BuildContext context) {
+      ReactionAcceptance? acceptance, BuildContext context,) {
     switch (acceptance) {
       case null:
         return SvgPicture.asset(
@@ -53,12 +53,12 @@ class NoteCreateSettingTop extends ConsumerWidget {
 
     final noteVisibility = ref.watch(
         noteCreateProvider(AccountScope.of(context))
-            .select((value) => value.noteVisibility));
+            .select((value) => value.noteVisibility),);
     final reactionAcceptance = ref.watch(
         noteCreateProvider(AccountScope.of(context))
-            .select((value) => value.reactionAcceptance));
+            .select((value) => value.reactionAcceptance),);
     final isLocal = ref.watch(noteCreateProvider(AccountScope.of(context))
-        .select((value) => value.localOnly));
+        .select((value) => value.localOnly),);
     return Row(
       children: [
         const Padding(padding: EdgeInsets.only(left: 5)),
@@ -76,18 +76,18 @@ class NoteCreateSettingTop extends ConsumerWidget {
                     context: context2,
                     builder: (context3) => NoteVisibilityDialog(
                           account: AccountScope.of(context),
-                        ));
+                        ),);
                 if (result != null) {
                   notifier.setNoteVisibility(result);
                 }
               },
-              icon: Icon(resolveVisibilityIcon(noteVisibility))),
+              icon: Icon(resolveVisibilityIcon(noteVisibility)),),
         ),
         IconButton(
             onPressed: () async {
               notifier.toggleLocalOnly(context);
             },
-            icon: isLocal ? const LocalOnlyIcon() : const Icon(Icons.rocket)),
+            icon: isLocal ? const LocalOnlyIcon() : const Icon(Icons.rocket),),
         Builder(
             builder: (context2) => IconButton(
                 onPressed: () async {
@@ -95,10 +95,10 @@ class NoteCreateSettingTop extends ConsumerWidget {
                       await showModalBottomSheet<ReactionAcceptance?>(
                           context: context2,
                           builder: (context) =>
-                              const ReactionAcceptanceDialog());
+                              const ReactionAcceptanceDialog(),);
                   notifier.setReactionAcceptance(result);
                 },
-                icon: resolveAcceptanceIcon(reactionAcceptance, context2))),
+                icon: resolveAcceptanceIcon(reactionAcceptance, context2),),),
       ],
     );
   }

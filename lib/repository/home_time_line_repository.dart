@@ -35,7 +35,7 @@ class HomeTimeLineRepository extends SocketTimelineRepository {
         onReacted: onReacted,
         onUnreacted: onUnreacted,
         onVoted: onVoted,
-        onUpdated: onUpdated);
+        onUpdated: onUpdated,);
   }
 
   @override
