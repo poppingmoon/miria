@@ -1,0 +1,73 @@
+name: Nightly
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 19 * * *'
+
+permissions:
+  contents: write
+
+env:
+  GIT_USER_EMAIL: '41898282+github-actions[bot]@users.noreply.github.com'
+  GIT_USER_NAME: 'github-actions[bot]'
+
+jobs:
+  create-release:
+    name: Create release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ${{ env.FLUTTER_HOME }}/.pub-cache
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            build-pubspec-
+
+      - run: flutter pub get
+
+      - name: Update version
+        run: |
+          echo "VERSION=$(
+            dart run cider version $(
+              dart run cider version | awk -F '+' '{print $1"-next.""'$(
+                date +%Y.%m.%d
+              )'""+"$2}'
+            )
+          )" >> $GITHUB_ENV
+
+      - run: |
+          git config --local user.name $GIT_USER_NAME
+          git config --local user.email $GIT_USER_EMAIL
+
+      - name: Commit and push pubspec.yaml
+        run: |
+          git add -u pubspec.yaml
+          git commit -m "Release $VERSION"
+          git tag v$VERSION
+          git push origin v$VERSION
+
+      - name: Generate a token
+        id: generate_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+        run: gh release create v$VERSION --generate-notes --prerelease

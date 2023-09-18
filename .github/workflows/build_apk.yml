@@ -1,0 +1,55 @@
+name: Build APK
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-apk:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+          cache: 'gradle'
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ${{ env.FLUTTER_HOME }}/.pub-cache
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            build-pubspec-
+
+      - run: flutter pub get
+
+      - run: echo "VERSION=$(dart run cider version)" >> $GITHUB_ENV
+
+      - name: Create apk file
+        run: |
+          echo -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > ./android/release.keystore
+          export ANDROID_KEYSTORE_PASSWORD="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}"
+          export ANDROID_KEY_ALIAS="${{ secrets.ANDROID_KEY_ALIAS }}"
+          export ANDROID_KEY_PASSWORD="${{ secrets.ANDROID_KEY_PASSWORD }}"
+          flutter build apk --no-tree-shake-icons --release
+          mv ./build/app/outputs/flutter-apk/app-release.apk ./build/app/outputs/flutter-apk/miria-$VERSION.apk
+
+      - name: Upload apk file
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload v$VERSION ./build/app/outputs/flutter-apk/miria-$VERSION.apk
