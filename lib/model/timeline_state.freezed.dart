@@ -32,7 +32,7 @@ mixin _$TimelineState {
   bool get isLastLoaded => throw _privateConstructorUsedError;
 
   /// 初期化中のエラー
-  Object? get error => throw _privateConstructorUsedError;
+  (Object, StackTrace)? get error => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TimelineStateCopyWith<TimelineState> get copyWith =>
@@ -51,7 +51,7 @@ abstract class $TimelineStateCopyWith<$Res> {
       bool isLoading,
       bool isDownDirectionLoading,
       bool isLastLoaded,
-      Object? error});
+      (Object, StackTrace)? error});
 }
 
 /// @nodoc
@@ -95,7 +95,10 @@ class _$TimelineStateCopyWithImpl<$Res, $Val extends TimelineState>
           ? _value.isLastLoaded
           : isLastLoaded // ignore: cast_nullable_to_non_nullable
               as bool,
-      error: freezed == error ? _value.error : error,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as (Object, StackTrace)?,
     ) as $Val);
   }
 }
@@ -114,7 +117,7 @@ abstract class _$$_TimelineStateCopyWith<$Res>
       bool isLoading,
       bool isDownDirectionLoading,
       bool isLastLoaded,
-      Object? error});
+      (Object, StackTrace)? error});
 }
 
 /// @nodoc
@@ -156,7 +159,10 @@ class __$$_TimelineStateCopyWithImpl<$Res>
           ? _value.isLastLoaded
           : isLastLoaded // ignore: cast_nullable_to_non_nullable
               as bool,
-      error: freezed == error ? _value.error : error,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as (Object, StackTrace)?,
     ));
   }
 }
@@ -216,7 +222,7 @@ class _$_TimelineState extends _TimelineState {
 
   /// 初期化中のエラー
   @override
-  final Object? error;
+  final (Object, StackTrace)? error;
 
   @override
   String toString() {
@@ -238,7 +244,7 @@ class _$_TimelineState extends _TimelineState {
                 other.isDownDirectionLoading == isDownDirectionLoading) &&
             (identical(other.isLastLoaded, isLastLoaded) ||
                 other.isLastLoaded == isLastLoaded) &&
-            const DeepCollectionEquality().equals(other.error, error));
+            (identical(other.error, error) || other.error == error));
   }
 
   @override
@@ -249,7 +255,7 @@ class _$_TimelineState extends _TimelineState {
       isLoading,
       isDownDirectionLoading,
       isLastLoaded,
-      const DeepCollectionEquality().hash(error));
+      error);
 
   @JsonKey(ignore: true)
   @override
@@ -265,7 +271,7 @@ abstract class _TimelineState extends TimelineState {
       final bool isLoading,
       final bool isDownDirectionLoading,
       final bool isLastLoaded,
-      final Object? error}) = _$_TimelineState;
+      final (Object, StackTrace)? error}) = _$_TimelineState;
   const _TimelineState._() : super._();
 
   @override
@@ -291,7 +297,7 @@ abstract class _TimelineState extends TimelineState {
   @override
 
   /// 初期化中のエラー
-  Object? get error;
+  (Object, StackTrace)? get error;
   @override
   @JsonKey(ignore: true)
   _$$_TimelineStateCopyWith<_$_TimelineState> get copyWith =>

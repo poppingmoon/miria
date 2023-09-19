@@ -162,7 +162,7 @@ class UserDetailTab extends ConsumerStatefulWidget {
 class UserDetailTabState extends ConsumerState<UserDetailTab> {
   UsersShowResponse? response;
   UsersShowResponse? remoteResponse;
-  Object? error;
+  (Object?, StackTrace)? error;
 
   @override
   void initState() {
@@ -212,10 +212,10 @@ class UserDetailTabState extends ConsumerState<UserDetailTab> {
             remoteResponse: remoteResponse,
           );
         }
-      } catch (e) {
+      } catch (e, s) {
         if (!mounted) return;
         setState(() {
-          error = e;
+          error = (e, s);
         });
       }
     });
@@ -233,7 +233,10 @@ class UserDetailTabState extends ConsumerState<UserDetailTab> {
       );
     }
     if (error != null) {
-      return ErrorDetail(error: error);
+      return ErrorDetail(
+        error: error?.$1,
+        stackTrace: error?.$2,
+      );
     }
 
     return const Center(

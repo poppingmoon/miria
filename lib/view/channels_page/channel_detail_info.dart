@@ -22,7 +22,7 @@ class ChannelDetailInfo extends ConsumerStatefulWidget {
 
 class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
   CommunityChannel? data;
-  Object? error;
+  (Object?, StackTrace)? error;
 
   Future<void> follow() async {
     await ref
@@ -80,10 +80,10 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
         setState(() {
           data = result;
         });
-      } catch (e) {
+      } catch (e, s) {
         if (!mounted) return;
         setState(() {
-          error = e;
+          error = (e, s);
         });
       }
     });
@@ -96,7 +96,7 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
       if (error == null) {
         return const Center(child: CircularProgressIndicator());
       } else {
-        return ErrorDetail(error: error);
+        return ErrorDetail(error: error?.$1, stackTrace: error?.$2);
       }
     }
 

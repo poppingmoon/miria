@@ -176,9 +176,9 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           noteRepository.addVote(id, vote);
         },
       );
-      ref.read(mainStreamRepositoryProvider(account)).reconnect();
       ref.read(misskeyProvider(account)).startStreaming();
       await Future.wait([
+        ref.read(mainStreamRepositoryProvider(account)).reconnect(),
         ref.read(emojiRepositoryProvider(account)).loadFromSourceIfNeed(),
         ref
             .read(accountRepositoryProvider.notifier)
@@ -188,8 +188,8 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
         else
           _reloadLatestNotes(),
       ]);
-    } catch (e) {
-      state = state.copyWith(error: e);
+    } catch (e, st) {
+      state = state.copyWith(error: (e, st));
     } finally {
       state = state.copyWith(isLoading: false);
     }

@@ -28,7 +28,10 @@ class CommonFuture<T> extends StatelessWidget {
             print(snapshot.error);
             print(snapshot.stackTrace);
           }
-          return ErrorNotification(error: snapshot.error);
+          return ErrorNotification(
+            error: snapshot.error,
+            stackTrace: snapshot.stackTrace,
+          );
         }
 
         if (snapshot.connectionState == ConnectionState.done) {

@@ -126,7 +126,9 @@ class UsersListPage extends ConsumerWidget {
               },
             );
           },
-          error: (error, _) => Center(child: ErrorDetail(error: error)),
+          error: (e, st) => Center(
+            child: ErrorDetail(error: e, stackTrace: st),
+          ),
           loading: () => const Center(child: CircularProgressIndicator()),
         ),
       ),
