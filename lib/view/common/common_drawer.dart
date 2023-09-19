@@ -109,12 +109,19 @@ class CommonDrawer extends ConsumerWidget {
               )
             ],
             ListTile(
-                leading: const Icon(Icons.settings),
-                title: const Text("設定"),
+                leading: const Icon(Icons.help),
+                title: const Text("ヘルプ"),
                 onTap: () {
                   Navigator.of(context).pop();
-                  context.pushRoute(const SettingsRoute());
+                  context.pushRoute(const HelpRoute());
                 }),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text("設定"),
+              onTap: () {
+                Navigator.of(context).pop();
+                context.pushRoute(const SettingsRoute());
+              }),
           ],
         ),
       ),

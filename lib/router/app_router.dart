@@ -92,5 +92,6 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: InstanceMuteRoute.page),
     AutoRoute(page: SeveralAccountGeneralSettingsRoute.page),
     AutoRoute(page: SharingAccountSelectRoute.page),
+    AutoRoute(page: HelpPageRoute.page),
   ];
 }
