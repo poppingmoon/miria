@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/users_list_settings.dart';
-import 'package:miria/view/common/checkbox_list_tile_form_field.dart';
 
 final _formKeyProvider = Provider.autoDispose((ref) => GlobalKey<FormState>());
 
@@ -66,8 +65,7 @@ class UsersListSettingsForm extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = ref.watch(_formKeyProvider);
     final initialSettings = ref.watch(_initialSettingsProvider);
-    // providerがdisposeされないようにするため
-    ref.watch(_usersListSettingsNotifierProvider);
+    final settings = ref.watch(_usersListSettingsNotifierProvider);
 
     return Form(
       key: formKey,
@@ -90,10 +88,10 @@ class UsersListSettingsForm extends ConsumerWidget {
                   .updateName,
             ),
           ),
-          CheckboxListTileFormField(
+          CheckboxListTile(
             title: const Text("パブリック"),
-            initialValue: initialSettings.isPublic,
-            onSaved: ref
+            value: settings.isPublic,
+            onChanged: ref
                 .read(_usersListSettingsNotifierProvider.notifier)
                 .updateIsPublic,
           ),
