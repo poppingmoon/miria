@@ -141,6 +141,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    HelpRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const HelpPage(),
+      );
+    },
     LoginRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -893,6 +899,20 @@ class HashtagRouteArgs {
   String toString() {
     return 'HashtagRouteArgs{key: $key, hashtag: $hashtag, account: $account}';
   }
+}
+
+/// generated route for
+/// [HelpPage]
+class HelpRoute extends PageRouteInfo<void> {
+  const HelpRoute({List<PageRouteInfo>? children})
+      : super(
+          HelpRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'HelpRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

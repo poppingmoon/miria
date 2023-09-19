@@ -17,6 +17,7 @@ import 'package:miria/view/explore_page/explore_role_users_page.dart';
 import 'package:miria/view/favorited_note_page/favorited_note_page.dart';
 import 'package:miria/view/federation_page/federation_page.dart';
 import 'package:miria/view/hashtag_page/hashtag_page.dart';
+import 'package:miria/view/help_page/help_page.dart';
 import 'package:miria/view/login_page/login_page.dart';
 import 'package:miria/view/note_create_page/note_create_page.dart';
 import 'package:miria/view/note_detail_page/note_detail_page.dart';
@@ -93,5 +94,6 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: InstanceMuteRoute.page),
     AutoRoute(page: SeveralAccountGeneralSettingsRoute.page),
     AutoRoute(page: SharingAccountSelectRoute.page),
+    AutoRoute(page: HelpRoute.page),
   ];
 }
