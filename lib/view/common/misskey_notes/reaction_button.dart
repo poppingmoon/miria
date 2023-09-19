@@ -102,6 +102,16 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
             return;
         }
 
+        if (await SimpleConfirmDialog.show(
+              context: context,
+              message: "リアクションしてもええか？",
+              primary: "やる",
+              secondary: "やっぱりやめる",
+            ) !=
+            true) {
+          return;
+        }
+
         await ref.read(misskeyProvider(account)).notes.reactions.create(
               NotesReactionsCreateRequest(
                 noteId: widget.noteId,
