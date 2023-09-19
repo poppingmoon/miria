@@ -68,6 +68,12 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onVoted: onVoted,
           withFiles: _tabSetting.withFiles,
         ),
+      TabType.roleTimeline => misskey.roleTimelineStream(
+          roleId: _tabSetting.roleId!,
+          onNoteReceived: onNoteReceived,
+          onReacted: onReacted,
+          onVoted: onVoted,
+        ),
       TabType.channel => misskey.channelStream(
           channelId: _tabSetting.channelId!,
           onNoteReceived: onNoteReceived,
@@ -122,6 +128,13 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
             limit: limit,
             untilId: untilId,
             withFiles: _tabSetting.withFiles,
+          ),
+        ),
+      TabType.roleTimeline => misskey.roles.notes(
+          RolesNotesRequest(
+            roleId: _tabSetting.roleId!,
+            limit: limit,
+            untilId: untilId,
           ),
         ),
       TabType.channel => misskey.channels.timeline(
