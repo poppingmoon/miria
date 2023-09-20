@@ -72,21 +72,22 @@ class UsersListSettingsForm extends ConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ListTile(
-            title: TextFormField(
-              initialValue: initialSettings.name,
-              maxLength: 100,
-              decoration: const InputDecoration(labelText: "リスト名"),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "入力してください";
-                }
-                return null;
-              },
-              onSaved: ref
-                  .read(_usersListSettingsNotifierProvider.notifier)
-                  .updateName,
+          TextFormField(
+            initialValue: initialSettings.name,
+            maxLength: 100,
+            decoration: const InputDecoration(
+              labelText: "リスト名",
+              contentPadding: EdgeInsets.fromLTRB(12, 24, 12, 16),
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "入力してください";
+              }
+              return null;
+            },
+            onSaved: ref
+                .read(_usersListSettingsNotifierProvider.notifier)
+                .updateName,
           ),
           CheckboxListTile(
             title: const Text("パブリック"),

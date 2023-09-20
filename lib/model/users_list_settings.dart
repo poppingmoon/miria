@@ -11,8 +11,7 @@ class UsersListSettings with _$UsersListSettings {
   }) = _UsersListSettings;
   const UsersListSettings._();
 
-  // ignore: prefer_constructors_over_static_methods
-  static UsersListSettings fromUsersList(UsersList list) {
+  factory UsersListSettings.fromUsersList(UsersList list) {
     return UsersListSettings(
       name: list.name ?? "",
       isPublic: list.isPublic ?? false,
