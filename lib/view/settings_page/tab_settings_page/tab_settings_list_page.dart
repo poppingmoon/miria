@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:miria/model/tab_setting.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,23 +44,25 @@ class TabSettingsListPage extends ConsumerWidget {
               itemCount: tabSettings.length,
               itemBuilder: (context, index) {
                 final tabSetting = tabSettings[index];
-                return ReorderableDragStartListener(
-                  key: Key("$index"),
-                  index: index,
-                  child: ListTile(
-                    leading: AccountScope(
-                      account: tabSetting.account,
-                      child: TabIconView(icon: tabSetting.icon),
+                if (Platform.isAndroid || Platform.isIOS) {
+                  return ReorderableDelayedDragStartListener(
+                    key: Key("$index"),
+                    index: index,
+                    child: TabSettingsListItem(
+                      tabSetting: tabSetting,
+                      index: index,
                     ),
-                    title: Text(tabSetting.name),
-                    subtitle: Text(
-                      "${tabSetting.tabType.displayName} / @${tabSetting.account.userId}@${tabSetting.account.host} ",
+                  );
+                } else {
+                  return ReorderableDragStartListener(
+                    key: Key("$index"),
+                    index: index,
+                    child: TabSettingsListItem(
+                      tabSetting: tabSetting,
+                      index: index,
                     ),
-                    trailing: const Icon(Icons.drag_handle),
-                    onTap: () =>
-                        context.pushRoute(TabSettingsRoute(tabIndex: index)),
-                  ),
-                );
+                  );
+                }
               },
               onReorder: (oldIndex, newIndex) {
                 if (oldIndex < newIndex) {
@@ -85,6 +90,33 @@ class TabSettingsListPage extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class TabSettingsListItem extends StatelessWidget {
+  const TabSettingsListItem({
+    super.key,
+    required this.tabSetting,
+    required this.index,
+  });
+
+  final TabSetting tabSetting;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: AccountScope(
+        account: tabSetting.account,
+        child: TabIconView(icon: tabSetting.icon),
+      ),
+      title: Text(tabSetting.name),
+      subtitle: Text(
+        "${tabSetting.tabType.displayName} / @${tabSetting.account.userId}@${tabSetting.account.host} ",
+      ),
+      trailing: const Icon(Icons.drag_handle),
+      onTap: () => context.pushRoute(TabSettingsRoute(tabIndex: index)),
     );
   }
 }
