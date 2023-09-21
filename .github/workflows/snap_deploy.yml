@@ -20,12 +20,13 @@ jobs:
         run: |
           pwd
           echo "VERSION=$(cat pubspec.yaml | grep version | cut -d ' ' -f 2)" >> $GITHUB_ENV
+          cp ${{ steps.snapcraft.outputs.snap }} miria-$VERSION-amd64_arm64.snap
 
       - name: Upload snap file
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload v$VERSION ${{ steps.snapcraft.outputs.snap }}
+          gh release upload v$VERSION miria-$VERSION-amd64_arm64.snap
 
       # https://github.com/snapcore/action-publish
       # 以下をコメントアウトを解除することでSnap Storeへアップロードすることが可能です。
