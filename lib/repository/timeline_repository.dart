@@ -252,14 +252,23 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     _socketController.disconnect();
   }
 
-  Future<void> reconnect() async {
+  void reconnect() {
     state = state.copyWith(
       isDownDirectionLoading: false,
       isLastLoaded: false,
       error: null,
     );
-    await ref.read(misskeyProvider(arg.account)).streamingService.restart();
-    await startTimeline();
+    try {
+      _socketController.reconnect();
+    } catch (e) {
+      Future(() async {
+        await ref.read(misskeyProvider(arg.account)).streamingService.restart();
+        startTimeline();
+      });
+      return;
+    }
+    ref.read(mainStreamRepositoryProvider(_tabSetting.account)).reconnect();
+    _reloadLatestNotes();
   }
 
   void _moveToOlder() {
