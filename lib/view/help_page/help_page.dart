@@ -46,7 +46,7 @@ HTL,LTL,STL,GTLにおいて、画面右上の🤖⇨**「>」**⇨**広告**か�
 
 \$[x2 Miriaでできないこと]
 
-**プッシュ通知**
+**○プッシュ通知**
 プッシュ通知の仕組み上Miriaで管理することが難しく、Misskey Webの通知機能を利用することを推奨しています。
 
 **○カスタムCSSや拡張機能の追加**
@@ -59,6 +59,14 @@ MiriaはFlutterを使い、独自の方法で作成したMFMの描画システ�
 MisskeyとAPIのレスポンス形式が大きくことなるものについては、現在対応する予定はありません。
 
 \$[x2 その他]
+
+**○バグを報告したい・機能の要望がしたい**
+
+MiriaのGitHubリポジトリの[Issue](https://github.com/shiosyakeyakini-info/miria/issues)で受け付けています。
+
+**○開発者を支援したい**
+
+[pixivFANBOX](https://shiosyakeyakini.fanbox.cc)で支援を受け付けています。
 
 **○画面右上のblobcatは何？**
 かわいいね。
