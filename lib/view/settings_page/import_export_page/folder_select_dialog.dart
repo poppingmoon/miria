@@ -14,7 +14,7 @@ class FolderResult {
 
 class FolderSelectDialog extends ConsumerStatefulWidget {
   final Account account;
-  final String? fileShowTarget;
+  final List<String>? fileShowTarget;
   final String confirmationText;
 
   const FolderSelectDialog({
@@ -101,16 +101,21 @@ class FolderSelectDialogState extends ConsumerState<FolderSelectDialog> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   future: () async {
-                    final list = await ref
-                        .read(misskeyProvider(widget.account))
-                        .drive
-                        .files
-                        .find(
-                          DriveFilesFindRequest(
-                            folderId: path.lastOrNull?.id,
-                            name: widget.fileShowTarget!,
-                          ),
-                        );
+                    final list = <DriveFile>[];
+                    for (final element in widget.fileShowTarget!) {
+                      list.addAll(
+                        await ref
+                            .read(misskeyProvider(widget.account))
+                            .drive
+                            .files
+                            .find(
+                              DriveFilesFindRequest(
+                                folderId: path.lastOrNull?.id,
+                                name: element,
+                              ),
+                            ),
+                      );
+                    }
                     return list.toList();
                   }(),
                   builder: (context, item) => Row(
