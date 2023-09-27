@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/providers.dart';
-import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/misskey_notes/mfm_text.dart';
 
 @RoutePage()
@@ -18,15 +17,11 @@ class HelpPageState extends ConsumerState<HelpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("ヘルプ")),
-      body: SingleChildScrollView(
+      body: const SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: AccountScope(
-            account: ref.read(accountRepositoryProvider).first,
-            child: const Column(
-              children: [
-                MfmText(
-                  mfmText: '''
+          padding: EdgeInsets.all(10),
+          child: MfmText(
+            mfmText: '''
 \$[x2 MiriaのHowTo]
 
 **○追加したアカウントのタイムラインを開く方法**
@@ -37,7 +32,7 @@ class HelpPageState extends ConsumerState<HelpPage> {
 
 **○リアクションデッキを編集・インポートする方法**
 画面左のメニューリストから、リアクションデッキを編集したい**アカウントの設定（<ユーザー名>の設定）**⇨**リアクションデッキ**から編集することができます。
-**+**ボタンからカスタム絵文字の追加、表示されているカスタム絵文字をタップして絵文字の削除が可能です。
+**「+」**ボタンからカスタム絵文字の追加、表示されているカスタム絵文字をタップして絵文字の削除が可能です。
 また、右上のメニューボタンから**一括追加**を選択すると、ウェブクライアントのリアクションデッキをインポートできます。
 
 **○サーバーからのお知らせを確認する方法**
@@ -51,6 +46,9 @@ HTL,LTL,STL,GTLにおいて、画面右上の🤖⇨**「>」**⇨**広告**か�
 
 \$[x2 Miriaでできないこと]
 
+**○プッシュ通知**
+プッシュ通知の仕組み上Miriaで管理することが難しく、Misskey Webの通知機能を利用することを推奨しています。
+
 **○カスタムCSSや拡張機能の追加**
 MiriaはFlutterを使い、独自の方法で作成したMFMの描画システムを使用しているため、ウェブ技術であるカスタムCSSなどは使用することができません。
 
@@ -62,12 +60,17 @@ MisskeyとAPIのレスポンス形式が大きくことなるものについて�
 
 \$[x2 その他]
 
+**○バグを報告したい・機能の要望がしたい**
+
+MiriaのGitHubリポジトリの[Issue](https://github.com/shiosyakeyakini-info/miria/issues)で受け付けています。
+
+**○開発者を支援したい**
+
+[pixivFANBOX](https://shiosyakeyakini.fanbox.cc)で支援を受け付けています。
+
 **○画面右上のblobcatは何？**
 かわいいね。
-                ''',
-                ),
-              ],
-            ),
+            ''',
           ),
         ),
       ),
