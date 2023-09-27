@@ -28,7 +28,11 @@ final dioProvider = Provider((ref) => Dio());
 final fileSystemProvider =
     Provider<FileSystem>((ref) => const LocalFileSystem());
 final misskeyProvider = Provider.family<Misskey, Account>(
-  (ref, account) => Misskey(token: account.token, host: account.host),
+  (ref, account) => Misskey(
+    token: account.token,
+    host: account.host,
+    socketConnectionTimeout: const Duration(seconds: 20),
+  ),
 );
 
 final timelineRepositoryProvider =

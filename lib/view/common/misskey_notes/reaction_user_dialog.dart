@@ -65,7 +65,8 @@ class ReactionUserDialog extends ConsumerWidget {
                     );
                 return response.toList();
               },
-              nextFuture: (_, index) async {
+              nextFuture: (item, index) async {
+                // 後方互換性のためにoffsetとuntilIdの両方をリクエストに含める
                 final response = await ref
                     .read(misskeyProvider(account))
                     .notes
@@ -75,6 +76,7 @@ class ReactionUserDialog extends ConsumerWidget {
                         noteId: noteId,
                         type: type,
                         offset: index,
+                        untilId: item.id,
                       ),
                     );
                 return response.toList();
