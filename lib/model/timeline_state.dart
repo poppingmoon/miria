@@ -24,7 +24,7 @@ class TimelineState with _$TimelineState {
     @Default(false) bool isLastLoaded,
 
     /// 初期化中のエラー
-    Object? error,
+    (Object, StackTrace)? error,
   }) = _TimelineState;
 
   Note? get oldestNote {

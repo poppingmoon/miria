@@ -22,7 +22,7 @@ class ChannelDetailInfo extends ConsumerStatefulWidget {
 
 class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
   CommunityChannel? data;
-  Object? error;
+  (Object?, StackTrace)? error;
 
   Future<void> follow() async {
     await ref
@@ -79,9 +79,9 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
         setState(() {
           data = result;
         });
-      } catch (e) {
+      } catch (e, s) {
         setState(() {
-          error = e;
+          error = (e, s);
         });
       }
     });
@@ -94,7 +94,7 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
       if (error == null) {
         return const Center(child: CircularProgressIndicator());
       } else {
-        return ErrorDetail(error: error);
+        return ErrorDetail(error: error?.$1, stackTrace: error?.$2);
       }
     }
 
@@ -129,6 +129,21 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
             ),
           ),
         ),
+        if (data.isSensitive)
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: DecoratedBox(
+                decoration:
+                    BoxDecoration(color: Theme.of(context).primaryColor),
+                child: const Text(
+                  " センシティブ ",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ),
         const Padding(padding: EdgeInsets.only(top: 10)),
         Align(
             alignment: Alignment.centerRight,

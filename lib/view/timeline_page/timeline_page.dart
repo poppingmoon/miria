@@ -91,6 +91,8 @@ class TabHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = ref.watch(timelineRepositoryProvider(tabSetting)
+        .select((timeline) => timeline.isLoading));
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border(
@@ -146,9 +148,12 @@ class TabHeader extends ConsumerWidget {
             padding: EdgeInsets.only(right: 5),
           ),
           IconButton(
-            onPressed:
-                ref.read(timelinePageControllerProvider.notifier).reconnect,
-            icon: const Icon(Icons.refresh),
+            onPressed: isLoading
+                ? null
+                : ref.read(timelinePageControllerProvider.notifier).reconnect,
+            icon: isLoading
+                ? const CircularProgressIndicator()
+                : const Icon(Icons.refresh),
           ),
         ],
       ),

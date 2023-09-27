@@ -40,8 +40,10 @@ class NoteRepository extends ChangeNotifier {
       renote: note.renote ?? _notes[note.renoteId],
       reply: note.reply ?? _notes[note.replyId],
       poll: note.poll ?? registeredNote?.poll,
-      myReaction: note.myReaction ??
-          (note.reactions.isNotEmpty ? registeredNote?.myReaction : null),
+      myReaction: note.myReaction?.isEmpty == true
+          ? null
+          : (note.myReaction ??
+              (note.reactions.isNotEmpty ? registeredNote?.myReaction : null)),
     );
     _noteStatuses[note.id] ??= const NoteStatus(
       isCwOpened: false,
@@ -75,26 +77,6 @@ class NoteRepository extends ChangeNotifier {
     });
   }
 
-  void addReaction(String noteId, TimelineReacted reaction) {
-    final registeredNote = _notes[noteId];
-    if (registeredNote == null) return;
-
-    final reactions = Map.of(registeredNote.reactions);
-    reactions[reaction.reaction] = (reactions[reaction.reaction] ?? 0) + 1;
-    final emoji = reaction.emoji;
-    final reactionEmojis = Map.of(registeredNote.reactionEmojis);
-    if (emoji != null && !reaction.reaction.endsWith("@.:")) {
-      reactionEmojis[emoji.name] = emoji.url;
-    }
-
-    registerNote(
-      registeredNote.copyWith(
-        reactions: reactions,
-        reactionEmojis: reactionEmojis,
-      ),
-    );
-  }
-
   void addVote(String noteId, TimelineVoted vote) {
     final registeredNote = _notes[noteId];
     if (registeredNote == null) return;
@@ -116,7 +98,7 @@ class NoteRepository extends ChangeNotifier {
 
   Future<void> refresh(String noteId) async {
     final note = await misskey.notes.show(NotesShowRequest(noteId: noteId));
-    registerNote(note);
+    registerNote(note.copyWith(myReaction: note.myReaction ?? ""));
   }
 
   void delete(String noteId) {

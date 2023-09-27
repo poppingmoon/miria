@@ -25,7 +25,11 @@ class MisskeyTimeline extends ConsumerWidget {
             padding: EdgeInsets.only(top: 10),
             child: Center(child: CircularProgressIndicator()),
           ),
-        if (timeline.error != null) ErrorDetail(error: timeline.error!),
+        if (timeline.error != null)
+          ErrorDetail(
+            error: timeline.error?.$1,
+            stackTrace: timeline.error?.$2,
+          ),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),

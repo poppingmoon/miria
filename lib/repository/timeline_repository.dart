@@ -18,17 +18,18 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
 
   @override
   TimelineState build(TabSetting arg) {
-    if (arg.isSubscribe) {
-      Timer.periodic(
-        const Duration(seconds: 10),
-        (_) => _checkUnsubscribed(),
-      );
-    }
+    final timer = _tabSetting.isSubscribe
+        ? Timer.periodic(
+            const Duration(seconds: 10),
+            (_) => _checkUnsubscribed(),
+          )
+        : null;
     Future(() {
       startTimeline();
     });
     ref.onDispose(() {
       disconnect();
+      timer?.cancel();
     });
     return const TimelineState();
   }
@@ -39,6 +40,8 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     required void Function(Note note) onNoteReceived,
     required FutureOr<void> Function(String id, TimelineReacted reaction)
         onReacted,
+    required FutureOr<void> Function(String id, TimelineReacted reaction)
+        onUnreacted,
     required FutureOr<void> Function(String id, TimelineVoted vote) onVoted,
   }) {
     final misskey = ref.read(misskeyProvider(_tabSetting.account));
@@ -47,21 +50,25 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
       TabType.localTimeline => misskey.localTimelineStream(
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
+          onUnreacted: onUnreacted,
           onVoted: onVoted,
         ),
       TabType.homeTimeline => misskey.homeTimelineStream(
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
+          onUnreacted: onUnreacted,
           onVoted: onVoted,
         ),
       TabType.globalTimeline => misskey.globalTimelineStream(
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
+          onUnreacted: onUnreacted,
           onVoted: onVoted,
         ),
       TabType.hybridTimeline => misskey.hybridTimelineStream(
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
+          onUnreacted: onUnreacted,
           onVoted: onVoted,
         ),
       TabType.channel => misskey.channelStream(
@@ -74,12 +81,14 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           listId: _tabSetting.listId!,
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
+          onUnreacted: onUnreacted,
           onVoted: onVoted,
         ),
       TabType.antenna => misskey.antennaStream(
           antennaId: _tabSetting.antennaId!,
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
+          onUnreacted: onUnreacted,
           onVoted: onVoted,
         ),
     };
@@ -161,15 +170,59 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           state = state.copyWith(newerNotes: [...state.newerNotes, note]);
         },
         onReacted: (id, reaction) {
-          noteRepository.addReaction(id, reaction);
+          final registeredNote = noteRepository.notes[id];
+          if (registeredNote == null) return;
+
+          final reactions = Map.of(registeredNote.reactions);
+          reactions[reaction.reaction] =
+              (reactions[reaction.reaction] ?? 0) + 1;
+          final emoji = reaction.emoji;
+          final reactionEmojis = Map.of(registeredNote.reactionEmojis);
+          if (emoji != null && !reaction.reaction.endsWith("@.:")) {
+            reactionEmojis[emoji.name] = emoji.url;
+          }
+
+          noteRepository.registerNote(
+            registeredNote.copyWith(
+              reactions: reactions,
+              reactionEmojis: reactionEmojis,
+              myReaction: reaction.userId == account.i.id
+                  ? emoji?.name
+                  : registeredNote.myReaction,
+            ),
+          );
+        },
+        onUnreacted: (id, reaction) {
+          final registeredNote = noteRepository.notes[id];
+          if (registeredNote == null) return;
+
+          final reactions = Map.of(registeredNote.reactions);
+          final reactionCount = reactions[reaction.reaction];
+          if (reactionCount == null) {
+            return;
+          }
+          if (reactionCount <= 1) {
+            reactions.remove(reaction.reaction);
+          } else {
+            reactions[reaction.reaction] = reactionCount - 1;
+          }
+
+          noteRepository.registerNote(
+            registeredNote.copyWith(
+              reactions: reactions,
+              myReaction: reaction.userId == account.i.id
+                  ? null
+                  : registeredNote.myReaction,
+            ),
+          );
         },
         onVoted: (id, vote) {
           noteRepository.addVote(id, vote);
         },
       );
-      ref.read(mainStreamRepositoryProvider(account)).reconnect();
-      ref.read(misskeyProvider(account)).startStreaming();
+      await ref.read(misskeyProvider(account)).startStreaming();
       await Future.wait([
+        ref.read(mainStreamRepositoryProvider(account)).reconnect(),
         ref.read(emojiRepositoryProvider(account)).loadFromSourceIfNeed(),
         ref.read(accountRepository).loadFromSourceIfNeed(account),
         if (state.olderNotes.isEmpty)
@@ -177,8 +230,8 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
         else
           _reloadLatestNotes(),
       ]);
-    } catch (e) {
-      state = state.copyWith(error: e);
+    } catch (e, st) {
+      state = state.copyWith(error: (e, st));
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -228,7 +281,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     _socketController.disconnect();
   }
 
-  void reconnect() {
+  Future<void> reconnect() async {
     state = state.copyWith(
       isDownDirectionLoading: false,
       isLastLoaded: false,
@@ -237,14 +290,14 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     try {
       _socketController.reconnect();
     } catch (e) {
-      Future(() async {
-        await ref.read(misskeyProvider(arg.account)).streamingService.restart();
-        startTimeline();
-      });
+      await ref.read(misskeyProvider(arg.account)).streamingService.restart();
+      await startTimeline();
       return;
     }
-    ref.read(mainStreamRepositoryProvider(_tabSetting.account)).reconnect();
-    _reloadLatestNotes();
+    await ref
+        .read(mainStreamRepositoryProvider(_tabSetting.account))
+        .reconnect();
+    await _reloadLatestNotes();
   }
 
   void _moveToOlder() {

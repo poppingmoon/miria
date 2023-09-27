@@ -14,6 +14,7 @@ class MainStreamRepository extends ChangeNotifier {
   final Account account;
   final AccountRepository accountRepository;
   SocketController? socketController;
+  bool isReconnecting = false;
 
   MainStreamRepository(
     this.misskey,
@@ -49,7 +50,7 @@ class MainStreamRepository extends ChangeNotifier {
     notifyListeners();
   }
 
-  void connect() {
+  Future<void> connect() async {
     socketController = misskey.mainStream(
       onReadAllNotifications: () {
         hasUnreadNotification = false;
@@ -80,17 +81,27 @@ class MainStreamRepository extends ChangeNotifier {
         accountRepository.createUnreadAnnouncement(account, announcement);
       },
     );
-    misskey.startStreaming();
-    Future(() async {
-      await confirmNotification();
-    });
+    await misskey.startStreaming();
+    confirmNotification();
   }
 
-  void reconnect() {
-    socketController?.disconnect();
-    connect();
-    Future(() async {
-      await confirmNotification();
-    });
+  Future<void> reconnect() async {
+    if (isReconnecting) {
+      // 排他制御
+      while (isReconnecting) {
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+      return;
+    }
+    isReconnecting = true;
+    try {
+      print("main stream repository's socket controller will be disconnect");
+      socketController?.disconnect();
+      socketController = null;
+      await misskey.streamingService.restart();
+      await connect();
+    } finally {
+      isReconnecting = false;
+    }
   }
 }
