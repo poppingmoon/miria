@@ -333,6 +333,14 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SplashPage(),
       );
     },
+    TimelineRoute.name: (routeData) {
+      final args = routeData.argsAs<TimelineRouteArgs>(
+          orElse: () => const TimelineRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: TimelinePage(key: args.key),
+      );
+    },
     UsersListRoute.name: (routeData) {
       final args = routeData.argsAs<UsersListRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -385,14 +393,6 @@ abstract class _$AppRouter extends RootStackRouter {
           userId: args.userId,
           account: args.account,
         ),
-      );
-    },
-    TimelineRoute.name: (routeData) {
-      final args = routeData.argsAs<TimelineRouteArgs>(
-          orElse: () => const TimelineRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: TimelinePage(key: args.key),
       );
     },
   };
@@ -1553,6 +1553,35 @@ class SplashRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [TimelinePage]
+class TimelineRoute extends PageRouteInfo<TimelineRouteArgs> {
+  TimelineRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TimelineRoute.name,
+          args: TimelineRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'TimelineRoute';
+
+  static const PageInfo<TimelineRouteArgs> page =
+      PageInfo<TimelineRouteArgs>(name);
+}
+
+class TimelineRouteArgs {
+  const TimelineRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'TimelineRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
 /// [UsersListPage]
 class UsersListRoute extends PageRouteInfo<UsersListRouteArgs> {
   UsersListRoute({
@@ -1758,34 +1787,5 @@ class UserRouteArgs {
   @override
   String toString() {
     return 'UserRouteArgs{key: $key, userId: $userId, account: $account}';
-  }
-}
-
-/// generated route for
-/// [TimelinePage]
-class TimelineRoute extends PageRouteInfo<TimelineRouteArgs> {
-  TimelineRoute({
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          TimelineRoute.name,
-          args: TimelineRouteArgs(key: key),
-          initialChildren: children,
-        );
-
-  static const String name = 'TimelineRoute';
-
-  static const PageInfo<TimelineRouteArgs> page =
-      PageInfo<TimelineRouteArgs>(name);
-}
-
-class TimelineRouteArgs {
-  const TimelineRouteArgs({this.key});
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'TimelineRouteArgs{key: $key}';
   }
 }
