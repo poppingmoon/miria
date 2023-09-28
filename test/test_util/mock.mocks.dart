@@ -4,26 +4,27 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i16;
-import 'dart:io' as _i23;
-import 'dart:typed_data' as _i24;
+import 'dart:io' as _i24;
+import 'dart:typed_data' as _i25;
 import 'dart:ui' as _i18;
 
-import 'package:dio/dio.dart' as _i25;
+import 'package:dio/dio.dart' as _i26;
 import 'package:dio/src/adapter.dart' as _i10;
-import 'package:dio/src/cancel_token.dart' as _i26;
+import 'package:dio/src/cancel_token.dart' as _i27;
 import 'package:dio/src/dio_mixin.dart' as _i12;
 import 'package:dio/src/options.dart' as _i9;
 import 'package:dio/src/response.dart' as _i13;
 import 'package:dio/src/transformer.dart' as _i11;
-import 'package:file_picker/file_picker.dart' as _i28;
+import 'package:file_picker/file_picker.dart' as _i29;
 import 'package:miria/model/account.dart' as _i17;
 import 'package:miria/model/account_settings.dart' as _i2;
+import 'package:miria/model/acct.dart' as _i20;
 import 'package:miria/model/general_settings.dart' as _i3;
-import 'package:miria/model/misskey_emoji_data.dart' as _i21;
+import 'package:miria/model/misskey_emoji_data.dart' as _i22;
 import 'package:miria/model/tab_setting.dart' as _i15;
 import 'package:miria/repository/account_settings_repository.dart' as _i19;
-import 'package:miria/repository/emoji_repository.dart' as _i20;
-import 'package:miria/repository/general_settings_repository.dart' as _i22;
+import 'package:miria/repository/emoji_repository.dart' as _i21;
+import 'package:miria/repository/general_settings_repository.dart' as _i23;
 import 'package:miria/repository/tab_settings_repository.dart' as _i14;
 import 'package:misskey_dart/misskey_dart.dart' as _i6;
 import 'package:misskey_dart/src/data/ping_response.dart' as _i8;
@@ -32,7 +33,7 @@ import 'package:misskey_dart/src/services/api_service.dart' as _i4;
 import 'package:misskey_dart/src/services/streaming_service.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 
-import 'mock.dart' as _i27;
+import 'mock.dart' as _i28;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -537,21 +538,6 @@ class MockTabSettingsRepository extends _i1.Mock
         returnValueForMissingStub: _i16.Future<void>.value(),
       ) as _i16.Future<void>);
   @override
-  void updateAccount(
-    _i17.Account? account,
-    _i6.IResponse? response,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #updateAccount,
-          [
-            account,
-            response,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
   _i16.Future<void> save(List<_i15.TabSetting>? tabSettings) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -659,6 +645,27 @@ class MockAccountSettingsRepository extends _i1.Mock
         returnValueForMissingStub: _i16.Future<void>.value(),
       ) as _i16.Future<void>);
   @override
+  _i2.AccountSettings fromAcct(_i20.Acct? acct) => (super.noSuchMethod(
+        Invocation.method(
+          #fromAcct,
+          [acct],
+        ),
+        returnValue: _FakeAccountSettings_0(
+          this,
+          Invocation.method(
+            #fromAcct,
+            [acct],
+          ),
+        ),
+        returnValueForMissingStub: _FakeAccountSettings_0(
+          this,
+          Invocation.method(
+            #fromAcct,
+            [acct],
+          ),
+        ),
+      ) as _i2.AccountSettings);
+  @override
   _i2.AccountSettings fromAccount(_i17.Account? account) => (super.noSuchMethod(
         Invocation.method(
           #fromAccount,
@@ -716,9 +723,9 @@ class MockAccountSettingsRepository extends _i1.Mock
 /// A class which mocks [EmojiRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockEmojiRepository extends _i1.Mock implements _i20.EmojiRepository {
+class MockEmojiRepository extends _i1.Mock implements _i21.EmojiRepository {
   @override
-  set emoji(List<_i20.EmojiRepositoryData>? _emoji) => super.noSuchMethod(
+  set emoji(List<_i21.EmojiRepositoryData>? _emoji) => super.noSuchMethod(
         Invocation.setter(
           #emoji,
           _emoji,
@@ -753,7 +760,7 @@ class MockEmojiRepository extends _i1.Mock implements _i20.EmojiRepository {
         returnValueForMissingStub: _i16.Future<void>.value(),
       ) as _i16.Future<void>);
   @override
-  _i16.Future<List<_i21.MisskeyEmojiData>> searchEmojis(
+  _i16.Future<List<_i22.MisskeyEmojiData>> searchEmojis(
     String? name, {
     int? limit = 30,
   }) =>
@@ -763,30 +770,30 @@ class MockEmojiRepository extends _i1.Mock implements _i20.EmojiRepository {
           [name],
           {#limit: limit},
         ),
-        returnValue: _i16.Future<List<_i21.MisskeyEmojiData>>.value(
-            <_i21.MisskeyEmojiData>[]),
+        returnValue: _i16.Future<List<_i22.MisskeyEmojiData>>.value(
+            <_i22.MisskeyEmojiData>[]),
         returnValueForMissingStub:
-            _i16.Future<List<_i21.MisskeyEmojiData>>.value(
-                <_i21.MisskeyEmojiData>[]),
-      ) as _i16.Future<List<_i21.MisskeyEmojiData>>);
+            _i16.Future<List<_i22.MisskeyEmojiData>>.value(
+                <_i22.MisskeyEmojiData>[]),
+      ) as _i16.Future<List<_i22.MisskeyEmojiData>>);
   @override
-  List<_i21.MisskeyEmojiData> defaultEmojis({int? limit}) =>
+  List<_i22.MisskeyEmojiData> defaultEmojis({int? limit}) =>
       (super.noSuchMethod(
         Invocation.method(
           #defaultEmojis,
           [],
           {#limit: limit},
         ),
-        returnValue: <_i21.MisskeyEmojiData>[],
-        returnValueForMissingStub: <_i21.MisskeyEmojiData>[],
-      ) as List<_i21.MisskeyEmojiData>);
+        returnValue: <_i22.MisskeyEmojiData>[],
+        returnValueForMissingStub: <_i22.MisskeyEmojiData>[],
+      ) as List<_i22.MisskeyEmojiData>);
 }
 
 /// A class which mocks [GeneralSettingsRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGeneralSettingsRepository extends _i1.Mock
-    implements _i22.GeneralSettingsRepository {
+    implements _i23.GeneralSettingsRepository {
   @override
   _i3.GeneralSettings get settings => (super.noSuchMethod(
         Invocation.getter(#settings),
@@ -2913,7 +2920,7 @@ class MockMisskeyDriveFiles extends _i1.Mock implements _i6.MisskeyDriveFiles {
   @override
   _i16.Future<_i6.DriveFile> create(
     _i6.DriveFilesCreateRequest? request,
-    _i23.File? fileContent,
+    _i24.File? fileContent,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -2948,7 +2955,7 @@ class MockMisskeyDriveFiles extends _i1.Mock implements _i6.MisskeyDriveFiles {
   @override
   _i16.Future<_i6.DriveFile> createAsBinary(
     _i6.DriveFilesCreateRequest? request,
-    _i24.Uint8List? fileContent,
+    _i25.Uint8List? fileContent,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -3043,7 +3050,7 @@ class MockMisskeyDriveFiles extends _i1.Mock implements _i6.MisskeyDriveFiles {
 /// A class which mocks [Dio].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockDio extends _i1.Mock implements _i25.Dio {
+class MockDio extends _i1.Mock implements _i26.Dio {
   @override
   _i9.BaseOptions get options => (super.noSuchMethod(
         Invocation.getter(#options),
@@ -3132,7 +3139,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     Object? data,
     Map<String, dynamic>? queryParameters,
     _i9.Options? options,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
     _i9.ProgressCallback? onReceiveProgress,
   }) =>
       (super.noSuchMethod(
@@ -3182,7 +3189,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     Uri? uri, {
     Object? data,
     _i9.Options? options,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
     _i9.ProgressCallback? onReceiveProgress,
   }) =>
       (super.noSuchMethod(
@@ -3230,7 +3237,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     Object? data,
     Map<String, dynamic>? queryParameters,
     _i9.Options? options,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
     _i9.ProgressCallback? onSendProgress,
     _i9.ProgressCallback? onReceiveProgress,
   }) =>
@@ -3284,7 +3291,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     Uri? uri, {
     Object? data,
     _i9.Options? options,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
     _i9.ProgressCallback? onSendProgress,
     _i9.ProgressCallback? onReceiveProgress,
   }) =>
@@ -3336,7 +3343,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     Object? data,
     Map<String, dynamic>? queryParameters,
     _i9.Options? options,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
     _i9.ProgressCallback? onSendProgress,
     _i9.ProgressCallback? onReceiveProgress,
   }) =>
@@ -3390,7 +3397,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     Uri? uri, {
     Object? data,
     _i9.Options? options,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
     _i9.ProgressCallback? onSendProgress,
     _i9.ProgressCallback? onReceiveProgress,
   }) =>
@@ -3442,7 +3449,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     Object? data,
     Map<String, dynamic>? queryParameters,
     _i9.Options? options,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -3488,7 +3495,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     Uri? uri, {
     Object? data,
     _i9.Options? options,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -3532,7 +3539,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     Object? data,
     Map<String, dynamic>? queryParameters,
     _i9.Options? options,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -3578,7 +3585,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     Uri? uri, {
     Object? data,
     _i9.Options? options,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -3622,7 +3629,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     Object? data,
     Map<String, dynamic>? queryParameters,
     _i9.Options? options,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
     _i9.ProgressCallback? onSendProgress,
     _i9.ProgressCallback? onReceiveProgress,
   }) =>
@@ -3676,7 +3683,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     Uri? uri, {
     Object? data,
     _i9.Options? options,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
     _i9.ProgressCallback? onSendProgress,
     _i9.ProgressCallback? onReceiveProgress,
   }) =>
@@ -3728,7 +3735,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     dynamic savePath, {
     _i9.ProgressCallback? onReceiveProgress,
     Map<String, dynamic>? queryParameters,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
     bool? deleteOnError = true,
     String? lengthHeader = r'content-length',
     Object? data,
@@ -3797,7 +3804,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     Uri? uri,
     dynamic savePath, {
     _i9.ProgressCallback? onReceiveProgress,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
     bool? deleteOnError = true,
     String? lengthHeader = r'content-length',
     Object? data,
@@ -3863,7 +3870,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
     String? path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
     _i9.Options? options,
     _i9.ProgressCallback? onSendProgress,
     _i9.ProgressCallback? onReceiveProgress,
@@ -3917,7 +3924,7 @@ class MockDio extends _i1.Mock implements _i25.Dio {
   _i16.Future<_i13.Response<T>> requestUri<T>(
     Uri? uri, {
     Object? data,
-    _i26.CancelToken? cancelToken,
+    _i27.CancelToken? cancelToken,
     _i9.Options? options,
     _i9.ProgressCallback? onSendProgress,
     _i9.ProgressCallback? onReceiveProgress,
@@ -3993,14 +4000,14 @@ class MockDio extends _i1.Mock implements _i25.Dio {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFilePickerPlatform extends _i1.Mock
-    implements _i27.FakeFilePickerPlatform {
+    implements _i28.FakeFilePickerPlatform {
   @override
-  _i16.Future<_i28.FilePickerResult?> pickFiles({
+  _i16.Future<_i29.FilePickerResult?> pickFiles({
     String? dialogTitle,
     String? initialDirectory,
-    _i28.FileType? type = _i28.FileType.any,
+    _i29.FileType? type = _i29.FileType.any,
     List<String>? allowedExtensions,
-    dynamic Function(_i28.FilePickerStatus)? onFileLoading,
+    dynamic Function(_i29.FilePickerStatus)? onFileLoading,
     bool? allowCompression = true,
     bool? allowMultiple = false,
     bool? withData = false,
@@ -4024,9 +4031,9 @@ class MockFilePickerPlatform extends _i1.Mock
             #lockParentWindow: lockParentWindow,
           },
         ),
-        returnValue: _i16.Future<_i28.FilePickerResult?>.value(),
-        returnValueForMissingStub: _i16.Future<_i28.FilePickerResult?>.value(),
-      ) as _i16.Future<_i28.FilePickerResult?>);
+        returnValue: _i16.Future<_i29.FilePickerResult?>.value(),
+        returnValueForMissingStub: _i16.Future<_i29.FilePickerResult?>.value(),
+      ) as _i16.Future<_i29.FilePickerResult?>);
   @override
   _i16.Future<bool?> clearTemporaryFiles() => (super.noSuchMethod(
         Invocation.method(
@@ -4060,7 +4067,7 @@ class MockFilePickerPlatform extends _i1.Mock
     String? dialogTitle,
     String? fileName,
     String? initialDirectory,
-    _i28.FileType? type = _i28.FileType.any,
+    _i29.FileType? type = _i29.FileType.any,
     List<String>? allowedExtensions,
     bool? lockParentWindow = false,
   }) =>

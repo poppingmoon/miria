@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:miria/model/account.dart';
+import 'package:miria/model/acct.dart';
 import 'package:miria/model/converters/icon_converter.dart';
 import 'package:miria/model/tab_icon.dart';
 import 'package:miria/model/tab_type.dart';
@@ -7,9 +7,20 @@ import 'package:miria/model/tab_type.dart';
 part 'tab_setting.freezed.dart';
 part 'tab_setting.g.dart';
 
+Map<String, dynamic> _readAcct(Map<dynamic, dynamic> json, String key) {
+  final account = json["account"] as Map<String, dynamic>?;
+  if (account != null) {
+    return {
+      "host": account["host"],
+      "username": account["userId"],
+    };
+  }
+  return json[key]! as Map<String, dynamic>;
+}
+
 @freezed
 class TabSetting with _$TabSetting {
-  const factory TabSetting({
+  factory TabSetting({
     @IconDataConverter() required TabIcon icon,
 
     /// タブ種別
@@ -34,7 +45,9 @@ class TabSetting with _$TabSetting {
     required String name,
 
     /// アカウント情報
-    required Account account,
+    // https://github.com/rrousselGit/freezed/issues/488
+    // ignore: invalid_annotation_target
+    @JsonKey(readValue: _readAcct) required Acct acct,
 
     /// Renoteを表示するかどうか
     @Default(true) bool renoteDisplay,
@@ -42,7 +55,7 @@ class TabSetting with _$TabSetting {
     /// ファイル付きのノートのみを表示するかどうか
     @Default(false) bool withFiles,
   }) = _TabSetting;
-  const TabSetting._();
+  TabSetting._();
 
   factory TabSetting.fromJson(Map<String, Object?> json) =>
       _$TabSettingFromJson(json);

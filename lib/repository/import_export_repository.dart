@@ -50,10 +50,13 @@ class ImportExportRepository extends ChangeNotifier {
     if (!context.mounted) return;
     if (alreadyExists.isEmpty) {
       alreadyExists = await reader(misskeyProvider(account)).drive.files.find(
-          DriveFilesFindRequest(
-              name: "miria.json.unknown", folderId: folder?.id,),);
+            DriveFilesFindRequest(
+              name: "miria.json.unknown",
+              folderId: folder?.id,
+            ),
+          );
 
-    if (!context.mounted) return;
+      if (!context.mounted) return;
       if (alreadyExists.isEmpty) {
         await SimpleMessageDialog.show(context, "ここにMiriaの設定ファイルあれへんかったわ");
         return;
@@ -79,11 +82,7 @@ class ImportExportRepository extends ChangeNotifier {
     final accounts = reader(accountRepositoryProvider);
     for (final accountSetting in importedAccountSettings) {
       // この端末でログイン済みのアカウントであれば
-      if (accounts.any(
-        (element) =>
-            element.host == accountSetting.host &&
-            element.userId == accountSetting.userId,
-      )) {
+      if (accounts.any((account) => account.acct == accountSetting.acct)) {
         reader(accountSettingsRepositoryProvider).save(accountSetting);
       }
     }
@@ -94,29 +93,17 @@ class ImportExportRepository extends ChangeNotifier {
     // タブ設定
     final tabSettings = <TabSetting>[];
 
-    for (final e in json["tabSettings"] as List) {
-      final tabSetting = e as Map<String, dynamic>;
-      final account = accounts.firstWhereOrNull(
-        (element) {
-          final account = tabSetting["account"] as Map<String, dynamic>;
-          return account["host"] == element.host &&
-              account["userId"] == element.userId;
-        },
-      );
+    for (final jsonTabSetting in json["tabSettings"] as Iterable) {
+      final tabSetting =
+          TabSetting.fromJson(jsonTabSetting as Map<String, dynamic>);
+      final account = accounts
+          .firstWhereOrNull((account) => tabSetting.acct == account.acct);
 
       if (account == null) {
         continue;
       }
 
-      // Unhandled Exception: type 'EqualUnmodifiableMapView<dynamic, dynamic>' is not a subtype of type 'Map<String, dynamic>?' in type cast
-      // freezedがわるさしてそう
-      tabSetting
-        ..remove("account")
-        ..addEntries(
-          [MapEntry("account", jsonDecode(jsonEncode(account.toJson())))],
-        );
-
-      tabSettings.add(TabSetting.fromJson(tabSetting));
+      tabSettings.add(tabSetting);
     }
     reader(tabSettingsRepositoryProvider).save(tabSettings);
 
@@ -174,14 +161,6 @@ class ImportExportRepository extends ChangeNotifier {
       accountSettings:
           reader(accountSettingsRepositoryProvider).accountSettings.toList(),
     ).toJson();
-
-    // 外に漏れると困るので
-    for (final element in data["tabSettings"] as List) {
-      // ignore: avoid_dynamic_calls
-      element["account"]
-        ..remove("token")
-        ..remove("i");
-    }
 
     await reader(misskeyProvider(account)).drive.files.createAsBinary(
           DriveFilesCreateRequest(

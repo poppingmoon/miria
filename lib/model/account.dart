@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:miria/model/acct.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 part 'account.freezed.dart';
@@ -28,8 +29,11 @@ class Account with _$Account {
   @override
   int get hashCode => Object.hash(runtimeType, host, userId);
 
-  String get acct {
-    return "@$userId@$host";
+  Acct get acct {
+    return Acct(
+      host: host,
+      username: userId,
+    );
   }
 
   factory Account.demoAccount(String host) => Account(

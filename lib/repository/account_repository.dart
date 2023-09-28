@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:miria/model/account.dart';
+import 'package:miria/model/acct.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:misskey_dart/misskey_dart.dart';
@@ -14,7 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 class AccountRepository extends Notifier<List<Account>> {
-  final _validatedAccts = <String>{};
+  final _validatedAccts = <Acct>{};
   String _sessionId = "";
 
   @override
@@ -69,7 +70,6 @@ class AccountRepository extends Notifier<List<Account>> {
               (index == accountIndex) ? element.copyWith(i: i) : element,
         )
         .toList();
-    ref.read(tabSettingsRepositoryProvider).updateAccount(account, i);
   }
 
   Future<void> removeUnreadAnnouncement(Account account) async {
@@ -84,7 +84,6 @@ class AccountRepository extends Notifier<List<Account>> {
               (index == accountIndex) ? element.copyWith(i: i) : element,
         )
         .toList();
-    ref.read(tabSettingsRepositoryProvider).updateAccount(account, i);
   }
 
   Future<void> remove(Account account) async {

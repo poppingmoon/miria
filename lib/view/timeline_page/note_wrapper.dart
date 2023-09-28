@@ -37,8 +37,9 @@ final _subscribeNoteProvider =
     timelineRepository.preserveUnsubscribe(note);
   });
 
+  final account = ref.read(accountProvider(tabSetting.acct));
   return ref.watch(
-    notesProvider(tabSetting.account).select(
+    notesProvider(account).select(
       (noteRepository) => noteRepository.notes[note.id],
     ),
   );

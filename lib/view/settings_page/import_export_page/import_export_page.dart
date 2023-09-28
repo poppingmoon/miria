@@ -45,7 +45,7 @@ class ImportExportPageState extends ConsumerState<ImportExportPage> {
                       for (final account in accounts)
                         DropdownMenuItem(
                           value: account,
-                          child: Text(account.acct),
+                          child: Text(account.acct.toString()),
                         ),
                     ],
                     value: selectedImportAccount,
@@ -89,7 +89,7 @@ class ImportExportPageState extends ConsumerState<ImportExportPage> {
                       for (final account in accounts)
                         DropdownMenuItem(
                           value: account,
-                          child: Text(account.acct),
+                          child: Text(account.acct.toString()),
                         ),
                     ],
                     value: selectedExportAccount,

@@ -16,7 +16,7 @@ _$_TabSetting _$$_TabSettingFromJson(Map<String, dynamic> json) =>
       antennaId: json['antennaId'] as String?,
       isSubscribe: json['isSubscribe'] as bool? ?? true,
       name: json['name'] as String,
-      account: Account.fromJson(json['account'] as Map<String, dynamic>),
+      acct: Acct.fromJson(_readAcct(json, 'acct') as Map<String, dynamic>),
       renoteDisplay: json['renoteDisplay'] as bool? ?? true,
       withFiles: json['withFiles'] as bool? ?? false,
     );
@@ -31,7 +31,7 @@ Map<String, dynamic> _$$_TabSettingToJson(_$_TabSetting instance) =>
       'antennaId': instance.antennaId,
       'isSubscribe': instance.isSubscribe,
       'name': instance.name,
-      'account': instance.account.toJson(),
+      'acct': instance.acct.toJson(),
       'renoteDisplay': instance.renoteDisplay,
       'withFiles': instance.withFiles,
     };

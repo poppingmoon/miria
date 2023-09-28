@@ -4,6 +4,7 @@ import 'dart:collection';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/extensions/note_extension.dart';
+import 'package:miria/model/account.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/model/tab_type.dart';
 import 'package:miria/model/timeline_state.dart';
@@ -36,6 +37,10 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
 
   TabSetting get _tabSetting => arg;
 
+  Account get _account => ref.read(accountProvider(_tabSetting.acct));
+
+  Misskey get _misskey => ref.read(misskeyProvider(_account));
+
   SocketController _createSocketController({
     required void Function(Note note) onNoteReceived,
     required FutureOr<void> Function(String id, TimelineReacted reaction)
@@ -44,57 +49,55 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
         onUnreacted,
     required FutureOr<void> Function(String id, TimelineVoted vote) onVoted,
   }) {
-    final misskey = ref.read(misskeyProvider(_tabSetting.account));
-
     return switch (_tabSetting.tabType) {
-      TabType.localTimeline => misskey.localTimelineStream(
+      TabType.localTimeline => _misskey.localTimelineStream(
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
           withFiles: _tabSetting.withFiles,
         ),
-      TabType.homeTimeline => misskey.homeTimelineStream(
+      TabType.homeTimeline => _misskey.homeTimelineStream(
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
           withFiles: _tabSetting.withFiles,
         ),
-      TabType.globalTimeline => misskey.globalTimelineStream(
+      TabType.globalTimeline => _misskey.globalTimelineStream(
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
           withFiles: _tabSetting.withFiles,
         ),
-      TabType.hybridTimeline => misskey.hybridTimelineStream(
+      TabType.hybridTimeline => _misskey.hybridTimelineStream(
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
           withFiles: _tabSetting.withFiles,
         ),
-      TabType.roleTimeline => misskey.roleTimelineStream(
+      TabType.roleTimeline => _misskey.roleTimelineStream(
           roleId: _tabSetting.roleId!,
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onVoted: onVoted,
         ),
-      TabType.channel => misskey.channelStream(
+      TabType.channel => _misskey.channelStream(
           channelId: _tabSetting.channelId!,
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onVoted: onVoted,
         ),
-      TabType.userList => misskey.userListStream(
+      TabType.userList => _misskey.userListStream(
           listId: _tabSetting.listId!,
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
         ),
-      TabType.antenna => misskey.antennaStream(
+      TabType.antenna => _misskey.antennaStream(
           antennaId: _tabSetting.antennaId!,
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
@@ -108,52 +111,50 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     int? limit,
     String? untilId,
   }) {
-    final misskey = ref.read(misskeyProvider(_tabSetting.account));
-
     return switch (_tabSetting.tabType) {
-      TabType.localTimeline => misskey.notes.localTimeline(
+      TabType.localTimeline => _misskey.notes.localTimeline(
           NotesLocalTimelineRequest(
             limit: limit,
             untilId: untilId,
             withFiles: _tabSetting.withFiles,
           ),
         ),
-      TabType.homeTimeline => misskey.notes.homeTimeline(
+      TabType.homeTimeline => _misskey.notes.homeTimeline(
           NotesTimelineRequest(
             limit: limit ?? 30,
             untilId: untilId,
             withFiles: _tabSetting.withFiles,
           ),
         ),
-      TabType.globalTimeline => misskey.notes.globalTimeline(
+      TabType.globalTimeline => _misskey.notes.globalTimeline(
           NotesGlobalTimelineRequest(
             limit: limit,
             untilId: untilId,
             withFiles: _tabSetting.withFiles,
           ),
         ),
-      TabType.hybridTimeline => misskey.notes.hybridTimeline(
+      TabType.hybridTimeline => _misskey.notes.hybridTimeline(
           NotesHybridTimelineRequest(
             limit: limit,
             untilId: untilId,
             withFiles: _tabSetting.withFiles,
           ),
         ),
-      TabType.roleTimeline => misskey.roles.notes(
+      TabType.roleTimeline => _misskey.roles.notes(
           RolesNotesRequest(
             roleId: _tabSetting.roleId!,
             limit: limit,
             untilId: untilId,
           ),
         ),
-      TabType.channel => misskey.channels.timeline(
+      TabType.channel => _misskey.channels.timeline(
           ChannelsTimelineRequest(
             channelId: _tabSetting.channelId!,
             limit: limit,
             untilId: untilId,
           ),
         ),
-      TabType.userList => misskey.notes.userListTimeline(
+      TabType.userList => _misskey.notes.userListTimeline(
           UserListTimelineRequest(
             listId: _tabSetting.listId!,
             limit: limit,
@@ -161,7 +162,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
             withFiles: _tabSetting.withFiles,
           ),
         ),
-      TabType.antenna => misskey.antennas.notes(
+      TabType.antenna => _misskey.antennas.notes(
           AntennasNotesRequest(
             antennaId: _tabSetting.antennaId!,
             limit: limit,
@@ -182,16 +183,15 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
       error: null,
     );
 
-    final account = _tabSetting.account;
-    final noteRepository = ref.read(notesProvider(account));
+    final noteRepository = ref.read(notesProvider(_account));
 
     try {
       await Future.wait([
-        ref.read(mainStreamRepositoryProvider(account)).reconnect(),
-        ref.read(emojiRepositoryProvider(account)).loadFromSourceIfNeed(),
+        ref.read(mainStreamRepositoryProvider(_account)).reconnect(),
+        ref.read(emojiRepositoryProvider(_account)).loadFromSourceIfNeed(),
         ref
             .read(accountRepositoryProvider.notifier)
-            .loadFromSourceIfNeed(account),
+            .loadFromSourceIfNeed(_account),
         if (state.olderNotes.isEmpty)
           downDirectionLoad()
         else
@@ -219,7 +219,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
             registeredNote.copyWith(
               reactions: reactions,
               reactionEmojis: reactionEmojis,
-              myReaction: reaction.userId == account.i.id
+              myReaction: reaction.userId == _account.i.id
                   ? emoji?.name
                   : registeredNote.myReaction,
             ),
@@ -244,7 +244,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
             registeredNote.copyWith(
               reactions: reactions,
               // https://github.com/rrousselGit/freezed/issues/906
-              myReaction: reaction.userId == account.i.id
+              myReaction: reaction.userId == _account.i.id
                   ? ""
                   : registeredNote.myReaction,
             ),
@@ -266,7 +266,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     state = state.copyWith(isDownDirectionLoading: true);
     try {
       final notes = await _requestNotes(untilId: state.oldestNote?.id);
-      ref.read(notesProvider(_tabSetting.account)).registerAll(notes);
+      ref.read(notesProvider(_account)).registerAll(notes);
       state = state.copyWith(
         olderNotes: [...state.olderNotes, ...notes],
         isLastLoaded: notes.isEmpty,
@@ -284,7 +284,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
       return;
     }
 
-    ref.read(notesProvider(_tabSetting.account)).registerAll(notes);
+    ref.read(notesProvider(_account)).registerAll(notes);
 
     if (state.olderNotes.isEmpty ||
         state.olderNotes.first.createdAt < notes.last.createdAt) {

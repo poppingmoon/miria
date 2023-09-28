@@ -92,7 +92,7 @@ class TabSettingsListPage extends ConsumerWidget {
   }
 }
 
-class TabSettingsListItem extends StatelessWidget {
+class TabSettingsListItem extends ConsumerWidget {
   const TabSettingsListItem({
     super.key,
     required this.tabSetting,
@@ -103,15 +103,16 @@ class TabSettingsListItem extends StatelessWidget {
   final int index;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final account = ref.watch(accountProvider(tabSetting.acct));
     return ListTile(
       leading: AccountScope(
-        account: tabSetting.account,
+        account: account,
         child: TabIconView(icon: tabSetting.icon),
       ),
       title: Text(tabSetting.name),
       subtitle: Text(
-        "${tabSetting.tabType.displayName} / @${tabSetting.account.userId}@${tabSetting.account.host} ",
+        "${tabSetting.tabType.displayName} / ${tabSetting.acct}",
       ),
       trailing: const Icon(Icons.drag_handle),
       onTap: () => context.pushRoute(TabSettingsRoute(tabIndex: index)),

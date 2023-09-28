@@ -33,7 +33,7 @@ class CommonDrawer extends ConsumerWidget {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   subtitle: Text(
-                    account.acct,
+                    account.acct.toString(),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   children: [

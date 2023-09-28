@@ -32,6 +32,7 @@ class TimelineAppBar extends ConsumerWidget {
       tabSettingsRepositoryProvider.select((repo) => repo.tabSettings.toList()),
     );
     final page = ref.watch(timelinePageControllerProvider);
+    final account = ref.watch(accountProvider(page.tabSetting.acct));
 
     return AppBar(
       title: SingleChildScrollView(
@@ -42,13 +43,14 @@ class TimelineAppBar extends ConsumerWidget {
                 (index, tabSetting) => Builder(
                   builder: (context) {
                     final isCurrentTab = tabSetting == page.tabSetting;
+                    final account = ref.watch(accountProvider(tabSetting.acct));
 
                     return Ink(
                       color: isCurrentTab
                           ? AppTheme.of(context).currentDisplayTabColor
                           : Colors.transparent,
                       child: AccountScope(
-                        account: tabSetting.account,
+                        account: account,
                         child: IconButton(
                           icon: TabIconView(
                             icon: tabSetting.icon,
@@ -72,7 +74,7 @@ class TimelineAppBar extends ConsumerWidget {
       ),
       actions: [
         AccountScope(
-          account: page.tabSetting.account,
+          account: account,
           child: const NotificationIcon(),
         ),
       ],
@@ -91,6 +93,7 @@ class TabHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final account = ref.watch(accountProvider(tabSetting.acct));
     final isLoading = ref.watch(
       timelineRepositoryProvider(tabSetting)
           .select((timeline) => timeline.isLoading),
@@ -121,7 +124,7 @@ class TabHeader extends ConsumerWidget {
                   context: context,
                   builder: (context) => ChannelDialog(
                     channelId: tabSetting.channelId ?? "",
-                    account: tabSetting.account,
+                    account: account,
                   ),
                 );
               },
@@ -133,7 +136,7 @@ class TabHeader extends ConsumerWidget {
               onPressed: () {
                 context.pushRoute(
                   UsersListDetailRoute(
-                    account: tabSetting.account,
+                    account: account,
                     listId: tabSetting.listId!,
                   ),
                 );
@@ -151,7 +154,7 @@ class TabHeader extends ConsumerWidget {
                 showDialog<void>(
                   context: context,
                   builder: (context) => ServerDetailDialog(
-                    account: tabSetting.account,
+                    account: account,
                   ),
                 );
               },
@@ -193,6 +196,7 @@ class TimelinePage extends ConsumerWidget {
         (repo) => repo.settings.tabPosition,
       ),
     );
+    final account = ref.watch(accountProvider(page.tabSetting.acct));
 
     return Scaffold(
       key: scaffoldKey,
@@ -209,8 +213,9 @@ class TimelinePage extends ConsumerWidget {
                 onPageChanged: (index) => controller.changePage(index),
                 itemBuilder: (_, index) {
                   final tabSetting = tabSettings[index];
+                  final account = ref.watch(accountProvider(tabSetting.acct));
                   return AccountScope(
-                    account: tabSetting.account,
+                    account: account,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -258,7 +263,7 @@ class TimelinePage extends ConsumerWidget {
       ),
       resizeToAvoidBottomInset: true,
       drawer: CommonDrawer(
-        initialOpenAccount: page.tabSetting.account,
+        initialOpenAccount: account,
       ),
     );
   }
@@ -272,19 +277,13 @@ class BannerArea extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bannerAnnouncement = ref.watch(
-      accountRepositoryProvider.select((accounts) {
-        return accounts
-            .firstWhereOrNull(
-              (element) => element.acct == tabSetting.account.acct,
-            )
-            ?.i
-            .unreadAnnouncements;
-      }),
+      accountProvider(tabSetting.acct)
+          .select((account) => account.i.unreadAnnouncements),
     );
 
     // ダイアログの実装が大変なので（状態管理とか）いったんバナーと一緒に扱う
     final bannerData = bannerAnnouncement
-        ?.where(
+        .where(
           (element) =>
               element.display == AnnouncementDisplayType.banner ||
               element.display == AnnouncementDisplayType.dialog,
@@ -321,25 +320,15 @@ class AnnoucementInfo extends ConsumerWidget {
   const AnnoucementInfo({super.key, required this.tabSetting});
 
   void announcementsRoute(BuildContext context, WidgetRef ref) {
-    final account = ref
-        .read(accountRepositoryProvider)
-        .firstWhereOrNull((element) => element.acct == tabSetting.account.acct);
-    if (account == null) return;
+    final account = ref.read(accountProvider(tabSetting.acct));
     context.pushRoute(AnnouncementRoute(account: account));
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasUnread = ref.watch(
-      accountRepositoryProvider.select((accounts) {
-        return accounts
-            .firstWhereOrNull(
-              (element) => element.acct == tabSetting.account.acct,
-            )
-            ?.i
-            .unreadAnnouncements
-            .isNotEmpty;
-      }),
+      accountProvider(tabSetting.acct)
+          .select((account) => account.i.unreadAnnouncements.isNotEmpty),
     );
     if (hasUnread == true) {
       return IconButton(

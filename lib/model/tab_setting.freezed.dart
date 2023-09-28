@@ -45,7 +45,10 @@ mixin _$TabSetting {
   String get name => throw _privateConstructorUsedError;
 
   /// アカウント情報
-  Account get account => throw _privateConstructorUsedError;
+// https://github.com/rrousselGit/freezed/issues/488
+// ignore: invalid_annotation_target
+  @JsonKey(readValue: _readAcct)
+  Acct get acct => throw _privateConstructorUsedError;
 
   /// Renoteを表示するかどうか
   bool get renoteDisplay => throw _privateConstructorUsedError;
@@ -74,12 +77,12 @@ abstract class $TabSettingCopyWith<$Res> {
       String? antennaId,
       bool isSubscribe,
       String name,
-      Account account,
+      @JsonKey(readValue: _readAcct) Acct acct,
       bool renoteDisplay,
       bool withFiles});
 
   $TabIconCopyWith<$Res> get icon;
-  $AccountCopyWith<$Res> get account;
+  $AcctCopyWith<$Res> get acct;
 }
 
 /// @nodoc
@@ -103,7 +106,7 @@ class _$TabSettingCopyWithImpl<$Res, $Val extends TabSetting>
     Object? antennaId = freezed,
     Object? isSubscribe = null,
     Object? name = null,
-    Object? account = null,
+    Object? acct = null,
     Object? renoteDisplay = null,
     Object? withFiles = null,
   }) {
@@ -140,10 +143,10 @@ class _$TabSettingCopyWithImpl<$Res, $Val extends TabSetting>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      account: null == account
-          ? _value.account
-          : account // ignore: cast_nullable_to_non_nullable
-              as Account,
+      acct: null == acct
+          ? _value.acct
+          : acct // ignore: cast_nullable_to_non_nullable
+              as Acct,
       renoteDisplay: null == renoteDisplay
           ? _value.renoteDisplay
           : renoteDisplay // ignore: cast_nullable_to_non_nullable
@@ -165,9 +168,9 @@ class _$TabSettingCopyWithImpl<$Res, $Val extends TabSetting>
 
   @override
   @pragma('vm:prefer-inline')
-  $AccountCopyWith<$Res> get account {
-    return $AccountCopyWith<$Res>(_value.account, (value) {
-      return _then(_value.copyWith(account: value) as $Val);
+  $AcctCopyWith<$Res> get acct {
+    return $AcctCopyWith<$Res>(_value.acct, (value) {
+      return _then(_value.copyWith(acct: value) as $Val);
     });
   }
 }
@@ -189,14 +192,14 @@ abstract class _$$_TabSettingCopyWith<$Res>
       String? antennaId,
       bool isSubscribe,
       String name,
-      Account account,
+      @JsonKey(readValue: _readAcct) Acct acct,
       bool renoteDisplay,
       bool withFiles});
 
   @override
   $TabIconCopyWith<$Res> get icon;
   @override
-  $AccountCopyWith<$Res> get account;
+  $AcctCopyWith<$Res> get acct;
 }
 
 /// @nodoc
@@ -218,7 +221,7 @@ class __$$_TabSettingCopyWithImpl<$Res>
     Object? antennaId = freezed,
     Object? isSubscribe = null,
     Object? name = null,
-    Object? account = null,
+    Object? acct = null,
     Object? renoteDisplay = null,
     Object? withFiles = null,
   }) {
@@ -255,10 +258,10 @@ class __$$_TabSettingCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      account: null == account
-          ? _value.account
-          : account // ignore: cast_nullable_to_non_nullable
-              as Account,
+      acct: null == acct
+          ? _value.acct
+          : acct // ignore: cast_nullable_to_non_nullable
+              as Acct,
       renoteDisplay: null == renoteDisplay
           ? _value.renoteDisplay
           : renoteDisplay // ignore: cast_nullable_to_non_nullable
@@ -274,7 +277,7 @@ class __$$_TabSettingCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_TabSetting extends _TabSetting {
-  const _$_TabSetting(
+  _$_TabSetting(
       {@IconDataConverter() required this.icon,
       required this.tabType,
       this.roleId,
@@ -283,7 +286,7 @@ class _$_TabSetting extends _TabSetting {
       this.antennaId,
       this.isSubscribe = true,
       required this.name,
-      required this.account,
+      @JsonKey(readValue: _readAcct) required this.acct,
       this.renoteDisplay = true,
       this.withFiles = false})
       : super._();
@@ -325,8 +328,11 @@ class _$_TabSetting extends _TabSetting {
   final String name;
 
   /// アカウント情報
+// https://github.com/rrousselGit/freezed/issues/488
+// ignore: invalid_annotation_target
   @override
-  final Account account;
+  @JsonKey(readValue: _readAcct)
+  final Acct acct;
 
   /// Renoteを表示するかどうか
   @override
@@ -340,7 +346,7 @@ class _$_TabSetting extends _TabSetting {
 
   @override
   String toString() {
-    return 'TabSetting(icon: $icon, tabType: $tabType, roleId: $roleId, channelId: $channelId, listId: $listId, antennaId: $antennaId, isSubscribe: $isSubscribe, name: $name, account: $account, renoteDisplay: $renoteDisplay, withFiles: $withFiles)';
+    return 'TabSetting(icon: $icon, tabType: $tabType, roleId: $roleId, channelId: $channelId, listId: $listId, antennaId: $antennaId, isSubscribe: $isSubscribe, name: $name, acct: $acct, renoteDisplay: $renoteDisplay, withFiles: $withFiles)';
   }
 
   @override
@@ -359,7 +365,7 @@ class _$_TabSetting extends _TabSetting {
             (identical(other.isSubscribe, isSubscribe) ||
                 other.isSubscribe == isSubscribe) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.account, account) || other.account == account) &&
+            (identical(other.acct, acct) || other.acct == acct) &&
             (identical(other.renoteDisplay, renoteDisplay) ||
                 other.renoteDisplay == renoteDisplay) &&
             (identical(other.withFiles, withFiles) ||
@@ -369,7 +375,7 @@ class _$_TabSetting extends _TabSetting {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, icon, tabType, roleId, channelId,
-      listId, antennaId, isSubscribe, name, account, renoteDisplay, withFiles);
+      listId, antennaId, isSubscribe, name, acct, renoteDisplay, withFiles);
 
   @JsonKey(ignore: true)
   @override
@@ -386,7 +392,7 @@ class _$_TabSetting extends _TabSetting {
 }
 
 abstract class _TabSetting extends TabSetting {
-  const factory _TabSetting(
+  factory _TabSetting(
       {@IconDataConverter() required final TabIcon icon,
       required final TabType tabType,
       final String? roleId,
@@ -395,10 +401,10 @@ abstract class _TabSetting extends TabSetting {
       final String? antennaId,
       final bool isSubscribe,
       required final String name,
-      required final Account account,
+      @JsonKey(readValue: _readAcct) required final Acct acct,
       final bool renoteDisplay,
       final bool withFiles}) = _$_TabSetting;
-  const _TabSetting._() : super._();
+  _TabSetting._() : super._();
 
   factory _TabSetting.fromJson(Map<String, dynamic> json) =
       _$_TabSetting.fromJson;
@@ -437,7 +443,10 @@ abstract class _TabSetting extends TabSetting {
   @override
 
   /// アカウント情報
-  Account get account;
+// https://github.com/rrousselGit/freezed/issues/488
+// ignore: invalid_annotation_target
+  @JsonKey(readValue: _readAcct)
+  Acct get acct;
   @override
 
   /// Renoteを表示するかどうか

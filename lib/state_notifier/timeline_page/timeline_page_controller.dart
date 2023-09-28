@@ -48,11 +48,12 @@ class TimelinePageController extends AutoDisposeNotifier<TimelinePageState> {
     try {
       final accountSettings = ref
           .read(accountSettingsRepositoryProvider)
-          .fromAccount(state.tabSetting.account);
+          .fromAcct(state.tabSetting.acct);
       ref.read(timelineNoteProvider).clear();
       FocusManager.instance.primaryFocus?.unfocus();
 
-      await ref.read(misskeyProvider(state.tabSetting.account)).notes.create(
+      final account = ref.read(accountProvider(state.tabSetting.acct));
+      await ref.read(misskeyProvider(account)).notes.create(
             NotesCreateRequest(
               text: text,
               channelId: state.tabSetting.channelId,
@@ -94,7 +95,7 @@ class TimelinePageController extends AutoDisposeNotifier<TimelinePageState> {
       NoteCreateRoute(
         channel: channel,
         initialText: sendText,
-        initialAccount: state.tabSetting.account,
+        initialAccount: ref.read(accountProvider(state.tabSetting.acct)),
       ),
     );
   }

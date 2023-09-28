@@ -29,7 +29,7 @@ class TabSettingsPage extends ConsumerStatefulWidget {
 }
 
 class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
-  late Account? selectedAccount = ref.read(accountRepositoryProvider).first;
+  late Account selectedAccount = ref.read(accountRepositoryProvider).first;
   TabType? selectedTabType = TabType.localTimeline;
   RolesListResponse? selectedRole;
   CommunityChannel? selectedChannel;
@@ -49,7 +49,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
     if (tab != null) {
       final tabSetting =
           ref.read(tabSettingsRepositoryProvider).tabSettings.toList()[tab];
-      selectedAccount = tabSetting.account;
+      selectedAccount = ref.read(accountProvider(tabSetting.acct));
       selectedTabType = tabSetting.tabType;
       final roleId = tabSetting.roleId;
       final channelId = tabSetting.channelId;
@@ -63,7 +63,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
       if (roleId != null) {
         Future(() async {
           selectedRole = await ref
-              .read(misskeyProvider(tabSetting.account))
+              .read(misskeyProvider(selectedAccount))
               .roles
               .show(RolesShowRequest(roleId: roleId));
           setState(() {});
@@ -72,7 +72,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
       if (channelId != null) {
         Future(() async {
           selectedChannel = await ref
-              .read(misskeyProvider(tabSetting.account))
+              .read(misskeyProvider(selectedAccount))
               .channels
               .show(ChannelsShowRequest(channelId: channelId));
           if (!mounted) return;
@@ -82,7 +82,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
       if (listId != null) {
         Future(() async {
           final response = await ref
-              .read(misskeyProvider(tabSetting.account))
+              .read(misskeyProvider(selectedAccount))
               .users
               .list
               .show(UsersListsShowRequest(listId: listId));
@@ -94,7 +94,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
       if (antennaId != null) {
         Future(() async {
           selectedAntenna = await ref
-              .read(misskeyProvider(tabSetting.account))
+              .read(misskeyProvider(selectedAccount))
               .antennas
               .show(AntennasShowRequest(antennaId: antennaId));
           if (!mounted) return;
@@ -147,10 +147,13 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                   for (final account in accounts)
                     DropdownMenuItem(
                       value: account,
-                      child: Text(account.acct),
+                      child: Text(account.acct.toString()),
                     ),
                 ],
                 onChanged: (value) {
+                  if (value == null) {
+                    return;
+                  }
                   setState(() {
                     selectedAccount = value;
                     selectedAntenna = null;
@@ -188,13 +191,10 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                     Expanded(child: Text(selectedRole?.name ?? "")),
                     IconButton(
                       onPressed: () async {
-                        final selected = selectedAccount;
-                        if (selected == null) return;
-
                         selectedRole = await showDialog<RolesListResponse>(
                           context: context,
                           builder: (context) =>
-                              RoleSelectDialog(account: selected),
+                              RoleSelectDialog(account: selectedAccount),
                         );
                         setState(() {
                           nameController.text =
@@ -213,13 +213,10 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                     Expanded(child: Text(selectedChannel?.name ?? "")),
                     IconButton(
                       onPressed: () async {
-                        final selected = selectedAccount;
-                        if (selected == null) return;
-
                         selectedChannel = await showDialog<CommunityChannel>(
                           context: context,
                           builder: (context) =>
-                              ChannelSelectDialog(account: selected),
+                              ChannelSelectDialog(account: selectedAccount),
                         );
                         setState(() {
                           nameController.text =
@@ -238,13 +235,10 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                     Expanded(child: Text(selectedUserList?.name ?? "")),
                     IconButton(
                       onPressed: () async {
-                        final selected = selectedAccount;
-                        if (selected == null) return;
-
                         selectedUserList = await showDialog<UsersList>(
                           context: context,
                           builder: (context) =>
-                              UserListSelectDialog(account: selected),
+                              UserListSelectDialog(account: selectedAccount),
                         );
                         setState(() {
                           nameController.text =
@@ -263,13 +257,10 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                     Expanded(child: Text(selectedAntenna?.name ?? "")),
                     IconButton(
                       onPressed: () async {
-                        final selected = selectedAccount;
-                        if (selected == null) return;
-
                         selectedAntenna = await showDialog<Antenna>(
                           context: context,
                           builder: (context) =>
-                              AntennaSelectDialog(account: selected),
+                              AntennaSelectDialog(account: selectedAccount),
                         );
                         setState(() {
                           nameController.text =
@@ -292,26 +283,23 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
               Row(
                 children: [
                   Expanded(
-                    child: selectedAccount == null
-                        ? Container()
-                        : AccountScope(
-                            account: selectedAccount!,
-                            child: SizedBox(
-                              height: 32,
-                              child: TabIconView(
-                                icon: selectedIcon,
-                                size: IconTheme.of(context).size,
-                              ),
-                            ),
-                          ),
+                    child: AccountScope(
+                      account: selectedAccount,
+                      child: SizedBox(
+                        height: 32,
+                        child: TabIconView(
+                          icon: selectedIcon,
+                          size: IconTheme.of(context).size,
+                        ),
+                      ),
+                    ),
                   ),
                   IconButton(
                     onPressed: () async {
-                      if (selectedAccount == null) return;
                       selectedIcon = await showDialog<TabIcon>(
                         context: context,
                         builder: (context) => IconSelectDialog(
-                          account: selectedAccount!,
+                          account: selectedAccount,
                         ),
                       );
                       setState(() {});
@@ -347,12 +335,6 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
-                    final account = selectedAccount;
-                    if (account == null) {
-                      SimpleMessageDialog.show(context, "アカウントを選択してください。");
-                      return;
-                    }
-
                     final tabType = selectedTabType;
                     if (tabType == null) {
                       SimpleMessageDialog.show(context, "タブの種類を選択してください。");
@@ -389,7 +371,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                       icon: icon,
                       tabType: tabType,
                       name: nameController.text,
-                      account: account,
+                      acct: selectedAccount.acct,
                       roleId: selectedRole?.id,
                       channelId: selectedChannel?.id,
                       listId: selectedUserList?.id,
