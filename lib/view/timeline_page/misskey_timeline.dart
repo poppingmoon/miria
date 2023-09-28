@@ -7,20 +7,24 @@ import 'package:miria/view/common/error_detail.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/timeline_page/note_wrapper.dart';
 
+final _centerKeyProvider = Provider.autoDispose<UniqueKey>((ref) {
+  return UniqueKey();
+});
+
 class MisskeyTimeline extends ConsumerWidget {
-  MisskeyTimeline({super.key, required this.tabSetting});
+  const MisskeyTimeline({super.key, required this.tabSetting});
 
   final TabSetting tabSetting;
-  final centerKey = UniqueKey();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final timeline = ref.watch(timelineRepositoryProvider(tabSetting));
     final controller = ref.watch(timelineControllerProvider(tabSetting));
+    final centerKey = ref.watch(_centerKeyProvider);
 
     return Column(
       children: [
-        if (timeline.isLoading)
+        if (timeline.isLoading && timeline.isEmpty)
           const Padding(
             padding: EdgeInsets.only(top: 10),
             child: Center(child: CircularProgressIndicator()),

@@ -181,8 +181,6 @@ class TimelinePage extends ConsumerWidget {
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
-  void noteCreateRoute() {}
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tabSettings = ref.watch(
@@ -218,7 +216,12 @@ class TimelinePage extends ConsumerWidget {
                       children: [
                         BannerArea(tabSetting: tabSetting),
                         Expanded(
-                          child: MisskeyTimeline(tabSetting: tabSetting),
+                          child: RefreshIndicator(
+                            onRefresh: ref
+                                .read(timelinePageControllerProvider.notifier)
+                                .reconnect,
+                            child: MisskeyTimeline(tabSetting: tabSetting),
+                          ),
                         ),
                         const TimelineEmoji(),
                       ],
