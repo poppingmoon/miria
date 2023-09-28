@@ -20,7 +20,7 @@ class MisskeyTimeline extends ConsumerWidget {
 
     return Column(
       children: [
-        if (timeline.isLoading)
+        if (timeline.isLoading && timeline.isEmpty)
           const Padding(
             padding: EdgeInsets.only(top: 10),
             child: Center(child: CircularProgressIndicator()),

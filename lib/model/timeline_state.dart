@@ -30,4 +30,8 @@ class TimelineState with _$TimelineState {
   Note? get oldestNote {
     return olderNotes.lastOrNull ?? newerNotes.firstOrNull;
   }
+
+  bool get isEmpty {
+    return olderNotes.isEmpty && newerNotes.isEmpty;
+  }
 }
