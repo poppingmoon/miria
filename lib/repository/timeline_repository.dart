@@ -219,8 +219,9 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           noteRepository.registerNote(
             registeredNote.copyWith(
               reactions: reactions,
+              // https://github.com/rrousselGit/freezed/issues/906
               myReaction: reaction.userId == account.i.id
-                  ? null
+                  ? ""
                   : registeredNote.myReaction,
             ),
           );
