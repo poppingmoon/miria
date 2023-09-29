@@ -59,7 +59,7 @@ class NoteWrapper extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final satisfied = ref.watch(_noteFilterProvider((targetNote, tabSetting)));
     if (!satisfied) {
-      return Container();
+      return const SizedBox.shrink();
     }
 
     final note = ref.watch(

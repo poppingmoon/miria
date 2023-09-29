@@ -85,7 +85,7 @@ class TimelineButtomItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final timeline = ref.watch(timelineRepositoryProvider(tabSetting));
     if (timeline.isLastLoaded) {
-      return Container();
+      return const SizedBox.shrink();
     }
 
     if (timeline.isDownDirectionLoading) {
@@ -95,7 +95,7 @@ class TimelineButtomItem extends ConsumerWidget {
           child: Center(child: CircularProgressIndicator()),
         );
       } else {
-        return Container();
+        return const SizedBox.shrink();
       }
     }
 
