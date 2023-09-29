@@ -45,12 +45,9 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
       renoteDashPattern: [10.0, 6.0],
       currentDisplayTabColor:
           theme.isDarkTheme ? theme.primaryDarken : theme.primaryLighten,
-      voteColor1: theme.isDarkTheme
-          ? theme.primaryLighten.lighten()
-          : theme.primaryDarken.darken(),
-      voteColor2: theme.isDarkTheme
-          ? theme.primaryDarken.darken()
-          : theme.primaryLighten.lighten(),
+      voteColor1: theme.buttonGradateA,
+      voteColor2: theme.buttonGradateB,
+      voteColor3: theme.accentedBackground,
       unicodeEmojiStyle: resolveUnicodeEmojiStyle(),
     );
   }
