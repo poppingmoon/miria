@@ -38,7 +38,7 @@ class TimelinePageController extends AutoDisposeNotifier<TimelinePageState> {
   Future<void> reconnect() async {
     await ref
         .read(timelineRepositoryProvider(state.tabSetting).notifier)
-        .startTimeline();
+        .startTimeline(restart: true);
     forceScrollToTop();
   }
 

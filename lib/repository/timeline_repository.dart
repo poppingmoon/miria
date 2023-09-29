@@ -172,7 +172,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     };
   }
 
-  Future<void> startTimeline() async {
+  Future<void> startTimeline({bool restart = false}) async {
     if (state.isLoading) {
       return;
     }
@@ -186,17 +186,9 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     final noteRepository = ref.read(notesProvider(_account));
 
     try {
-      await Future.wait([
-        ref.read(mainStreamRepositoryProvider(_account)).reconnect(),
-        ref.read(emojiRepositoryProvider(_account)).loadFromSourceIfNeed(),
-        ref
-            .read(accountRepositoryProvider.notifier)
-            .loadFromSourceIfNeed(_account),
-        if (state.olderNotes.isEmpty)
-          downDirectionLoad()
-        else
-          _reloadLatestNotes(),
-      ]);
+      if (restart) {
+        _misskey.streamingService.close();
+      }
       _socketController = _createSocketController(
         onNoteReceived: (note) {
           noteRepository.registerNote(note);
@@ -254,6 +246,18 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           noteRepository.addVote(id, vote);
         },
       );
+      await Future.wait([
+        ref.read(mainStreamRepositoryProvider(_account)).reconnect(),
+        ref.read(emojiRepositoryProvider(_account)).loadFromSourceIfNeed(),
+        ref
+            .read(accountRepositoryProvider.notifier)
+            .loadFromSourceIfNeed(_account),
+        if (state.olderNotes.isEmpty)
+          downDirectionLoad()
+        else
+          _reloadLatestNotes(),
+      ]);
+      await _misskey.startStreaming();
     } catch (e, st) {
       state = state.copyWith(error: (e, st));
     } finally {
