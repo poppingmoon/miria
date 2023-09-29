@@ -59,6 +59,7 @@ dependencies:
   colorfilter_generator: ^0.0.8
   matrix2d: ^1.0.4
   twemoji_v2: ^0.5.3
+  any_link_preview: ^3.0.1
 
 dependency_overrides:
   image_editor:
