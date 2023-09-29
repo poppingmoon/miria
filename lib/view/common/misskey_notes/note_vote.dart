@@ -108,13 +108,13 @@ class NoteVoteState extends ConsumerState<NoteVote> {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.transparent),
                   borderRadius: BorderRadius.circular(5),
-                  color: isOpened ? null : AppTheme.of(context).voteColor2,
+                  color: isOpened ? null : AppTheme.of(context).voteColor3,
                   gradient: isOpened
                       ? LinearGradient(
                           colors: [
                             AppTheme.of(context).voteColor1,
-                            AppTheme.of(context).voteColor1,
                             AppTheme.of(context).voteColor2,
+                            AppTheme.of(context).voteColor3,
                           ],
                           stops: [
                             0,
