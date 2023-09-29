@@ -42,7 +42,7 @@ class TimelineController
         } else {
           // 要素が減っていたら一度クリアして追加しなおす
           _animatedList!.removeAllItems(
-            (_, __) => Container(),
+            (_, __) => const SizedBox.shrink(),
             duration: Duration.zero,
           );
           _animatedList!.insertAllItems(0, next, duration: Duration.zero);
