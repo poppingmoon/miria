@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:any_link_preview/any_link_preview.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -18,6 +19,7 @@ import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/avatar_icon.dart';
 import 'package:miria/view/common/constants.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
+import 'package:miria/view/common/misskey_notes/link_preview.dart';
 import 'package:miria/view/common/misskey_notes/local_only_icon.dart';
 import 'package:miria/view/common/misskey_notes/mfm_text.dart';
 import 'package:miria/view/common/misskey_notes/misskey_file_view.dart';
@@ -203,6 +205,24 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
     return (thisNodeCount, newLinesCount);
   }
 
+  List<String> extractLinks(List<parser.MfmNode> nodes) {
+    final links = <String>[];
+    for (final node in nodes) {
+      final children = node.children;
+      if (children != null) {
+        links.addAll(extractLinks(children));
+      }
+      if (node is parser.MfmURL) {
+        links.add(node.value);
+      } else if (node is parser.MfmLink) {
+        if (!node.silent) {
+          links.add(node.url);
+        }
+      }
+    }
+    return links;
+  }
+
   @override
   Widget build(BuildContext context) {
     final latestActualNote = ref.watch(
@@ -287,6 +307,8 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
       notesProvider(AccountScope.of(context))
           .select((value) => value.noteStatuses[widget.note.id]!.isLongVisible),
     );
+
+    final links = extractLinks(displayTextNodes!);
 
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(
@@ -529,6 +551,8 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                   poll: displayNote.poll!,
                                   loginAs: widget.loginAs,
                                 ),
+                              if (isLongVisible && widget.recursive < 2)
+                                ...links.map((link) => LinkPreview(link: link)),
                               if (displayNote.renoteId != null &&
                                   (widget.recursive < 2 &&
                                       !widget.isForceUnvisibleRenote))

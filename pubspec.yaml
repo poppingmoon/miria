@@ -8,6 +8,7 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
+  any_link_preview: ^3.0.0
   auto_route: ^6.0.5
   cached_network_image: ^3.2.3
   collection: ^1.16.0
