@@ -48,6 +48,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     required FutureOr<void> Function(String id, TimelineReacted reaction)
         onUnreacted,
     required FutureOr<void> Function(String id, TimelineVoted vote) onVoted,
+    required FutureOr<void> Function(String id, NoteEdited note) onUpdated,
   }) {
     return switch (_tabSetting.tabType) {
       TabType.localTimeline => _misskey.localTimelineStream(
@@ -55,6 +56,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
           withFiles: _tabSetting.withFiles,
         ),
       TabType.homeTimeline => _misskey.homeTimelineStream(
@@ -62,6 +64,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
           withFiles: _tabSetting.withFiles,
         ),
       TabType.globalTimeline => _misskey.globalTimelineStream(
@@ -69,6 +72,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
           withFiles: _tabSetting.withFiles,
         ),
       TabType.hybridTimeline => _misskey.hybridTimelineStream(
@@ -76,6 +80,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
           withFiles: _tabSetting.withFiles,
         ),
       TabType.roleTimeline => _misskey.roleTimelineStream(
@@ -83,12 +88,14 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
         ),
       TabType.channel => _misskey.channelStream(
           channelId: _tabSetting.channelId!,
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
         ),
       TabType.userList => _misskey.userListStream(
           listId: _tabSetting.listId!,
@@ -96,6 +103,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
         ),
       TabType.antenna => _misskey.antennaStream(
           antennaId: _tabSetting.antennaId!,
@@ -103,6 +111,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
         ),
     };
   }
@@ -242,9 +251,8 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
             ),
           );
         },
-        onVoted: (id, vote) {
-          noteRepository.addVote(id, vote);
-        },
+        onVoted: noteRepository.addVote,
+        onUpdated: noteRepository.updateNote,
       );
       await Future.wait([
         ref.read(mainStreamRepositoryProvider(_account)).reconnect(),
