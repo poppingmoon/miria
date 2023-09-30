@@ -96,6 +96,19 @@ class NoteRepository extends ChangeNotifier {
     );
   }
 
+  void updateNote(String noteId, NoteEdited note) {
+    final registeredNote = _notes[noteId];
+    if (registeredNote == null) return;
+
+    registerNote(
+      registeredNote.copyWith(
+        text: note.text,
+        cw: note.cw,
+        updatedAt: DateTime.now(),
+      ),
+    );
+  }
+
   Future<void> refresh(String noteId) async {
     final note = await misskey.notes.show(NotesShowRequest(noteId: noteId));
     registerNote(note.copyWith(myReaction: note.myReaction ?? ""));
