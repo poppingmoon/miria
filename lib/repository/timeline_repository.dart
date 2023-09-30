@@ -43,6 +43,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     required FutureOr<void> Function(String id, TimelineReacted reaction)
         onUnreacted,
     required FutureOr<void> Function(String id, TimelineVoted vote) onVoted,
+    required FutureOr<void> Function(String id, NoteEdited note) onUpdated,
   }) {
     final misskey = ref.read(misskeyProvider(_tabSetting.account));
 
@@ -52,30 +53,35 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
         ),
       TabType.homeTimeline => misskey.homeTimelineStream(
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
         ),
       TabType.globalTimeline => misskey.globalTimelineStream(
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
         ),
       TabType.hybridTimeline => misskey.hybridTimelineStream(
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
         ),
       TabType.channel => misskey.channelStream(
           channelId: _tabSetting.channelId!,
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
         ),
       TabType.userList => misskey.userListStream(
           listId: _tabSetting.listId!,
@@ -83,6 +89,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
         ),
       TabType.antenna => misskey.antennaStream(
           antennaId: _tabSetting.antennaId!,
@@ -90,6 +97,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
+          onUpdated: onUpdated,
         ),
     };
   }
@@ -221,9 +229,8 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
             ),
           );
         },
-        onVoted: (id, vote) {
-          noteRepository.addVote(id, vote);
-        },
+        onVoted: noteRepository.addVote,
+        onUpdated: noteRepository.updateNote,
       );
       await Future.wait([
         ref.read(mainStreamRepositoryProvider(account)).reconnect(),
