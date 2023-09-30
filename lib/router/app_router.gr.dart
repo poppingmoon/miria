@@ -170,7 +170,8 @@ abstract class _$AppRouter extends RootStackRouter {
           channel: args.channel,
           reply: args.reply,
           renote: args.renote,
-          deletedNote: args.deletedNote,
+          note: args.note,
+          noteCreationMode: args.noteCreationMode,
         ),
       );
     },
@@ -952,7 +953,8 @@ class NoteCreateRoute extends PageRouteInfo<NoteCreateRouteArgs> {
     CommunityChannel? channel,
     Note? reply,
     Note? renote,
-    Note? deletedNote,
+    Note? note,
+    NoteCreationMode? noteCreationMode,
     List<PageRouteInfo>? children,
   }) : super(
           NoteCreateRoute.name,
@@ -964,7 +966,8 @@ class NoteCreateRoute extends PageRouteInfo<NoteCreateRouteArgs> {
             channel: channel,
             reply: reply,
             renote: renote,
-            deletedNote: deletedNote,
+            note: note,
+            noteCreationMode: noteCreationMode,
           ),
           initialChildren: children,
         );
@@ -984,7 +987,8 @@ class NoteCreateRouteArgs {
     this.channel,
     this.reply,
     this.renote,
-    this.deletedNote,
+    this.note,
+    this.noteCreationMode,
   });
 
   final Key? key;
@@ -1001,11 +1005,13 @@ class NoteCreateRouteArgs {
 
   final Note? renote;
 
-  final Note? deletedNote;
+  final Note? note;
+
+  final NoteCreationMode? noteCreationMode;
 
   @override
   String toString() {
-    return 'NoteCreateRouteArgs{key: $key, initialAccount: $initialAccount, initialText: $initialText, initialMediaFiles: $initialMediaFiles, channel: $channel, reply: $reply, renote: $renote, deletedNote: $deletedNote}';
+    return 'NoteCreateRouteArgs{key: $key, initialAccount: $initialAccount, initialText: $initialText, initialMediaFiles: $initialMediaFiles, channel: $channel, reply: $reply, renote: $renote, note: $note, noteCreationMode: $noteCreationMode}';
   }
 }
 

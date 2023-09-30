@@ -120,5 +120,6 @@ final noteCreateProvider = StateNotifierProvider.family
       ref.read(fileSystemProvider),
       ref.read(dioProvider),
       ref.read(misskeyProvider(account)),
-      ref.read(errorEventProvider.notifier)),
+      ref.read(errorEventProvider.notifier),
+      ref.read(notesProvider(account))),
 );
