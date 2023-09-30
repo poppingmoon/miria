@@ -222,17 +222,18 @@ class NoteModalSheet extends ConsumerWidget {
                 baseNote.files.isEmpty)) ...[
           if (account.i.policies.canEditNote)
             ListTile(
-                title: const Text("編集する"),
-                onTap: () async {
-                  Navigator.of(context).pop();
-                  context.pushRoute(
-                    NoteCreateRoute(
-                      initialAccount: account,
-                      note: targetNote,
-                      noteCreationMode: NoteCreationMode.update,
-                    ),
-                  );
-                }),
+              title: const Text("編集する"),
+              onTap: () async {
+                Navigator.of(context).pop();
+                context.pushRoute(
+                  NoteCreateRoute(
+                    initialAccount: account,
+                    note: targetNote,
+                    noteCreationMode: NoteCreationMode.update,
+                  ),
+                );
+              },
+            ),
           ListTile(
             title: const Text("削除する"),
             onTap: () async {

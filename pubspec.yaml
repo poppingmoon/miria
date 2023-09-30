@@ -44,7 +44,7 @@ dependencies:
   misskey_dart:
     git:
       url: https://github.com/poppingmoon/misskey_dart.git
-      ref: f894f34ff8e6c9c7166e3f5e6466ba169135fbbf
+      ref: b65bdfe8b682ad9d61eba49422ef41acf8dd723c
   package_info_plus: ^4.0.0
   path: ^1.8.2
   path_provider: ^2.0.14
@@ -58,6 +58,9 @@ dependencies:
   url_launcher: ^6.1.10
   uuid: ^3.0.7
   visibility_detector: ^0.4.0+2
+  webview_flutter: ^4.3.0
+  webview_flutter_android: ^3.12.0
+  webview_flutter_wkwebview: ^3.9.0
 
 dependency_overrides:
   image_editor:

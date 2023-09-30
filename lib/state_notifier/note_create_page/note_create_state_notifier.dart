@@ -422,14 +422,19 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
       );
 
       if (state.noteCreationMode == NoteCreationMode.update) {
-        await misskey.notes.update(NotesUpdateRequest(
-          noteId: state.noteId!,
-          text: postText ?? "",
-          cw: state.isCw ? state.cwText : null,
-        ));
-        noteRepository.registerNote(noteRepository.notes[state.noteId!]!
-            .copyWith(
-                text: postText ?? "", cw: state.isCw ? state.cwText : null));
+        await misskey.notes.update(
+          NotesUpdateRequest(
+            noteId: state.noteId!,
+            text: postText ?? "",
+            cw: state.isCw ? state.cwText : null,
+          ),
+        );
+        noteRepository.registerNote(
+          noteRepository.notes[state.noteId!]!.copyWith(
+            text: postText ?? "",
+            cw: state.isCw ? state.cwText : null,
+          ),
+        );
       } else {
         await misskey.notes.create(
           NotesCreateRequest(

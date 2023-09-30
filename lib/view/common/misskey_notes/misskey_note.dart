@@ -1,6 +1,6 @@
+import 'dart:collection';
 import 'dart:math';
 
-import 'package:any_link_preview/any_link_preview.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -206,8 +206,22 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
     return (thisNodeCount, newLinesCount);
   }
 
+  // https://github.com/misskey-dev/misskey/blob/2023.9.2/packages/frontend/src/scripts/extract-url-from-mfm.ts
   List<String> extractLinks(List<parser.MfmNode> nodes) {
-    final links = <String>[];
+    String removeHash(String link) {
+      final hashIndex = link.lastIndexOf("#");
+      if (hashIndex < 0) {
+        return link;
+      } else {
+        return link.substring(0, hashIndex);
+      }
+    }
+
+    // # より前の部分が重複しているものを取り除く
+    final links = LinkedHashSet<String>(
+      equals: (link, other) => removeHash(link) == removeHash(other),
+      hashCode: (link) => removeHash(link).hashCode,
+    );
     for (final node in nodes) {
       final children = node.children;
       if (children != null) {
@@ -221,7 +235,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
         }
       }
     }
-    return links;
+    return links.toList();
   }
 
   @override
@@ -558,7 +572,12 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                   loginAs: widget.loginAs,
                                 ),
                               if (isLongVisible && widget.recursive < 2)
-                                ...links.map((link) => LinkPreview(link: link)),
+                                ...links.map(
+                                  (link) => LinkPreview(
+                                    account: AccountScope.of(context),
+                                    link: link,
+                                  ),
+                                ),
                               if (displayNote.renoteId != null &&
                                   (widget.recursive < 2 &&
                                       !widget.isForceUnvisibleRenote))

@@ -79,7 +79,6 @@ class Account with _$Account {
           hasUnreadSpecifiedNotes: false,
           mutedWords: [],
           mutedInstances: [],
-          mutingNotificationTypes: [],
           emailNotificationTypes: [],
           achievements: [],
           loggedInDays: 0,
