@@ -1428,6 +1428,10 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
       String,
       _i6.TimelineVoted,
     )? onVoted,
+    _i16.FutureOr<void> Function(
+      String,
+      _i6.NoteEdited,
+    )? onUpdated,
     bool? withReplies,
     bool? withFiles,
   }) =>
@@ -1441,6 +1445,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
             #onUnreacted: onUnreacted,
             #onDeleted: onDeleted,
             #onVoted: onVoted,
+            #onUpdated: onUpdated,
             #withReplies: withReplies,
             #withFiles: withFiles,
           },
@@ -1456,6 +1461,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #onUpdated: onUpdated,
               #withReplies: withReplies,
               #withFiles: withFiles,
             },
@@ -1472,6 +1478,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #onUpdated: onUpdated,
               #withReplies: withReplies,
               #withFiles: withFiles,
             },
@@ -1497,6 +1504,10 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
       String,
       _i6.TimelineVoted,
     )? onVoted,
+    _i16.FutureOr<void> Function(
+      String,
+      _i6.NoteEdited,
+    )? onUpdated,
     bool? withReplies,
     bool? withFiles,
   }) =>
@@ -1510,6 +1521,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
             #onUnreacted: onUnreacted,
             #onDeleted: onDeleted,
             #onVoted: onVoted,
+            #onUpdated: onUpdated,
             #withReplies: withReplies,
             #withFiles: withFiles,
           },
@@ -1525,6 +1537,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #onUpdated: onUpdated,
               #withReplies: withReplies,
               #withFiles: withFiles,
             },
@@ -1541,6 +1554,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #onUpdated: onUpdated,
               #withReplies: withReplies,
               #withFiles: withFiles,
             },
@@ -1566,6 +1580,10 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
       String,
       _i6.TimelineVoted,
     )? onVoted,
+    _i16.FutureOr<void> Function(
+      String,
+      _i6.NoteEdited,
+    )? onUpdated,
     bool? withReplies,
     bool? withFiles,
   }) =>
@@ -1579,6 +1597,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
             #onUnreacted: onUnreacted,
             #onDeleted: onDeleted,
             #onVoted: onVoted,
+            #onUpdated: onUpdated,
             #withReplies: withReplies,
             #withFiles: withFiles,
           },
@@ -1594,6 +1613,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #onUpdated: onUpdated,
               #withReplies: withReplies,
               #withFiles: withFiles,
             },
@@ -1610,6 +1630,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #onUpdated: onUpdated,
               #withReplies: withReplies,
               #withFiles: withFiles,
             },
@@ -1635,6 +1656,10 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
       String,
       _i6.TimelineVoted,
     )? onVoted,
+    _i16.FutureOr<void> Function(
+      String,
+      _i6.NoteEdited,
+    )? onUpdated,
     bool? withReplies,
     bool? withFiles,
   }) =>
@@ -1648,6 +1673,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
             #onUnreacted: onUnreacted,
             #onDeleted: onDeleted,
             #onVoted: onVoted,
+            #onUpdated: onUpdated,
             #withReplies: withReplies,
             #withFiles: withFiles,
           },
@@ -1663,6 +1689,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #onUpdated: onUpdated,
               #withReplies: withReplies,
               #withFiles: withFiles,
             },
@@ -1679,6 +1706,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #onUpdated: onUpdated,
               #withReplies: withReplies,
               #withFiles: withFiles,
             },
@@ -1705,6 +1733,10 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
       String,
       _i6.TimelineVoted,
     )? onVoted,
+    _i16.FutureOr<void> Function(
+      String,
+      _i6.NoteEdited,
+    )? onUpdated,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1717,6 +1749,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
             #onUnreacted: onUnreacted,
             #onDeleted: onDeleted,
             #onVoted: onVoted,
+            #onUpdated: onUpdated,
           },
         ),
         returnValue: _FakeSocketController_26(
@@ -1731,6 +1764,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #onUpdated: onUpdated,
             },
           ),
         ),
@@ -1746,6 +1780,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #onUpdated: onUpdated,
             },
           ),
         ),
@@ -1770,6 +1805,10 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
       String,
       _i6.TimelineVoted,
     )? onVoted,
+    _i16.FutureOr<void> Function(
+      String,
+      _i6.NoteEdited,
+    )? onUpdated,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1782,6 +1821,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
             #onUnreacted: onUnreacted,
             #onDeleted: onDeleted,
             #onVoted: onVoted,
+            #onUpdated: onUpdated,
           },
         ),
         returnValue: _FakeSocketController_26(
@@ -1796,6 +1836,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #onUpdated: onUpdated,
             },
           ),
         ),
@@ -1811,6 +1852,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #onUpdated: onUpdated,
             },
           ),
         ),
@@ -1829,6 +1871,10 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
       String,
       _i6.TimelineReacted,
     )? onUnreacted,
+    _i16.FutureOr<void> Function(
+      String,
+      _i6.NoteEdited,
+    )? onUpdated,
     _i16.FutureOr<void> Function(DateTime)? onDeleted,
     _i16.FutureOr<void> Function(
       String,
@@ -1846,6 +1892,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
             #onUserRemoved: onUserRemoved,
             #onReacted: onReacted,
             #onUnreacted: onUnreacted,
+            #onUpdated: onUpdated,
             #onDeleted: onDeleted,
             #onVoted: onVoted,
           },
@@ -1862,6 +1909,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUserRemoved: onUserRemoved,
               #onReacted: onReacted,
               #onUnreacted: onUnreacted,
+              #onUpdated: onUpdated,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
             },
@@ -1879,6 +1927,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUserRemoved: onUserRemoved,
               #onReacted: onReacted,
               #onUnreacted: onUnreacted,
+              #onUpdated: onUpdated,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
             },
@@ -1905,6 +1954,10 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
       String,
       _i6.TimelineVoted,
     )? onVoted,
+    _i16.FutureOr<void> Function(
+      String,
+      _i6.NoteEdited,
+    )? onUpdated,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1917,6 +1970,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
             #onUnreacted: onUnreacted,
             #onDeleted: onDeleted,
             #onVoted: onVoted,
+            #onUpdated: onUpdated,
           },
         ),
         returnValue: _FakeSocketController_26(
@@ -1931,6 +1985,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #onUpdated: onUpdated,
             },
           ),
         ),
@@ -1946,6 +2001,7 @@ class MockMisskey extends _i1.Mock implements _i6.Misskey {
               #onUnreacted: onUnreacted,
               #onDeleted: onDeleted,
               #onVoted: onVoted,
+              #onUpdated: onUpdated,
             },
           ),
         ),
@@ -2198,6 +2254,16 @@ class MockMisskeyNotes extends _i1.Mock implements _i6.MisskeyNotes {
       (super.noSuchMethod(
         Invocation.method(
           #create,
+          [request],
+        ),
+        returnValue: _i16.Future<void>.value(),
+        returnValueForMissingStub: _i16.Future<void>.value(),
+      ) as _i16.Future<void>);
+  @override
+  _i16.Future<void> update(_i6.NotesUpdateRequest? request) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #update,
           [request],
         ),
         returnValue: _i16.Future<void>.value(),

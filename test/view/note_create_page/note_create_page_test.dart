@@ -91,7 +91,7 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
-                deletedNote: TestData.note1.copyWith(
+                note: TestData.note1.copyWith(
                   channelId: TestData.channel1.id,
                   channel: NoteChannelInfo(
                     id: TestData.channel1.id,
@@ -285,7 +285,7 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
-                deletedNote: TestData.note1
+                note: TestData.note1
                     .copyWith(visibility: NoteVisibility.specified),
               ),
             ),
@@ -544,7 +544,7 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
-                deletedNote: TestData.note1.copyWith(localOnly: true),
+                note: TestData.note1.copyWith(localOnly: true),
               ),
             ),
           ),
@@ -758,7 +758,7 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
-                deletedNote: TestData.note1.copyWith(
+                note: TestData.note1.copyWith(
                   reactionAcceptance: ReactionAcceptance.likeOnly,
                 ),
               ),
@@ -908,7 +908,7 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
-                deletedNote: TestData.note1.copyWith(cw: "えっちなやつ"),
+                note: TestData.note1.copyWith(cw: "えっちなやつ"),
               ),
             ),
           ),
@@ -1009,7 +1009,7 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
-                deletedNote: TestData.note1,
+                note: TestData.note1,
               ),
             ),
           ),
@@ -1100,7 +1100,7 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
-                deletedNote: TestData.note1.copyWith(
+                note: TestData.note1.copyWith(
                   files: [TestData.drive1],
                   fileIds: [TestData.drive1.id],
                 ),
@@ -1377,7 +1377,7 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
-                deletedNote: TestData.note1.copyWith(mentions: ["@ai"]),
+                note: TestData.note1.copyWith(mentions: ["@ai"]),
               ),
             ),
           ),
@@ -1473,7 +1473,7 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
-                deletedNote: TestData.note4AsVote.copyWith(
+                note: TestData.note4AsVote.copyWith(
                   poll: TestData.note4AsVote.poll?.copyWith(multiple: false),
                 ),
               ),
@@ -1519,7 +1519,7 @@ void main() {
             child: DefaultRootWidget(
               initialRoute: NoteCreateRoute(
                 initialAccount: TestData.account,
-                deletedNote: TestData.note4AsVote.copyWith(
+                note: TestData.note4AsVote.copyWith(
                   poll: TestData.note4AsVote.poll?.copyWith(multiple: true),
                 ),
               ),
