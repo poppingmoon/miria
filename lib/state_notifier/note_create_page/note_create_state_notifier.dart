@@ -400,7 +400,7 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
         ],
       );
     } else if (result == DriveModalSheetReturnValue.upload) {
-      final result = await FilePicker.platform.pickFiles(type: FileType.image);
+      final result = await FilePicker.platform.pickFiles();
       if (result == null) return;
 
       final path = result.files.single.path;
