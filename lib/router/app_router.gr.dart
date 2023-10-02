@@ -151,7 +151,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: PhotoEditPage(
           account: args.account,
-          file: args.file,
+          initialImage: args.initialImage,
           onSubmit: args.onSubmit,
           key: args.key,
         ),
@@ -929,7 +929,7 @@ class UserFollowerRouteArgs {
 class PhotoEditRoute extends PageRouteInfo<PhotoEditRouteArgs> {
   PhotoEditRoute({
     required Account account,
-    required MisskeyPostFile file,
+    required Uint8List initialImage,
     required void Function(Uint8List) onSubmit,
     Key? key,
     List<PageRouteInfo>? children,
@@ -937,7 +937,7 @@ class PhotoEditRoute extends PageRouteInfo<PhotoEditRouteArgs> {
           PhotoEditRoute.name,
           args: PhotoEditRouteArgs(
             account: account,
-            file: file,
+            initialImage: initialImage,
             onSubmit: onSubmit,
             key: key,
           ),
@@ -953,14 +953,14 @@ class PhotoEditRoute extends PageRouteInfo<PhotoEditRouteArgs> {
 class PhotoEditRouteArgs {
   const PhotoEditRouteArgs({
     required this.account,
-    required this.file,
+    required this.initialImage,
     required this.onSubmit,
     this.key,
   });
 
   final Account account;
 
-  final MisskeyPostFile file;
+  final Uint8List initialImage;
 
   final void Function(Uint8List) onSubmit;
 
@@ -968,7 +968,7 @@ class PhotoEditRouteArgs {
 
   @override
   String toString() {
-    return 'PhotoEditRouteArgs{account: $account, file: $file, onSubmit: $onSubmit, key: $key}';
+    return 'PhotoEditRouteArgs{account: $account, initialImage: $initialImage, onSubmit: $onSubmit, key: $key}';
   }
 }
 
