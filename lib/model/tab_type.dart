@@ -3,6 +3,7 @@ enum TabType {
   homeTimeline("ホームタイムライン"),
   globalTimeline("グローバルタイムライン"),
   hybridTimeline("ソーシャルタイムライン"),
+  roleTimeline("ロールタイムライン"),
   channel("チャンネル"),
   userList("リスト"),
   antenna("アンテナ"),

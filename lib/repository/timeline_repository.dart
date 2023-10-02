@@ -76,6 +76,15 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onVoted: onVoted,
           onUpdated: onUpdated,
         ),
+      TabType.roleTimeline => misskey.roleTimelineStream(
+          roleId: _tabSetting.roleId!,
+          onNoteReceived: onNoteReceived,
+          onReacted: onReacted,
+          onUnreacted: onUnreacted,
+          onVoted: onVoted,
+          // TODO: misskey_dartを修正
+          // onUpdated: onUpdated,
+        ),
       TabType.channel => misskey.channelStream(
           channelId: _tabSetting.channelId!,
           onNoteReceived: onNoteReceived,
@@ -129,6 +138,13 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
         ),
       TabType.hybridTimeline => misskey.notes.hybridTimeline(
           NotesHybridTimelineRequest(
+            limit: limit,
+            untilId: untilId,
+          ),
+        ),
+      TabType.roleTimeline => misskey.roles.notes(
+          RolesNotesRequest(
+            roleId: _tabSetting.roleId!,
             limit: limit,
             untilId: untilId,
           ),
