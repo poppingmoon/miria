@@ -155,19 +155,18 @@ class LinkPreviewTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(5),
             child: Row(
               children: [
-                if (thumbnail != null)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 5),
-                    child: CachedNetworkImage(
-                      imageUrl: thumbnail,
-                      height: imageSize,
-                      width: imageSize,
-                      fit: BoxFit.cover,
-                    ),
+                if (thumbnail == null)
+                  SizedBox(height: imageSize)
+                else
+                  CachedNetworkImage(
+                    imageUrl: thumbnail,
+                    height: imageSize,
+                    width: imageSize,
+                    fit: BoxFit.cover,
                   ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(5),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,6 +258,7 @@ class _PlayerItemState extends State<PlayerItem> {
         }
         controller
           ?..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..setBackgroundColor(Colors.transparent)
           ..setNavigationDelegate(
             NavigationDelegate(
               onNavigationRequest: (request) async {
