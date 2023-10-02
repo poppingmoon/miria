@@ -1,4 +1,5 @@
 import "package:auto_route/auto_route.dart";
+import "package:dio/dio.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
@@ -6,6 +7,7 @@ import "package:miria/model/misskey_post_file.dart";
 import "package:miria/providers.dart";
 import "package:miria/router/app_router.dart";
 import "package:miria/state_notifier/note_create_page/note_create_state_notifier.dart";
+import "package:miria/view/common/misskey_notes/network_image.dart";
 import "package:miria/view/note_create_page/file_settings_dialog.dart";
 
 class CreateFileView extends ConsumerWidget {
@@ -19,21 +21,32 @@ class CreateFileView extends ConsumerWidget {
   });
 
   Future<void> onTap(BuildContext context, WidgetRef ref) async {
-    if (defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.macOS ||
-        defaultTargetPlatform == TargetPlatform.android) {
-      await context.pushRoute<Uint8List?>(
-        PhotoEditRoute(
-          accountContext: ref.read(accountContextProvider),
-          file: file,
-          onSubmit: (result) {
-            ref
-                .read(noteCreateNotifierProvider.notifier)
-                .setFileContent(file, result);
-          },
-        ),
-      );
+    Future<Uint8List?> getDriveImage(String url) async {
+      final response = await ref.read(dioProvider).get<Uint8List>(
+            url,
+            options: Options(responseType: ResponseType.bytes),
+          );
+      return response.data;
     }
+
+    final initialImage = switch (file) {
+      PostFile(:final file) => await file.readAsBytes(),
+      AlreadyPostedFile(:final file) => await getDriveImage(file.url),
+    };
+    if (initialImage == null) return;
+    if (!context.mounted) return;
+
+    await context.pushRoute<Uint8List?>(
+      PhotoEditRoute(
+        accountContext: ref.read(accountContextProvider),
+        initialImage: initialImage,
+        onSubmit: (result) {
+          ref
+              .read(noteCreateNotifierProvider.notifier)
+              .setFileContent(file, result);
+        },
+      ),
+    );
   }
 
   Future<void> detailTap(BuildContext context, WidgetRef ref) async {
@@ -54,93 +67,57 @@ class CreateFileView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final data = file;
-
-    switch (data) {
-      case ImageFile():
-        return Card.outlined(
-          child: SizedBox(
-            width: 210,
-            child: Column(
+    return Card.outlined(
+      child: SizedBox(
+        width: 210,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(5),
+              child: SizedBox(
+                height: 200,
+                child: GestureDetector(
+                  onTap: (file.type?.startsWith("image") ?? false) &&
+                          (defaultTargetPlatform == TargetPlatform.iOS ||
+                              defaultTargetPlatform == TargetPlatform.macOS ||
+                              defaultTargetPlatform == TargetPlatform.android)
+                      ? () async => await onTap(context, ref)
+                      : null,
+                  child: switch (file) {
+                    PostFile(:final file) => Image.file(file),
+                    AlreadyPostedFile(:final file) => NetworkImageView(
+                        url: file.thumbnailUrl ?? file.url,
+                        type: ImageType.imageThumbnail,
+                      ),
+                  },
+                ),
+              ),
+            ),
+            Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  child: SizedBox(
-                    height: 200,
-                    child: GestureDetector(
-                      onTap: () async => await onTap(context, ref),
-                      child: Image.memory(data.data),
-                    ),
+                if (file.isNsfw)
+                  const Icon(Icons.details_rounded)
+                else
+                  const SizedBox(width: 5),
+                Expanded(
+                  child: Text(
+                    file.fileName,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Row(
-                  children: [
-                    if (data.isNsfw) const Icon(Icons.details_rounded),
-                    if (!data.isNsfw) const SizedBox(width: 5),
-                    Expanded(
-                      child: Text(
-                        data.fileName,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () async => detailTap(context, ref),
-                      icon: const Icon(Icons.more_vert),
-                    ),
-                    IconButton(
-                      onPressed: () => delete(context, ref),
-                      icon: const Icon(Icons.delete),
-                    ),
-                  ],
+                IconButton(
+                  onPressed: () async => detailTap(context, ref),
+                  icon: const Icon(Icons.more_vert),
+                ),
+                IconButton(
+                  onPressed: () => delete(context, ref),
+                  icon: const Icon(Icons.delete),
                 ),
               ],
             ),
-          ),
-        );
-      case ImageFileAlreadyPostedFile():
-        return Card.outlined(
-          child: SizedBox(
-            width: 210,
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  child: SizedBox(
-                    height: 200,
-                    child: GestureDetector(
-                      onTap: () async => await onTap(context, ref),
-                      child: Image.memory(data.data),
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [
-                    if (data.isNsfw) const Icon(Icons.details_rounded),
-                    if (!data.isNsfw) const SizedBox(width: 5),
-                    Expanded(
-                      child: Text(
-                        data.fileName,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () async => detailTap(context, ref),
-                      icon: const Icon(Icons.more_vert),
-                    ),
-                    IconButton(
-                      onPressed: () => delete(context, ref),
-                      icon: const Icon(Icons.delete),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      case UnknownFile():
-        return Text(data.fileName);
-      case UnknownAlreadyPostedFile():
-        return Text(data.fileName);
-    }
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,15 +1,12 @@
 import "dart:io";
 import "dart:typed_data";
 
-import "package:dio/dio.dart";
 import "package:file_picker/file_picker.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_image_compress/flutter_image_compress.dart";
 import "package:freezed_annotation/freezed_annotation.dart";
-import "package:image/image.dart";
 import "package:mfm_parser/mfm_parser.dart";
-import "package:mime/mime.dart";
 import "package:miria/extensions/note_visibility_extension.dart";
 import "package:miria/log.dart";
 import "package:miria/model/misskey_post_file.dart";
@@ -104,7 +101,6 @@ class NoteCreateChannel with _$NoteCreateChannel {
 )
 class NoteCreateNotifier extends _$NoteCreateNotifier {
   late final _fileSystem = ref.read(fileSystemProvider);
-  late final _dio = ref.read(dioProvider);
   late final _misskey = ref.read(misskeyPostContextProvider);
   late final _noteRepository = ref.read(notesWithProvider);
   late final _dialogNotifier = ref.read(dialogStateNotifierProvider.notifier);
@@ -158,57 +154,22 @@ class NoteCreateNotifier extends _$NoteCreateNotifier {
     }
     if (initialMediaFiles != null && initialMediaFiles.isNotEmpty) {
       resultState = resultState.copyWith(
-        files: await Future.wait(
-          initialMediaFiles.map((media) async {
-            final file = _fileSystem.file(media);
-            final fileName = file.basename;
-            final extension = fileName.split(".").last.toLowerCase();
-            if (["jpg", "png", "gif", "webp", "heic"].contains(extension)) {
-              return ImageFile(
-                data: await loadImage(file),
-                fileName: fileName,
-              );
-            } else {
-              return UnknownFile(
-                data: await file.readAsBytes(),
-                fileName: fileName,
-              );
-            }
-          }),
-        ),
+        files: initialMediaFiles.map((path) {
+          final file = _fileSystem.file(path);
+          final fileName = file.basename;
+          return PostFile(
+            file: file,
+            fileName: fileName,
+          );
+        }).toList(),
       );
     }
 
     // 削除されたノートの反映
     if (note != null) {
-      final files = <MisskeyPostFile>[];
-      for (final file in note.files) {
-        if (file.type.startsWith("image")) {
-          final response = await _dio.get(
-            file.url,
-            options: Options(responseType: ResponseType.bytes),
-          );
-          files.add(
-            ImageFileAlreadyPostedFile(
-              fileName: file.name,
-              data: response.data,
-              id: file.id,
-              isNsfw: file.isSensitive,
-              caption: file.comment,
-            ),
-          );
-        } else {
-          files.add(
-            UnknownAlreadyPostedFile(
-              url: file.url,
-              id: file.id,
-              fileName: file.name,
-              isNsfw: file.isSensitive,
-              caption: file.comment,
-            ),
-          );
-        }
-      }
+      final files =
+          note.files.map((file) => AlreadyPostedFile.file(file)).toList();
+
       final deletedNoteChannel = note.channel;
 
       final replyTo = <User>[];
@@ -353,21 +314,17 @@ class NoteCreateNotifier extends _$NoteCreateNotifier {
           DriveFile? response;
 
           switch (file) {
-            case ImageFile():
-              final fileName = file.fileName.toLowerCase();
-              var imageData = file.data;
-              try {
-                if (fileName.endsWith("jpg") ||
-                    fileName.endsWith("jpeg") ||
-                    fileName.endsWith("tiff") ||
-                    fileName.endsWith("tif")) {
-                  imageData =
-                      await FlutterImageCompress.compressWithList(file.data);
+            case PostFile():
+              var contents = await file.file.readAsBytes();
+              if (["image/jpeg", "image/tiff", "image/heic"]
+                  .contains(file.type)) {
+                try {
+                  contents =
+                      await FlutterImageCompress.compressWithList(contents);
+                } catch (e) {
+                  logger.shout("failed to compress file");
                 }
-              } catch (e) {
-                logger.shout("failed to compress file");
               }
-
               response = await _misskey.drive.files.createAsBinary(
                 DriveFilesCreateRequest(
                   force: true,
@@ -375,52 +332,31 @@ class NoteCreateNotifier extends _$NoteCreateNotifier {
                   isSensitive: file.isNsfw,
                   comment: file.caption,
                 ),
-                imageData,
+                contents,
               );
               fileIds.add(response.id);
-
-            case UnknownFile():
-              response = await _misskey.drive.files.createAsBinary(
-                DriveFilesCreateRequest(
-                  force: true,
-                  name: file.fileName,
-                  isSensitive: file.isNsfw,
-                  comment: file.caption,
-                ),
-                file.data,
-              );
-              fileIds.add(response.id);
-
-            case UnknownAlreadyPostedFile():
-              if (file.isEdited) {
-                await _misskey.drive.files.update(
-                  DriveFilesUpdateRequest(
-                    fileId: file.id,
-                    name: file.fileName,
-                    isSensitive: file.isNsfw,
-                    comment: file.caption,
-                  ),
-                );
-              }
-              fileIds.add(file.id);
-            case ImageFileAlreadyPostedFile():
+            case AlreadyPostedFile():
               if (file.isEdited) {
                 response = await _misskey.drive.files.update(
                   DriveFilesUpdateRequest(
-                    fileId: file.id,
+                    fileId: file.file.id,
                     name: file.fileName,
                     isSensitive: file.isNsfw,
                     comment: file.caption,
                   ),
                 );
               }
-
-              fileIds.add(file.id);
+              fileIds.add(file.file.id);
           }
 
-          if (response?.isSensitive == true &&
-              !file.isNsfw &&
-              !ref.read(accountContextProvider).postAccount.i.alwaysMarkNsfw) {
+          if (response case final response?
+              when response.isSensitive &&
+                  !file.isNsfw &&
+                  !ref
+                      .read(accountContextProvider)
+                      .postAccount
+                      .i
+                      .alwaysMarkNsfw) {
             final result = await _dialogNotifier.showDialog(
               message: (context) => S.of(context).unexpectedSensitive,
               actions: (context) =>
@@ -429,7 +365,7 @@ class NoteCreateNotifier extends _$NoteCreateNotifier {
             if (result == 1) {
               await _misskey.drive.files.update(
                 DriveFilesUpdateRequest(
-                  fileId: fileIds.last,
+                  fileId: response.id,
                   isSensitive: false,
                 ),
               );
@@ -559,31 +495,10 @@ class NoteCreateNotifier extends _$NoteCreateNotifier {
               allowMultiple: true,
             ),
           );
-      if (result == null) return;
-      final files = await Future.wait(
-        result.map((file) async {
-          if (file.type.startsWith("image")) {
-            final fileContentResponse = await _dio.get<Uint8List>(
-              file.url,
-              options: Options(responseType: ResponseType.bytes),
-            );
-            return ImageFileAlreadyPostedFile(
-              data: fileContentResponse.data!,
-              id: file.id,
-              fileName: file.name,
-              isNsfw: file.isSensitive,
-              caption: file.comment,
-            );
-          }
-          return UnknownAlreadyPostedFile(
-            url: file.url,
-            id: file.id,
-            fileName: file.name,
-            isNsfw: file.isSensitive,
-            caption: file.comment,
-          );
-        }),
-      );
+      if (result == null || result.isEmpty) return;
+
+      final files = result.map((file) => AlreadyPostedFile.file(file));
+
       state = state.copyWith(
         files: [
           ...state.files,
@@ -599,90 +514,32 @@ class NoteCreateNotifier extends _$NoteCreateNotifier {
       );
       if (result == null || result.files.isEmpty) return;
 
-      final fsFiles = result.files.map((file) {
+      final files = result.files.map((file) {
         final path = file.path;
         if (path != null) {
-          return _fileSystem.file(path);
+          return PostFile.file(_fileSystem.file(path));
         }
         return null;
       }).nonNulls;
-      final files = await Future.wait(
-        fsFiles.map(
-          (file) async => ImageFile(
-            data: await loadImage(file),
-            fileName: file.basename,
-          ),
-        ),
-      );
 
-      state = state.copyWith(files: [
-        ...state.files,
-        ...files.where((file) => file.data.isNotEmpty)
-      ]);
+      state = state.copyWith(files: [...state.files, ...files]);
     }
-  }
-
-  Future<Uint8List> loadImage(File file) async {
-    final imageBytes = await file.readAsBytes();
-    final mime = lookupMimeType(file.path, headerBytes: imageBytes);
-    if (mime == "image/jpeg") {
-      final origExif = decodeJpgExif(imageBytes);
-      final exif = ExifData();
-
-      if (origExif != null) {
-        final orientation = origExif.imageIfd["Orientation"];
-        if (orientation != null) {
-          exif.imageIfd["Orientation"] = orientation;
-        }
-      }
-
-      final img = injectJpgExif(imageBytes, exif);
-      if (img == null) {
-        return Uint8List(0);
-      }
-
-      return img;
-    } else if (mime == "image/heic") {
-      return Uint8List(0);
-    }
-    return imageBytes;
   }
 
   /// メディアの内容を変更する
-  void setFileContent(MisskeyPostFile file, Uint8List? content) {
+  Future<void> setFileContent(MisskeyPostFile file, Uint8List? content) async {
     if (content == null) return;
+    final tempDir = await _fileSystem.systemTempDirectory.createTemp();
+    final tempFile = _fileSystem.file("${tempDir.path}/${file.fileName}");
+    await tempFile.writeAsBytes(content.toList());
     final files = state.files.toList();
 
-    switch (file) {
-      case ImageFile():
-        files[files.indexOf(file)] = ImageFile(
-          data: content,
-          fileName: file.fileName,
-          caption: file.caption,
-          isNsfw: file.isNsfw,
-        );
-      case ImageFileAlreadyPostedFile():
-        files[files.indexOf(file)] = ImageFile(
-          data: content,
-          fileName: file.fileName,
-          caption: file.caption,
-          isNsfw: file.isNsfw,
-        );
-      case UnknownFile():
-        files[files.indexOf(file)] = ImageFile(
-          data: content,
-          fileName: file.fileName,
-          caption: file.caption,
-          isNsfw: file.isNsfw,
-        );
-      case UnknownAlreadyPostedFile():
-        files[files.indexOf(file)] = ImageFile(
-          data: content,
-          fileName: file.fileName,
-          caption: file.caption,
-          isNsfw: file.isNsfw,
-        );
-    }
+    files[files.indexOf(file)] = PostFile(
+      file: tempFile,
+      fileName: file.fileName,
+      isNsfw: file.isNsfw,
+      caption: file.caption,
+    );
 
     state = state.copyWith(files: files);
   }
@@ -693,37 +550,18 @@ class NoteCreateNotifier extends _$NoteCreateNotifier {
     final file = state.files[index];
 
     switch (file) {
-      case ImageFile():
-        files[index] = ImageFile(
-          data: file.data,
+      case PostFile():
+        files[index] = file.copyWith(
           fileName: result.fileName,
-          caption: result.caption,
           isNsfw: result.isNsfw,
+          caption: result.caption,
         );
-      case ImageFileAlreadyPostedFile():
-        files[index] = ImageFileAlreadyPostedFile(
-          data: file.data,
-          id: file.id,
-          fileName: result.fileName,
-          isNsfw: result.isNsfw,
-          caption: result.caption,
+      case AlreadyPostedFile():
+        files[index] = file.copyWith(
           isEdited: true,
-        );
-      case UnknownFile():
-        files[index] = UnknownFile(
-          data: file.data,
           fileName: result.fileName,
           isNsfw: result.isNsfw,
           caption: result.caption,
-        );
-      case UnknownAlreadyPostedFile():
-        files[index] = UnknownAlreadyPostedFile(
-          url: file.url,
-          id: file.id,
-          fileName: result.fileName,
-          isNsfw: result.isNsfw,
-          caption: result.caption,
-          isEdited: true,
         );
     }
 

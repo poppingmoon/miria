@@ -7,7 +7,7 @@ part of 'photo_edit_state_notifier.dart';
 // **************************************************************************
 
 String _$photoEditStateNotifierHash() =>
-    r'8775951cc945fb8d595f0c3ac490e2e3d8820039';
+    r'6c335dbaa906b7e6248b1177168b71530312e2f9';
 
 /// See also [PhotoEditStateNotifier].
 @ProviderFor(PhotoEditStateNotifier)
