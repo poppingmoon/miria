@@ -35,17 +35,14 @@ class ImportExportRepository extends ChangeNotifier {
     if (result == null) return;
 
     final folder = result.folder;
-    Iterable<DriveFile> alreadyExists = await reader(misskeyProvider(account))
-        .drive
-        .files
-        .find(DriveFilesFindRequest(name: "miria.json", folderId: folder?.id));
 
-    alreadyExists = await reader(misskeyProvider(account)).drive.files.find(
-          DriveFilesFindRequest(
-            name: "miria.json.unknown",
-            folderId: folder?.id,
-          ),
-        );
+    Iterable<DriveFile> alreadyExists =
+        await reader(misskeyProvider(account)).drive.files.find(
+              DriveFilesFindRequest(
+                name: "miria.json",
+                folderId: folder?.id,
+              ),
+            );
 
     if (!context.mounted) return;
     if (alreadyExists.isEmpty) {

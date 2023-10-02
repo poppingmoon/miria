@@ -893,8 +893,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: b65bdfe8b682ad9d61eba49422ef41acf8dd723c
-      resolved-ref: b65bdfe8b682ad9d61eba49422ef41acf8dd723c
+      ref: "04b45915b9fd0695cbe82029fde6cdd89a707a52"
+      resolved-ref: "04b45915b9fd0695cbe82029fde6cdd89a707a52"
       url: "https://github.com/poppingmoon/misskey_dart.git"
     source: git
     version: "1.0.0"

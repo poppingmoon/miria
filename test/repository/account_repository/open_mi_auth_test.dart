@@ -64,8 +64,14 @@ void main() {
         data: AuthTestData.calckeyNodeInfo2,
       ),
     );
-    final provider =
-        ProviderContainer(overrides: [dioProvider.overrideWithValue(dio)]);
+    final mockMisskey = MockMisskey();
+    when(mockMisskey.endpoints()).thenAnswer((_) async => []);
+    final provider = ProviderContainer(
+      overrides: [
+        dioProvider.overrideWithValue(dio),
+        misskeyProvider.overrideWith((ref, arg) => mockMisskey),
+      ],
+    );
     final accountRepository = provider.read(accountRepositoryProvider.notifier);
 
     await expectLater(
@@ -103,6 +109,8 @@ void main() {
         data: AuthTestData.oldVerMisskeyNodeInfo2,
       ),
     );
+    final mockMisskey = MockMisskey();
+    when(mockMisskey.endpoints()).thenAnswer((_) async => []);
     final provider =
         ProviderContainer(overrides: [dioProvider.overrideWithValue(dio)]);
     final accountRepository = provider.read(accountRepositoryProvider.notifier);
