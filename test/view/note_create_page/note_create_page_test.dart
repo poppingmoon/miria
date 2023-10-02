@@ -1175,7 +1175,6 @@ void main() {
                 const DriveFilesCreateRequest(
                   name: "test.png",
                   force: true,
-                  comment: "",
                   isSensitive: false,
                 ),
               ),
@@ -1256,7 +1255,6 @@ void main() {
                 const DriveFilesCreateRequest(
                   name: "test.txt",
                   force: true,
-                  comment: "",
                   isSensitive: false,
                 ),
               ),
@@ -1661,7 +1659,6 @@ void main() {
                 const DriveFilesCreateRequest(
                   name: "test.txt",
                   force: true,
-                  comment: "",
                   isSensitive: false,
                 ),
               ),
@@ -2882,6 +2879,8 @@ void main() {
 
         await tester.tap(find.text(TestData.drive1.name), warnIfMissed: false);
         await tester.pumpAndSettle();
+        await tester.tap(find.byIcon(Icons.check));
+        await tester.pumpAndSettle();
 
         await tester.enterText(
           find.byType(TextField).hitTestable(),
@@ -2995,7 +2994,6 @@ void main() {
                 const DriveFilesCreateRequest(
                   name: "test.png",
                   force: true,
-                  comment: "",
                   isSensitive: false,
                 ),
               ),

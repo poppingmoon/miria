@@ -4,13 +4,17 @@ import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/misskey_notes/network_image.dart';
 import 'package:miria/view/common/pushable_listview.dart';
+import 'package:miria/view/themes/app_theme.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 class DriveFileSelectDialog extends ConsumerStatefulWidget {
   final Account account;
+  final bool allowMultiple;
+
   const DriveFileSelectDialog({
     super.key,
     required this.account,
+    this.allowMultiple = false,
   });
 
   @override
@@ -20,23 +24,41 @@ class DriveFileSelectDialog extends ConsumerStatefulWidget {
 
 class DriveFileSelectDialogState extends ConsumerState<DriveFileSelectDialog> {
   final List<DriveFolder> path = [];
+  final List<DriveFile> files = [];
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Row(
-        children: [
-          if (path.isNotEmpty)
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  path.removeLast();
-                });
-              },
-              icon: const Icon(Icons.arrow_back),
+      title: AppBar(
+        leading: IconButton(
+          onPressed: path.isEmpty
+              ? null
+              : () {
+                  setState(() {
+                    path.removeLast();
+                  });
+                },
+          icon: const Icon(Icons.arrow_back),
+        ),
+        title: path.isEmpty
+            ? const Text("ファイルを選択")
+            : Text(path.map((e) => e.name).join("/")),
+        actions: [
+          if (files.isNotEmpty)
+            Center(
+              child: Text(
+                "(${files.length})",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
             ),
-          Expanded(child: Text(path.map((e) => e.name).join("/"))),
+          if (widget.allowMultiple)
+            IconButton(
+              onPressed:
+                  files.isEmpty ? null : () => Navigator.of(context).pop(files),
+              icon: const Icon(Icons.check),
+            ),
         ],
+        backgroundColor: Colors.transparent,
       ),
       content: SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
@@ -104,28 +126,56 @@ class DriveFileSelectDialogState extends ConsumerState<DriveFileSelectDialog> {
                 },
                 listKey: path.map((e) => e.id).join("/"),
                 itemBuilder: (context, item) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop(item);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: double.infinity,
-                            height: 200,
-                            child: item.thumbnailUrl == null
-                                ? Container()
-                                : NetworkImageView(
-                                    fit: BoxFit.cover,
-                                    url: item.thumbnailUrl!,
-                                    type: ImageType.imageThumbnail,
-                                  ),
-                          ),
-                          Text(item.name),
-                        ],
+                  final isSelected = files.any((file) => file.id == item.id);
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: InkWell(
+                      customBorder: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      onTap: () {
+                        if (widget.allowMultiple) {
+                          setState(() {
+                            if (isSelected) {
+                              files.removeWhere((file) => file.id == item.id);
+                            } else {
+                              files.add(item);
+                            }
+                          });
+                        } else {
+                          Navigator.of(context).pop(item);
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: (widget.allowMultiple && isSelected)
+                            ? BoxDecoration(
+                                color: AppTheme.of(context)
+                                    .currentDisplayTabColor
+                                    .withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(5),
+                              )
+                            : null,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: double.infinity,
+                              height: 200,
+                              child: item.thumbnailUrl == null
+                                  ? const SizedBox.shrink()
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: NetworkImageView(
+                                        fit: BoxFit.cover,
+                                        url: item.thumbnailUrl!,
+                                        type: ImageType.imageThumbnail,
+                                      ),
+                                    ),
+                            ),
+                            Text(item.name),
+                          ],
+                        ),
                       ),
                     ),
                   );
