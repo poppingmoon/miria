@@ -1,14 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/summaly_result.dart';
 import 'package:miria/providers.dart';
+import 'package:miria/view/common/misskey_notes/player_embed.dart';
+import 'package:miria/view/common/misskey_notes/twitter_embed.dart';
+import 'package:miria/view/themes/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:webview_flutter_android/webview_flutter_android.dart';
-import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 final _summalyProvider =
     AsyncNotifierProvider.family<_Summaly, SummalyResult, (String, String)>(
@@ -22,18 +24,23 @@ class _Summaly extends FamilyAsyncNotifier<SummalyResult, (String, String)> {
     final dio = ref.watch(dioProvider);
     final url = Uri.parse(link);
     // https://github.com/misskey-dev/misskey/blob/2023.9.3/packages/frontend/src/components/MkUrlPreview.vue#L141-L145
-    final replacedUrl = url.replace(
-      host: url.host == "music.youtube.com" &&
-              ["watch", "channel"].contains(url.pathSegments.firstOrNull)
-          ? "www.youtube.com"
-          : null,
-      fragment: "",
-    );
+    final replacedUrl = url
+        .replace(
+          host: url.host == "music.youtube.com" &&
+                  ["watch", "channel"].contains(url.pathSegments.firstOrNull)
+              ? "www.youtube.com"
+              : null,
+        )
+        .removeFragment();
     final response = await dio.getUri<Map<String, dynamic>>(
       Uri.https(
         host,
         "url",
-        {"url": replacedUrl.toString(), "lang": "ja-JP"},
+        {
+          "url": replacedUrl.toString(),
+          // TODO: l10n
+          "lang": "ja-JP",
+        },
       ),
     );
     return SummalyResult.fromJson(response.data!);
@@ -79,12 +86,30 @@ class LinkPreviewItem extends StatefulWidget {
 
 class _LinkPreviewItemState extends State<LinkPreviewItem> {
   bool isPlayerOpen = false;
+  bool isTweetExpanded = false;
+
+  String? extractTweetId(String link) {
+    final url = Uri.parse(link);
+    if (!["twitter.com", "mobile.twitter.com", "x.com", "mobile.x.com"]
+        .contains(url.host)) {
+      return null;
+    }
+    final index = url.pathSegments.indexWhere(
+      (segment) => ["status", "statuses"].contains(segment),
+    );
+    if (index < 0 || url.pathSegments.length - 1 <= index) {
+      return null;
+    }
+    final tweetId = url.pathSegments[index + 1];
+    return int.tryParse(tweetId)?.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final tweetId = extractTweetId(widget.link);
     return Column(
       children: [
-        if (!isPlayerOpen)
+        if (!isPlayerOpen && !isTweetExpanded)
           LinkPreviewTile(
             link: widget.link,
             summalyResult: widget.summalyResult,
@@ -92,7 +117,7 @@ class _LinkPreviewItemState extends State<LinkPreviewItem> {
         if (widget.summalyResult.player.url != null &&
             WebViewPlatform.instance != null)
           if (isPlayerOpen) ...[
-            PlayerItem(player: widget.summalyResult.player),
+            PlayerEmbed(player: widget.summalyResult.player),
             OutlinedButton.icon(
               onPressed: () => setState(() {
                 isPlayerOpen = false;
@@ -107,6 +132,29 @@ class _LinkPreviewItemState extends State<LinkPreviewItem> {
               }),
               icon: const Icon(Icons.play_arrow),
               label: const Text("プレイヤーを開く"),
+            ),
+        if (tweetId != null && WebViewPlatform.instance != null)
+          if (isTweetExpanded) ...[
+            TwitterEmbed(
+              tweetId: tweetId,
+              isDark: AppTheme.of(context).isDarkMode,
+              // TODO: l10n
+              lang: "ja",
+            ),
+            OutlinedButton.icon(
+              onPressed: () => setState(() {
+                isTweetExpanded = false;
+              }),
+              icon: const Icon(Icons.close),
+              label: const Text("ツイートを閉じる"),
+            ),
+          ] else
+            OutlinedButton.icon(
+              onPressed: () => setState(() {
+                isTweetExpanded = true;
+              }),
+              icon: const Icon(Icons.play_arrow),
+              label: const Text("ツイートを開く"),
             ),
       ],
     );
@@ -215,88 +263,6 @@ class LinkPreviewTile extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class PlayerItem extends StatefulWidget {
-  const PlayerItem({super.key, required this.player});
-
-  final Player player;
-
-  @override
-  State<PlayerItem> createState() => _PlayerItemState();
-}
-
-class _PlayerItemState extends State<PlayerItem> {
-  WebViewController? controller;
-
-  @override
-  void initState() {
-    super.initState();
-    final playerUrl = widget.player.url;
-    if (playerUrl != null) {
-      final url = Uri.tryParse(playerUrl);
-      if (url != null && WebViewPlatform.instance != null) {
-        // https://github.com/misskey-dev/misskey/blob/2023.9.3/packages/frontend/src/components/MkUrlPreview.vue#L18
-        final replacedUrl = url.replace(
-          queryParameters: {
-            ...url.queryParameters,
-            "autoplay": "1",
-            "auto_play": "1",
-          },
-        );
-        if (WebViewPlatform.instance is WebKitWebViewPlatform) {
-          controller = WebViewController.fromPlatformCreationParams(
-            WebKitWebViewControllerCreationParams(
-              allowsInlineMediaPlayback: true,
-              mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
-            ),
-          );
-        } else {
-          controller = WebViewController();
-        }
-        controller
-          ?..setJavaScriptMode(JavaScriptMode.unrestricted)
-          ..setBackgroundColor(Colors.transparent)
-          ..setNavigationDelegate(
-            NavigationDelegate(
-              onNavigationRequest: (request) async {
-                final url = Uri.tryParse(request.url);
-                if (url != null && await canLaunchUrl(url)) {
-                  launchUrl(url, mode: LaunchMode.externalApplication);
-                }
-                return NavigationDecision.prevent;
-              },
-            ),
-          )
-          ..loadRequest(replacedUrl);
-        if (controller?.platform is AndroidWebViewController) {
-          (controller!.platform as AndroidWebViewController)
-              .setMediaPlaybackRequiresUserGesture(false);
-        }
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = this.controller;
-    if (controller == null) {
-      return const SizedBox.shrink();
-    }
-    final width = widget.player.width;
-    final height = widget.player.height;
-    if (width != null && height != null) {
-      final aspectRatio = width / height;
-      return AspectRatio(
-        aspectRatio: aspectRatio,
-        child: WebViewWidget(controller: controller),
-      );
-    }
-    return SizedBox(
-      height: height?.toDouble() ?? 200,
-      child: WebViewWidget(controller: controller),
     );
   }
 }
