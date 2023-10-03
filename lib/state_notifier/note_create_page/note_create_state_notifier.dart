@@ -12,7 +12,7 @@ import "package:mfm_parser/mfm_parser.dart";
 import "package:mime/mime.dart";
 import "package:miria/extensions/note_visibility_extension.dart";
 import "package:miria/log.dart";
-import "package:miria/model/image_file.dart";
+import "package:miria/model/misskey_post_file.dart";
 import "package:miria/providers.dart";
 import "package:miria/router/app_router.dart";
 import "package:miria/view/common/dialog/dialog_state.dart";
