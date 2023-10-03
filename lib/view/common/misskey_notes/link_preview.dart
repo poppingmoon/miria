@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +7,8 @@ import 'package:miria/model/account.dart';
 import 'package:miria/model/summaly_result.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/misskey_notes/player_embed.dart';
+import 'package:miria/view/common/misskey_notes/twitter_embed.dart';
+import 'package:miria/view/themes/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -83,12 +86,30 @@ class LinkPreviewItem extends StatefulWidget {
 
 class _LinkPreviewItemState extends State<LinkPreviewItem> {
   bool isPlayerOpen = false;
+  bool isTweetExpanded = false;
+
+  String? extractTweetId(String link) {
+    final url = Uri.parse(link);
+    if (!["twitter.com", "mobile.twitter.com", "x.com", "mobile.x.com"]
+        .contains(url.host)) {
+      return null;
+    }
+    final index = url.pathSegments.indexWhere(
+      (segment) => ["status", "statuses"].contains(segment),
+    );
+    if (index < 0 || url.pathSegments.length - 1 <= index) {
+      return null;
+    }
+    final tweetId = url.pathSegments[index + 1];
+    return int.tryParse(tweetId)?.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final tweetId = extractTweetId(widget.link);
     return Column(
       children: [
-        if (!isPlayerOpen)
+        if (!isPlayerOpen && !isTweetExpanded)
           LinkPreviewTile(
             link: widget.link,
             summalyResult: widget.summalyResult,
@@ -111,6 +132,29 @@ class _LinkPreviewItemState extends State<LinkPreviewItem> {
               }),
               icon: const Icon(Icons.play_arrow),
               label: const Text("プレイヤーを開く"),
+            ),
+        if (tweetId != null && WebViewPlatform.instance != null)
+          if (isTweetExpanded) ...[
+            TwitterEmbed(
+              tweetId: tweetId,
+              isDark: AppTheme.of(context).isDarkMode,
+              // TODO: l10n
+              lang: "ja",
+            ),
+            OutlinedButton.icon(
+              onPressed: () => setState(() {
+                isTweetExpanded = false;
+              }),
+              icon: const Icon(Icons.close),
+              label: const Text("ツイートを閉じる"),
+            ),
+          ] else
+            OutlinedButton.icon(
+              onPressed: () => setState(() {
+                isTweetExpanded = true;
+              }),
+              icon: const Icon(Icons.play_arrow),
+              label: const Text("ツイートを開く"),
             ),
       ],
     );
