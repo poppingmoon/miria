@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:miria/model/image_file.dart';
+import 'package:miria/model/misskey_post_file.dart';
 
 class FileSettingsDialogResult {
   final String fileName;
