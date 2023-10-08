@@ -127,6 +127,18 @@ class TabHeader extends ConsumerWidget {
               },
               icon: const Icon(Icons.info_outline),
             )
+          else if (tabSetting.tabType == TabType.userList)
+            IconButton(
+              onPressed: () {
+                context.pushRoute(
+                  UsersListDetailRoute(
+                    account: tabSetting.account,
+                    listId: tabSetting.listId!,
+                  ),
+                );
+              },
+              icon: const Icon(Icons.info_outline),
+            )
           else if ([
             TabType.hybridTimeline,
             TabType.localTimeline,
