@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:file/file.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mfm_parser/mfm_parser.dart';
@@ -291,6 +292,15 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
         state.files.map((file) async {
           switch (file) {
             case PostFile():
+              Uint8List contents = await file.file.readAsBytes();
+              if (["image/jpeg", "image/tiff"].contains(file.type)) {
+                try {
+                  contents =
+                      await FlutterImageCompress.compressWithList(contents);
+                } catch (e) {
+                  debugPrint("failed to compress file");
+                }
+              }
               final response = await misskey.drive.files.createAsBinary(
                 DriveFilesCreateRequest(
                   force: true,
@@ -298,7 +308,7 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
                   isSensitive: file.isNsfw,
                   comment: file.caption,
                 ),
-                await file.file.readAsBytes(),
+                contents,
               );
               return response.id;
             case AlreadyPostedFile():
@@ -414,7 +424,8 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
           allowMultiple: true,
         ),
       );
-      if (result == null) return;
+      if (result == null || result.isEmpty) return;
+
       final files = result.map(
         (file) => AlreadyPostedFile(
           file: file,

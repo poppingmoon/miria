@@ -82,6 +82,30 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
               .reactions
               .delete(NotesReactionsDeleteRequest(noteId: widget.noteId));
 
+          final String reactionString;
+          final emojiData = widget.emojiData;
+          switch (emojiData) {
+            case UnicodeEmojiData():
+              reactionString = emojiData.char;
+            case CustomEmojiData():
+              if (!emojiData.isCurrentServer) return;
+              reactionString = ":${emojiData.baseName}:";
+            case NotEmojiData():
+              return;
+          }
+
+          await ref.read(misskeyProvider(account)).notes.reactions.create(
+                NotesReactionsCreateRequest(
+                  noteId: widget.noteId,
+                  reaction: reactionString,
+                ),
+              );
+
+          // misskey.ioはただちにリアクションを反映してくれない
+          if (account.host == "misskey.io") {
+            await Future<void>.delayed(const Duration(seconds: 1));
+          }
+
           await ref.read(notesProvider(account)).refresh(widget.noteId);
 
           return;
