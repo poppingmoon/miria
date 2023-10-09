@@ -215,7 +215,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
               reactions: reactions,
               reactionEmojis: reactionEmojis,
               myReaction: reaction.userId == account.i.id
-                  ? emoji?.name
+                  ? (emoji?.name != null ? ":${emoji?.name}:" : null)
                   : registeredNote.myReaction,
             ),
           );
