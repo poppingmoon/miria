@@ -32,13 +32,15 @@ class ImportExportPageState extends ConsumerState<ImportExportPage> {
               "設定ファイルの管理",
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const Text("Miriaの現在の設定から、「全般設定」「アカウントごとの設定」「タブ設定」を設定ファイルに出力して管理することができます。"),
-            const Text("設定ファイルは、指定したアカウントの「ドライブ」に保存されます。"),
+            const Text("現在の設定から、「全般設定」「アカウントごとの設定」「タブ設定」を設定ファイルに出力して管理することができます。"),
+            const Text("・ログイン情報は記録されません。"),
+            const Text("・設定ファイルは、指定したアカウントの「ドライブ」に保存されます。"),
+            const Text("・作成できる設定ファイルは、「ドライブ」のフォルダごとに1つまでです。"),
             Text(
               "インポート",
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const Text("全般設定と、この端末でログインしているアカウントのみに対応する設定が読み込まれます。"),
+            const Text("全般設定と、この端末でログインしているアカウントに対応する設定が読み込まれます。"),
             Row(
               children: [
                 Expanded(
@@ -79,8 +81,7 @@ class ImportExportPageState extends ConsumerState<ImportExportPage> {
               "エクスポート",
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const Textconst Text("この端末でログインしているすべてのアカウントの、ログイン情報以外の情報を設定ファイルに記録します。"),
-            const Text("1つのアカウントにつき、設定ファイルを1つまで作成することができます（上書きをすることもできます）。"),
+            const Text("この端末でログインしているすべてのアカウントの情報を設定ファイルに記録します。"),
             Row(
               children: [
                 Expanded(
