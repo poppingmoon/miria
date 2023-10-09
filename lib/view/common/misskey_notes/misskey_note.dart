@@ -7,6 +7,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mfm_parser/mfm_parser.dart' as parser;
+import 'package:miria/const.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/extensions/note_extension.dart';
 import 'package:miria/extensions/note_visibility_extension.dart';
@@ -845,6 +846,11 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
           .notes
           .reactions
           .delete(NotesReactionsDeleteRequest(noteId: displayNote.id));
+      if (account.host == "misskey.io") {
+        await Future<void>.delayed(
+          const Duration(milliseconds: misskeyIOReactionDelay),
+        );
+      }
       await ref.read(notesProvider(account)).refresh(displayNote.id);
       return;
     }
@@ -875,6 +881,11 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
         reaction: ":${selectedEmoji.baseName}:",
       ),
     );
+    if (account.host == "misskey.io") {
+      await Future<void>.delayed(
+        const Duration(milliseconds: misskeyIOReactionDelay),
+      );
+    }
     await note.refresh(displayNote.id);
   }
 }

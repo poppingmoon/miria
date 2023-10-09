@@ -132,7 +132,6 @@ class TabHeader extends ConsumerWidget {
             )
           else if (tabSetting.tabType == TabType.userList)
             IconButton(
-              icon: const Icon(Icons.info_outline),
               onPressed: () {
                 context.pushRoute(
                   UsersListDetailRoute(
@@ -141,6 +140,7 @@ class TabHeader extends ConsumerWidget {
                   ),
                 );
               },
+              icon: const Icon(Icons.info_outline),
             )
           else if ([
             TabType.hybridTimeline,

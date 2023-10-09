@@ -38,8 +38,6 @@ class ReactionAcceptanceDialog extends StatelessWidget {
               Navigator.of(context).pop(ReactionAcceptance.nonSensitiveOnly),
           leading: const Icon(Icons.shield_outlined),
           title: const Text("非センシティブのみ"),
-          subtitle:
-              const Text("Misskey v13.13.1からの機能です。サーバーによっては使用できないことがあります。"),
         ),
         ListTile(
           onTap: () => Navigator.of(context).pop(
@@ -47,8 +45,6 @@ class ReactionAcceptanceDialog extends StatelessWidget {
           ),
           leading: const Icon(Icons.add_moderator_outlined),
           title: const Text("非センシティブのみ（リモートからはいいねのみ）"),
-          subtitle:
-              const Text("Misskey v13.13.1からの機能です。サーバーによっては使用できないことがあります。"),
         ),
       ],
     );
