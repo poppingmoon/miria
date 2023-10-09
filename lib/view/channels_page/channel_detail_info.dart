@@ -92,6 +92,9 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
   @override
   Widget build(BuildContext context) {
     final data = this.data;
+    final isFavorited = data?.isFavorited;
+    final isFollowing = data?.isFollowing;
+
     if (data == null) {
       if (error == null) {
         return const Center(child: CircularProgressIndicator());
@@ -152,29 +155,31 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
           alignment: Alignment.centerRight,
           child: Wrap(
             children: [
-              if (data.isFavorited)
-                ElevatedButton.icon(
-                  onPressed: unfavorite.expectFailure(context),
-                  icon: const Icon(Icons.favorite_border),
-                  label: const Text("お気に入り中"),
-                )
-              else
-                OutlinedButton(
-                  onPressed: favorite.expectFailure(context),
-                  child: const Text("お気に入りにいれる"),
-                ),
+              if (isFavorited != null)
+                if (isFavorited)
+                  ElevatedButton.icon(
+                    onPressed: unfavorite.expectFailure(context),
+                    icon: const Icon(Icons.favorite_border),
+                    label: const Text("お気に入り中"),
+                  )
+                else
+                  OutlinedButton(
+                    onPressed: favorite.expectFailure(context),
+                    child: const Text("お気に入りにいれる"),
+                  ),
               const Padding(padding: EdgeInsets.only(left: 10)),
-              if (data.isFollowing)
-                ElevatedButton.icon(
-                  onPressed: unfollow.expectFailure(context),
-                  icon: const Icon(Icons.check),
-                  label: const Text("フォローしています"),
-                )
-              else
-                OutlinedButton(
-                  onPressed: follow.expectFailure(context),
-                  child: const Text("フォローする"),
-                ),
+              if (isFollowing != null)
+                if (isFollowing)
+                  ElevatedButton.icon(
+                    onPressed: unfollow.expectFailure(context),
+                    icon: const Icon(Icons.check),
+                    label: const Text("フォローしています"),
+                  )
+                else
+                  OutlinedButton(
+                    onPressed: follow.expectFailure(context),
+                    child: const Text("フォローする"),
+                  ),
             ],
           ),
         ),
