@@ -40,7 +40,7 @@ void main() {
           argThat(equals(const NotesSearchRequest(query: "Misskey"))),
         ),
       ).called(1);
-      expect(find.text(TestData.note1ExpectText), findsOneWidget);
+      expect(find.text(TestData.note1.text!), findsOneWidget);
 
       when(mockNote.search(any)).thenAnswer((_) async => [TestData.note2]);
       await tester.tap(find.byIcon(Icons.keyboard_arrow_down).at(1));
@@ -52,13 +52,13 @@ void main() {
             equals(
               NotesSearchRequest(
                 query: "Misskey",
-                untilId: TestData.note1ExpectId,
+                untilId: TestData.note1.id,
               ),
             ),
           ),
         ),
       ).called(1);
-      expect(find.text(TestData.note2ExpectText), findsOneWidget);
+      expect(find.text(TestData.note2.text!), findsOneWidget);
     });
 
     testWidgets("ユーザー指定ができること", (tester) async {
@@ -100,7 +100,7 @@ void main() {
       );
 
       // ノートが表示されていること
-      expect(find.text(TestData.note1ExpectText), findsOneWidget);
+      expect(find.text(TestData.note1.text!), findsOneWidget);
       verify(
         mockNote.search(
           argThat(
@@ -140,27 +140,27 @@ void main() {
       await tester.tap(find.byIcon(Icons.keyboard_arrow_right).at(1));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text(TestData.channel1ExpectName));
+      await tester.tap(find.text(TestData.channel1.name));
       await tester.pumpAndSettle();
 
       // 指定したユーザーが表示されていること
       expect(
         find.descendant(
           of: find.byType(Card),
-          matching: find.text(TestData.channel1ExpectName),
+          matching: find.text(TestData.channel1.name),
         ),
         findsOneWidget,
       );
 
       // ノートが表示されていること
-      expect(find.text(TestData.note1ExpectText), findsOneWidget);
+      expect(find.text(TestData.note1.text!), findsOneWidget);
       verify(
         mockNote.search(
           argThat(
             equals(
               NotesSearchRequest(
                 query: "",
-                channelId: TestData.channel1ExpectId,
+                channelId: TestData.channel1.id,
               ),
             ),
           ),
@@ -195,7 +195,7 @@ void main() {
           ),
         ),
       ).called(1);
-      expect(find.text(TestData.note1ExpectText), findsOneWidget);
+      expect(find.text(TestData.note1.text!), findsOneWidget);
 
       when(mockNote.searchByTag(any)).thenAnswer((_) async => [TestData.note2]);
       await tester.tap(find.byIcon(Icons.keyboard_arrow_down).at(1));
@@ -207,13 +207,13 @@ void main() {
             equals(
               NotesSearchByTagRequest(
                 tag: "藍ちゃん大食いチャレンジ",
-                untilId: TestData.note1ExpectId,
+                untilId: TestData.note1.id,
               ),
             ),
           ),
         ),
       ).called(1);
-      expect(find.text(TestData.note2ExpectText), findsOneWidget);
+      expect(find.text(TestData.note2.text!), findsOneWidget);
     });
   });
 
@@ -397,7 +397,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text(TestData.note1ExpectText), findsOneWidget);
+      expect(find.text(TestData.note1.text!), findsOneWidget);
       verify(
         mockNote.search(
           argThat(equals(const NotesSearchRequest(query: "Misskey"))),

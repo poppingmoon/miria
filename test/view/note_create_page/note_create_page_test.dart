@@ -55,7 +55,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.text(TestData.channel1ExpectName), findsOneWidget);
+        expect(find.text(TestData.channel1.name), findsOneWidget);
 
         await tester.enterText(
           find.byType(TextField).hitTestable(),
@@ -69,7 +69,7 @@ void main() {
             argThat(
               equals(
                 predicate<NotesCreateRequest>(
-                  (arg) => arg.channelId == TestData.channel1ExpectId,
+                  (arg) => arg.channelId == TestData.channel1.id,
                 ),
               ),
             ),
@@ -104,7 +104,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.text(TestData.channel1ExpectName), findsOneWidget);
+        expect(find.text(TestData.channel1.name), findsOneWidget);
 
         await tester.enterText(
           find.byType(TextField).hitTestable(),
@@ -118,7 +118,7 @@ void main() {
             argThat(
               equals(
                 predicate<NotesCreateRequest>(
-                  (arg) => arg.channelId == TestData.channel1ExpectId,
+                  (arg) => arg.channelId == TestData.channel1.id,
                 ),
               ),
             ),
@@ -152,7 +152,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.text(TestData.channel1ExpectName), findsOneWidget);
+        expect(find.text(TestData.channel1.name), findsOneWidget);
 
         await tester.enterText(
           find.byType(TextField).hitTestable(),
@@ -166,7 +166,7 @@ void main() {
             argThat(
               equals(
                 predicate<NotesCreateRequest>(
-                  (arg) => arg.channelId == TestData.channel1ExpectId,
+                  (arg) => arg.channelId == TestData.channel1.id,
                 ),
               ),
             ),
@@ -201,7 +201,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.text(TestData.channel2ExpectName), findsOneWidget);
+        expect(find.text(TestData.channel2.name), findsOneWidget);
 
         await tester.enterText(
           find.byType(TextField).hitTestable(),
@@ -215,7 +215,7 @@ void main() {
             argThat(
               equals(
                 predicate<NotesCreateRequest>(
-                  (arg) => arg.channelId == TestData.channel2ExpectId,
+                  (arg) => arg.channelId == TestData.channel2.id,
                 ),
               ),
             ),
@@ -1305,7 +1305,7 @@ void main() {
           find.descendant(
             of: find.byType(ReplyToArea),
             matching: find.text(
-              TestData.note3ExpectUserName,
+              TestData.note3AsAnotherUser.user.username,
               findRichText: true,
             ),
           ),
@@ -1967,7 +1967,7 @@ void main() {
             find.descendant(
               of: find.byType(MfmPreview),
               matching: find.textContaining(
-                TestData.note3ExpectUserName.tight,
+                TestData.note3AsAnotherUser.user.username.tight,
                 findRichText: true,
               ),
             ),
