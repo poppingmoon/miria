@@ -94,21 +94,6 @@ class _TwitterEmbedState extends State<TwitterEmbed> {
     );
   </script>
 
-  <script>
-    function createTweet() {
-      window.twttr.widgets.createTweet(
-        "${widget.tweetId}",
-        document.getElementById("container"),
-        {
-          ${widget.isDark ? "theme: 'dark'," : ""}
-          ${widget.lang != null ? "lang: '${widget.lang}'," : ""}
-        }
-      ).then(function(el) {
-        Twitter.postMessage(el.clientHeight);
-      });
-    }
-  </script>
-
 </html>""",
       );
   }
