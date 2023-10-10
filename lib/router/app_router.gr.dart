@@ -420,6 +420,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    InstalledThemesRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const InstalledThemesPage(),
+      );
+    },
   };
 }
 
@@ -1913,4 +1919,18 @@ class UserRouteArgs {
   String toString() {
     return 'UserRouteArgs{key: $key, userId: $userId, account: $account}';
   }
+}
+
+/// generated route for
+/// [InstalledThemesPage]
+class InstalledThemesRoute extends PageRouteInfo<void> {
+  const InstalledThemesRoute({List<PageRouteInfo>? children})
+      : super(
+          InstalledThemesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'InstalledThemesRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }

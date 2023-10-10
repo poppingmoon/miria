@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/providers.dart';
-import 'package:miria/view/themes/built_in_color_themes.dart';
+import 'package:miria/router/app_router.dart';
 
 @RoutePage()
 class GeneralSettingsPage extends ConsumerStatefulWidget {
@@ -37,20 +37,23 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final settings = ref.read(generalSettingsRepositoryProvider).settings;
+    final colorThemes = ref.read(colorThemeRepositoryProvider);
     setState(() {
       lightModeTheme = settings.lightColorThemeId;
-      if (lightModeTheme.isEmpty) {
-        lightModeTheme = builtInColorThemes
-            .where((element) => !element.isDarkTheme)
-            .first
-            .id;
+      if (lightModeTheme.isEmpty ||
+          colorThemes.every(
+            (element) => element.isDarkTheme || element.id != lightModeTheme,
+          )) {
+        lightModeTheme =
+            colorThemes.firstWhere((element) => !element.isDarkTheme).id;
       }
       darkModeTheme = settings.darkColorThemeId;
       if (darkModeTheme.isEmpty ||
-          builtInColorThemes.every((element) =>
-              !element.isDarkTheme || element.id != darkModeTheme)) {
+          colorThemes.every(
+            (element) => !element.isDarkTheme || element.id != darkModeTheme,
+          )) {
         darkModeTheme =
-            builtInColorThemes.where((element) => element.isDarkTheme).first.id;
+            colorThemes.firstWhere((element) => element.isDarkTheme).id;
       }
       colorSystem = settings.themeColorSystem;
       nsfwInherit = settings.nsfwInherit;
@@ -86,6 +89,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorThemes = ref.watch(colorThemeRepositoryProvider);
     return Scaffold(
       appBar: AppBar(title: const Text("全般設定")),
       body: SingleChildScrollView(
@@ -207,8 +211,9 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       const Text("ライトモードで使うテーマ"),
                       DropdownButton<String>(
+                        isExpanded: true,
                         items: [
-                          for (final element in builtInColorThemes
+                          for (final element in colorThemes
                               .where((element) => !element.isDarkTheme))
                             DropdownMenuItem(
                               value: element.id,
@@ -226,34 +231,45 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       const Text("ダークモードで使うテーマ"),
                       DropdownButton<String>(
-                          items: [
-                            for (final element in builtInColorThemes
-                                .where((element) => element.isDarkTheme))
-                              DropdownMenuItem(
-                                value: element.id,
-                                child: Text("${element.name}っぽいの"),
-                              )
-                          ],
-                          value: darkModeTheme,
-                          onChanged: (value) => setState(() {
-                                darkModeTheme = value ?? "";
-                                save();
-                              })),
+                        isExpanded: true,
+                        items: [
+                          for (final element in colorThemes
+                              .where((element) => element.isDarkTheme))
+                            DropdownMenuItem(
+                              value: element.id,
+                              child: Text("${element.name}っぽいの"),
+                            ),
+                        ],
+                        value: darkModeTheme,
+                        onChanged: (value) => setState(() {
+                          darkModeTheme = value ?? "";
+                          save();
+                        }),
+                      ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       const Text("ライトモード・ダークモードのつかいわけ"),
                       DropdownButton<ThemeColorSystem>(
-                          items: [
-                            for (final colorSystem in ThemeColorSystem.values)
-                              DropdownMenuItem(
-                                value: colorSystem,
-                                child: Text(colorSystem.displayName),
-                              )
-                          ],
-                          value: colorSystem,
-                          onChanged: (value) => setState(() {
-                                colorSystem = value ?? ThemeColorSystem.system;
-                                save();
-                              }))
+                        isExpanded: true,
+                        items: [
+                          for (final colorSystem in ThemeColorSystem.values)
+                            DropdownMenuItem(
+                              value: colorSystem,
+                              child: Text(colorSystem.displayName),
+                            ),
+                        ],
+                        value: colorSystem,
+                        onChanged: (value) => setState(() {
+                          colorSystem = value ?? ThemeColorSystem.system;
+                          save();
+                        }),
+                      ),
+                      ListTile(
+                        title: const Text("テーマの管理"),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () {
+                          context.pushRoute(const InstalledThemesRoute());
+                        },
+                      ),
                     ],
                   ),
                 ),
