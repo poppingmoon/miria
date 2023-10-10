@@ -385,7 +385,7 @@
             }
         }
     },
-    
+
     "notificationAll": "みんな",
     "notificationForMe": "自分宛て",
     "notificationDirect": "ダイレクト",
@@ -718,6 +718,10 @@
             }
         }
     },
+
+    "invalidThemeFormat": "テーマの形式が間違っています",
+    "alreadyInstalledTheme": "このテーマは既にインストールされています",
+
     "importFromThisFolder": "このフォルダーからインポートする",
     "exportedFileNotFound": "ここにMiriaの設定ファイルあれへんかったわ",
     "importCompleted": "インポート終わったで。",
@@ -814,6 +818,7 @@
         }
     },
     "selectLightOrDarkMode": "ライトモード・ダークモードのつかいわけ",
+    "manageThemes": "テーマの管理",
     "reaction": "リアクション",
     "emojiTapReaction": "ノート内の絵文字タップでリアクションする",
     "emojiTapReactionDescription": "ノート内の絵文字をタップしてリアクションします。MFMや外部サーバーの絵文字の場合うまく機能しないことがあります。",
@@ -825,6 +830,12 @@
     "fontFantasy": "フォント （$[font.fantasy 用）",
     "fontSize": "フォントサイズ",
     "systemFont": "システム標準",
+    "installTheme": "テーマのインストール",
+    "themeCode": "テーマコード",
+    "install": "インストール",
+    "installedThemes": "インストールされたテーマ",
+    "noInstalledThemes": "インストールされたテーマがありません",
+    "confirmDeleteTheme": "このテーマを削除しますか？",
 
     "selectFolder": "フォルダー選択",
     "settingsFileManagement": "設定ファイルの管理",

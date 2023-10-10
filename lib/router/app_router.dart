@@ -52,6 +52,8 @@ import "package:miria/view/server_detail_dialog.dart";
 import "package:miria/view/settings_page/account_settings_page/account_list.dart";
 import "package:miria/view/settings_page/app_info_page/app_info_page.dart";
 import "package:miria/view/settings_page/general_settings_page/general_settings_page.dart";
+import "package:miria/view/settings_page/general_settings_page/install_theme_dialog.dart";
+import "package:miria/view/settings_page/general_settings_page/installed_themes_page.dart";
 import "package:miria/view/settings_page/import_export_page/folder_select_dialog.dart";
 import "package:miria/view/settings_page/import_export_page/import_export_page.dart";
 import "package:miria/view/settings_page/settings_page.dart";
@@ -135,6 +137,7 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: MisskeyGamesRoute.page),
     // きしょ……
     AutoRoute(page: MisskeyRouteRoute.page),
+    AutoRoute(page: InstalledThemesRoute.page),
 
     AutoRoute(path: "/share-extension", page: ShareExtensionRoute.page),
 
@@ -150,6 +153,7 @@ class AppRouter extends _$AppRouter {
     AutoDialogRoute(page: ChannelDetailRoute.page),
     AutoDialogRoute(page: ServerDetailRoute.page),
     AutoDialogRoute(page: ReactionUserRoute.page),
+    AutoDialogRoute(page: InstallThemeRoute.page),
     AutoDialogRoute<CommunityChannel>(page: ChannelSelectRoute.page),
     AutoDialogRoute<ClipSettings>(page: ClipSettingsRoute.page),
     AutoDialogRoute<MisskeyEmojiData>(page: ReactionPickerRoute.page),

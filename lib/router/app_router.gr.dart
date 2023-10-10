@@ -107,12 +107,13 @@ abstract class _$AppRouter extends RootStackRouter {
       final args = routeData.argsAs<AntennaSettingsRouteArgs>();
       return AutoRoutePage<AntennaSettings>(
         routeData: routeData,
-        child: AntennaSettingsDialog(
+        child: WrappedRoute(
+            child: AntennaSettingsDialog(
           account: args.account,
           key: args.key,
           title: args.title,
           initialSettings: args.initialSettings,
-        ),
+        )),
       );
     },
     AppInfoRoute.name: (routeData) {
@@ -334,6 +335,18 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ImportExportPage(),
+      );
+    },
+    InstallThemeRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const InstallThemeDialog(),
+      );
+    },
+    InstalledThemesRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const InstalledThemesPage(),
       );
     },
     InstanceMuteRoute.name: (routeData) {
@@ -1898,6 +1911,34 @@ class ImportExportRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ImportExportRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [InstallThemeDialog]
+class InstallThemeRoute extends PageRouteInfo<void> {
+  const InstallThemeRoute({List<PageRouteInfo>? children})
+      : super(
+          InstallThemeRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'InstallThemeRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [InstalledThemesPage]
+class InstalledThemesRoute extends PageRouteInfo<void> {
+  const InstalledThemesRoute({List<PageRouteInfo>? children})
+      : super(
+          InstalledThemesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'InstalledThemesRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
