@@ -2,7 +2,7 @@ name: miria
 description: Miria is Misskey Client for Mobile App.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.6-next.73+80
+version: 1.0.7-next.73+80
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -46,7 +46,7 @@ dependencies:
   misskey_dart:
     git:
       url: https://github.com/poppingmoon/misskey_dart.git
-      ref: 9d61b293477eef099ab561584003259fd59e9473
+      ref: 6ecf50144c420deba10b9485625e1c8225b2bb03
   package_info_plus: ^4.0.0
   path: ^1.8.2
   path_provider: ^2.0.14
