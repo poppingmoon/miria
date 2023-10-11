@@ -243,6 +243,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const GeneralSettingsPage(),
       );
     },
+    InstalledThemesRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const InstalledThemesPage(),
+      );
+    },
     ImportExportRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -1255,6 +1261,20 @@ class GeneralSettingsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'GeneralSettingsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [InstalledThemesPage]
+class InstalledThemesRoute extends PageRouteInfo<void> {
+  const InstalledThemesRoute({List<PageRouteInfo>? children})
+      : super(
+          InstalledThemesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'InstalledThemesRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
