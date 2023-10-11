@@ -187,7 +187,6 @@ class TimelinePage extends ConsumerWidget {
       tabSettingsRepositoryProvider.select((repo) => repo.tabSettings.toList()),
     );
     final page = ref.watch(timelinePageControllerProvider);
-    final controller = ref.watch(timelinePageControllerProvider.notifier);
     final tabPosition = ref.watch(
       generalSettingsRepositoryProvider.select(
         (repo) => repo.settings.tabPosition,
@@ -206,7 +205,9 @@ class TimelinePage extends ConsumerWidget {
               child: PageView.builder(
                 controller: page.pageController,
                 itemCount: tabSettings.length,
-                onPageChanged: (index) => controller.changePage(index),
+                onPageChanged: ref
+                    .read(timelinePageControllerProvider.notifier)
+                    .changePage,
                 itemBuilder: (_, index) {
                   final tabSetting = tabSettings[index];
                   return AccountScope(
