@@ -20,6 +20,15 @@ class _VideoDialogState extends State<VideoDialog> {
   void initState() {
     super.initState();
     player.open(Media(widget.url));
+    controller.rect.addListener(() {
+      final rect = controller.rect.value;
+      if (rect == null || rect.width == 0 || rect.height == 0) {
+        return;
+      }
+      setState(() {
+        aspectRatio = rect.width / rect.height;
+      });
+    });
   }
 
   @override
@@ -30,15 +39,6 @@ class _VideoDialogState extends State<VideoDialog> {
 
   @override
   Widget build(BuildContext context) {
-    controller.rect.addListener(() {
-      final rect = controller.rect.value;
-      if (rect == null || rect.width == 0 || rect.height == 0) {
-        return;
-      }
-      setState(() {
-        aspectRatio = rect.width / rect.height;
-      });
-    });
     final themeData = MaterialVideoControlsThemeData(
       seekBarPositionColor: Theme.of(context).primaryColor,
       seekBarThumbColor: Theme.of(context).primaryColor,
