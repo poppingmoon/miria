@@ -23,6 +23,7 @@ import 'package:miria/repository/tab_settings_repository.dart';
 import 'package:miria/repository/time_line_repository.dart';
 import 'package:miria/repository/user_list_time_line_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/state_notifier/common/misskey_notes/misskey_note_notifier.dart';
 import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
 import 'package:miria/state_notifier/photo_edit_page/photo_edit_state_notifier.dart';
 import 'package:misskey_dart/misskey_dart.dart';
@@ -214,4 +215,9 @@ final noteCreateProvider = StateNotifierProvider.family
       ref.read(misskeyProvider(account)),
       ref.read(errorEventProvider.notifier),
       ref.read(notesProvider(account))),
+);
+
+final misskeyNoteNotifierProvider =
+    NotifierProvider.family<MisskeyNoteNotifier, void, Account>(
+  MisskeyNoteNotifier.new,
 );
