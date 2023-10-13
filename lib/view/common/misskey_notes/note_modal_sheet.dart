@@ -9,11 +9,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
+import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/common/misskey_notes/abuse_dialog.dart';
 import 'package:miria/view/common/misskey_notes/clip_modal_sheet.dart';
-import 'package:miria/view/common/misskey_notes/open_another_account.dart';
 import 'package:miria/view/dialogs/simple_confirm_dialog.dart';
 import 'package:miria/view/note_create_page/note_create_page.dart';
+import 'package:miria/view/user_page/user_control_dialog.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -42,6 +43,7 @@ class NoteModalSheet extends ConsumerWidget {
     return ListView(
       children: [
         ListTile(
+          leading: const Icon(Icons.info_outline),
           title: const Text("詳細"),
           onTap: () {
             context
@@ -49,6 +51,7 @@ class NoteModalSheet extends ConsumerWidget {
           },
         ),
         ListTile(
+          leading: const Icon(Icons.copy),
           title: const Text("内容をコピー"),
           onTap: () {
             Clipboard.setData(ClipboardData(text: targetNote.text ?? ""));
@@ -56,6 +59,7 @@ class NoteModalSheet extends ConsumerWidget {
           },
         ),
         ListTile(
+          leading: const Icon(Icons.link),
           title: const Text("リンクをコピー"),
           onTap: () {
             Clipboard.setData(
@@ -67,29 +71,27 @@ class NoteModalSheet extends ConsumerWidget {
           },
         ),
         ListTile(
-          title: const Text("ユーザー名をコピー"),
-          onTap: () {
-            Clipboard.setData(
-              ClipboardData(
-                text: targetNote.user.name ?? targetNote.user.username,
+          leading: const Icon(Icons.person),
+          title: const Text("ユーザー"),
+          onTap: () async {
+            final response = await ref
+                .read(misskeyProvider(account))
+                .users
+                .show(UsersShowRequest(userId: targetNote.userId));
+            if (!context.mounted) return;
+            showModalBottomSheet<void>(
+              context: context,
+              builder: (context) => UserControlDialog(
+                account: account,
+                response: response,
+                isMe: targetNote.user.host == null &&
+                    targetNote.user.username == account.userId,
               ),
             );
-            Navigator.of(context).pop();
           },
         ),
         ListTile(
-          title: const Text("ユーザースクリーン名をコピー"),
-          onTap: () {
-            Clipboard.setData(
-              ClipboardData(
-                text:
-                    "@${targetNote.user.username}${targetNote.user.host != null ? "@${targetNote.user.host}" : ""}",
-              ),
-            );
-            Navigator.of(context).pop();
-          },
-        ),
-        ListTile(
+          leading: const Icon(Icons.open_in_browser),
           title: const Text("ブラウザで開く"),
           onTap: () async {
             launchUrlString(
@@ -102,6 +104,7 @@ class NoteModalSheet extends ConsumerWidget {
         ),
         if (targetNote.user.host != null)
           ListTile(
+            leading: const Icon(Icons.rocket_launch),
             title: const Text("ブラウザでリモート先を開く"),
             onTap: () async {
               final uri = targetNote.url ?? targetNote.uri;
@@ -111,9 +114,16 @@ class NoteModalSheet extends ConsumerWidget {
               Navigator.of(context).pop();
             },
           ),
-        if (!targetNote.localOnly)
-          OpenAnotherAccount(note: targetNote, beforeOpenAccount: account),
         ListTile(
+          leading: const Icon(Icons.open_in_new),
+          title: const Text("別のアカウントで開く"),
+          onTap: () => ref
+              .read(misskeyNoteNotifierProvider(account).notifier)
+              .openNoteInOtherAccount(context, targetNote)
+              .expectFailure(context),
+        ),
+        ListTile(
+          leading: const Icon(Icons.share),
           title: const Text("ノートを共有"),
           onTap: () {
             ref.read(noteModalSheetSharingModeProviding.notifier).state = true;
@@ -161,6 +171,7 @@ class NoteModalSheet extends ConsumerWidget {
             return (data == null)
                 ? const Center(child: CircularProgressIndicator())
                 : ListTile(
+                    leading: const Icon(Icons.star_rounded),
                     onTap: () async {
                       if (data.isFavorited) {
                         ref
@@ -192,6 +203,7 @@ class NoteModalSheet extends ConsumerWidget {
           },
         ),
         ListTile(
+          leading: const Icon(Icons.attach_file),
           title: const Text("クリップ"),
           onTap: () {
             Navigator.of(context).pop();
@@ -204,6 +216,7 @@ class NoteModalSheet extends ConsumerWidget {
           },
         ),
         ListTile(
+          leading: const Icon(Icons.repeat_rounded),
           title: const Text("リノートの直後のノート"),
           onTap: () {
             context.pushRoute(
@@ -222,6 +235,7 @@ class NoteModalSheet extends ConsumerWidget {
                 baseNote.files.isEmpty)) ...[
           if (account.i.policies.canEditNote)
             ListTile(
+              leading: const Icon(Icons.edit),
               title: const Text("編集する"),
               onTap: () async {
                 Navigator.of(context).pop();
@@ -235,6 +249,7 @@ class NoteModalSheet extends ConsumerWidget {
               },
             ),
           ListTile(
+            leading: const Icon(Icons.delete),
             title: const Text("削除する"),
             onTap: () async {
               if (await showDialog<bool>(
@@ -257,6 +272,7 @@ class NoteModalSheet extends ConsumerWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.edit_outlined),
             title: const Text("削除してなおす"),
             onTap: () async {
               if (await showDialog<bool>(
@@ -292,6 +308,7 @@ class NoteModalSheet extends ConsumerWidget {
             baseNote.files.isEmpty &&
             baseNote.poll == null) ...[
           ListTile(
+            leading: const Icon(Icons.delete),
             title: const Text("リノートを解除する"),
             onTap: () async {
               await ref
@@ -309,6 +326,7 @@ class NoteModalSheet extends ConsumerWidget {
             (baseNote.user.host == null &&
                 baseNote.user.username != account.userId))
           ListTile(
+            leading: const Icon(Icons.report),
             title: const Text("通報する"),
             onTap: () {
               Navigator.of(context).pop();

@@ -34,110 +34,6 @@ import 'package:miria/view/reaction_picker_dialog/reaction_picker_dialog.dart';
 import 'package:miria/view/themes/app_theme.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
-Future<void> _navigateDetailPage(
-  BuildContext context,
-  Note note,
-  Account? loginAs,
-) async {
-  final pushRoute = context.pushRoute;
-  if (loginAs == null) {
-    pushRoute(NoteDetailRoute(note: note, account: AccountScope.of(context)));
-    return;
-  }
-  final ref = ProviderScope.containerOf(context);
-  final host = note.user.host ?? AccountScope.of(context).host;
-
-  try {
-    // まず、自分のサーバーの直近のノートに該当のノートが含まれているか見る
-    final myHostUserData =
-        await ref.read(misskeyProvider(loginAs)).users.showByName(
-              UsersShowByUserNameRequest(
-                userName: note.user.username,
-                host: host,
-              ),
-            );
-
-    final myHostUserNotes =
-        await ref.read(misskeyProvider(loginAs)).users.notes(
-              UsersNotesRequest(
-                userId: myHostUserData.id,
-                untilDate: note.createdAt.millisecondsSinceEpoch + 1,
-              ),
-            );
-
-    final foundMyHostNote = myHostUserNotes
-        .firstWhereOrNull((e) => e.uri?.pathSegments.lastOrNull == note.id);
-    if (foundMyHostNote != null) {
-      pushRoute(NoteDetailRoute(note: foundMyHostNote, account: loginAs));
-      return;
-    }
-    throw Exception();
-  } catch (e) {
-    // 最終手段として、連合で照会する
-    final result = await ref.read(misskeyProvider(loginAs)).ap.show(
-          ApShowRequest(
-            uri: note.uri ??
-                Uri(
-                  scheme: "https",
-                  host: host,
-                  pathSegments: ["notes", note.id],
-                ),
-          ),
-        );
-    // よくかんがえたら無駄
-    final resultNote = await ref
-        .read(misskeyProvider(loginAs))
-        .notes
-        .show(NotesShowRequest(noteId: result.object["id"] as String));
-    pushRoute(NoteDetailRoute(note: resultNote, account: loginAs));
-  }
-}
-
-Future<void> _navigateUserDetailPage(
-  BuildContext context,
-  Note note,
-  Account? loginAs,
-) async {
-  final pushRoute = context.pushRoute;
-  if (loginAs == null) {
-    pushRoute(
-      UserRoute(userId: note.user.id, account: AccountScope.of(context)),
-    );
-    return;
-  }
-
-  final ref = ProviderScope.containerOf(context);
-  final host = note.user.host ?? AccountScope.of(context).host;
-
-  try {
-    // まず、自分のサーバーの直近のノートに該当のノートが含まれているか見る
-    final myHostUserData =
-        await ref.read(misskeyProvider(loginAs)).users.showByName(
-              UsersShowByUserNameRequest(
-                userName: note.user.username,
-                host: host,
-              ),
-            );
-    pushRoute(UserRoute(userId: myHostUserData.id, account: loginAs));
-  } catch (e) {
-    // 最終手段として、連合で照会する
-    final result = await ref.read(misskeyProvider(loginAs)).ap.show(
-          ApShowRequest(
-            uri: note.uri ??
-                Uri(
-                  scheme: "https",
-                  host: host,
-                  pathSegments: ["@${note.id}"],
-                ),
-          ),
-        );
-    // よくかんがえたら無駄
-    pushRoute(
-      UserRoute(userId: result.object["id"] as String, account: loginAs),
-    );
-  }
-}
-
 class MisskeyNote extends ConsumerStatefulWidget {
   final Note note;
   final bool isDisplayBorder;
@@ -241,9 +137,10 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
 
   @override
   Widget build(BuildContext context) {
+    final account = AccountScope.of(context);
+
     final latestActualNote = ref.watch(
-      notesProvider(AccountScope.of(context))
-          .select((value) => value.notes[widget.note.id]),
+      notesProvider(account).select((value) => value.notes[widget.note.id]),
     );
     final renoteId = widget.note.renote?.id;
     final Note? renoteNote;
@@ -252,8 +149,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
 
     if (isEmptyRenote) {
       renoteNote = ref.watch(
-        notesProvider(AccountScope.of(context))
-            .select((value) => value.notes[renoteId]),
+        notesProvider(account).select((value) => value.notes[renoteId]),
       );
     } else {
       renoteNote = null;
@@ -277,7 +173,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
     displayTextNodes ??= const parser.MfmParser().parse(displayNote.text ?? "");
 
     final noteStatus = ref.watch(
-      notesProvider(AccountScope.of(context))
+      notesProvider(account)
           .select((value) => value.noteStatuses[widget.note.id]),
     )!;
     if (!noteStatus.isLongVisibleInitialized ||
@@ -301,7 +197,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
           !(displayNote.cw?.isNotEmpty == true) &&
           shouldCollaposed(displayTextNodes!));
 
-      ref.read(notesProvider(AccountScope.of(context))).updateNoteStatus(
+      ref.read(notesProvider(account)).updateNoteStatus(
             widget.note.id,
             (status) => status.copyWith(
               isLongVisible: isLongVisible,
@@ -316,16 +212,16 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
         "@${displayNote.user.username}${displayNote.user.host == null ? "" : "@${displayNote.user.host}"}";
 
     final isCwOpened = ref.watch(
-      notesProvider(AccountScope.of(context))
+      notesProvider(account)
           .select((value) => value.noteStatuses[widget.note.id]!.isCwOpened),
     );
     final isReactionedRenote = ref.watch(
-      notesProvider(AccountScope.of(context)).select(
+      notesProvider(account).select(
         (value) => value.noteStatuses[widget.note.id]!.isReactionedRenote,
       ),
     );
     final isLongVisible = ref.watch(
-      notesProvider(AccountScope.of(context))
+      notesProvider(account)
           .select((value) => value.noteStatuses[widget.note.id]!.isLongVisible),
     );
 
@@ -394,11 +290,14 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                   children: [
                     AvatarIcon(
                       user: displayNote.user,
-                      onTap: () => _navigateUserDetailPage(
-                        context,
-                        displayNote,
-                        widget.loginAs,
-                      ).expectFailure(context),
+                      onTap: () => ref
+                          .read(misskeyNoteNotifierProvider(account).notifier)
+                          .navigateToUserPage(
+                            context,
+                            displayNote.user,
+                            widget.loginAs,
+                          )
+                          .expectFailure(context),
                     ),
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     Expanded(
@@ -423,8 +322,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                 GestureDetector(
                                   onTap: () => context.pushRoute(
                                     FederationRoute(
-                                      account: widget.loginAs ??
-                                          AccountScope.of(context),
+                                      account: widget.loginAs ?? account,
                                       host: displayNote.user.host!,
                                     ),
                                   ),
@@ -466,11 +364,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                     ),
                                     onPressed: () {
                                       ref
-                                          .read(
-                                            notesProvider(
-                                              AccountScope.of(context),
-                                            ),
-                                          )
+                                          .read(notesProvider(account))
                                           .updateNoteStatus(
                                             widget.note.id,
                                             (status) => status.copyWith(
@@ -636,9 +530,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                     emojiData: MisskeyEmojiData.fromEmojiName(
                                       emojiName: reaction.element.key,
                                       repository: ref.read(
-                                        emojiRepositoryProvider(
-                                          AccountScope.of(context),
-                                        ),
+                                        emojiRepositoryProvider(account),
                                       ),
                                       emojiInfo: displayNote.reactionEmojis,
                                     ),
@@ -683,11 +575,17 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                       tapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
                                     ),
-                                    onPressed: () => _navigateDetailPage(
-                                      context,
-                                      displayNote,
-                                      widget.loginAs,
-                                    ).expectFailure(context),
+                                    onPressed: () => ref
+                                        .read(
+                                          misskeyNoteNotifierProvider(account)
+                                              .notifier,
+                                        )
+                                        .navigateToNoteDetailPage(
+                                          context,
+                                          displayNote,
+                                          widget.loginAs,
+                                        )
+                                        .expectFailure(context),
                                     icon: Icon(
                                       Icons.u_turn_left,
                                       size: 16 *
@@ -705,8 +603,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                       context.pushRoute(
                                         NoteCreateRoute(
                                           reply: displayNote,
-                                          initialAccount:
-                                              AccountScope.of(context),
+                                          initialAccount: account,
                                         ),
                                       );
                                     },
@@ -755,7 +652,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                           return NoteModalSheet(
                                             baseNote: widget.note,
                                             targetNote: displayNote,
-                                            account: AccountScope.of(context),
+                                            account: account,
                                             noteBoundaryKey: globalKey,
                                           );
                                         },
@@ -890,7 +787,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
   }
 }
 
-class NoteHeader1 extends StatelessWidget {
+class NoteHeader1 extends ConsumerWidget {
   final Note displayNote;
   final Account? loginAs;
 
@@ -899,8 +796,11 @@ class NoteHeader1 extends StatelessWidget {
     required this.displayNote,
     required this.loginAs,
   });
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final account = AccountScope.of(context);
+
     return Row(
       children: [
         Expanded(
@@ -919,7 +819,9 @@ class NoteHeader1 extends StatelessWidget {
             ),
           ),
         GestureDetector(
-          onTap: () => _navigateDetailPage(context, displayNote, loginAs)
+          onTap: () => ref
+              .read(misskeyNoteNotifierProvider(account).notifier)
+              .navigateToNoteDetailPage(context, displayNote, loginAs)
               .expectFailure(context),
           child: Text(
             displayNote.createdAt.differenceNow,
@@ -949,7 +851,7 @@ class NoteHeader1 extends StatelessWidget {
   }
 }
 
-class RenoteHeader extends StatelessWidget {
+class RenoteHeader extends ConsumerWidget {
   final Note note;
   final Account? loginAs;
 
@@ -960,20 +862,20 @@ class RenoteHeader extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final renoteTextStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
           color: AppTheme.of(context).renoteBorderColor,
         );
+    final account = AccountScope.of(context);
 
     return Row(
       children: [
         Expanded(
           child: GestureDetector(
-            onTap: () => _navigateUserDetailPage(
-              context,
-              note,
-              loginAs,
-            ).expectFailure(context),
+            onTap: () => ref
+                .read(misskeyNoteNotifierProvider(account).notifier)
+                .navigateToUserPage(context, note.user, loginAs)
+                .expectFailure(context),
             child: SimpleMfmText(
               note.user.name ?? note.user.username,
               style: renoteTextStyle?.copyWith(
@@ -1033,11 +935,13 @@ class NoteChannelView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final account = AccountScope.of(context);
+
     return GestureDetector(
       onTap: () {
         context.pushRoute(
           ChannelDetailRoute(
-            account: AccountScope.of(context),
+            account: account,
             channelId: channel.id,
           ),
         );
@@ -1092,7 +996,7 @@ class RenoteButton extends StatelessWidget {
         context: context,
         builder: (innerContext) => RenoteModalSheet(
           note: displayNote,
-          account: AccountScope.of(context),
+          account: account,
         ),
       ),
       onLongPress: () => showDialog<void>(

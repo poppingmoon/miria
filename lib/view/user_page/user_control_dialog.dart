@@ -8,8 +8,9 @@ import 'package:miria/model/note_search_condition.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
-import 'package:miria/view/common/futurable.dart';
 import 'package:miria/view/dialogs/simple_confirm_dialog.dart';
+import 'package:miria/view/user_page/antenna_modal_sheet.dart';
+import 'package:miria/view/user_page/users_list_modal_sheet.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -43,13 +44,9 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
   Future<void> addToList() async {
     return showModalBottomSheet(
       context: context,
-      builder: (context) => CommonFuture<Iterable<UsersList>>(
-        future: ref.read(misskeyProvider(widget.account)).users.list.list(),
-        complete: (context, userLists) => UserListControlDialog(
-          account: widget.account,
-          userLists: userLists.toList(),
-          userId: widget.response.id,
-        ),
+      builder: (context) => UsersListModalSheet(
+        account: widget.account,
+        user: widget.response.toUser(),
       ),
     );
   }
@@ -57,13 +54,9 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
   Future<void> addToAntenna() async {
     return showModalBottomSheet(
       context: context,
-      builder: (context) => CommonFuture<Iterable<Antenna>>(
-        future: ref.read(misskeyProvider(widget.account)).antennas.list(),
-        complete: (context, antennas) => AntennaControlDialog(
-          account: widget.account,
-          antennas: antennas.toList(),
-          acct: widget.response.acct,
-        ),
+      builder: (context) => AntennaModalSheet(
+        account: widget.account,
+        user: widget.response.toUser(),
       ),
     );
   }
@@ -148,6 +141,34 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
     return ListView(
       children: [
         ListTile(
+          leading: const Icon(Icons.copy),
+          title: const Text("ユーザー名をコピー"),
+          onTap: () {
+            Clipboard.setData(
+              ClipboardData(
+                text: widget.response.name ?? widget.response.username,
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("コピーしました")),
+            );
+            Navigator.of(context).pop();
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.copy),
+          title: const Text("ユーザースクリーン名をコピー"),
+          onTap: () {
+            Clipboard.setData(ClipboardData(text: widget.response.acct));
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("コピーしました")),
+            );
+            Navigator.of(context).pop();
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.link),
+          title: const Text("リンクをコピー"),
           onTap: () {
             Clipboard.setData(
               ClipboardData(
@@ -163,33 +184,9 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
             );
             Navigator.of(context).pop();
           },
-          title: const Text("リンクをコピー"),
         ),
         ListTile(
-          onTap: () {
-            Clipboard.setData(
-              ClipboardData(
-                text: widget.response.name ?? widget.response.username,
-              ),
-            );
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("コピーしました")),
-            );
-            Navigator.of(context).pop();
-          },
-          title: const Text("ユーザー名をコピー"),
-        ),
-        ListTile(
-          onTap: () {
-            Clipboard.setData(ClipboardData(text: widget.response.acct));
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("コピーしました")),
-            );
-            Navigator.of(context).pop();
-          },
-          title: const Text("ユーザースクリーン名をコピー"),
-        ),
-        ListTile(
+          leading: const Icon(Icons.open_in_browser),
           title: const Text("ブラウザで開く"),
           onTap: () {
             launchUrl(
@@ -198,11 +195,32 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
                 host: widget.account.host,
                 path: widget.response.acct,
               ),
+              mode: LaunchMode.inAppWebView,
             );
             Navigator.of(context).pop();
           },
         ),
+        if (widget.response.host != null)
+          ListTile(
+            leading: const Icon(Icons.rocket_launch),
+            title: const Text("ブラウザでリモート先を開く"),
+            onTap: () {
+              final uri = widget.response.uri ?? widget.response.url;
+              if (uri == null) return;
+              launchUrl(uri, mode: LaunchMode.inAppWebView);
+              Navigator.of(context).pop();
+            },
+          ),
         ListTile(
+          leading: const Icon(Icons.open_in_new),
+          title: const Text("別のアカウントで開く"),
+          onTap: () => ref
+              .read(misskeyNoteNotifierProvider(widget.account).notifier)
+              .openUserInOtherAccount(context, widget.response.toUser())
+              .expectFailure(context),
+        ),
+        ListTile(
+          leading: const Icon(Icons.search),
           title: const Text("ノートを検索"),
           onTap: () => context.pushRoute(
             SearchRoute(
@@ -214,213 +232,54 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
           ),
         ),
         ListTile(
-          onTap: addToList,
+          leading: const Icon(Icons.list),
           title: const Text("リストに追加"),
+          onTap: addToList,
         ),
         ListTile(
-          onTap: addToAntenna,
+          leading: const Icon(Icons.settings_input_antenna),
           title: const Text("アンテナに追加"),
+          onTap: addToAntenna,
         ),
         if (!widget.isMe) ...[
           if (widget.response.isRenoteMuted ?? false)
             ListTile(
-              onTap: renoteMuteDelete,
+              leading: const Icon(Icons.repeat_rounded),
               title: const Text("Renoteのミュート解除する"),
+              onTap: renoteMuteDelete,
             )
           else
             ListTile(
-              onTap: renoteMuteCreate,
+              leading: const Icon(Icons.repeat_rounded),
               title: const Text("Renoteをミュートする"),
+              onTap: renoteMuteCreate,
             ),
           if (widget.response.isMuted ?? false)
             ListTile(
-              onTap: muteDelete,
+              leading: const Icon(Icons.visibility),
               title: const Text("ミュート解除する"),
+              onTap: muteDelete,
             )
           else
             ListTile(
-              onTap: muteCreate,
+              leading: const Icon(Icons.visibility_off),
               title: const Text("ミュートする"),
+              onTap: muteCreate,
             ),
           if (widget.response.isBlocked ?? false)
             ListTile(
-              onTap: blockingDelete,
+              leading: const Icon(Icons.block),
               title: const Text("ブロックを解除する"),
+              onTap: blockingDelete,
             )
           else
             ListTile(
-              onTap: blockingCreate,
+              leading: const Icon(Icons.block),
               title: const Text("ブロックする"),
+              onTap: blockingCreate,
             ),
         ],
       ],
-    );
-  }
-}
-
-class UserListControlDialog extends ConsumerStatefulWidget {
-  final Account account;
-  final List<UsersList> userLists;
-  final String userId;
-
-  const UserListControlDialog({
-    super.key,
-    required this.account,
-    required this.userLists,
-    required this.userId,
-  });
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _UserListControlDialogState();
-}
-
-class _UserListControlDialogState extends ConsumerState<UserListControlDialog> {
-  late List<bool> isUserInList;
-
-  @override
-  void initState() {
-    super.initState();
-    isUserInList = widget.userLists
-        .map((userList) => userList.userIds.contains(widget.userId))
-        .toList();
-  }
-
-  Future<void> pushTo(int index) async {
-    await ref.read(misskeyProvider(widget.account)).users.list.push(
-          UsersListsPushRequest(
-            listId: widget.userLists[index].id,
-            userId: widget.userId,
-          ),
-        );
-    setState(() {
-      isUserInList[index] = true;
-    });
-  }
-
-  Future<void> pullFrom(int index) async {
-    await ref.read(misskeyProvider(widget.account)).users.list.pull(
-          UsersListsPullRequest(
-            listId: widget.userLists[index].id,
-            userId: widget.userId,
-          ),
-        );
-    setState(() {
-      isUserInList[index] = false;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.userLists.length,
-      itemBuilder: (context, i) {
-        return CheckboxListTile(
-          value: isUserInList[i],
-          onChanged: (value) async {
-            if (value == null) {
-              return;
-            }
-            if (value) {
-              await pushTo(i).expectFailure(context);
-            } else {
-              await pullFrom(i).expectFailure(context);
-            }
-          },
-          title: Text(widget.userLists[i].name!),
-        );
-      },
-    );
-  }
-}
-
-class AntennaControlDialog extends ConsumerStatefulWidget {
-  const AntennaControlDialog({
-    super.key,
-    required this.account,
-    required this.antennas,
-    required this.acct,
-  });
-
-  final Account account;
-  final List<Antenna> antennas;
-  final String acct;
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _AntennaControlDialogState();
-}
-
-class _AntennaControlDialogState extends ConsumerState<AntennaControlDialog> {
-  late final List<Antenna> userAntennas;
-  late List<bool> isUserInAntenna;
-
-  @override
-  void initState() {
-    super.initState();
-    userAntennas = widget.antennas
-        .where((antenna) => antenna.src == AntennaSource.users)
-        .toList();
-    isUserInAntenna = userAntennas
-        .map((userAntenna) => userAntenna.users.contains(widget.acct))
-        .toList();
-  }
-
-  Future<void> updateUsers(Antenna antenna, List<String> users) async {
-    await ref.read(misskeyProvider(widget.account)).antennas.update(
-          AntennasUpdateRequest(
-            antennaId: antenna.id,
-            name: antenna.name,
-            src: antenna.src,
-            keywords: antenna.keywords,
-            excludeKeywords: antenna.excludeKeywords,
-            users: users,
-            caseSensitive: antenna.caseSensitive,
-            withReplies: antenna.withReplies,
-            withFile: antenna.withFile,
-            notify: antenna.notify,
-          ),
-        );
-  }
-
-  Future<void> pushTo(int index) async {
-    final antenna = userAntennas[index];
-    final users = [...antenna.users, widget.acct];
-    await updateUsers(antenna, users);
-    setState(() {
-      isUserInAntenna[index] = true;
-    });
-  }
-
-  Future<void> pullFrom(int index) async {
-    final antenna = userAntennas[index];
-    final users = antenna.users.where((user) => user != widget.acct).toList();
-    await updateUsers(antenna, users);
-    setState(() {
-      isUserInAntenna[index] = false;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: userAntennas.length,
-      itemBuilder: (context, i) {
-        return CheckboxListTile(
-          value: isUserInAntenna[i],
-          onChanged: (value) async {
-            if (value == null) {
-              return;
-            }
-            if (value) {
-              await pushTo(i).expectFailure(context);
-            } else {
-              await pullFrom(i).expectFailure(context);
-            }
-          },
-          title: Text(userAntennas[i].name),
-        );
-      },
     );
   }
 }
