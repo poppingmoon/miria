@@ -26,6 +26,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/state_notifier/common/misskey_notes/misskey_note_notifier.dart';
 import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
 import 'package:miria/state_notifier/photo_edit_page/photo_edit_state_notifier.dart';
+import 'package:miria/state_notifier/user_list_page/users_lists_list_notifier.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 final dioProvider = Provider((ref) => Dio());
@@ -220,4 +221,9 @@ final noteCreateProvider = StateNotifierProvider.family
 final misskeyNoteNotifierProvider =
     NotifierProvider.family<MisskeyNoteNotifier, void, Account>(
   MisskeyNoteNotifier.new,
+);
+
+final usersListsListNotifierProvider = AsyncNotifierProvider.autoDispose
+    .family<UsersListsListNotifier, List<UsersList>, Misskey>(
+  UsersListsListNotifier.new,
 );
