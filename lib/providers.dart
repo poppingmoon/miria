@@ -24,6 +24,7 @@ import 'package:miria/repository/tab_settings_repository.dart';
 import 'package:miria/repository/time_line_repository.dart';
 import 'package:miria/repository/user_list_time_line_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/state_notifier/common/misskey_notes/misskey_note_notifier.dart';
 import 'package:miria/state_notifier/common/misskey_server_list_notifier.dart';
 import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
 import 'package:miria/state_notifier/photo_edit_page/photo_edit_state_notifier.dart';
@@ -262,4 +263,9 @@ final noteCreateProvider = StateNotifierProvider.family
 final misskeyServerListNotifierProvider = AsyncNotifierProvider.autoDispose<
     MisskeyServerListNotifier, List<JoinMisskeyInstanceInfo>>(
   MisskeyServerListNotifier.new,
+);
+
+final misskeyNoteNotifierProvider =
+    NotifierProvider.family<MisskeyNoteNotifier, void, Account>(
+  MisskeyNoteNotifier.new,
 );
