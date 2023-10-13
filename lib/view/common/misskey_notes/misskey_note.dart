@@ -36,13 +36,14 @@ import 'package:misskey_dart/misskey_dart.dart';
 
 Future<void> _navigateDetailPage(
     BuildContext context, Note note, Account? loginAs) async {
+  final account = AccountScope.of(context);
   final pushRoute = context.pushRoute;
   if (loginAs == null) {
-    pushRoute(NoteDetailRoute(note: note, account: AccountScope.of(context)));
+    pushRoute(NoteDetailRoute(note: note, account: account));
     return;
   }
   final ref = ProviderScope.containerOf(context);
-  final host = note.user.host ?? AccountScope.of(context).host;
+  final host = note.user.host ?? account.host;
 
   try {
     // まず、自分のサーバーの直近のノートに該当のノートが含まれているか見る
@@ -85,15 +86,15 @@ Future<void> _navigateDetailPage(
 
 Future<void> _navigateUserDetailPage(
     BuildContext context, Note note, Account? loginAs) async {
+  final account = AccountScope.of(context);
   final pushRoute = context.pushRoute;
   if (loginAs == null) {
-    pushRoute(
-        UserRoute(userId: note.user.id, account: AccountScope.of(context)));
+    pushRoute(UserRoute(userId: note.user.id, account: account));
     return;
   }
 
   final ref = ProviderScope.containerOf(context);
-  final host = note.user.host ?? AccountScope.of(context).host;
+  final host = note.user.host ?? account.host;
 
   try {
     // まず、自分のサーバーの直近のノートに該当のノートが含まれているか見る
@@ -219,8 +220,10 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
 
   @override
   Widget build(BuildContext context) {
-    final latestActualNote = ref.watch(notesProvider(AccountScope.of(context))
-        .select((value) => value.notes[widget.note.id]));
+    final account = AccountScope.of(context);
+
+    final latestActualNote = ref.watch(
+        notesProvider(account).select((value) => value.notes[widget.note.id]));
     final renoteId = widget.note.renote?.id;
     final Note? renoteNote;
 
@@ -231,8 +234,8 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
         latestActualNote?.poll == null;
 
     if (isEmptyRenote) {
-      renoteNote = ref.watch(notesProvider(AccountScope.of(context))
-          .select((value) => value.notes[renoteId]));
+      renoteNote = ref.watch(
+          notesProvider(account).select((value) => value.notes[renoteId]));
     } else {
       renoteNote = null;
     }
@@ -254,7 +257,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
 
     displayTextNodes ??= const parser.MfmParser().parse(displayNote.text ?? "");
 
-    final noteStatus = ref.watch(notesProvider(AccountScope.of(context))
+    final noteStatus = ref.watch(notesProvider(account)
         .select((value) => value.noteStatuses[widget.note.id]))!;
 
     if (noteStatus.isIncludeMuteWord && !noteStatus.isMuteOpened) {
@@ -296,7 +299,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
           !(displayNote.cw?.isNotEmpty == true) &&
           shouldCollaposed(displayTextNodes!));
 
-      ref.read(notesProvider(AccountScope.of(context))).updateNoteStatus(
+      ref.read(notesProvider(account)).updateNoteStatus(
             widget.note.id,
             (status) => status.copyWith(
               isLongVisible: isLongVisible,
@@ -310,12 +313,11 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
     final userId =
         "@${displayNote.user.username}${displayNote.user.host == null ? "" : "@${displayNote.user.host}"}";
 
-    final isCwOpened = ref.watch(notesProvider(AccountScope.of(context))
+    final isCwOpened = ref.watch(notesProvider(account)
         .select((value) => value.noteStatuses[widget.note.id]!.isCwOpened));
-    final isReactionedRenote = ref.watch(notesProvider(AccountScope.of(context))
-        .select(
-            (value) => value.noteStatuses[widget.note.id]!.isReactionedRenote));
-    final isLongVisible = ref.watch(notesProvider(AccountScope.of(context))
+    final isReactionedRenote = ref.watch(notesProvider(account).select(
+        (value) => value.noteStatuses[widget.note.id]!.isReactionedRenote));
+    final isLongVisible = ref.watch(notesProvider(account)
         .select((value) => value.noteStatuses[widget.note.id]!.isLongVisible));
 
     final links = extractLinks(displayTextNodes!);
@@ -411,8 +413,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                 GestureDetector(
                                   onTap: () => context.pushRoute(
                                       FederationRoute(
-                                          account: widget.loginAs ??
-                                              AccountScope.of(context),
+                                          account: widget.loginAs ?? account,
                                           host: displayNote.user.host!)),
                                   child: InkResponse(
                                     child: Text(
@@ -438,7 +439,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                               onPressed: () {
                                 ref
                                     .read(
-                                        notesProvider(AccountScope.of(context)))
+                                        notesProvider(account))
                                     .updateNoteStatus(
                                         widget.note.id,
                                         (status) => status.copyWith(
@@ -462,8 +463,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                     child: InNoteButton(
                                       onPressed: () {
                                         ref
-                                            .read(notesProvider(
-                                                AccountScope.of(context)))
+                                            .read(notesProvider(account))
                                             .updateNoteStatus(
                                               widget.note.id,
                                               (status) => status.copyWith(
@@ -516,8 +516,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                       child: InNoteButton(
                                         onPressed: () {
                                           ref
-                                              .read(notesProvider(
-                                                  AccountScope.of(context)))
+                                              .read(notesProvider(account))
                                               .updateNoteStatus(
                                                   widget.note.id,
                                                   (status) => status.copyWith(
@@ -600,8 +599,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                     emojiData: MisskeyEmojiData.fromEmojiName(
                                         emojiName: reaction.element.key,
                                         repository: ref.read(
-                                            emojiRepositoryProvider(
-                                                AccountScope.of(context))),
+                                            emojiRepositoryProvider(account)),
                                         emojiInfo: displayNote.reactionEmojis),
                                     reactionCount: reaction.element.value,
                                     myReaction: displayNote.myReaction,
@@ -660,8 +658,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                       onPressed: () {
                                         context.pushRoute(NoteCreateRoute(
                                             reply: displayNote,
-                                            initialAccount:
-                                                AccountScope.of(context)));
+                                            initialAccount: account));
                                       },
                                       style: const ButtonStyle(
                                         padding: MaterialStatePropertyAll(
@@ -701,7 +698,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                             return NoteModalSheet(
                                               baseNote: widget.note,
                                               targetNote: displayNote,
-                                              account: AccountScope.of(context),
+                                              account: account,
                                               noteBoundaryKey: globalKey,
                                             );
                                           });
@@ -967,10 +964,12 @@ class NoteChannelView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final account = AccountScope.of(context);
+
     return GestureDetector(
       onTap: () {
         context.pushRoute(ChannelDetailRoute(
-          account: AccountScope.of(context),
+          account: account,
           channelId: channel.id,
         ));
       },
@@ -1022,8 +1021,8 @@ class RenoteButton extends StatelessWidget {
     return TextButton.icon(
       onPressed: () => showModalBottomSheet(
           context: context,
-          builder: (innerContext) => RenoteModalSheet(
-              note: displayNote, account: AccountScope.of(context))),
+          builder: (innerContext) =>
+              RenoteModalSheet(note: displayNote, account: account)),
       onLongPress: () => showDialog(
           context: context,
           builder: (context) =>
