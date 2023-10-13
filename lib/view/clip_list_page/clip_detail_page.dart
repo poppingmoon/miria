@@ -6,7 +6,6 @@ import 'package:miria/model/account.dart';
 import 'package:miria/model/clip_settings.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/clip_list_page/clip_detail_note_list.dart';
-import 'package:miria/view/clip_list_page/clip_list_page.dart';
 import 'package:miria/view/clip_list_page/clip_settings_dialog.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';

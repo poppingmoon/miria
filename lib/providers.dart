@@ -24,6 +24,7 @@ import 'package:miria/repository/time_line_repository.dart';
 import 'package:miria/repository/user_list_time_line_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/state_notifier/antenna_page/antennas_list_notifier.dart';
+import 'package:miria/state_notifier/clip_list_page/clips_list_notifier.dart';
 import 'package:miria/state_notifier/common/misskey_notes/misskey_note_notifier.dart';
 import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
 import 'package:miria/state_notifier/photo_edit_page/photo_edit_state_notifier.dart';
@@ -233,3 +234,6 @@ final antennasListNotifierProvider = AsyncNotifierProvider.autoDispose
     .family<AntennasListNotifier, List<Antenna>, Misskey>(
   AntennasListNotifier.new,
 );
+
+final clipsListNotifierProvider = AsyncNotifierProvider.autoDispose
+    .family<ClipsListNotifier, List<Clip>, Misskey>(ClipsListNotifier.new);
