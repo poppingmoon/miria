@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:miria/extensions/users_show_response_extension.dart';
+import 'package:miria/extensions/user_extension.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
@@ -22,14 +22,12 @@ enum UserControl {
 
 class UserControlDialog extends ConsumerStatefulWidget {
   final Account account;
-  final UsersShowResponse response;
-  final bool isMe;
+  final UserDetailed response;
 
   const UserControlDialog({
     super.key,
     required this.account,
     required this.response,
-    required this.isMe,
   });
 
   @override
@@ -43,7 +41,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
       context: context,
       builder: (context) => UsersListModalSheet(
         account: widget.account,
-        user: widget.response.toUser(),
+        user: widget.response,
       ),
     );
   }
@@ -53,7 +51,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
       context: context,
       builder: (context) => AntennaModalSheet(
         account: widget.account,
-        user: widget.response.toUser(),
+        user: widget.response,
       ),
     );
   }
@@ -131,6 +129,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final user = widget.response;
     return ListView(
       children: [
         ListTile(
@@ -209,7 +208,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
           title: const Text("別のアカウントで開く"),
           onTap: () => ref
               .read(misskeyNoteNotifierProvider(widget.account).notifier)
-              .openUserInOtherAccount(context, widget.response.toUser())
+              .openUserInOtherAccount(context, user)
               .expectFailure(context),
         ),
         ListTile(
@@ -222,8 +221,8 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
           title: const Text("アンテナに追加"),
           onTap: addToAntenna,
         ),
-        if (!widget.isMe) ...[
-          if (widget.response.isRenoteMuted ?? false)
+        if (user is UserDetailedNotMeWithRelations) ...[
+          if (user.isRenoteMuted)
             ListTile(
               leading: const Icon(Icons.repeat_rounded),
               title: const Text("Renoteのミュート解除する"),
@@ -235,7 +234,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
               title: const Text("Renoteをミュートする"),
               onTap: renoteMuteCreate.expectFailure(context),
             ),
-          if (widget.response.isMuted ?? false)
+          if (user.isMuted)
             ListTile(
               leading: const Icon(Icons.visibility),
               title: const Text("ミュート解除する"),
@@ -247,7 +246,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
               title: const Text("ミュートする"),
               onTap: muteCreate.expectFailure(context),
             ),
-          if (widget.response.isBlocking ?? false)
+          if (user.isBlocking)
             ListTile(
               leading: const Icon(Icons.block),
               title: const Text("ブロックを解除する"),
