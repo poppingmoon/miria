@@ -76,7 +76,7 @@ final favoriteProvider =
 );
 
 final notesProvider = ChangeNotifierProvider.family<NoteRepository, Account>(
-  (ref, account) => NoteRepository(ref.read(misskeyProvider(account))),
+  (ref, account) => NoteRepository(ref.read(misskeyProvider(account)), account),
 );
 
 //TODO: アカウント毎である必要はない ホスト毎

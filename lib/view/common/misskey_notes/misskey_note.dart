@@ -176,6 +176,28 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
       notesProvider(account)
           .select((value) => value.noteStatuses[widget.note.id]),
     )!;
+
+    if (noteStatus.isIncludeMuteWord && !noteStatus.isMuteOpened) {
+      return SizedBox(
+        width: double.infinity,
+        child: GestureDetector(
+          onTap: () => ref
+              .read(notesProvider(AccountScope.of(context)))
+              .updateNoteStatus(
+                displayNote.id,
+                (status) => status.copyWith(isMuteOpened: true),
+              ),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+            child: Text(
+              "${displayNote.user.name ?? displayNote.user.username}が何か言うとるわ",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+        ),
+      );
+    }
+
     if (!noteStatus.isLongVisibleInitialized ||
         widget.isForceUnvisibleRenote ||
         widget.isForceUnvisibleReply ||
