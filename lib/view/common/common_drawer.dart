@@ -24,7 +24,7 @@ class CommonDrawer extends ConsumerWidget {
               AccountScope(
                 account: account,
                 child: ExpansionTile(
-                    leading: AvatarIcon.fromIResponse(account.i),
+                    leading: AvatarIcon(user: account.i),
                     initiallyExpanded: account.acct == initialOpenAcct,
                     title: SimpleMfmText(account.i.name ?? account.i.username,
                         style: Theme.of(context).textTheme.titleMedium),
