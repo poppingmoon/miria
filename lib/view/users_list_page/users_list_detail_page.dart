@@ -66,7 +66,7 @@ class _UsersListUsers
         userIds: list.userIds,
       ),
     );
-    return response.map((e) => e.toUser()).toList();
+    return response.toList();
   }
 
   Misskey get _misskey => arg.$1;
