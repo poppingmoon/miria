@@ -11,7 +11,7 @@ class TestData {
       Account(host: "example.miria.shiosyakeyakini.info", userId: "ai", i: i1);
 
   // i
-  static IResponse i1 = IResponse.fromJson(JSON5.parse(r"""
+  static MeDetailed i1 = MeDetailed.fromJson(JSON5.parse(r"""
 {
   id: '7rkr3b1c1c',
   name: '藍',
@@ -376,8 +376,8 @@ class TestData {
   files: [],
   replyId: null,
   renoteId: null,
-}  
-  
+}
+
   '''));
 
   static Note note2 = Note.fromJson(JSON5.parse(r'''
@@ -415,7 +415,7 @@ class TestData {
   files: [],
   replyId: null,
   renoteId: null,
-}  
+}
   '''));
 
   /// 自身でないノート１
@@ -460,7 +460,7 @@ class TestData {
   files: [],
   replyId: null,
   renoteId: null,
-}  
+}
   '''));
 
   /// 自身のノート（投票込みのノート）
@@ -641,7 +641,7 @@ class TestData {
   replyId: null,
   renoteId: null,
   myReaction: ':ultra_igyo@.:',
-}  
+}
   '''));
 
   // ドライブ（フォルダ）
@@ -683,7 +683,7 @@ class TestData {
     folder: null,
     userId: null,
     user: null,
-  }  
+  }
   '''));
 
   static DriveFile drive2AsVideo = DriveFile.fromJson(JSON5.parse(r'''
@@ -732,7 +732,7 @@ class TestData {
 }'''));
   static String user1ExpectId = "7rkr3b1c1c";
 
-  static User detailedUser1 = User.fromJson(JSON5.parse(r'''
+  static UserDetailed detailedUser1 = UserDetailed.fromJson(JSON5.parse(r'''
 {
   id: '7z9zua5kyv',
   name: 'おいしいBot',
@@ -1013,8 +1013,8 @@ class TestData {
   static String detailedUser2ExpectedId = "9gbzuv2cze";
 
   // ユーザー情報
-  static UsersShowResponse usersShowResponse1 =
-      UsersShowResponse.fromJson(JSON5.parse(r'''
+  static UserDetailed usersShowResponse1 =
+      UserDetailed.fromJson(JSON5.parse(r'''
 {
   id: '7rkr3b1c1c',
   name: '藍',
@@ -1121,12 +1121,12 @@ class TestData {
   isBlocked: false,
   isMuted: false,
   isRenoteMuted: false,
-}  
-  
+}
+
   '''));
 
-  static UsersShowResponse usersShowResponse2 =
-      UsersShowResponse.fromJson(JSON5.parse(r'''
+  static UserDetailedNotMeWithRelations usersShowResponse2 =
+      UserDetailedNotMeWithRelations.fromJson(JSON5.parse(r'''
 {
   id: '7z9zua5kyv',
   name: 'おいしいBot',
@@ -1295,8 +1295,8 @@ class TestData {
   isBlocked: false,
   isMuted: false,
   isRenoteMuted: false,
-}  
-  
+}
+
   '''));
 
   // カスタム絵文字
@@ -1412,7 +1412,7 @@ class TestData {
   isFollowing: true,
   isFavorited: true,
   hasUnreadNote: false,
-}  
+}
   '''));
 
   // アンテナ

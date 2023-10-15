@@ -904,8 +904,8 @@ void main() {
         final misskey = MockMisskey();
         final users = MockMisskeyUsers();
         when(misskey.users).thenReturn(users);
-        when(users.show(any))
-            .thenAnswer((_) async => TestData.usersShowResponse2);
+        when(users.showByIds(any))
+            .thenAnswer((_) async => [TestData.usersShowResponse2]);
 
         await tester.pumpWidget(ProviderScope(
             overrides: [
@@ -941,8 +941,8 @@ void main() {
         final misskey = MockMisskey();
         final users = MockMisskeyUsers();
         when(misskey.users).thenReturn(users);
-        when(users.show(any))
-            .thenAnswer((_) async => TestData.usersShowResponse1);
+        when(users.showByIds(any))
+            .thenAnswer((_) async => [TestData.usersShowResponse1]);
         await tester.pumpWidget(ProviderScope(
             overrides: [
               misskeyProvider.overrideWith((ref, arg) => misskey),
@@ -1817,8 +1817,7 @@ void main() {
         final mockUser = MockMisskeyUsers();
         when(mockMisskey.notes).thenReturn(mockNote);
         when(mockMisskey.users).thenReturn(mockUser);
-        when(mockUser.showByName(any))
-            .thenAnswer((_) async => TestData.usersShowResponse2);
+        provideDummy<UserDetailed>(TestData.usersShowResponse2);
 
         await tester.pumpWidget(ProviderScope(
             overrides: [

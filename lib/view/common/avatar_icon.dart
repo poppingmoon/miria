@@ -19,33 +19,6 @@ class AvatarIcon extends StatelessWidget {
     this.onTap,
   });
 
-  factory AvatarIcon.fromIResponse(IResponse response, {double height = 48}) {
-    return AvatarIcon(
-      user: User(
-        id: response.id,
-        username: response.username,
-        avatarUrl: response.avatarUrl,
-        isCat: response.isCat,
-        isBot: response.isBot,
-      ),
-      height: height,
-    );
-  }
-
-  factory AvatarIcon.fromUserResponse(UsersShowResponse response,
-      {double height = 48}) {
-    return AvatarIcon(
-      user: User(
-        id: response.id,
-        username: response.username,
-        avatarUrl: response.avatarUrl,
-        isCat: response.isCat,
-        isBot: response.isBot,
-      ),
-      height: height,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

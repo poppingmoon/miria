@@ -181,6 +181,14 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
       }
       final deletedNoteChannel = note.channel;
 
+      final replyTo = <User>[];
+      if (note.mentions.isNotEmpty) {
+        replyTo.addAll(
+          await misskey.users
+              .showByIds(UsersShowByIdsRequest(userIds: note.mentions)),
+        );
+      }
+
       resultState = resultState.copyWith(
         noteVisibility: note.visibility,
         localOnly: note.localOnly,
@@ -193,11 +201,7 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
         isCw: note.cw?.isNotEmpty == true,
         text: note.text ?? "",
         reactionAcceptance: note.reactionAcceptance,
-        replyTo: [
-          for (final userId in note.mentions)
-            (await misskey.users.show(UsersShowRequest(userId: userId)))
-                .toUser()
-        ],
+        replyTo: replyTo.toList(),
         isVote: note.poll != null,
         isVoteMultiple: note.poll?.multiple ?? false,
         voteExpireType: VoteExpireType.date,
@@ -219,6 +223,14 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
     }
 
     if (reply != null) {
+      final replyTo = <User>[];
+      if (reply.mentions.isNotEmpty) {
+        replyTo.addAll(
+          await misskey.users
+              .showByIds(UsersShowByIdsRequest(userIds: reply.mentions)),
+        );
+      }
+
       resultState = resultState.copyWith(
         reply: reply,
         noteVisibility:
@@ -227,9 +239,7 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
         isCw: reply.cw?.isNotEmpty == true,
         replyTo: [
           reply.user,
-          for (final userId in reply.mentions)
-            (await misskey.users.show(UsersShowRequest(userId: userId)))
-                .toUser()
+          ...replyTo,
         ]..removeWhere((element) => element.id == state.account.i.id),
       );
     }
