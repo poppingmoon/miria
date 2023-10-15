@@ -80,7 +80,7 @@ class AccountListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
-      leading: AvatarIcon.fromIResponse(account.i),
+      leading: AvatarIcon(user: account.i),
       title: Text(
         account.i.name ?? account.i.username,
         style: Theme.of(context).textTheme.titleMedium,
