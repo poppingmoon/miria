@@ -62,8 +62,10 @@ parts:
     flutter-target: lib/main.dart
     build-packages:
       - libsecret-1-dev
+      - libmpv-dev
     stage-packages:
       - libsecret-1-0
+      - libmpv1
   # Integrate custom dialogs in your snap - doc - snapcraft.io
   # https://forum.snapcraft.io/t/integrate-custom-dialogs-in-your-snap/10825
   zenity-integration:
