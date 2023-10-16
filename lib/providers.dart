@@ -25,6 +25,7 @@ import 'package:miria/repository/tab_settings_repository.dart';
 import 'package:miria/repository/time_line_repository.dart';
 import 'package:miria/repository/user_list_time_line_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/state_notifier/common/download_file_notifier.dart';
 import 'package:miria/state_notifier/common/misskey_server_list_notifier.dart';
 import 'package:miria/state_notifier/drive_page/breadcrumbs_notifier.dart';
 import 'package:miria/state_notifier/drive_page/drive_files_notifier.dart';
@@ -267,6 +268,9 @@ final misskeyServerListNotifierProvider = AsyncNotifierProvider.autoDispose<
     MisskeyServerListNotifier, List<JoinMisskeyInstanceInfo>>(
   MisskeyServerListNotifier.new,
 );
+
+final downloadFileNotifierProvider =
+    NotifierProvider<DownloadFileNotifier, void>(DownloadFileNotifier.new);
 
 final driveFilesNotifierProvider = NotifierProvider.autoDispose
     .family<DriveFilesNotifier, PaginationState<DriveFile>, (Misskey, String?)>(
