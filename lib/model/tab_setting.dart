@@ -41,6 +41,12 @@ class TabSetting with _$TabSetting {
     /// ノートの投稿のキャプチャをするかどうか
     @Default(true) bool isSubscribe,
 
+    /// 返信を含むかどうか
+    @Default(true) bool isIncludeReplies,
+
+    /// ファイルのみにするかどうか
+    @Default(false) bool isMediaOnly,
+
     /// タブ名
     required String name,
 
@@ -51,9 +57,6 @@ class TabSetting with _$TabSetting {
 
     /// Renoteを表示するかどうか
     @Default(true) bool renoteDisplay,
-
-    /// ファイル付きのノートのみを表示するかどうか
-    @Default(false) bool withFiles,
   }) = _TabSetting;
   TabSetting._();
 

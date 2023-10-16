@@ -41,6 +41,12 @@ mixin _$TabSetting {
   /// ノートの投稿のキャプチャをするかどうか
   bool get isSubscribe => throw _privateConstructorUsedError;
 
+  /// 返信を含むかどうか
+  bool get isIncludeReplies => throw _privateConstructorUsedError;
+
+  /// ファイルのみにするかどうか
+  bool get isMediaOnly => throw _privateConstructorUsedError;
+
   /// タブ名
   String get name => throw _privateConstructorUsedError;
 
@@ -52,9 +58,6 @@ mixin _$TabSetting {
 
   /// Renoteを表示するかどうか
   bool get renoteDisplay => throw _privateConstructorUsedError;
-
-  /// ファイル付きのノートのみを表示するかどうか
-  bool get withFiles => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -76,10 +79,11 @@ abstract class $TabSettingCopyWith<$Res> {
       String? listId,
       String? antennaId,
       bool isSubscribe,
+      bool isIncludeReplies,
+      bool isMediaOnly,
       String name,
       @JsonKey(readValue: _readAcct) Acct acct,
-      bool renoteDisplay,
-      bool withFiles});
+      bool renoteDisplay});
 
   $TabIconCopyWith<$Res> get icon;
   $AcctCopyWith<$Res> get acct;
@@ -105,10 +109,11 @@ class _$TabSettingCopyWithImpl<$Res, $Val extends TabSetting>
     Object? listId = freezed,
     Object? antennaId = freezed,
     Object? isSubscribe = null,
+    Object? isIncludeReplies = null,
+    Object? isMediaOnly = null,
     Object? name = null,
     Object? acct = null,
     Object? renoteDisplay = null,
-    Object? withFiles = null,
   }) {
     return _then(_value.copyWith(
       icon: null == icon
@@ -139,6 +144,14 @@ class _$TabSettingCopyWithImpl<$Res, $Val extends TabSetting>
           ? _value.isSubscribe
           : isSubscribe // ignore: cast_nullable_to_non_nullable
               as bool,
+      isIncludeReplies: null == isIncludeReplies
+          ? _value.isIncludeReplies
+          : isIncludeReplies // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isMediaOnly: null == isMediaOnly
+          ? _value.isMediaOnly
+          : isMediaOnly // ignore: cast_nullable_to_non_nullable
+              as bool,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -150,10 +163,6 @@ class _$TabSettingCopyWithImpl<$Res, $Val extends TabSetting>
       renoteDisplay: null == renoteDisplay
           ? _value.renoteDisplay
           : renoteDisplay // ignore: cast_nullable_to_non_nullable
-              as bool,
-      withFiles: null == withFiles
-          ? _value.withFiles
-          : withFiles // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -191,10 +200,11 @@ abstract class _$$_TabSettingCopyWith<$Res>
       String? listId,
       String? antennaId,
       bool isSubscribe,
+      bool isIncludeReplies,
+      bool isMediaOnly,
       String name,
       @JsonKey(readValue: _readAcct) Acct acct,
-      bool renoteDisplay,
-      bool withFiles});
+      bool renoteDisplay});
 
   @override
   $TabIconCopyWith<$Res> get icon;
@@ -220,10 +230,11 @@ class __$$_TabSettingCopyWithImpl<$Res>
     Object? listId = freezed,
     Object? antennaId = freezed,
     Object? isSubscribe = null,
+    Object? isIncludeReplies = null,
+    Object? isMediaOnly = null,
     Object? name = null,
     Object? acct = null,
     Object? renoteDisplay = null,
-    Object? withFiles = null,
   }) {
     return _then(_$_TabSetting(
       icon: null == icon
@@ -254,6 +265,14 @@ class __$$_TabSettingCopyWithImpl<$Res>
           ? _value.isSubscribe
           : isSubscribe // ignore: cast_nullable_to_non_nullable
               as bool,
+      isIncludeReplies: null == isIncludeReplies
+          ? _value.isIncludeReplies
+          : isIncludeReplies // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isMediaOnly: null == isMediaOnly
+          ? _value.isMediaOnly
+          : isMediaOnly // ignore: cast_nullable_to_non_nullable
+              as bool,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -265,10 +284,6 @@ class __$$_TabSettingCopyWithImpl<$Res>
       renoteDisplay: null == renoteDisplay
           ? _value.renoteDisplay
           : renoteDisplay // ignore: cast_nullable_to_non_nullable
-              as bool,
-      withFiles: null == withFiles
-          ? _value.withFiles
-          : withFiles // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -285,10 +300,11 @@ class _$_TabSetting extends _TabSetting {
       this.listId,
       this.antennaId,
       this.isSubscribe = true,
+      this.isIncludeReplies = true,
+      this.isMediaOnly = false,
       required this.name,
       @JsonKey(readValue: _readAcct) required this.acct,
-      this.renoteDisplay = true,
-      this.withFiles = false})
+      this.renoteDisplay = true})
       : super._();
 
   factory _$_TabSetting.fromJson(Map<String, dynamic> json) =>
@@ -323,6 +339,16 @@ class _$_TabSetting extends _TabSetting {
   @JsonKey()
   final bool isSubscribe;
 
+  /// 返信を含むかどうか
+  @override
+  @JsonKey()
+  final bool isIncludeReplies;
+
+  /// ファイルのみにするかどうか
+  @override
+  @JsonKey()
+  final bool isMediaOnly;
+
   /// タブ名
   @override
   final String name;
@@ -339,14 +365,9 @@ class _$_TabSetting extends _TabSetting {
   @JsonKey()
   final bool renoteDisplay;
 
-  /// ファイル付きのノートのみを表示するかどうか
-  @override
-  @JsonKey()
-  final bool withFiles;
-
   @override
   String toString() {
-    return 'TabSetting(icon: $icon, tabType: $tabType, roleId: $roleId, channelId: $channelId, listId: $listId, antennaId: $antennaId, isSubscribe: $isSubscribe, name: $name, acct: $acct, renoteDisplay: $renoteDisplay, withFiles: $withFiles)';
+    return 'TabSetting(icon: $icon, tabType: $tabType, roleId: $roleId, channelId: $channelId, listId: $listId, antennaId: $antennaId, isSubscribe: $isSubscribe, isIncludeReplies: $isIncludeReplies, isMediaOnly: $isMediaOnly, name: $name, acct: $acct, renoteDisplay: $renoteDisplay)';
   }
 
   @override
@@ -364,18 +385,32 @@ class _$_TabSetting extends _TabSetting {
                 other.antennaId == antennaId) &&
             (identical(other.isSubscribe, isSubscribe) ||
                 other.isSubscribe == isSubscribe) &&
+            (identical(other.isIncludeReplies, isIncludeReplies) ||
+                other.isIncludeReplies == isIncludeReplies) &&
+            (identical(other.isMediaOnly, isMediaOnly) ||
+                other.isMediaOnly == isMediaOnly) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.acct, acct) || other.acct == acct) &&
             (identical(other.renoteDisplay, renoteDisplay) ||
-                other.renoteDisplay == renoteDisplay) &&
-            (identical(other.withFiles, withFiles) ||
-                other.withFiles == withFiles));
+                other.renoteDisplay == renoteDisplay));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, icon, tabType, roleId, channelId,
-      listId, antennaId, isSubscribe, name, acct, renoteDisplay, withFiles);
+  int get hashCode => Object.hash(
+      runtimeType,
+      icon,
+      tabType,
+      roleId,
+      channelId,
+      listId,
+      antennaId,
+      isSubscribe,
+      isIncludeReplies,
+      isMediaOnly,
+      name,
+      acct,
+      renoteDisplay);
 
   @JsonKey(ignore: true)
   @override
@@ -400,10 +435,11 @@ abstract class _TabSetting extends TabSetting {
       final String? listId,
       final String? antennaId,
       final bool isSubscribe,
+      final bool isIncludeReplies,
+      final bool isMediaOnly,
       required final String name,
       @JsonKey(readValue: _readAcct) required final Acct acct,
-      final bool renoteDisplay,
-      final bool withFiles}) = _$_TabSetting;
+      final bool renoteDisplay}) = _$_TabSetting;
   _TabSetting._() : super._();
 
   factory _TabSetting.fromJson(Map<String, dynamic> json) =
@@ -438,6 +474,14 @@ abstract class _TabSetting extends TabSetting {
   bool get isSubscribe;
   @override
 
+  /// 返信を含むかどうか
+  bool get isIncludeReplies;
+  @override
+
+  /// ファイルのみにするかどうか
+  bool get isMediaOnly;
+  @override
+
   /// タブ名
   String get name;
   @override
@@ -451,10 +495,6 @@ abstract class _TabSetting extends TabSetting {
 
   /// Renoteを表示するかどうか
   bool get renoteDisplay;
-  @override
-
-  /// ファイル付きのノートのみを表示するかどうか
-  bool get withFiles;
   @override
   @JsonKey(ignore: true)
   _$$_TabSettingCopyWith<_$_TabSetting> get copyWith =>

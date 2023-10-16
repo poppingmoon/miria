@@ -52,36 +52,50 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
   }) {
     return switch (_tabSetting.tabType) {
       TabType.localTimeline => _misskey.localTimelineStream(
+          parameter: LocalTimelineParameter(
+            withRenotes: _tabSetting.renoteDisplay,
+            withReplies: _tabSetting.isIncludeReplies,
+            withFiles: _tabSetting.isMediaOnly,
+          ),
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
           onUpdated: onUpdated,
-          withFiles: _tabSetting.withFiles,
         ),
       TabType.homeTimeline => _misskey.homeTimelineStream(
+          parameter: HomeTimelineParameter(
+            withRenotes: _tabSetting.renoteDisplay,
+            withFiles: _tabSetting.isMediaOnly,
+          ),
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
           onUpdated: onUpdated,
-          withFiles: _tabSetting.withFiles,
         ),
       TabType.globalTimeline => _misskey.globalTimelineStream(
+          parameter: GlobalTimelineParameter(
+            withRenotes: _tabSetting.renoteDisplay,
+            withFiles: _tabSetting.isMediaOnly,
+          ),
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
           onUpdated: onUpdated,
-          withFiles: _tabSetting.withFiles,
         ),
       TabType.hybridTimeline => _misskey.hybridTimelineStream(
+          parameter: HybridTimelineParameter(
+            withRenotes: _tabSetting.renoteDisplay,
+            withReplies: _tabSetting.isIncludeReplies,
+            withFiles: _tabSetting.isMediaOnly,
+          ),
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
           onUpdated: onUpdated,
-          withFiles: _tabSetting.withFiles,
         ),
       TabType.roleTimeline => _misskey.roleTimelineStream(
           roleId: _tabSetting.roleId!,
@@ -125,28 +139,34 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           NotesLocalTimelineRequest(
             limit: limit,
             untilId: untilId,
-            withFiles: _tabSetting.withFiles,
+            withRenotes: _tabSetting.renoteDisplay,
+            withReplies: _tabSetting.isIncludeReplies,
+            withFiles: _tabSetting.isMediaOnly,
           ),
         ),
       TabType.homeTimeline => _misskey.notes.homeTimeline(
           NotesTimelineRequest(
             limit: limit ?? 30,
             untilId: untilId,
-            withFiles: _tabSetting.withFiles,
+            withRenotes: _tabSetting.renoteDisplay,
+            withFiles: _tabSetting.isMediaOnly,
           ),
         ),
       TabType.globalTimeline => _misskey.notes.globalTimeline(
           NotesGlobalTimelineRequest(
             limit: limit,
             untilId: untilId,
-            withFiles: _tabSetting.withFiles,
+            withRenotes: _tabSetting.renoteDisplay,
+            withFiles: _tabSetting.isMediaOnly,
           ),
         ),
       TabType.hybridTimeline => _misskey.notes.hybridTimeline(
           NotesHybridTimelineRequest(
             limit: limit,
             untilId: untilId,
-            withFiles: _tabSetting.withFiles,
+            withRenotes: _tabSetting.renoteDisplay,
+            withReplies: _tabSetting.isIncludeReplies,
+            withFiles: _tabSetting.isMediaOnly,
           ),
         ),
       TabType.roleTimeline => _misskey.roles.notes(
@@ -168,7 +188,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
             listId: _tabSetting.listId!,
             limit: limit,
             untilId: untilId,
-            withFiles: _tabSetting.withFiles,
+            withFiles: _tabSetting.isMediaOnly,
           ),
         ),
       TabType.antenna => _misskey.antennas.notes(

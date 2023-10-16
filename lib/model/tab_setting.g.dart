@@ -15,10 +15,11 @@ _$_TabSetting _$$_TabSettingFromJson(Map<String, dynamic> json) =>
       listId: json['listId'] as String?,
       antennaId: json['antennaId'] as String?,
       isSubscribe: json['isSubscribe'] as bool? ?? true,
+      isIncludeReplies: json['isIncludeReplies'] as bool? ?? true,
+      isMediaOnly: json['isMediaOnly'] as bool? ?? false,
       name: json['name'] as String,
       acct: Acct.fromJson(_readAcct(json, 'acct') as Map<String, dynamic>),
       renoteDisplay: json['renoteDisplay'] as bool? ?? true,
-      withFiles: json['withFiles'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_TabSettingToJson(_$_TabSetting instance) =>
@@ -30,10 +31,11 @@ Map<String, dynamic> _$$_TabSettingToJson(_$_TabSetting instance) =>
       'listId': instance.listId,
       'antennaId': instance.antennaId,
       'isSubscribe': instance.isSubscribe,
+      'isIncludeReplies': instance.isIncludeReplies,
+      'isMediaOnly': instance.isMediaOnly,
       'name': instance.name,
       'acct': instance.acct.toJson(),
       'renoteDisplay': instance.renoteDisplay,
-      'withFiles': instance.withFiles,
     };
 
 const _$TabTypeEnumMap = {
