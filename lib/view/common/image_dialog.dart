@@ -8,15 +8,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/misskey_notes/network_image.dart';
+import 'package:misskey_dart/misskey_dart.dart' hide Permission;
 import 'package:permission_handler/permission_handler.dart';
 
 class ImageDialog extends ConsumerStatefulWidget {
-  final List<String> imageUrlList;
+  final List<DriveFile> driveFiles;
   final int initialPage;
 
   const ImageDialog({
     super.key,
-    required this.imageUrlList,
+    required this.driveFiles,
     required this.initialPage,
   });
 
@@ -47,6 +48,8 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrlList = widget.driveFiles.map((file) => file.url);
+
     return AlertDialog(
         backgroundColor: Colors.transparent,
         titlePadding: EdgeInsets.zero,
@@ -117,7 +120,7 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                                   ? const ScrollPhysics()
                                   : const NeverScrollableScrollPhysics(),
                               children: [
-                                for (final url in widget.imageUrlList)
+                                for (final url in imageUrlList)
                                   ScaleNotifierInteractiveViewer(
                                     imageUrl: url,
                                     controller: _transformationController,
@@ -162,10 +165,6 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                         onPressed: () async {
                           final page = pageController.page?.toInt();
                           if (page == null) return;
-                          final response = await ref.read(dioProvider).get(
-                              widget.imageUrlList[page],
-                              options:
-                                  Options(responseType: ResponseType.bytes));
 
                           if (defaultTargetPlatform == TargetPlatform.android) {
                             final androidInfo =
@@ -185,7 +184,24 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                             }
                           }
 
-                          await ImageGallerySaver.saveImage(response.data);
+                          final driveFile = widget.driveFiles[page];
+
+                          final tempDir =
+                              ref.read(fileSystemProvider).systemTempDirectory;
+                          final savePath = "${tempDir.path}/${driveFile.name}";
+
+                          await ref.read(dioProvider).download(
+                                driveFile.url,
+                                savePath,
+                                options: Options(
+                                  responseType: ResponseType.bytes,
+                                ),
+                              );
+
+                          await ImageGallerySaver.saveFile(
+                            savePath,
+                            name: driveFile.name,
+                          );
                           if (!mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text("画像保存したで")));
