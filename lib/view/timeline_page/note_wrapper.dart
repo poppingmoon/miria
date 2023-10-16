@@ -8,9 +8,12 @@ import 'package:miria/view/common/misskey_notes/misskey_note.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 final _noteFilterProvider =
-    Provider.autoDispose.family<bool, (Note, TabSetting)>((ref, tuple) {
-  final (note, tabSetting) = tuple;
+    Provider.autoDispose.family<bool, (Note, TabSetting)>((ref, arg) {
+  final (note, tabSetting) = arg;
   if (!tabSetting.renoteDisplay && note.isEmptyRenote) {
+    return false;
+  }
+  if (tabSetting.isMediaOnly && note.files.isEmpty) {
     return false;
   }
   final nsfwInherit =

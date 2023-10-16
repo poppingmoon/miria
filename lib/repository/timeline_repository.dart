@@ -49,6 +49,11 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
 
     return switch (_tabSetting.tabType) {
       TabType.localTimeline => misskey.localTimelineStream(
+          parameter: LocalTimelineParameter(
+            withRenotes: _tabSetting.renoteDisplay,
+            withReplies: _tabSetting.isIncludeReplies,
+            withFiles: _tabSetting.isMediaOnly,
+          ),
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
@@ -56,6 +61,10 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onUpdated: onUpdated,
         ),
       TabType.homeTimeline => misskey.homeTimelineStream(
+          parameter: HomeTimelineParameter(
+            withRenotes: _tabSetting.renoteDisplay,
+            withFiles: _tabSetting.isMediaOnly,
+          ),
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
@@ -63,6 +72,10 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onUpdated: onUpdated,
         ),
       TabType.globalTimeline => misskey.globalTimelineStream(
+          parameter: GlobalTimelineParameter(
+            withRenotes: _tabSetting.renoteDisplay,
+            withFiles: _tabSetting.isMediaOnly,
+          ),
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
@@ -70,6 +83,11 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onUpdated: onUpdated,
         ),
       TabType.hybridTimeline => misskey.hybridTimelineStream(
+          parameter: HybridTimelineParameter(
+            withRenotes: _tabSetting.renoteDisplay,
+            withReplies: _tabSetting.isIncludeReplies,
+            withFiles: _tabSetting.isMediaOnly,
+          ),
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onUnreacted: onUnreacted,
@@ -122,24 +140,34 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           NotesLocalTimelineRequest(
             limit: limit,
             untilId: untilId,
+            withRenotes: _tabSetting.renoteDisplay,
+            withReplies: _tabSetting.isIncludeReplies,
+            withFiles: _tabSetting.isMediaOnly,
           ),
         ),
       TabType.homeTimeline => misskey.notes.homeTimeline(
           NotesTimelineRequest(
             limit: limit ?? 30,
             untilId: untilId,
+            withRenotes: _tabSetting.renoteDisplay,
+            withFiles: _tabSetting.isMediaOnly,
           ),
         ),
       TabType.globalTimeline => misskey.notes.globalTimeline(
           NotesGlobalTimelineRequest(
             limit: limit,
             untilId: untilId,
+            withRenotes: _tabSetting.renoteDisplay,
+            withFiles: _tabSetting.isMediaOnly,
           ),
         ),
       TabType.hybridTimeline => misskey.notes.hybridTimeline(
           NotesHybridTimelineRequest(
             limit: limit,
             untilId: untilId,
+            withRenotes: _tabSetting.renoteDisplay,
+            withReplies: _tabSetting.isIncludeReplies,
+            withFiles: _tabSetting.isMediaOnly,
           ),
         ),
       TabType.roleTimeline => misskey.roles.notes(
