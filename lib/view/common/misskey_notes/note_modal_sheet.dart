@@ -231,7 +231,7 @@ class NoteModalSheet extends ConsumerWidget {
                 baseNote.renote != null &&
                 baseNote.poll == null &&
                 baseNote.files.isEmpty)) ...[
-          if (account.i.policies.canEditNote)
+          if (account.i.policies.canEditNote as bool)
             ListTile(
               leading: const Icon(Icons.edit),
               title: const Text("編集する"),

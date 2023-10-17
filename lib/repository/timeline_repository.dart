@@ -188,6 +188,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
             listId: _tabSetting.listId!,
             limit: limit,
             untilId: untilId,
+            withRenotes: _tabSetting.renoteDisplay,
             withFiles: _tabSetting.isMediaOnly,
           ),
         ),
