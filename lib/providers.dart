@@ -24,6 +24,7 @@ import 'package:miria/repository/timeline_repository.dart';
 import 'package:miria/state_notifier/antenna_page/antennas_list_notifier.dart';
 import 'package:miria/state_notifier/clip_list_page/clips_list_notifier.dart';
 import 'package:miria/state_notifier/common/misskey_notes/misskey_note_notifier.dart';
+import 'package:miria/state_notifier/common/misskey_server_list_notifier.dart';
 import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
 import 'package:miria/state_notifier/photo_edit_page/photo_edit_state_notifier.dart';
 import 'package:miria/state_notifier/timeline_page/timeline_controller.dart';
@@ -183,3 +184,8 @@ final antennasListNotifierProvider = AsyncNotifierProvider.autoDispose
 
 final clipsListNotifierProvider = AsyncNotifierProvider.autoDispose
     .family<ClipsListNotifier, List<Clip>, Misskey>(ClipsListNotifier.new);
+
+final misskeyServerListNotifierProvider = AsyncNotifierProvider.autoDispose<
+    MisskeyServerListNotifier, List<JoinMisskeyInstanceInfo>>(
+  MisskeyServerListNotifier.new,
+);
