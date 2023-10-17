@@ -37,7 +37,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
       serifStyle:
           TextStyle(fontFamilyFallback: resolveFontFamilySerifCallback()),
       reactionButtonBackgroundColor: theme.buttonBackground,
-      reactionButtonMeReactedColor: theme.primary,
+      reactionButtonMeReactedColor: theme.accentedBackground,
       renoteBorderColor: theme.renote,
       renoteBorderRadius: const Radius.circular(20),
       renoteStrokeWidth: 1.5,
