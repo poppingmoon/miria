@@ -20,6 +20,7 @@ import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/avatar_icon.dart';
 import 'package:miria/view/common/constants.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
+import 'package:miria/view/common/misskey_notes/in_note_button.dart';
 import 'package:miria/view/common/misskey_notes/link_preview.dart';
 import 'package:miria/view/common/misskey_notes/local_only_icon.dart';
 import 'package:miria/view/common/misskey_notes/mfm_text.dart';
@@ -367,51 +368,21 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                   .read(generalSettingsRepositoryProvider)
                                   .settings
                                   .enableAnimatedMFM,
-                              suffixSpan: [
-                                WidgetSpan(
-                                  alignment: PlaceholderAlignment.middle,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 0,
-                                      backgroundColor:
-                                          AppTheme.of(context).buttonBackground,
-                                      foregroundColor: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.color,
-                                      padding: const EdgeInsets.only(
-                                        left: 5,
-                                        right: 5,
-                                        top: 8,
-                                        bottom: 8,
+                            ),
+                            InNoteButton(
+                              onPressed: () {
+                                ref
+                                    .read(notesProvider(account))
+                                    .updateNoteStatus(
+                                      widget.note.id,
+                                      (status) => status.copyWith(
+                                        isCwOpened: !status.isCwOpened,
                                       ),
-                                      textStyle: TextStyle(
-                                        fontSize: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.fontSize,
-                                      ),
-                                      minimumSize:
-                                          const Size(double.infinity, 0),
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    onPressed: () {
-                                      ref
-                                          .read(notesProvider(account))
-                                          .updateNoteStatus(
-                                            widget.note.id,
-                                            (status) => status.copyWith(
-                                              isCwOpened: !status.isCwOpened,
-                                            ),
-                                          );
-                                    },
-                                    child: Text(
-                                      isCwOpened ? "隠す" : "続きを見る",
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                    );
+                              },
+                              child: Text(
+                                isCwOpened ? "隠す" : "続きを見る",
+                              ),
                             ),
                           ],
                           if (displayNote.cw == null ||
@@ -452,31 +423,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                             ),
                             if (isReactionedRenote || !isLongVisible)
                               Center(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 0,
-                                    backgroundColor:
-                                        AppTheme.of(context).buttonBackground,
-                                    foregroundColor: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.color,
-                                    padding: const EdgeInsets.only(
-                                      left: 5,
-                                      right: 5,
-                                      top: 8,
-                                      bottom: 8,
-                                    ),
-                                    textStyle: TextStyle(
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.fontSize,
-                                    ),
-                                    minimumSize: const Size(double.infinity, 0),
-                                    tapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                  ),
+                                child: InNoteButton(
                                   onPressed: () {
                                     final repository = ref.read(
                                       notesProvider(

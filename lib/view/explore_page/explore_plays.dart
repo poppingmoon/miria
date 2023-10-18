@@ -35,6 +35,7 @@ class ExplorePagesState extends ConsumerState<ExplorePlay> {
                   host: AccountScope.of(context).host,
                   pathSegments: ["play", item.id],
                 ),
+                mode: LaunchMode.externalApplication,
               );
             },
             title: MfmText(mfmText: item.title),

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/image_dialog.dart';
+import 'package:miria/view/common/misskey_notes/in_note_button.dart';
 import 'package:miria/view/common/misskey_notes/network_image.dart';
 import 'package:miria/view/common/misskey_notes/video_dialog.dart';
 import 'package:misskey_dart/misskey_dart.dart';
@@ -79,7 +80,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
             ],
           ),
           if (isElipsed)
-            ElevatedButton(
+            InNoteButton(
               onPressed: () => setState(() {
                 isElipsed = !isElipsed;
               }),
