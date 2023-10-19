@@ -391,6 +391,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                               mfmNode: displayTextNodes,
                               host: displayNote.user.host,
                               emoji: displayNote.emojis,
+                              isNyaize: displayNote.user.isCat,
                               isEnableAnimatedMFM: ref
                                   .read(generalSettingsRepositoryProvider)
                                   .settings

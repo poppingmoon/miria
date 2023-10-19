@@ -988,8 +988,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: next
-      resolved-ref: "1c1816131590643ffb9ea012cad4f8d398c4f8d0"
+      ref: c930ea393f33848ab8102817d498f87b866293af
+      resolved-ref: c930ea393f33848ab8102817d498f87b866293af
       url: "https://github.com/poppingmoon/mfm_renderer.git"
     source: git
     version: "0.0.1"
