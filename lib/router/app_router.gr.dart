@@ -147,6 +147,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const LoginPage(),
       );
     },
+    MisskeyRouteRoute.name: (routeData) {
+      final args = routeData.argsAs<MisskeyRouteRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: MisskeyPagePage(
+          key: args.key,
+          account: args.account,
+          page: args.page,
+        ),
+      );
+    },
     NotesAfterRenoteRoute.name: (routeData) {
       final args = routeData.argsAs<NotesAfterRenoteRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -334,6 +345,14 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SplashPage(),
       );
     },
+    TimelineRoute.name: (routeData) {
+      final args = routeData.argsAs<TimelineRouteArgs>(
+          orElse: () => const TimelineRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: TimelinePage(key: args.key),
+      );
+    },
     UsersListDetailRoute.name: (routeData) {
       final args = routeData.argsAs<UsersListDetailRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -396,25 +415,6 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           userId: args.userId,
           account: args.account,
-        ),
-      );
-    },
-    TimelineRoute.name: (routeData) {
-      final args = routeData.argsAs<TimelineRouteArgs>(
-          orElse: () => const TimelineRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: TimelinePage(key: args.key),
-      );
-    },
-    MisskeyRouteRoute.name: (routeData) {
-      final args = routeData.argsAs<MisskeyRouteRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: MisskeyPagePage(
-          key: args.key,
-          account: args.account,
-          page: args.page,
         ),
       );
     },
@@ -919,6 +919,49 @@ class LoginRoute extends PageRouteInfo<void> {
   static const String name = 'LoginRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [MisskeyPagePage]
+class MisskeyRouteRoute extends PageRouteInfo<MisskeyRouteRouteArgs> {
+  MisskeyRouteRoute({
+    Key? key,
+    required Account account,
+    required Page page,
+    List<PageRouteInfo>? children,
+  }) : super(
+          MisskeyRouteRoute.name,
+          args: MisskeyRouteRouteArgs(
+            key: key,
+            account: account,
+            page: page,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'MisskeyRouteRoute';
+
+  static const PageInfo<MisskeyRouteRouteArgs> page =
+      PageInfo<MisskeyRouteRouteArgs>(name);
+}
+
+class MisskeyRouteRouteArgs {
+  const MisskeyRouteRouteArgs({
+    this.key,
+    required this.account,
+    required this.page,
+  });
+
+  final Key? key;
+
+  final Account account;
+
+  final Page page;
+
+  @override
+  String toString() {
+    return 'MisskeyRouteRouteArgs{key: $key, account: $account, page: $page}';
+  }
 }
 
 /// generated route for
@@ -1581,6 +1624,35 @@ class SplashRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [TimelinePage]
+class TimelineRoute extends PageRouteInfo<TimelineRouteArgs> {
+  TimelineRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TimelineRoute.name,
+          args: TimelineRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'TimelineRoute';
+
+  static const PageInfo<TimelineRouteArgs> page =
+      PageInfo<TimelineRouteArgs>(name);
+}
+
+class TimelineRouteArgs {
+  const TimelineRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'TimelineRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
 /// [UsersListDetailPage]
 class UsersListDetailRoute extends PageRouteInfo<UsersListDetailRouteArgs> {
   UsersListDetailRoute({
@@ -1829,77 +1901,5 @@ class UserRouteArgs {
   @override
   String toString() {
     return 'UserRouteArgs{key: $key, userId: $userId, account: $account}';
-  }
-}
-
-/// generated route for
-/// [TimelinePage]
-class TimelineRoute extends PageRouteInfo<TimelineRouteArgs> {
-  TimelineRoute({
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          TimelineRoute.name,
-          args: TimelineRouteArgs(key: key),
-          initialChildren: children,
-        );
-
-  static const String name = 'TimelineRoute';
-
-  static const PageInfo<TimelineRouteArgs> page =
-      PageInfo<TimelineRouteArgs>(name);
-}
-
-class TimelineRouteArgs {
-  const TimelineRouteArgs({this.key});
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'TimelineRouteArgs{key: $key}';
-  }
-}
-
-/// generated route for
-/// [MisskeyPagePage]
-class MisskeyRouteRoute extends PageRouteInfo<MisskeyRouteRouteArgs> {
-  MisskeyRouteRoute({
-    Key? key,
-    required Account account,
-    required Page page,
-    List<PageRouteInfo>? children,
-  }) : super(
-          MisskeyRouteRoute.name,
-          args: MisskeyRouteRouteArgs(
-            key: key,
-            account: account,
-            page: page,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'MisskeyRouteRoute';
-
-  static const PageInfo<MisskeyRouteRouteArgs> page =
-      PageInfo<MisskeyRouteRouteArgs>(name);
-}
-
-class MisskeyRouteRouteArgs {
-  const MisskeyRouteRouteArgs({
-    this.key,
-    required this.account,
-    required this.page,
-  });
-
-  final Key? key;
-
-  final Account account;
-
-  final Page page;
-
-  @override
-  String toString() {
-    return 'MisskeyRouteRouteArgs{key: $key, account: $account, page: $page}';
   }
 }

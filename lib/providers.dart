@@ -4,6 +4,7 @@ import 'package:file/local.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
+import 'package:miria/model/acct.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/model/timeline_controller_state.dart';
 import 'package:miria/model/timeline_page_state.dart';
@@ -79,6 +80,18 @@ final accountRepository = ChangeNotifierProvider((ref) => AccountRepository(
     ref.read(tabSettingsRepositoryProvider),
     ref.read(accountSettingsRepositoryProvider),
     ref.read));
+
+final accountProvider = Provider.family<Account, Acct>(
+  (ref, acct) => ref.watch(
+    accountRepository.select(
+      (repository) => repository.account.firstWhere(
+        (account) =>
+            account.host == acct.host && account.userId == acct.username,
+      ),
+    ),
+  ),
+);
+
 final tabSettingsRepositoryProvider =
     ChangeNotifierProvider((ref) => TabSettingsRepository());
 

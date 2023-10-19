@@ -4,6 +4,7 @@ import 'dart:collection';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/extensions/note_extension.dart';
+import 'package:miria/model/account.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/model/tab_type.dart';
 import 'package:miria/model/timeline_state.dart';
@@ -36,6 +37,10 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
 
   TabSetting get _tabSetting => arg;
 
+  Account get _account => ref.read(accountProvider(_tabSetting.acct));
+
+  Misskey get _misskey => ref.read(misskeyProvider(_account));
+
   SocketController _createSocketController({
     required void Function(Note note) onNoteReceived,
     required FutureOr<void> Function(String id, TimelineReacted reaction)
@@ -45,10 +50,8 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     required FutureOr<void> Function(String id, TimelineVoted vote) onVoted,
     required FutureOr<void> Function(String id, NoteEdited note) onUpdated,
   }) {
-    final misskey = ref.read(misskeyProvider(_tabSetting.account));
-
     return switch (_tabSetting.tabType) {
-      TabType.localTimeline => misskey.localTimelineStream(
+      TabType.localTimeline => _misskey.localTimelineStream(
           parameter: LocalTimelineParameter(
             withRenotes: _tabSetting.renoteDisplay,
             withReplies: _tabSetting.isIncludeReplies,
@@ -60,7 +63,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onVoted: onVoted,
           onUpdated: onUpdated,
         ),
-      TabType.homeTimeline => misskey.homeTimelineStream(
+      TabType.homeTimeline => _misskey.homeTimelineStream(
           parameter: HomeTimelineParameter(
             withRenotes: _tabSetting.renoteDisplay,
             withFiles: _tabSetting.isMediaOnly,
@@ -71,7 +74,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onVoted: onVoted,
           onUpdated: onUpdated,
         ),
-      TabType.globalTimeline => misskey.globalTimelineStream(
+      TabType.globalTimeline => _misskey.globalTimelineStream(
           parameter: GlobalTimelineParameter(
             withRenotes: _tabSetting.renoteDisplay,
             withFiles: _tabSetting.isMediaOnly,
@@ -82,7 +85,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onVoted: onVoted,
           onUpdated: onUpdated,
         ),
-      TabType.hybridTimeline => misskey.hybridTimelineStream(
+      TabType.hybridTimeline => _misskey.hybridTimelineStream(
           parameter: HybridTimelineParameter(
             withRenotes: _tabSetting.renoteDisplay,
             withReplies: _tabSetting.isIncludeReplies,
@@ -94,7 +97,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onVoted: onVoted,
           onUpdated: onUpdated,
         ),
-      TabType.roleTimeline => misskey.roleTimelineStream(
+      TabType.roleTimeline => _misskey.roleTimelineStream(
           roleId: _tabSetting.roleId!,
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
@@ -103,14 +106,14 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           // TODO: misskey_dartを修正
           // onUpdated: onUpdated,
         ),
-      TabType.channel => misskey.channelStream(
+      TabType.channel => _misskey.channelStream(
           channelId: _tabSetting.channelId!,
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
           onVoted: onVoted,
           onUpdated: onUpdated,
         ),
-      TabType.userList => misskey.userListStream(
+      TabType.userList => _misskey.userListStream(
           listId: _tabSetting.listId!,
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
@@ -118,7 +121,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onVoted: onVoted,
           onUpdated: onUpdated,
         ),
-      TabType.antenna => misskey.antennaStream(
+      TabType.antenna => _misskey.antennaStream(
           antennaId: _tabSetting.antennaId!,
           onNoteReceived: onNoteReceived,
           onReacted: onReacted,
@@ -133,10 +136,8 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     int? limit,
     String? untilId,
   }) {
-    final misskey = ref.read(misskeyProvider(_tabSetting.account));
-
     return switch (_tabSetting.tabType) {
-      TabType.localTimeline => misskey.notes.localTimeline(
+      TabType.localTimeline => _misskey.notes.localTimeline(
           NotesLocalTimelineRequest(
             limit: limit,
             untilId: untilId,
@@ -145,7 +146,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
             withFiles: _tabSetting.isMediaOnly,
           ),
         ),
-      TabType.homeTimeline => misskey.notes.homeTimeline(
+      TabType.homeTimeline => _misskey.notes.homeTimeline(
           NotesTimelineRequest(
             limit: limit ?? 30,
             untilId: untilId,
@@ -153,7 +154,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
             withFiles: _tabSetting.isMediaOnly,
           ),
         ),
-      TabType.globalTimeline => misskey.notes.globalTimeline(
+      TabType.globalTimeline => _misskey.notes.globalTimeline(
           NotesGlobalTimelineRequest(
             limit: limit,
             untilId: untilId,
@@ -161,7 +162,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
             withFiles: _tabSetting.isMediaOnly,
           ),
         ),
-      TabType.hybridTimeline => misskey.notes.hybridTimeline(
+      TabType.hybridTimeline => _misskey.notes.hybridTimeline(
           NotesHybridTimelineRequest(
             limit: limit,
             untilId: untilId,
@@ -170,21 +171,21 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
             withFiles: _tabSetting.isMediaOnly,
           ),
         ),
-      TabType.roleTimeline => misskey.roles.notes(
+      TabType.roleTimeline => _misskey.roles.notes(
           RolesNotesRequest(
             roleId: _tabSetting.roleId!,
             limit: limit,
             untilId: untilId,
           ),
         ),
-      TabType.channel => misskey.channels.timeline(
+      TabType.channel => _misskey.channels.timeline(
           ChannelsTimelineRequest(
             channelId: _tabSetting.channelId!,
             limit: limit,
             untilId: untilId,
           ),
         ),
-      TabType.userList => misskey.notes.userListTimeline(
+      TabType.userList => _misskey.notes.userListTimeline(
           UserListTimelineRequest(
             listId: _tabSetting.listId!,
             limit: limit,
@@ -193,7 +194,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
             withFiles: _tabSetting.isMediaOnly,
           ),
         ),
-      TabType.antenna => misskey.antennas.notes(
+      TabType.antenna => _misskey.antennas.notes(
           AntennasNotesRequest(
             antennaId: _tabSetting.antennaId!,
             limit: limit,
@@ -214,80 +215,32 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
       error: null,
     );
 
-    final account = _tabSetting.account;
-    final noteRepository = ref.read(notesProvider(account));
-    final misskey = ref.read(misskeyProvider(account));
+    final noteRepository = ref.read(notesProvider(_account));
 
     try {
       if (restart) {
-        misskey.streamingService.close();
+        _misskey.streamingService.close();
       }
       _socketController = _createSocketController(
         onNoteReceived: (note) {
           noteRepository.registerNote(note);
           state = state.copyWith(newerNotes: [...state.newerNotes, note]);
         },
-        onReacted: (id, reaction) {
-          final registeredNote = noteRepository.notes[id];
-          if (registeredNote == null) return;
-
-          final reactions = Map.of(registeredNote.reactions);
-          reactions[reaction.reaction] =
-              (reactions[reaction.reaction] ?? 0) + 1;
-          final emoji = reaction.emoji;
-          final reactionEmojis = Map.of(registeredNote.reactionEmojis);
-          if (emoji != null && !reaction.reaction.endsWith("@.:")) {
-            reactionEmojis[emoji.name] = emoji.url;
-          }
-
-          noteRepository.registerNote(
-            registeredNote.copyWith(
-              reactions: reactions,
-              reactionEmojis: reactionEmojis,
-              myReaction: reaction.userId == account.i.id
-                  ? (emoji?.name != null ? ":${emoji?.name}:" : null)
-                  : registeredNote.myReaction,
-            ),
-          );
-        },
-        onUnreacted: (id, reaction) {
-          final registeredNote = noteRepository.notes[id];
-          if (registeredNote == null) return;
-
-          final reactions = Map.of(registeredNote.reactions);
-          final reactionCount = reactions[reaction.reaction];
-          if (reactionCount == null) {
-            return;
-          }
-          if (reactionCount <= 1) {
-            reactions.remove(reaction.reaction);
-          } else {
-            reactions[reaction.reaction] = reactionCount - 1;
-          }
-
-          noteRepository.registerNote(
-            registeredNote.copyWith(
-              reactions: reactions,
-              // https://github.com/rrousselGit/freezed/issues/906
-              myReaction: reaction.userId == account.i.id
-                  ? ""
-                  : registeredNote.myReaction,
-            ),
-          );
-        },
+        onReacted: noteRepository.addReaction,
+        onUnreacted: noteRepository.removeReaction,
         onVoted: noteRepository.addVote,
         onUpdated: noteRepository.updateNote,
       );
       await Future.wait([
-        ref.read(mainStreamRepositoryProvider(account)).reconnect(),
-        ref.read(emojiRepositoryProvider(account)).loadFromSourceIfNeed(),
-        ref.read(accountRepository).loadFromSourceIfNeed(account),
+        ref.read(mainStreamRepositoryProvider(_account)).reconnect(),
+        ref.read(emojiRepositoryProvider(_account)).loadFromSourceIfNeed(),
+        ref.read(accountRepository).loadFromSourceIfNeed(_tabSetting.acct),
         if (state.olderNotes.isEmpty)
           downDirectionLoad()
         else
           _reloadLatestNotes(),
       ]);
-      await misskey.startStreaming();
+      await _misskey.startStreaming();
     } catch (e, st) {
       state = state.copyWith(error: (e, st));
     } finally {
@@ -300,7 +253,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
     state = state.copyWith(isDownDirectionLoading: true);
     try {
       final notes = await _requestNotes(untilId: state.oldestNote?.id);
-      ref.read(notesProvider(_tabSetting.account)).registerAll(notes);
+      ref.read(notesProvider(_account)).registerAll(notes);
       state = state.copyWith(
         olderNotes: [...state.olderNotes, ...notes],
         isLastLoaded: notes.isEmpty,
@@ -318,7 +271,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
       return;
     }
 
-    ref.read(notesProvider(_tabSetting.account)).registerAll(notes);
+    ref.read(notesProvider(_account)).registerAll(notes);
 
     if (state.olderNotes.isEmpty ||
         state.olderNotes.first.createdAt < notes.last.createdAt) {
