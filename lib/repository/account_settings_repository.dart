@@ -60,7 +60,6 @@ class AccountSettingsRepository extends ChangeNotifier {
         AccountSettings(
           userId: acct.username,
           host: acct.host,
-          reactions: [],
         );
   }
 

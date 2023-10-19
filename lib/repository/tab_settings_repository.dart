@@ -44,9 +44,7 @@ class TabSettingsRepository extends ChangeNotifier {
   }
 
   Future<void> removeAccount(Account account) async {
-    _tabSettings.removeWhere(
-      (tabSetting) => tabSetting.acct == account.acct,
-    );
+    _tabSettings.removeWhere((tabSetting) => tabSetting.acct == account.acct);
     await save(_tabSettings);
     notifyListeners();
   }

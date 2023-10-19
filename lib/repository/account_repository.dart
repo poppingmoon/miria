@@ -41,9 +41,10 @@ class AccountRepository extends Notifier<List<Account>> {
     }
   }
 
-  Future<void> loadFromSourceIfNeed(Account account) async {
-    if (_validatedAccts.contains(account.acct)) return;
+  Future<void> loadFromSourceIfNeed(Acct acct) async {
+    if (_validatedAccts.contains(acct)) return;
 
+    final account = ref.read(accountProvider(acct));
     final i = await ref.read(misskeyProvider(account)).i.i();
 
     state =

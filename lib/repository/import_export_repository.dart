@@ -7,9 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
-import 'package:miria/model/account_settings.dart';
 import 'package:miria/model/exported_setting.dart';
-import 'package:miria/model/general_settings.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
@@ -69,15 +67,11 @@ class ImportExportRepository extends ChangeNotifier {
 
     final json = jsonDecode(response.data!) as Map<String, dynamic>;
 
-    final importedGeneralSettings = GeneralSettings.fromJson(
-      json["generalSettings"] as Map<String, dynamic>,
-    );
-    final importedAccountSettings = (json["accountSettings"] as List)
-        .map((e) => AccountSettings.fromJson(e as Map<String, dynamic>));
+    final importedSettings = ExportedSetting.fromJson(json);
 
     // アカウント設定よみこみ
     final accounts = reader(accountRepositoryProvider);
-    for (final accountSetting in importedAccountSettings) {
+    for (final accountSetting in importedSettings.accountSettings) {
       // この端末でログイン済みのアカウントであれば
       if (accounts.any((account) => account.acct == accountSetting.acct)) {
         reader(accountSettingsRepositoryProvider).save(accountSetting);
@@ -85,14 +79,13 @@ class ImportExportRepository extends ChangeNotifier {
     }
 
     // 全般設定
-    reader(generalSettingsRepositoryProvider).update(importedGeneralSettings);
+    reader(generalSettingsRepositoryProvider)
+        .update(importedSettings.generalSettings);
 
     // タブ設定
     final tabSettings = <TabSetting>[];
 
-    for (final jsonTabSetting in json["tabSettings"] as Iterable) {
-      final tabSetting =
-          TabSetting.fromJson(jsonTabSetting as Map<String, dynamic>);
+    for (final tabSetting in importedSettings.tabSettings) {
       final account = accounts
           .firstWhereOrNull((account) => tabSetting.acct == account.acct);
 

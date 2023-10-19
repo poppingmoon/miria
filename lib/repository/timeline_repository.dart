@@ -224,54 +224,8 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           noteRepository.registerNote(note);
           state = state.copyWith(newerNotes: [...state.newerNotes, note]);
         },
-        onReacted: (id, reaction) {
-          final registeredNote = noteRepository.notes[id];
-          if (registeredNote == null) return;
-
-          final reactions = Map.of(registeredNote.reactions);
-          reactions[reaction.reaction] =
-              (reactions[reaction.reaction] ?? 0) + 1;
-          final emoji = reaction.emoji;
-          final reactionEmojis = Map.of(registeredNote.reactionEmojis);
-          if (emoji != null && !reaction.reaction.endsWith("@.:")) {
-            reactionEmojis[emoji.name] = emoji.url;
-          }
-
-          noteRepository.registerNote(
-            registeredNote.copyWith(
-              reactions: reactions,
-              reactionEmojis: reactionEmojis,
-              myReaction: reaction.userId == _account.i.id
-                  ? (emoji?.name != null ? ":${emoji?.name}:" : null)
-                  : registeredNote.myReaction,
-            ),
-          );
-        },
-        onUnreacted: (id, reaction) {
-          final registeredNote = noteRepository.notes[id];
-          if (registeredNote == null) return;
-
-          final reactions = Map.of(registeredNote.reactions);
-          final reactionCount = reactions[reaction.reaction];
-          if (reactionCount == null) {
-            return;
-          }
-          if (reactionCount <= 1) {
-            reactions.remove(reaction.reaction);
-          } else {
-            reactions[reaction.reaction] = reactionCount - 1;
-          }
-
-          noteRepository.registerNote(
-            registeredNote.copyWith(
-              reactions: reactions,
-              // https://github.com/rrousselGit/freezed/issues/906
-              myReaction: reaction.userId == _account.i.id
-                  ? ""
-                  : registeredNote.myReaction,
-            ),
-          );
-        },
+        onReacted: noteRepository.addReaction,
+        onUnreacted: noteRepository.removeReaction,
         onVoted: noteRepository.addVote,
         onUpdated: noteRepository.updateNote,
       );
@@ -280,7 +234,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
         ref.read(emojiRepositoryProvider(_account)).loadFromSourceIfNeed(),
         ref
             .read(accountRepositoryProvider.notifier)
-            .loadFromSourceIfNeed(_account),
+            .loadFromSourceIfNeed(_tabSetting.acct),
         if (state.olderNotes.isEmpty)
           downDirectionLoad()
         else

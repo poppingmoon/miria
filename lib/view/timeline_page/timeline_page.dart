@@ -195,7 +195,6 @@ class TimelinePage extends ConsumerWidget {
         (repo) => repo.settings.tabPosition,
       ),
     );
-    final account = ref.watch(accountProvider(page.tabSetting.acct));
 
     return Scaffold(
       key: scaffoldKey,
@@ -264,7 +263,7 @@ class TimelinePage extends ConsumerWidget {
       ),
       resizeToAvoidBottomInset: true,
       drawer: CommonDrawer(
-        initialOpenAccount: account,
+        initialOpenAcct: page.tabSetting.acct,
       ),
     );
   }
