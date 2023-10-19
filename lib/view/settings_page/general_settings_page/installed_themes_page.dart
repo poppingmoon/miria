@@ -79,6 +79,7 @@ class InstalledThemesPage extends ConsumerWidget {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text("コピーしました")),
                               );
+                              Navigator.of(context).pop();
                             },
                             child: const Text("コピー"),
                           ),

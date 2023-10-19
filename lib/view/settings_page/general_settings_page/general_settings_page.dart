@@ -260,11 +260,12 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                           save();
                         }),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
+                      ListTile(
+                        title: const Text("テーマの管理"),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () {
                           context.pushRoute(const InstalledThemesRoute());
                         },
-                        child: const Text("テーマの管理"),
                       ),
                     ],
                   ),

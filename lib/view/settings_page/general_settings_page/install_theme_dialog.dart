@@ -56,7 +56,7 @@ class InstallThemeDialog extends ConsumerWidget {
               },
             ),
             ElevatedButton(
-              onPressed: () => formKey.currentState?.save(),
+              onPressed: formKey.currentState?.save,
               child: const Text("インストール"),
             ),
           ],
