@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,47 +43,42 @@ class AccountRepository extends Notifier<List<Account>> {
   Future<void> loadFromSourceIfNeed(Acct acct) async {
     if (_validatedAccts.contains(acct)) return;
 
-    final account = ref.read(accountProvider(acct));
+    final index = state.indexWhere((e) => e.acct == acct);
+    final account = state[index];
     final i = await ref.read(misskeyProvider(account)).i.i();
 
-    state =
-        state.map((e) => (e == account) ? account.copyWith(i: i) : e).toList();
-    _validatedAccts.add(account.acct);
+    final accounts = List.of(state);
+    accounts[index] = account.copyWith(i: i);
+    state = accounts;
+    _validatedAccts.add(acct);
   }
 
   Future<void> createUnreadAnnouncement(
     Account account,
     AnnouncementsResponse announcement,
   ) async {
-    final accountIndex =
-        state.indexWhere((element) => element.acct == account.acct);
-    final i = state[accountIndex].i.copyWith(
+    final index = state.indexOf(account);
+    final i = state[index].i.copyWith(
       unreadAnnouncements: [
-        ...state[accountIndex].i.unreadAnnouncements,
+        ...state[index].i.unreadAnnouncements,
         announcement,
       ],
     );
 
-    state = state
-        .mapIndexed(
-          (index, element) =>
-              (index == accountIndex) ? element.copyWith(i: i) : element,
-        )
-        .toList();
+    final accounts = List.of(state);
+    accounts[index] = account.copyWith(i: i);
+    state = accounts;
   }
 
   Future<void> removeUnreadAnnouncement(Account account) async {
-    final accountIndex =
-        state.indexWhere((element) => element.acct == account.acct);
-    final i = state[accountIndex].i.copyWith(
+    final index = state.indexOf(account);
+    final i = state[index].i.copyWith(
       unreadAnnouncements: [],
     );
-    state = state
-        .mapIndexed(
-          (index, element) =>
-              (index == accountIndex) ? element.copyWith(i: i) : element,
-        )
-        .toList();
+
+    final accounts = List.of(state);
+    accounts[index] = account.copyWith(i: i);
+    state = accounts;
   }
 
   Future<void> remove(Account account) async {
@@ -224,7 +218,9 @@ class AccountRepository extends Notifier<List<Account>> {
   Future<void> _addIfTabSettingNothing() async {
     if (state.length == 1) {
       final account = state.first;
-      ref.read(tabSettingsRepositoryProvider).initializeTabSettings(account);
+      ref
+          .read(tabSettingsRepositoryProvider)
+          .initializeTabSettings(account.acct);
     }
   }
 }

@@ -97,8 +97,7 @@ final accountProvider = Provider.family<Account, Acct>(
   (ref, acct) => ref.watch(
     accountRepositoryProvider.select(
       (accounts) => accounts.firstWhere(
-        (account) =>
-            account.host == acct.host && account.userId == acct.username,
+        (account) => account.acct == acct,
       ),
     ),
   ),

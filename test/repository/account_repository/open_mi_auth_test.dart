@@ -111,8 +111,12 @@ void main() {
     );
     final mockMisskey = MockMisskey();
     when(mockMisskey.endpoints()).thenAnswer((_) async => []);
-    final provider =
-        ProviderContainer(overrides: [dioProvider.overrideWithValue(dio)]);
+    final provider = ProviderContainer(
+      overrides: [
+        dioProvider.overrideWithValue(dio),
+        misskeyProvider.overrideWith((ref, arg) => mockMisskey),
+      ],
+    );
     final accountRepository = provider.read(accountRepositoryProvider.notifier);
 
     await expectLater(
