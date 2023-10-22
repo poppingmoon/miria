@@ -44,6 +44,7 @@ class NoteCreatePage extends HookConsumerWidget implements AutoRouteWrapper {
   final Account initialAccount;
   final String? initialText;
   final List<String>? initialMediaFiles;
+  final List<DriveFile>? initialDriveFiles;
   final bool exitOnNoted;
   final CommunityChannel? channel;
   final Note? reply;
@@ -56,6 +57,7 @@ class NoteCreatePage extends HookConsumerWidget implements AutoRouteWrapper {
     super.key,
     this.initialText,
     this.initialMediaFiles,
+    this.initialDriveFiles,
     this.exitOnNoted = false,
     this.channel,
     this.reply,
@@ -84,6 +86,7 @@ class NoteCreatePage extends HookConsumerWidget implements AutoRouteWrapper {
             channel,
             initialText,
             initialMediaFiles,
+            initialDriveFiles,
             note,
             renote,
             reply,
