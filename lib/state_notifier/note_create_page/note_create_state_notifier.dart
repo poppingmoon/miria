@@ -104,6 +104,7 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
     CommunityChannel? channel,
     String? initialText,
     List<String>? initialMediaFiles,
+    List<DriveFile>? initialDriveFiles,
     Note? note,
     Note? renote,
     Note? reply,
@@ -151,40 +152,44 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
       );
     }
 
-    // 削除されたノートの反映
-    if (note != null) {
-      final files = <MisskeyPostFile>[];
-      for (final file in note.files) {
-        if (file.type.startsWith("image")) {
-          final response = await dio.get(file.url,
-              options: Options(responseType: ResponseType.bytes));
-          files.add(
-            ImageFileAlreadyPostedFile(
+    final driveFiles = [...note?.files ?? [], ...initialDriveFiles ?? []];
+    if (driveFiles.isNotEmpty) {
+      final files = await Future.wait(
+        driveFiles.map((file) async {
+          if (file.type.startsWith("image")) {
+            final response = await dio.get(
+              file.url,
+              options: Options(responseType: ResponseType.bytes),
+            );
+            return ImageFileAlreadyPostedFile(
               fileName: file.name,
               data: response.data,
               id: file.id,
               isNsfw: file.isSensitive,
               caption: file.comment,
-            ),
-          );
-        } else {
-          files.add(
-            UnknownAlreadyPostedFile(
+            );
+          } else {
+            return UnknownAlreadyPostedFile(
               url: file.url,
               id: file.id,
               fileName: file.name,
               isNsfw: file.isSensitive,
               caption: file.comment,
-            ),
-          );
-        }
-      }
+            );
+          }
+        }),
+      );
+      resultState = resultState.copyWith(
+        files: [...resultState.files, ...files],
+      );
+    }
+    // 削除されたノートの反映
+    if (note != null) {
       final deletedNoteChannel = note.channel;
 
       resultState = resultState.copyWith(
         noteVisibility: note.visibility,
         localOnly: note.localOnly,
-        files: files,
         channel: deletedNoteChannel != null
             ? NoteCreateChannel(
                 id: deletedNoteChannel.id, name: deletedNoteChannel.name)

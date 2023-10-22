@@ -188,6 +188,7 @@ abstract class _$AppRouter extends RootStackRouter {
           initialAccount: args.initialAccount,
           initialText: args.initialText,
           initialMediaFiles: args.initialMediaFiles,
+          initialDriveFiles: args.initialDriveFiles,
           channel: args.channel,
           reply: args.reply,
           renote: args.renote,
@@ -1064,6 +1065,7 @@ class NoteCreateRoute extends PageRouteInfo<NoteCreateRouteArgs> {
     required Account initialAccount,
     String? initialText,
     List<String>? initialMediaFiles,
+    List<DriveFile>? initialDriveFiles,
     CommunityChannel? channel,
     Note? reply,
     Note? renote,
@@ -1077,6 +1079,7 @@ class NoteCreateRoute extends PageRouteInfo<NoteCreateRouteArgs> {
             initialAccount: initialAccount,
             initialText: initialText,
             initialMediaFiles: initialMediaFiles,
+            initialDriveFiles: initialDriveFiles,
             channel: channel,
             reply: reply,
             renote: renote,
@@ -1098,6 +1101,7 @@ class NoteCreateRouteArgs {
     required this.initialAccount,
     this.initialText,
     this.initialMediaFiles,
+    this.initialDriveFiles,
     this.channel,
     this.reply,
     this.renote,
@@ -1113,6 +1117,8 @@ class NoteCreateRouteArgs {
 
   final List<String>? initialMediaFiles;
 
+  final List<DriveFile>? initialDriveFiles;
+
   final CommunityChannel? channel;
 
   final Note? reply;
@@ -1125,7 +1131,7 @@ class NoteCreateRouteArgs {
 
   @override
   String toString() {
-    return 'NoteCreateRouteArgs{key: $key, initialAccount: $initialAccount, initialText: $initialText, initialMediaFiles: $initialMediaFiles, channel: $channel, reply: $reply, renote: $renote, note: $note, noteCreationMode: $noteCreationMode}';
+    return 'NoteCreateRouteArgs{key: $key, initialAccount: $initialAccount, initialText: $initialText, initialMediaFiles: $initialMediaFiles, initialDriveFiles: $initialDriveFiles, channel: $channel, reply: $reply, renote: $renote, note: $note, noteCreationMode: $noteCreationMode}';
   }
 }
 
