@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
+import 'package:miria/router/app_router.dart';
 import 'package:miria/view/drive_page/drive_file_modal_sheet.dart';
 import 'package:miria/view/note_create_page/thumbnail.dart';
 import 'package:misskey_dart/misskey_dart.dart';
@@ -19,6 +21,12 @@ class DriveFileGridItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       child: InkWell(
+        onTap: () => context.pushRoute(
+          DriveFileRoute(
+            account: account,
+            file: file,
+          ),
+        ),
         child: Column(
           children: [
             Expanded(
