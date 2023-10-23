@@ -14,4 +14,15 @@ class BreadcrumbsNotifier extends AutoDisposeNotifier<List<DriveFolder>> {
   void pop() {
     state = state.sublist(0, state.length - 1);
   }
+
+  void popUntil(String? folderId) {
+    state = state.sublist(
+      0,
+      state.indexWhere((folder) => folder.id == folderId) + 1,
+    );
+  }
+
+  void replace(DriveFolder folder) {
+    state = [...state.sublist(0, state.length - 1), folder];
+  }
 }

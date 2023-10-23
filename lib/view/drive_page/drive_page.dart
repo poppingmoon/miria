@@ -7,6 +7,7 @@ import 'package:miria/model/general_settings.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/common/pagination_bottom_item.dart';
+import 'package:miria/view/drive_page/breadcrumbs.dart';
 import 'package:miria/view/drive_page/drive_file_grid_item.dart';
 import 'package:miria/view/drive_page/drive_folder_grid_item.dart';
 
@@ -64,6 +65,13 @@ class DrivePage extends ConsumerWidget {
           },
           child: CustomScrollView(
             slivers: [
+              SliverAppBar(
+                title: Breadcrumbs(account: account),
+                automaticallyImplyLeading: false,
+                centerTitle: false,
+                pinned: true,
+                primary: false,
+              ),
               SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 sliver: SliverGrid.builder(
