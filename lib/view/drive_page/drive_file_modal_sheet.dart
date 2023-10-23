@@ -128,6 +128,16 @@ class DriveFileModalSheet extends ConsumerWidget {
             onTap: () => editImage(ref).expectFailure(context),
           ),
         ListTile(
+          leading: const Icon(Icons.edit),
+          title: const Text("このファイルからノートを作成"),
+          onTap: () => context.pushRoute(
+            NoteCreateRoute(
+              initialAccount: account,
+              initialDriveFiles: [file],
+            ),
+          ),
+        ),
+        ListTile(
           leading: const Icon(Icons.link),
           title: const Text("URLをコピー"),
           onTap: () {
