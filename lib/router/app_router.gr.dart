@@ -95,6 +95,8 @@ abstract class _$AppRouter extends RootStackRouter {
         child: DrivePage(
           key: args.key,
           account: args.account,
+          title: args.title,
+          floatingActionButtonBuilder: args.floatingActionButtonBuilder,
         ),
       );
     },
@@ -732,12 +734,19 @@ class DriveRoute extends PageRouteInfo<DriveRouteArgs> {
   DriveRoute({
     Key? key,
     required Account account,
+    Widget? title,
+    Widget Function(
+      BuildContext,
+      DriveFolder?,
+    )? floatingActionButtonBuilder,
     List<PageRouteInfo>? children,
   }) : super(
           DriveRoute.name,
           args: DriveRouteArgs(
             key: key,
             account: account,
+            title: title,
+            floatingActionButtonBuilder: floatingActionButtonBuilder,
           ),
           initialChildren: children,
         );
@@ -751,15 +760,24 @@ class DriveRouteArgs {
   const DriveRouteArgs({
     this.key,
     required this.account,
+    this.title,
+    this.floatingActionButtonBuilder,
   });
 
   final Key? key;
 
   final Account account;
 
+  final Widget? title;
+
+  final Widget Function(
+    BuildContext,
+    DriveFolder?,
+  )? floatingActionButtonBuilder;
+
   @override
   String toString() {
-    return 'DriveRouteArgs{key: $key, account: $account}';
+    return 'DriveRouteArgs{key: $key, account: $account, title: $title, floatingActionButtonBuilder: $floatingActionButtonBuilder}';
   }
 }
 

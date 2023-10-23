@@ -12,12 +12,21 @@ import 'package:miria/view/drive_page/drive_create_modal_sheet.dart';
 import 'package:miria/view/drive_page/drive_file_grid_item.dart';
 import 'package:miria/view/drive_page/drive_folder_grid_item.dart';
 import 'package:miria/view/drive_page/drive_folder_modal_sheet.dart';
+import 'package:misskey_dart/misskey_dart.dart';
 
 @RoutePage()
 class DrivePage extends ConsumerWidget {
-  const DrivePage({super.key, required this.account});
+  const DrivePage({
+    super.key,
+    required this.account,
+    this.title,
+    this.floatingActionButtonBuilder,
+  });
 
   final Account account;
+  final Widget? title;
+  final Widget Function(BuildContext context, DriveFolder? currentFolder)?
+      floatingActionButtonBuilder;
 
   static const itemMaxCrossAxisExtent = 400.0;
 
@@ -60,6 +69,17 @@ class DrivePage extends ConsumerWidget {
         appBar: AppBar(
           title: const Text("ドライブ"),
           actions: [
+            if (floatingActionButtonBuilder != null)
+              IconButton(
+                onPressed: () => showModalBottomSheet(
+                  context: context,
+                  builder: (context) => DriveCreateModalSheet(
+                    account: account,
+                    folder: currentFolder,
+                  ),
+                ),
+                icon: const Icon(Icons.add),
+              ),
             if (currentFolder != null)
               IconButton(
                 onPressed: () async {
@@ -204,16 +224,20 @@ class DrivePage extends ConsumerWidget {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => showModalBottomSheet<void>(
-            context: context,
-            builder: (context) => DriveCreateModalSheet(
-              account: account,
-              folder: currentFolder,
+        floatingActionButton: floatingActionButtonBuilder?.call(
+              context,
+              currentFolder,
+            ) ??
+            FloatingActionButton(
+              onPressed: () => showModalBottomSheet<void>(
+                context: context,
+                builder: (context) => DriveCreateModalSheet(
+                  account: account,
+                  folder: currentFolder,
+                ),
+              ),
+              child: const Icon(Icons.add),
             ),
-          ),
-          child: const Icon(Icons.add),
-        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:file/file.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/pagination_state.dart';
+import 'package:miria/providers.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 class DriveFilesNotifier extends AutoDisposeFamilyNotifier<
@@ -109,5 +110,34 @@ class DriveFilesNotifier extends AutoDisposeFamilyNotifier<
     state = state.copyWith(
       items: state.map((file) => file.id == fileId ? response : file).toList(),
     );
+  }
+
+  Future<void> move({
+    required String fileId,
+    required String? folderId,
+  }) async {
+    if (folderId == _folderId) {
+      return;
+    }
+    // folderIdがnullのときキーが削除されるのを回避
+    final response = await _misskey.apiService.post<Map<String, dynamic>>(
+      "drive/files/update",
+      {
+        "fileId": fileId,
+        "folderId": folderId,
+      },
+      excludeRemoveNullPredicate: (key, _) => key == "folderId",
+    );
+    final file = DriveFile.fromJson(response);
+    state = state.copyWith(
+      items: state.where((file) => file.id != fileId).toList(),
+    );
+    ref
+        .read(driveFilesNotifierProvider((_misskey, folderId)).notifier)
+        .add(file);
+  }
+
+  void add(DriveFile file) {
+    state = state.copyWith(items: [file, ...state]);
   }
 }

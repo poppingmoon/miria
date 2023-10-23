@@ -11,6 +11,7 @@ import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/dialogs/simple_confirm_dialog.dart';
+import 'package:miria/view/drive_page/drive_folder_select_dialog.dart';
 import 'package:miria/view/note_create_page/file_settings_dialog.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
@@ -97,6 +98,27 @@ class DriveFileModalSheet extends ConsumerWidget {
     Navigator.of(context).pop();
   }
 
+  Future<void> move(WidgetRef ref) async {
+    final context = ref.context;
+    final misskey = ref.read(misskeyProvider(account));
+    final result = await showDialog<(DriveFolder?,)>(
+      context: context,
+      builder: (context) => DriveFolderSelectDialog(account: account),
+    );
+    if (result == null) return;
+    await ref
+        .read(driveFilesNotifierProvider((misskey, file.folderId)).notifier)
+        .move(
+          fileId: file.id,
+          folderId: result.$1?.id,
+        );
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("移動しました")),
+    );
+    Navigator.of(context).pop();
+  }
+
   Future<void> delete(WidgetRef ref) async {
     final context = ref.context;
     final misskey = ref.read(misskeyProvider(account));
@@ -164,6 +186,11 @@ class DriveFileModalSheet extends ConsumerWidget {
             title: const Text("ダウンロード"),
             onTap: () => download(ref).expectFailure(context),
           ),
+        ListTile(
+          leading: const Icon(Icons.drive_file_move),
+          title: const Text("移動"),
+          onTap: () => move(ref).expectFailure(context),
+        ),
         ListTile(
           leading: const Icon(Icons.delete),
           title: const Text("削除"),
