@@ -12,6 +12,9 @@ extension DateTimeExtension on DateTime {
   String get formatUntilMinutes =>
       DateFormat("yyyy 年 M 月 d 日 HH:mm").format(toUtc().toLocal());
 
+  String get formatUntilSeconds =>
+      DateFormat("yyyy/MM/dd HH:mm:ss").format(toUtc().toLocal());
+
   String get formatUntilMilliSeconds =>
       "${DateFormat("yyyy/MM/dd HH:mm:ss", "ja_jp").format(toUtc().toLocal())}.${millisecond.toString().padLeft(3, '0')}";
 
