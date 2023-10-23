@@ -10,6 +10,7 @@ import 'package:miria/view/common/pagination_bottom_item.dart';
 import 'package:miria/view/drive_page/breadcrumbs.dart';
 import 'package:miria/view/drive_page/drive_file_grid_item.dart';
 import 'package:miria/view/drive_page/drive_folder_grid_item.dart';
+import 'package:miria/view/drive_page/drive_folder_modal_sheet.dart';
 
 @RoutePage()
 class DrivePage extends ConsumerWidget {
@@ -57,6 +58,38 @@ class DrivePage extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("ドライブ"),
+          actions: [
+            if (currentFolder != null)
+              IconButton(
+                onPressed: () async {
+                  await showModalBottomSheet<void>(
+                    context: context,
+                    builder: (context) => DriveFolderModalSheet(
+                      account: account,
+                      folder: currentFolder,
+                    ),
+                  );
+                  final siblings = ref.read(
+                    driveFoldersNotifierProvider(
+                      (misskey, currentFolder.parentId),
+                    ),
+                  );
+                  final updated = siblings.firstWhereOrNull(
+                    (folder) => folder.id == currentFolder.id,
+                  );
+                  if (updated == null) {
+                    // フォルダが削除されたらpopする
+                    ref.read(breadcrumbsNotifierProvider.notifier).pop();
+                  } else if (updated != currentFolder) {
+                    // フォルダが更新されたらreplaceする
+                    ref
+                        .read(breadcrumbsNotifierProvider.notifier)
+                        .replace(updated);
+                  }
+                },
+                icon: const Icon(Icons.more_vert),
+              ),
+          ],
         ),
         body: RefreshIndicator(
           onRefresh: () async {

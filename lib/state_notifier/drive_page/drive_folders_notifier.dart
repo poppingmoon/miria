@@ -53,4 +53,26 @@ class DriveFoldersNotifier extends AutoDisposeFamilyNotifier<
       rethrow;
     }
   }
+
+  Future<void> delete(String folderId) async {
+    await _misskey.drive.folders
+        .delete(DriveFoldersDeleteRequest(folderId: folderId));
+    state = state.copyWith(
+      items: state.where((folder) => folder.id != folderId).toList(),
+    );
+  }
+
+  Future<void> updateName(String folderId, String name) async {
+    final response = await _misskey.drive.folders.update(
+      DriveFoldersUpdateRequest(
+        folderId: folderId,
+        name: name,
+      ),
+    );
+    state = state.copyWith(
+      items: state
+          .map((folder) => folder.id == folderId ? response : folder)
+          .toList(),
+    );
+  }
 }

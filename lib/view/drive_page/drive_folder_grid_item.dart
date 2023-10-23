@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
+import 'package:miria/view/drive_page/drive_folder_modal_sheet.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 class DriveFolderGridItem extends ConsumerWidget {
@@ -20,6 +21,13 @@ class DriveFolderGridItem extends ConsumerWidget {
       child: InkWell(
         onTap: () =>
             ref.watch(breadcrumbsNotifierProvider.notifier).push(folder),
+        onLongPress: () => showModalBottomSheet<void>(
+          context: context,
+          builder: (context) => DriveFolderModalSheet(
+            account: account,
+            folder: folder,
+          ),
+        ),
         child: Row(
           children: [
             const Padding(
@@ -36,7 +44,13 @@ class DriveFolderGridItem extends ConsumerWidget {
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () => showModalBottomSheet<void>(
+                context: context,
+                builder: (context) => DriveFolderModalSheet(
+                  account: account,
+                  folder: folder,
+                ),
+              ),
               icon: const Icon(Icons.more_vert),
             ),
           ],
