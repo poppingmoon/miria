@@ -290,9 +290,14 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     DriveRoute.name: (routeData) {
+      final args = routeData.argsAs<DriveRouteArgs>(
+          orElse: () => const DriveRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const DrivePage(),
+        child: DrivePage(
+          selectFolder: args.selectFolder,
+          key: args.key,
+        ),
       );
     },
     DriveShellRoute.name: (routeData) {
@@ -1836,16 +1841,39 @@ class DriveModalRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [DrivePage]
-class DriveRoute extends PageRouteInfo<void> {
-  const DriveRoute({List<PageRouteInfo>? children})
-      : super(
+class DriveRoute extends PageRouteInfo<DriveRouteArgs> {
+  DriveRoute({
+    bool selectFolder = false,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           DriveRoute.name,
+          args: DriveRouteArgs(
+            selectFolder: selectFolder,
+            key: key,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'DriveRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<DriveRouteArgs> page = PageInfo<DriveRouteArgs>(name);
+}
+
+class DriveRouteArgs {
+  const DriveRouteArgs({
+    this.selectFolder = false,
+    this.key,
+  });
+
+  final bool selectFolder;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'DriveRouteArgs{selectFolder: $selectFolder, key: $key}';
+  }
 }
 
 /// generated route for
