@@ -8,6 +8,7 @@ import 'package:miria/providers.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/common/pagination_bottom_item.dart';
 import 'package:miria/view/drive_page/breadcrumbs.dart';
+import 'package:miria/view/drive_page/drive_create_modal_sheet.dart';
 import 'package:miria/view/drive_page/drive_file_grid_item.dart';
 import 'package:miria/view/drive_page/drive_folder_grid_item.dart';
 import 'package:miria/view/drive_page/drive_folder_modal_sheet.dart';
@@ -202,6 +203,16 @@ class DrivePage extends ConsumerWidget {
               ),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => showModalBottomSheet<void>(
+            context: context,
+            builder: (context) => DriveCreateModalSheet(
+              account: account,
+              folder: currentFolder,
+            ),
+          ),
+          child: const Icon(Icons.add),
         ),
       ),
     );
