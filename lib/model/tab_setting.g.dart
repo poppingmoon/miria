@@ -14,9 +14,11 @@ _$_TabSetting _$$_TabSettingFromJson(Map<String, dynamic> json) =>
       channelId: json['channelId'] as String?,
       listId: json['listId'] as String?,
       antennaId: json['antennaId'] as String?,
-      isSubscribe: json['isSubscribe'] ?? true,
+      isSubscribe: json['isSubscribe'] as bool? ?? true,
+      isIncludeReplies: json['isIncludeReplies'] as bool? ?? true,
+      isMediaOnly: json['isMediaOnly'] as bool? ?? false,
       name: json['name'] as String,
-      account: Account.fromJson(json['account'] as Map<String, dynamic>),
+      acct: Acct.fromJson(_readAcct(json, 'acct') as Map<String, dynamic>),
       renoteDisplay: json['renoteDisplay'] as bool? ?? true,
     );
 
@@ -29,8 +31,10 @@ Map<String, dynamic> _$$_TabSettingToJson(_$_TabSetting instance) =>
       'listId': instance.listId,
       'antennaId': instance.antennaId,
       'isSubscribe': instance.isSubscribe,
+      'isIncludeReplies': instance.isIncludeReplies,
+      'isMediaOnly': instance.isMediaOnly,
       'name': instance.name,
-      'account': instance.account.toJson(),
+      'acct': instance.acct.toJson(),
       'renoteDisplay': instance.renoteDisplay,
     };
 

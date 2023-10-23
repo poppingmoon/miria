@@ -12,6 +12,7 @@ import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
+import 'package:miria/view/common/misskey_notes/link_navigator.dart';
 import 'package:miria/view/common/misskey_notes/network_image.dart';
 import 'package:miria/view/themes/app_theme.dart';
 import 'package:miria/view/common/misskey_notes/custom_emoji.dart';
@@ -52,83 +53,6 @@ class MfmText extends ConsumerStatefulWidget {
 }
 
 class MfmTextState extends ConsumerState<MfmText> {
-  Future<void> onTapLink(String url) async {
-    final uri = Uri.tryParse(url);
-    if (uri == null) {
-      return; //TODO: なおす
-    }
-    final account = AccountScope.of(context);
-
-    // 他サーバーや外部サイトは別アプリで起動する
-    //TODO: nodeinfoから相手先サーバーがMisskeyの場合はそこで解決する
-    if (uri.host != AccountScope.of(context).host) {
-      if (await canLaunchUrl(uri)) {
-        if (!await launchUrl(uri,
-            mode: LaunchMode.externalNonBrowserApplication)) {
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
-        }
-      }
-    } else if (uri.pathSegments.length == 2 &&
-        uri.pathSegments.first == "clips") {
-      // クリップはクリップの画面で開く
-      context.pushRoute(
-          ClipDetailRoute(account: account, id: uri.pathSegments[1]));
-    } else if (uri.pathSegments.length == 2 &&
-        uri.pathSegments.first == "channels") {
-      context.pushRoute(
-          ChannelDetailRoute(account: account, channelId: uri.pathSegments[1]));
-    } else if (uri.pathSegments.length == 2 &&
-        uri.pathSegments.first == "notes") {
-      final note = await ref
-          .read(misskeyProvider(account))
-          .notes
-          .show(NotesShowRequest(noteId: uri.pathSegments[1]));
-      if (!mounted) return;
-      context.pushRoute(NoteDetailRoute(account: account, note: note));
-    } else if (uri.pathSegments.length == 1 &&
-        uri.pathSegments.first.startsWith("@")) {
-      await onMentionTap(uri.pathSegments.first);
-    } else {
-      // 自サーバーは内部ブラウザで起動する
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.inAppWebView);
-      }
-    }
-  }
-
-  Future<void> onMentionTap(String userName) async {
-    // 自分のインスタンスの誰か
-    // 本当は向こうで呼べばいいのでいらないのだけど
-    final regResult = RegExp(r'^@?(.+?)(@(.+?))?$').firstMatch(userName);
-
-    final contextHost = AccountScope.of(context).host;
-    final noteHost = widget.host ?? AccountScope.of(context).host;
-    final regResultHost = regResult?.group(3);
-    final String? finalHost;
-
-    if (regResultHost == null && noteHost == contextHost) {
-      // @なし
-      finalHost = null;
-    } else if (regResultHost == contextHost) {
-      // @自分ドメイン
-      finalHost = null;
-    } else if (regResultHost != null) {
-      finalHost = regResultHost;
-    } else {
-      finalHost = noteHost;
-    }
-
-    final response = await ref
-        .read(misskeyProvider(AccountScope.of(context)))
-        .users
-        .showByName(UsersShowByUserNameRequest(
-            userName: regResult?.group(1) ?? "", host: finalHost));
-
-    if (!mounted) return;
-    context.pushRoute(
-        UserRoute(userId: response.id, account: AccountScope.of(context)));
-  }
-
   Future<void> onSearch(String query) async {
     final uri = Uri(
         scheme: "https",
@@ -203,11 +127,14 @@ class MfmTextState extends ConsumerState<MfmText> {
         language: lang,
       ),
       serifStyle: AppTheme.of(context).serifStyle,
-      linkTap: (src) => onTapLink(src).expectFailure(context),
+      linkTap: (src) => const LinkNavigator()
+          .onTapLink(context, ref, src, widget.host)
+          .expectFailure(context),
       linkStyle: AppTheme.of(context).linkStyle,
       hashtagStyle: AppTheme.of(context).hashtagStyle,
-      mentionTap: (userName, host, acct) =>
-          onMentionTap(acct).expectFailure(context),
+      mentionTap: (userName, host, acct) => const LinkNavigator()
+          .onMentionTap(context, ref, acct, widget.host)
+          .expectFailure(context),
       hashtagTap: onHashtagTap,
       searchTap: onSearch,
       style: widget.style,
@@ -285,6 +212,7 @@ class SimpleMfmText extends ConsumerWidget {
   final Map<String, String> emojis;
   final List<InlineSpan> suffixSpan;
   final List<InlineSpan> prefixSpan;
+  final bool isNyaize;
 
   const SimpleMfmText(
     this.text, {
@@ -293,6 +221,7 @@ class SimpleMfmText extends ConsumerWidget {
     this.emojis = const {},
     this.suffixSpan = const [],
     this.prefixSpan = const [],
+    this.isNyaize = false,
   });
 
   @override
@@ -315,6 +244,7 @@ class SimpleMfmText extends ConsumerWidget {
       style: style,
       suffixSpan: suffixSpan,
       prefixSpan: prefixSpan,
+      isNyaize: isNyaize,
     );
   }
 }
