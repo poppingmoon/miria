@@ -231,6 +231,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ColorPickerDialog(),
       );
     },
+    DriveFileModalRoute.name: (routeData) {
+      final args = routeData.argsAs<DriveFileModalRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DriveFileModalSheet(
+          file: args.file,
+          key: args.key,
+        ),
+      );
+    },
     DriveFileSelectRoute.name: (routeData) {
       final args = routeData.argsAs<DriveFileSelectRouteArgs>();
       return AutoRoutePage<List<DriveFile>>(
@@ -1591,6 +1601,44 @@ class ColorPickerRoute extends PageRouteInfo<void> {
   static const String name = 'ColorPickerRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [DriveFileModalSheet]
+class DriveFileModalRoute extends PageRouteInfo<DriveFileModalRouteArgs> {
+  DriveFileModalRoute({
+    required DriveFile file,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DriveFileModalRoute.name,
+          args: DriveFileModalRouteArgs(
+            file: file,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DriveFileModalRoute';
+
+  static const PageInfo<DriveFileModalRouteArgs> page =
+      PageInfo<DriveFileModalRouteArgs>(name);
+}
+
+class DriveFileModalRouteArgs {
+  const DriveFileModalRouteArgs({
+    required this.file,
+    this.key,
+  });
+
+  final DriveFile file;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'DriveFileModalRouteArgs{file: $file, key: $key}';
+  }
 }
 
 /// generated route for
