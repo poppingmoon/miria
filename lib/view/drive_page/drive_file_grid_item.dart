@@ -27,6 +27,13 @@ class DriveFileGridItem extends ConsumerWidget {
             file: file,
           ),
         ),
+        onLongPress: () => showModalBottomSheet<void>(
+          context: context,
+          builder: (context) => DriveFileModalSheet(
+            account: account,
+            file: file,
+          ),
+        ),
         child: Column(
           children: [
             Expanded(

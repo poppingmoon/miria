@@ -28,6 +28,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/state_notifier/common/download_file_notifier.dart';
 import 'package:miria/state_notifier/common/misskey_server_list_notifier.dart';
 import 'package:miria/state_notifier/drive_page/breadcrumbs_notifier.dart';
+import 'package:miria/state_notifier/drive_page/drive_file_notes_page/drive_files_attached_notes_notifier.dart';
 import 'package:miria/state_notifier/drive_page/drive_files_notifier.dart';
 import 'package:miria/state_notifier/drive_page/drive_folders_notifier.dart';
 import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
@@ -286,3 +287,8 @@ final breadcrumbsNotifierProvider =
     NotifierProvider.autoDispose<BreadcrumbsNotifier, List<DriveFolder>>(
   BreadcrumbsNotifier.new,
 );
+
+final driveFilesAttachedNotesProvider = NotifierProvider.autoDispose.family<
+    DriveFilesAttachedNotesNotifier,
+    PaginationState<Note>,
+    (Misskey, String)>(DriveFilesAttachedNotesNotifier.new);

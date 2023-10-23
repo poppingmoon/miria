@@ -6,6 +6,7 @@ import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/drive_page/drive_file_modal_sheet.dart';
 import 'package:miria/view/drive_page/drive_file_page/drive_file_details.dart';
+import 'package:miria/view/drive_page/drive_file_page/drive_file_notes.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 @RoutePage()
@@ -29,7 +30,7 @@ class DriveFilePage extends ConsumerWidget {
         ) ??
         this.file;
     return DefaultTabController(
-      length: 1,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: const Text("ファイルの詳細"),
@@ -57,12 +58,14 @@ class DriveFilePage extends ConsumerWidget {
           bottom: const TabBar(
             tabs: [
               Tab(icon: Icon(Icons.info), text: "情報"),
+              Tab(icon: Icon(Icons.edit), text: "添付されているノート"),
             ],
           ),
         ),
         body: TabBarView(
           children: [
             DriveFileDetails(account: account, file: file),
+            DriveFileNotes(account: account, file: file),
           ],
         ),
       ),
