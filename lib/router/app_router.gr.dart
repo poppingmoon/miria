@@ -231,6 +231,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ColorPickerDialog(),
       );
     },
+    DriveCreateModalRoute.name: (routeData) {
+      final args = routeData.argsAs<DriveCreateModalRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DriveCreateModalSheet(
+          folder: args.folder,
+          key: args.key,
+        ),
+      );
+    },
     DriveFileModalRoute.name: (routeData) {
       final args = routeData.argsAs<DriveFileModalRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -1602,6 +1612,44 @@ class ColorPickerRoute extends PageRouteInfo<void> {
   static const String name = 'ColorPickerRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [DriveCreateModalSheet]
+class DriveCreateModalRoute extends PageRouteInfo<DriveCreateModalRouteArgs> {
+  DriveCreateModalRoute({
+    required DriveFolder? folder,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DriveCreateModalRoute.name,
+          args: DriveCreateModalRouteArgs(
+            folder: folder,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DriveCreateModalRoute';
+
+  static const PageInfo<DriveCreateModalRouteArgs> page =
+      PageInfo<DriveCreateModalRouteArgs>(name);
+}
+
+class DriveCreateModalRouteArgs {
+  const DriveCreateModalRouteArgs({
+    required this.folder,
+    this.key,
+  });
+
+  final DriveFolder? folder;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'DriveCreateModalRouteArgs{folder: $folder, key: $key}';
+  }
 }
 
 /// generated route for

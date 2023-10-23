@@ -57,6 +57,17 @@ class DriveFoldersNotifier extends _$DriveFoldersNotifier {
     });
   }
 
+  Future<void> create(String? name) async {
+    final response = await _misskey.drive.folders.create(
+      DriveFoldersCreateRequest(
+        name: name,
+        parentId: folderId,
+      ),
+    );
+    final value = state.valueOrNull ?? const PaginationState();
+    state = AsyncValue.data(value.copyWith(items: [response, ...value.items]));
+  }
+
   Future<void> delete(String folderId) async {
     await _misskey.drive.folders
         .delete(DriveFoldersDeleteRequest(folderId: folderId));

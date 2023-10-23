@@ -253,6 +253,12 @@ class DrivePage extends HookConsumerWidget {
             ],
           ),
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async => await context.pushRoute(
+            DriveCreateModalRoute(folder: currentFolder),
+          ),
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
