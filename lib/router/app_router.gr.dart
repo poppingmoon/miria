@@ -88,6 +88,16 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    DriveRoute.name: (routeData) {
+      final args = routeData.argsAs<DriveRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DrivePage(
+          key: args.key,
+          account: args.account,
+        ),
+      );
+    },
     ExploreRoute.name: (routeData) {
       final args = routeData.argsAs<ExploreRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -701,6 +711,43 @@ class ClipListRouteArgs {
   @override
   String toString() {
     return 'ClipListRouteArgs{key: $key, account: $account}';
+  }
+}
+
+/// generated route for
+/// [DrivePage]
+class DriveRoute extends PageRouteInfo<DriveRouteArgs> {
+  DriveRoute({
+    Key? key,
+    required Account account,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DriveRoute.name,
+          args: DriveRouteArgs(
+            key: key,
+            account: account,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DriveRoute';
+
+  static const PageInfo<DriveRouteArgs> page = PageInfo<DriveRouteArgs>(name);
+}
+
+class DriveRouteArgs {
+  const DriveRouteArgs({
+    this.key,
+    required this.account,
+  });
+
+  final Key? key;
+
+  final Account account;
+
+  @override
+  String toString() {
+    return 'DriveRouteArgs{key: $key, account: $account}';
   }
 }
 
