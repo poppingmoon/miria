@@ -251,6 +251,16 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    DriveFileRoute.name: (routeData) {
+      final args = routeData.argsAs<DriveFileRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DriveFilePage(
+          file: args.file,
+          key: args.key,
+        ),
+      );
+    },
     DriveFileSelectRoute.name: (routeData) {
       final args = routeData.argsAs<DriveFileSelectRouteArgs>();
       return AutoRoutePage<List<DriveFile>>(
@@ -694,6 +704,7 @@ abstract class _$AppRouter extends RootStackRouter {
           labelText: args.labelText,
           buttonText: args.buttonText,
           initialValue: args.initialValue,
+          maxLines: args.maxLines,
           validator: args.validator,
         ),
       );
@@ -1687,6 +1698,44 @@ class DriveFileModalRouteArgs {
   @override
   String toString() {
     return 'DriveFileModalRouteArgs{file: $file, key: $key}';
+  }
+}
+
+/// generated route for
+/// [DriveFilePage]
+class DriveFileRoute extends PageRouteInfo<DriveFileRouteArgs> {
+  DriveFileRoute({
+    required DriveFile file,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DriveFileRoute.name,
+          args: DriveFileRouteArgs(
+            file: file,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DriveFileRoute';
+
+  static const PageInfo<DriveFileRouteArgs> page =
+      PageInfo<DriveFileRouteArgs>(name);
+}
+
+class DriveFileRouteArgs {
+  const DriveFileRouteArgs({
+    required this.file,
+    this.key,
+  });
+
+  final DriveFile file;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'DriveFileRouteArgs{file: $file, key: $key}';
   }
 }
 
@@ -3188,6 +3237,7 @@ class TextFormFieldRoute extends PageRouteInfo<TextFormFieldRouteArgs> {
     String? labelText,
     String? buttonText,
     String? initialValue,
+    int? maxLines = 1,
     String? Function(String?)? validator,
     List<PageRouteInfo>? children,
   }) : super(
@@ -3198,6 +3248,7 @@ class TextFormFieldRoute extends PageRouteInfo<TextFormFieldRouteArgs> {
             labelText: labelText,
             buttonText: buttonText,
             initialValue: initialValue,
+            maxLines: maxLines,
             validator: validator,
           ),
           initialChildren: children,
@@ -3216,6 +3267,7 @@ class TextFormFieldRouteArgs {
     this.labelText,
     this.buttonText,
     this.initialValue,
+    this.maxLines = 1,
     this.validator,
   });
 
@@ -3229,11 +3281,13 @@ class TextFormFieldRouteArgs {
 
   final String? initialValue;
 
+  final int? maxLines;
+
   final String? Function(String?)? validator;
 
   @override
   String toString() {
-    return 'TextFormFieldRouteArgs{key: $key, title: $title, labelText: $labelText, buttonText: $buttonText, initialValue: $initialValue, validator: $validator}';
+    return 'TextFormFieldRouteArgs{key: $key, title: $title, labelText: $labelText, buttonText: $buttonText, initialValue: $initialValue, maxLines: $maxLines, validator: $validator}';
   }
 }
 

@@ -238,6 +238,8 @@ class DrivePage extends HookConsumerWidget {
                     final file = files.elementAt(index);
                     return DriveFileWidget(
                       file: file,
+                      onTap: () async =>
+                          await context.pushRoute(DriveFileRoute(file: file)),
                     );
                   },
                 ),
