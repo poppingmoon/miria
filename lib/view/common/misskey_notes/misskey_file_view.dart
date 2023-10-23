@@ -46,6 +46,7 @@ class MisskeyFileView extends HookConsumerWidget {
             name: targetFile.name,
             position: 0,
             noteUrl: noteUrl,
+            height: height,
           ),
         ),
       );
@@ -78,6 +79,7 @@ class MisskeyFileView extends HookConsumerWidget {
                     name: targetFile.element.name,
                     position: targetFile.index,
                     noteUrl: noteUrl,
+                    height: height,
                   ),
                 ),
             ],
@@ -101,6 +103,7 @@ class MisskeyImage extends HookConsumerWidget {
   final String fileType;
   final String name;
   final String? noteUrl;
+  final double? height;
 
   const MisskeyImage({
     required this.isSensitive,
@@ -110,6 +113,7 @@ class MisskeyImage extends HookConsumerWidget {
     required this.fileType,
     required this.name,
     this.noteUrl,
+    this.height,
     super.key,
   });
 
@@ -215,13 +219,13 @@ class MisskeyImage extends HookConsumerWidget {
 
                 if (fileType.startsWith("image")) {
                   return SizedBox(
-                    height: 200,
+                    height: height,
                     child: NetworkImageView(
                       url: thumbnailUrl ?? targetFiles[position].url,
                       type: ImageType.imageThumbnail,
                       loadingBuilder: (context, widget, chunkEvent) => SizedBox(
                         width: double.infinity,
-                        height: 200,
+                        height: height,
                         child: widget,
                       ),
                     ),
@@ -231,7 +235,7 @@ class MisskeyImage extends HookConsumerWidget {
                     children: [
                       Positioned.fill(
                         child: SizedBox(
-                          height: 200,
+                          height: height,
                           child: thumbnailUrl != null
                               ? NetworkImageView(
                                   url: thumbnailUrl!,
@@ -239,7 +243,7 @@ class MisskeyImage extends HookConsumerWidget {
                                   loadingBuilder:
                                       (context, widget, chunkEvent) => SizedBox(
                                     width: double.infinity,
-                                    height: 200,
+                                    height: height,
                                     child: widget,
                                   ),
                                 )
@@ -257,7 +261,7 @@ class MisskeyImage extends HookConsumerWidget {
                   return Container(
                     decoration: const BoxDecoration(color: Colors.transparent),
                     width: double.infinity,
-                    height: 200,
+                    height: height,
                     child: Center(
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
