@@ -356,15 +356,13 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                 children: [
                   Expanded(
                       child: Focus(
-                          onKeyEvent: (FocusNode node, KeyEvent event) {
+                          onKeyEvent: (node, event) {
                             if (event is KeyDownEvent) {
                               if (event.logicalKey ==
                                       LogicalKeyboardKey.enter &&
                                   RawKeyboard.instance.keysPressed.contains(
                                       LogicalKeyboardKey.controlLeft)) {
                                 note().expectFailure(context);
-                                debugDumpFocusTree() ;
-                                debugDescribeFocusTree() ;
                                 return KeyEventResult.handled;
                               }
                             }
