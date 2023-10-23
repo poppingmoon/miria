@@ -249,6 +249,23 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const DriveModalSheet(),
       );
     },
+    DriveRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const DrivePage(),
+      );
+    },
+    DriveShellRoute.name: (routeData) {
+      final args = routeData.argsAs<DriveShellRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(
+            child: DriveShellPage(
+          accountContext: args.accountContext,
+          key: args.key,
+        )),
+      );
+    },
     ExpireSelectRoute.name: (routeData) {
       return AutoRoutePage<Expire>(
         routeData: routeData,
@@ -1606,6 +1623,58 @@ class DriveModalRoute extends PageRouteInfo<void> {
   static const String name = 'DriveModalRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [DrivePage]
+class DriveRoute extends PageRouteInfo<void> {
+  const DriveRoute({List<PageRouteInfo>? children})
+      : super(
+          DriveRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'DriveRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [DriveShellPage]
+class DriveShellRoute extends PageRouteInfo<DriveShellRouteArgs> {
+  DriveShellRoute({
+    required AccountContext accountContext,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DriveShellRoute.name,
+          args: DriveShellRouteArgs(
+            accountContext: accountContext,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DriveShellRoute';
+
+  static const PageInfo<DriveShellRouteArgs> page =
+      PageInfo<DriveShellRouteArgs>(name);
+}
+
+class DriveShellRouteArgs {
+  const DriveShellRouteArgs({
+    required this.accountContext,
+    this.key,
+  });
+
+  final AccountContext accountContext;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'DriveShellRouteArgs{accountContext: $accountContext, key: $key}';
+  }
 }
 
 /// generated route for

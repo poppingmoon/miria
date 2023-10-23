@@ -28,6 +28,8 @@ import "package:miria/view/common/color_picker_dialog.dart";
 import "package:miria/view/common/misskey_notes/reaction_user_dialog.dart";
 import "package:miria/view/common/misskey_notes/renote_modal_sheet.dart";
 import "package:miria/view/common/misskey_notes/renote_user_dialog.dart";
+import "package:miria/view/drive_page/drive_page.dart";
+import "package:miria/view/drive_page/drive_shell_page.dart";
 import "package:miria/view/explore_page/explore_page.dart";
 import "package:miria/view/explore_page/explore_role_users_page.dart";
 import "package:miria/view/favorited_note_page/favorited_note_page.dart";
@@ -135,6 +137,12 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: MisskeyGamesRoute.page),
     // きしょ……
     AutoRoute(page: MisskeyRouteRoute.page),
+    AutoRoute(
+      page: DriveShellRoute.page,
+      children: [
+        AutoRoute(page: DriveRoute.page),
+      ],
+    ),
 
     AutoRoute(path: "/share-extension", page: ShareExtensionRoute.page),
 
