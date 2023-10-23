@@ -28,6 +28,8 @@ import "package:miria/view/common/color_picker_dialog.dart";
 import "package:miria/view/common/misskey_notes/reaction_user_dialog.dart";
 import "package:miria/view/common/misskey_notes/renote_modal_sheet.dart";
 import "package:miria/view/common/misskey_notes/renote_user_dialog.dart";
+import "package:miria/view/common/text_form_field_dialog.dart";
+import "package:miria/view/drive_page/drive_folder_modal_sheet.dart";
 import "package:miria/view/drive_page/drive_page.dart";
 import "package:miria/view/drive_page/drive_shell_page.dart";
 import "package:miria/view/explore_page/explore_page.dart";
@@ -141,6 +143,7 @@ class AppRouter extends _$AppRouter {
       page: DriveShellRoute.page,
       children: [
         AutoRoute(page: DriveRoute.page),
+        AutoModalRouteSheet(page: DriveFolderModalRoute.page),
       ],
     ),
 
@@ -170,6 +173,7 @@ class AppRouter extends _$AppRouter {
     AutoDialogRoute<AntennaSettings>(page: AntennaSettingsRoute.page),
     AutoDialogRoute<FolderResult>(page: FolderSelectRoute.page),
     AutoDialogRoute<List<DriveFile>>(page: DriveFileSelectRoute.page),
+    AutoDialogRoute<String>(page: TextFormFieldRoute.page),
 
     // モーダルシート
     AutoModalRouteSheet(page: UserControlRoute.page),

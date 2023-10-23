@@ -243,6 +243,16 @@ abstract class _$AppRouter extends RootStackRouter {
         )),
       );
     },
+    DriveFolderModalRoute.name: (routeData) {
+      final args = routeData.argsAs<DriveFolderModalRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DriveFolderModalSheet(
+          folder: args.folder,
+          key: args.key,
+        ),
+      );
+    },
     DriveModalRoute.name: (routeData) {
       return AutoRoutePage<DriveModalSheetReturnValue>(
         routeData: routeData,
@@ -649,6 +659,21 @@ abstract class _$AppRouter extends RootStackRouter {
         child: TabSettingsPage(
           key: args.key,
           tabIndex: args.tabIndex,
+        ),
+      );
+    },
+    TextFormFieldRoute.name: (routeData) {
+      final args = routeData.argsAs<TextFormFieldRouteArgs>(
+          orElse: () => const TextFormFieldRouteArgs());
+      return AutoRoutePage<String>(
+        routeData: routeData,
+        child: TextFormFieldDialog(
+          key: args.key,
+          title: args.title,
+          labelText: args.labelText,
+          buttonText: args.buttonText,
+          initialValue: args.initialValue,
+          validator: args.validator,
         ),
       );
     },
@@ -1608,6 +1633,44 @@ class DriveFileSelectRouteArgs {
   @override
   String toString() {
     return 'DriveFileSelectRouteArgs{account: $account, key: $key, allowMultiple: $allowMultiple}';
+  }
+}
+
+/// generated route for
+/// [DriveFolderModalSheet]
+class DriveFolderModalRoute extends PageRouteInfo<DriveFolderModalRouteArgs> {
+  DriveFolderModalRoute({
+    required DriveFolder folder,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DriveFolderModalRoute.name,
+          args: DriveFolderModalRouteArgs(
+            folder: folder,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DriveFolderModalRoute';
+
+  static const PageInfo<DriveFolderModalRouteArgs> page =
+      PageInfo<DriveFolderModalRouteArgs>(name);
+}
+
+class DriveFolderModalRouteArgs {
+  const DriveFolderModalRouteArgs({
+    required this.folder,
+    this.key,
+  });
+
+  final DriveFolder folder;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'DriveFolderModalRouteArgs{folder: $folder, key: $key}';
   }
 }
 
@@ -3011,6 +3074,64 @@ class TabSettingsRouteArgs {
   @override
   String toString() {
     return 'TabSettingsRouteArgs{key: $key, tabIndex: $tabIndex}';
+  }
+}
+
+/// generated route for
+/// [TextFormFieldDialog]
+class TextFormFieldRoute extends PageRouteInfo<TextFormFieldRouteArgs> {
+  TextFormFieldRoute({
+    Key? key,
+    Widget? title,
+    String? labelText,
+    String? buttonText,
+    String? initialValue,
+    String? Function(String?)? validator,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TextFormFieldRoute.name,
+          args: TextFormFieldRouteArgs(
+            key: key,
+            title: title,
+            labelText: labelText,
+            buttonText: buttonText,
+            initialValue: initialValue,
+            validator: validator,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'TextFormFieldRoute';
+
+  static const PageInfo<TextFormFieldRouteArgs> page =
+      PageInfo<TextFormFieldRouteArgs>(name);
+}
+
+class TextFormFieldRouteArgs {
+  const TextFormFieldRouteArgs({
+    this.key,
+    this.title,
+    this.labelText,
+    this.buttonText,
+    this.initialValue,
+    this.validator,
+  });
+
+  final Key? key;
+
+  final Widget? title;
+
+  final String? labelText;
+
+  final String? buttonText;
+
+  final String? initialValue;
+
+  final String? Function(String?)? validator;
+
+  @override
+  String toString() {
+    return 'TextFormFieldRouteArgs{key: $key, title: $title, labelText: $labelText, buttonText: $buttonText, initialValue: $initialValue, validator: $validator}';
   }
 }
 
