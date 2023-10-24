@@ -26,7 +26,7 @@ class AntennaNotesPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final misskey = ref.watch(misskeyProvider(account));
     final antenna = ref.watch(
-          antennasListNotifierProvider(misskey).select(
+          antennasNotifierProvider(misskey).select(
             (antennas) => antennas.valueOrNull
                 ?.firstWhereOrNull((e) => e.id == this.antenna.id),
           ),
@@ -53,7 +53,7 @@ class AntennaNotesPage extends ConsumerWidget {
                 if (!context.mounted) return;
                 if (settings != null) {
                   ref
-                      .read(antennasListNotifierProvider(misskey).notifier)
+                      .read(antennasNotifierProvider(misskey).notifier)
                       .updateAntenna(antenna.id, settings)
                       .expectFailure(context);
                 }

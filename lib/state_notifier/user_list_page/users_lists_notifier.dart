@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/users_list_settings.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
-class UsersListsListNotifier
+class UsersListsNotifier
     extends AutoDisposeFamilyAsyncNotifier<List<UsersList>, Misskey> {
   @override
   Future<List<UsersList>> build(Misskey arg) async {

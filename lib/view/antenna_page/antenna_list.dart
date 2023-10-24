@@ -15,7 +15,7 @@ class AntennaList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final account = AccountScope.of(context);
     final misskey = ref.watch(misskeyProvider(account));
-    final antennas = ref.watch(antennasListNotifierProvider(misskey));
+    final antennas = ref.watch(antennasNotifierProvider(misskey));
 
     return antennas.when(
       data: (antennas) {
@@ -38,7 +38,7 @@ class AntennaList extends ConsumerWidget {
                   if (result ?? false) {
                     await ref
                         .read(
-                          antennasListNotifierProvider(misskey).notifier,
+                          antennasNotifierProvider(misskey).notifier,
                         )
                         .delete(antenna.id)
                         .expectFailure(context);

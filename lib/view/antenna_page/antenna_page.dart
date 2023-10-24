@@ -38,7 +38,7 @@ class AntennaPage extends ConsumerWidget {
                 if (!context.mounted) return;
                 if (settings != null) {
                   await ref
-                      .read(antennasListNotifierProvider(misskey).notifier)
+                      .read(antennasNotifierProvider(misskey).notifier)
                       .create(settings)
                       .expectFailure(context);
                 }

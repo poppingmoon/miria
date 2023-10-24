@@ -19,7 +19,7 @@ class UsersListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final misskey = ref.watch(misskeyProvider(account));
-    final list = ref.watch(usersListsListNotifierProvider(misskey));
+    final list = ref.watch(usersListsNotifierProvider(misskey));
 
     return Scaffold(
       appBar: AppBar(
@@ -37,7 +37,7 @@ class UsersListPage extends ConsumerWidget {
               if (!context.mounted) return;
               if (settings != null) {
                 ref
-                    .read(usersListsListNotifierProvider(misskey).notifier)
+                    .read(usersListsNotifierProvider(misskey).notifier)
                     .create(settings)
                     .expectFailure(context);
               }
@@ -68,7 +68,7 @@ class UsersListPage extends ConsumerWidget {
                       if (result ?? false) {
                         await ref
                             .read(
-                              usersListsListNotifierProvider(misskey).notifier,
+                              usersListsNotifierProvider(misskey).notifier,
                             )
                             .delete(list.id)
                             .expectFailure(context);

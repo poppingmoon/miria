@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/clip_settings.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
-class ClipsListNotifier
+class ClipsNotifier
     extends AutoDisposeFamilyAsyncNotifier<List<Clip>, Misskey> {
   @override
   Future<List<Clip>> build(Misskey arg) async {

@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/antenna_settings.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
-class AntennasListNotifier
+class AntennasNotifier
     extends AutoDisposeFamilyAsyncNotifier<List<Antenna>, Misskey> {
   @override
   Future<List<Antenna>> build(Misskey arg) async {
@@ -24,6 +24,7 @@ class AntennasListNotifier
         withReplies: settings.withReplies,
         withFile: settings.withFile,
         notify: settings.notify,
+        localOnly: settings.localOnly,
       ),
     );
     state = AsyncValue.data([...?state.valueOrNull, antenna]);
@@ -52,6 +53,7 @@ class AntennasListNotifier
         withReplies: settings.withReplies,
         withFile: settings.withFile,
         notify: settings.notify,
+        localOnly: settings.localOnly,
       ),
     );
     state = AsyncValue.data(
@@ -68,6 +70,7 @@ class AntennasListNotifier
                         withReplies: settings.withReplies,
                         withFile: settings.withFile,
                         notify: settings.notify,
+                        localOnly: settings.localOnly,
                       )
                     : antenna,
               )

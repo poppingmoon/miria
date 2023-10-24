@@ -46,7 +46,7 @@ class _ClipModalSheetNotifier extends AutoDisposeFamilyAsyncNotifier<
   @override
   Future<List<(Clip, bool)>> build((Misskey, String) arg) async {
     final [userClips, noteClips] = await Future.wait([
-      ref.watch(clipsListNotifierProvider(_misskey).future),
+      ref.watch(clipsNotifierProvider(_misskey).future),
       ref.watch(_notesClipsNotifierProvider(arg).future),
     ]);
     return userClips
@@ -171,7 +171,7 @@ class ClipModalSheet extends ConsumerWidget {
                   if (!context.mounted) return;
                   if (settings != null) {
                     await ref
-                        .read(clipsListNotifierProvider(misskey).notifier)
+                        .read(clipsNotifierProvider(misskey).notifier)
                         .create(settings)
                         .expectFailure(context);
                   }

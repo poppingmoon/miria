@@ -22,7 +22,7 @@ class AntennaModalSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final misskey = ref.watch(misskeyProvider(account));
-    final antennas = ref.watch(antennasListNotifierProvider(misskey));
+    final antennas = ref.watch(antennasNotifierProvider(misskey));
 
     return antennas.when(
       data: (antennas) {
@@ -42,7 +42,7 @@ class AntennaModalSheet extends ConsumerWidget {
                   }
                   if (value) {
                     await ref
-                        .read(antennasListNotifierProvider(misskey).notifier)
+                        .read(antennasNotifierProvider(misskey).notifier)
                         .updateAntenna(
                           antenna.id,
                           AntennaSettings.fromAntenna(antenna).copyWith(
@@ -52,7 +52,7 @@ class AntennaModalSheet extends ConsumerWidget {
                         .expectFailure(context);
                   } else {
                     await ref
-                        .read(antennasListNotifierProvider(misskey).notifier)
+                        .read(antennasNotifierProvider(misskey).notifier)
                         .updateAntenna(
                           antenna.id,
                           AntennaSettings.fromAntenna(antenna).copyWith(
@@ -75,13 +75,16 @@ class AntennaModalSheet extends ConsumerWidget {
                     context: context,
                     builder: (context) => AntennaSettingsDialog(
                       title: const Text("作成"),
+                      initialSettings: const AntennaSettings(
+                        src: AntennaSource.users,
+                      ),
                       account: account,
                     ),
                   );
                   if (!context.mounted) return;
                   if (settings != null) {
                     await ref
-                        .read(antennasListNotifierProvider(misskey).notifier)
+                        .read(antennasNotifierProvider(misskey).notifier)
                         .create(settings)
                         .expectFailure(context);
                   }

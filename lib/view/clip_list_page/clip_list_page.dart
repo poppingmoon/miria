@@ -20,7 +20,7 @@ class ClipListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final misskey = ref.watch(misskeyProvider(account));
-    final clips = ref.watch(clipsListNotifierProvider(misskey));
+    final clips = ref.watch(clipsNotifierProvider(misskey));
 
     return Scaffold(
       appBar: AppBar(
@@ -38,7 +38,7 @@ class ClipListPage extends ConsumerWidget {
               if (!context.mounted) return;
               if (settings != null) {
                 ref
-                    .read(clipsListNotifierProvider(misskey).notifier)
+                    .read(clipsNotifierProvider(misskey).notifier)
                     .create(settings)
                     .expectFailure(context);
               }
@@ -68,7 +68,7 @@ class ClipListPage extends ConsumerWidget {
                     if (result ?? false) {
                       await ref
                           .read(
-                            clipsListNotifierProvider(misskey).notifier,
+                            clipsNotifierProvider(misskey).notifier,
                           )
                           .delete(clip.id)
                           .expectFailure(context);

@@ -21,7 +21,7 @@ class ClipDetailPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final misskey = ref.watch(misskeyProvider(account));
     final clip = ref.watch(
-      clipsListNotifierProvider(misskey).select(
+      clipsNotifierProvider(misskey).select(
         (clips) => clips.valueOrNull?.firstWhereOrNull((e) => e.id == id),
       ),
     );
@@ -46,7 +46,7 @@ class ClipDetailPage extends ConsumerWidget {
                   if (!context.mounted) return;
                   if (settings != null) {
                     ref
-                        .read(clipsListNotifierProvider(misskey).notifier)
+                        .read(clipsNotifierProvider(misskey).notifier)
                         .updateClip(clip.id, settings)
                         .expectFailure(context);
                   }
