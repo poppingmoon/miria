@@ -138,8 +138,10 @@ class PageContent extends ConsumerWidget {
         return GestureDetector(
           onTap: () => showDialog<void>(
             context: context,
-            builder: (context) =>
-                ImageDialog(driveFiles: [file], initialPage: 0),
+            builder: (context) => ImageDialog(
+              driveFiles: [file],
+              initialPage: 0,
+            ),
           ),
           child: NetworkImageView(
             url: thumbnailUrl ?? url,

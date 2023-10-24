@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/acct.dart';
 import 'package:miria/model/color_theme.dart';
+import 'package:miria/model/pagination_state.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/model/timeline_controller_state.dart';
 import 'package:miria/model/timeline_page_state.dart';
@@ -23,8 +24,13 @@ import 'package:miria/repository/tab_settings_repository.dart';
 import 'package:miria/repository/timeline_repository.dart';
 import 'package:miria/state_notifier/antenna_page/antennas_notifier.dart';
 import 'package:miria/state_notifier/clip_list_page/clips_notifier.dart';
+import 'package:miria/state_notifier/common/download_file_notifier.dart';
 import 'package:miria/state_notifier/common/misskey_notes/misskey_note_notifier.dart';
 import 'package:miria/state_notifier/common/misskey_server_list_notifier.dart';
+import 'package:miria/state_notifier/drive_page/breadcrumbs_notifier.dart';
+import 'package:miria/state_notifier/drive_page/drive_file_notes_page/drive_files_attached_notes_notifier.dart';
+import 'package:miria/state_notifier/drive_page/drive_files_notifier.dart';
+import 'package:miria/state_notifier/drive_page/drive_folders_notifier.dart';
 import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
 import 'package:miria/state_notifier/photo_edit_page/photo_edit_state_notifier.dart';
 import 'package:miria/state_notifier/timeline_page/timeline_controller.dart';
@@ -188,3 +194,26 @@ final misskeyServerListNotifierProvider = AsyncNotifierProvider.autoDispose<
     MisskeyServerListNotifier, List<JoinMisskeyInstanceInfo>>(
   MisskeyServerListNotifier.new,
 );
+
+final downloadFileNotifierProvider =
+    NotifierProvider<DownloadFileNotifier, void>(DownloadFileNotifier.new);
+
+final driveFilesNotifierProvider = NotifierProvider.autoDispose
+    .family<DriveFilesNotifier, PaginationState<DriveFile>, (Misskey, String?)>(
+  DriveFilesNotifier.new,
+);
+
+final driveFoldersNotifierProvider = NotifierProvider.autoDispose.family<
+    DriveFoldersNotifier, PaginationState<DriveFolder>, (Misskey, String?)>(
+  DriveFoldersNotifier.new,
+);
+
+final breadcrumbsNotifierProvider =
+    NotifierProvider.autoDispose<BreadcrumbsNotifier, List<DriveFolder>>(
+  BreadcrumbsNotifier.new,
+);
+
+final driveFilesAttachedNotesProvider = NotifierProvider.autoDispose.family<
+    DriveFilesAttachedNotesNotifier,
+    PaginationState<Note>,
+    (Misskey, String)>(DriveFilesAttachedNotesNotifier.new);

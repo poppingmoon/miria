@@ -104,6 +104,7 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
     CommunityChannel? channel,
     String? initialText,
     List<String>? initialMediaFiles,
+    List<DriveFile>? initialDriveFiles,
     Note? note,
     Note? renote,
     Note? reply,
@@ -140,11 +141,17 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
       );
     }
 
+    final driveFiles = [...note?.files ?? [], ...initialDriveFiles ?? []];
+    if (driveFiles.isNotEmpty) {
+      final files =
+          driveFiles.map((file) => AlreadyPostedFile.file(file)).toList();
+      resultState = resultState.copyWith(
+        files: [...resultState.files, ...files],
+      );
+    }
+
     // 削除されたノートの反映
     if (note != null) {
-      final files =
-          note.files.map((file) => AlreadyPostedFile.file(file)).toList();
-
       final deletedNoteChannel = note.channel;
 
       final replyTo = <User>[];
@@ -158,7 +165,6 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
       resultState = resultState.copyWith(
         noteVisibility: note.visibility,
         localOnly: note.localOnly,
-        files: files,
         channel: deletedNoteChannel != null
             ? NoteCreateChannel(
                 id: deletedNoteChannel.id,

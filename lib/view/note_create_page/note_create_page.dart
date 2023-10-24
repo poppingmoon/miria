@@ -41,6 +41,7 @@ class NoteCreatePage extends ConsumerStatefulWidget {
   final Account initialAccount;
   final String? initialText;
   final List<String>? initialMediaFiles;
+  final List<DriveFile>? initialDriveFiles;
   final CommunityChannel? channel;
   final Note? reply;
   final Note? renote;
@@ -52,6 +53,7 @@ class NoteCreatePage extends ConsumerStatefulWidget {
     required this.initialAccount,
     this.initialText,
     this.initialMediaFiles,
+    this.initialDriveFiles,
     this.channel,
     this.reply,
     this.renote,
@@ -86,6 +88,7 @@ class NoteCreatePageState extends ConsumerState<NoteCreatePage> {
         widget.channel,
         widget.initialText,
         widget.initialMediaFiles,
+        widget.initialDriveFiles,
         widget.note,
         widget.renote,
         widget.reply,
