@@ -116,12 +116,16 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                           if (event.logicalKey ==
                               LogicalKeyboardKey.arrowLeft) {
                             pageController.previousPage(
-                                duration: _duration, curve: _curve);
+                              duration: _duration,
+                              curve: _curve,
+                            );
                             return KeyEventResult.handled;
                           } else if (event.logicalKey ==
                               LogicalKeyboardKey.arrowRight) {
                             pageController.nextPage(
-                                duration: _duration, curve: _curve);
+                              duration: _duration,
+                              curve: _curve,
+                            );
                             return KeyEventResult.handled;
                           }
                         }
