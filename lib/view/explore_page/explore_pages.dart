@@ -37,7 +37,13 @@ class ExplorePagesState extends ConsumerState<ExplorePages> {
                 ),
               );
             },
-            title: MfmText(mfmText: item.title),
+            title: MfmText(
+              mfmText: item.title,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
             subtitle: MfmText(mfmText: item.summary ?? ""),
           );
         },
