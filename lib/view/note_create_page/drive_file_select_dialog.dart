@@ -161,9 +161,8 @@ class DriveFileSelectDialogState extends ConsumerState<DriveFileSelectDialog> {
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(5),
-                              child: Thumbnail(
-                                url: item.thumbnailUrl,
-                                type: item.type,
+                              child: Thumbnail.driveFile(
+                                item,
                                 width: double.infinity,
                                 height: 200,
                                 fit: BoxFit.cover,

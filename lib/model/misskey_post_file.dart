@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:file/file.dart';
 import 'package:mime/mime.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
@@ -33,6 +32,13 @@ class PostFile extends MisskeyPostFile {
     super.caption,
   });
 
+  factory PostFile.file(File file) {
+    return PostFile(
+      file: file,
+      fileName: file.basename,
+    );
+  }
+
   @override
   PostFile copyWith({
     File? file,
@@ -63,6 +69,15 @@ class AlreadyPostedFile extends MisskeyPostFile {
     super.isNsfw,
     super.caption,
   });
+
+  factory AlreadyPostedFile.file(DriveFile file) {
+    return AlreadyPostedFile(
+      file: file,
+      fileName: file.name,
+      isNsfw: file.isSensitive,
+      caption: file.comment,
+    );
+  }
 
   @override
   AlreadyPostedFile copyWith({

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:miria/view/common/misskey_notes/network_image.dart';
+import 'package:misskey_dart/misskey_dart.dart';
 
 class Thumbnail extends StatelessWidget {
   const Thumbnail({
@@ -11,6 +12,16 @@ class Thumbnail extends StatelessWidget {
     this.fit,
     this.iconSize = 50,
   });
+
+  Thumbnail.driveFile(
+    DriveFile file, {
+    super.key,
+    this.width,
+    this.height,
+    this.fit,
+    this.iconSize = 50,
+  })  : url = file.thumbnailUrl,
+        type = file.type;
 
   final String? url;
   final String? type;
@@ -44,6 +55,7 @@ class Thumbnail extends StatelessWidget {
         type: ImageType.imageThumbnail,
         width: width,
         height: height,
+        fit: fit,
       );
     }
 

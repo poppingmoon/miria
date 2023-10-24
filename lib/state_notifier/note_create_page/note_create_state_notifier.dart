@@ -142,16 +142,8 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
 
     // 削除されたノートの反映
     if (note != null) {
-      final files = note.files
-          .map(
-            (file) => AlreadyPostedFile(
-              file: file,
-              fileName: file.name,
-              isNsfw: file.isSensitive,
-              caption: file.comment,
-            ),
-          )
-          .toList();
+      final files =
+          note.files.map((file) => AlreadyPostedFile.file(file)).toList();
 
       final deletedNoteChannel = note.channel;
 
@@ -436,14 +428,7 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
       );
       if (result == null || result.isEmpty) return;
 
-      final files = result.map(
-        (file) => AlreadyPostedFile(
-          file: file,
-          fileName: file.name,
-          isNsfw: file.isSensitive,
-          caption: file.comment,
-        ),
-      );
+      final files = result.map((file) => AlreadyPostedFile.file(file));
 
       state = state.copyWith(
         files: [
@@ -460,10 +445,7 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
       final files = result.files.map((file) {
         final path = file.path;
         if (path != null) {
-          return PostFile(
-            file: fileSystem.file(path),
-            fileName: file.name,
-          );
+          return PostFile.file(fileSystem.file(path));
         }
         return null;
       }).nonNulls;

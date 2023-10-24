@@ -83,10 +83,7 @@ class CreateFileView extends ConsumerWidget {
             child: switch (file) {
               PostFile(:final file) =>
                 isImage ? Image.file(file) : Thumbnail(type: type),
-              AlreadyPostedFile(:final file) => Thumbnail(
-                  url: file.thumbnailUrl,
-                  type: type,
-                ),
+              AlreadyPostedFile(:final file) => Thumbnail.driveFile(file),
             },
           ),
         ),

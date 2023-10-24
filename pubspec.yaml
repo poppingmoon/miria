@@ -66,6 +66,7 @@ dependencies:
   webview_flutter: ^4.3.0
   webview_flutter_android: ^3.12.0
   webview_flutter_wkwebview: ^3.9.0
+  mime: ^1.0.4
 
 dependency_overrides:
   image_editor:
