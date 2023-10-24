@@ -130,6 +130,11 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
                 : theme.foreground.lighten(0.1)));
 
     final themeData = ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: theme.primary,
+        brightness: theme.isDarkTheme ? Brightness.dark : Brightness.light,
+        primary: theme.primary,
+      ),
       brightness: theme.isDarkTheme ? Brightness.dark : Brightness.light,
       useMaterial3: false,
       primaryColor: theme.primary,
