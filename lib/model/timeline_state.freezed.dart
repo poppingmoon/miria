@@ -104,11 +104,11 @@ class _$TimelineStateCopyWithImpl<$Res, $Val extends TimelineState>
 }
 
 /// @nodoc
-abstract class _$$_TimelineStateCopyWith<$Res>
+abstract class _$$TimelineStateImplCopyWith<$Res>
     implements $TimelineStateCopyWith<$Res> {
-  factory _$$_TimelineStateCopyWith(
-          _$_TimelineState value, $Res Function(_$_TimelineState) then) =
-      __$$_TimelineStateCopyWithImpl<$Res>;
+  factory _$$TimelineStateImplCopyWith(
+          _$TimelineStateImpl value, $Res Function(_$TimelineStateImpl) then) =
+      __$$TimelineStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -121,11 +121,11 @@ abstract class _$$_TimelineStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TimelineStateCopyWithImpl<$Res>
-    extends _$TimelineStateCopyWithImpl<$Res, _$_TimelineState>
-    implements _$$_TimelineStateCopyWith<$Res> {
-  __$$_TimelineStateCopyWithImpl(
-      _$_TimelineState _value, $Res Function(_$_TimelineState) _then)
+class __$$TimelineStateImplCopyWithImpl<$Res>
+    extends _$TimelineStateCopyWithImpl<$Res, _$TimelineStateImpl>
+    implements _$$TimelineStateImplCopyWith<$Res> {
+  __$$TimelineStateImplCopyWithImpl(
+      _$TimelineStateImpl _value, $Res Function(_$TimelineStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -138,7 +138,7 @@ class __$$_TimelineStateCopyWithImpl<$Res>
     Object? isLastLoaded = null,
     Object? error = freezed,
   }) {
-    return _then(_$_TimelineState(
+    return _then(_$TimelineStateImpl(
       newerNotes: null == newerNotes
           ? _value._newerNotes
           : newerNotes // ignore: cast_nullable_to_non_nullable
@@ -169,8 +169,8 @@ class __$$_TimelineStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_TimelineState extends _TimelineState {
-  const _$_TimelineState(
+class _$TimelineStateImpl extends _TimelineState {
+  const _$TimelineStateImpl(
       {final List<Note> newerNotes = const <Note>[],
       final List<Note> olderNotes = const <Note>[],
       this.isLoading = false,
@@ -233,7 +233,7 @@ class _$_TimelineState extends _TimelineState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TimelineState &&
+            other is _$TimelineStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._newerNotes, _newerNotes) &&
             const DeepCollectionEquality()
@@ -260,8 +260,8 @@ class _$_TimelineState extends _TimelineState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TimelineStateCopyWith<_$_TimelineState> get copyWith =>
-      __$$_TimelineStateCopyWithImpl<_$_TimelineState>(this, _$identity);
+  _$$TimelineStateImplCopyWith<_$TimelineStateImpl> get copyWith =>
+      __$$TimelineStateImplCopyWithImpl<_$TimelineStateImpl>(this, _$identity);
 }
 
 abstract class _TimelineState extends TimelineState {
@@ -271,7 +271,7 @@ abstract class _TimelineState extends TimelineState {
       final bool isLoading,
       final bool isDownDirectionLoading,
       final bool isLastLoaded,
-      final (Object, StackTrace)? error}) = _$_TimelineState;
+      final (Object, StackTrace)? error}) = _$TimelineStateImpl;
   const _TimelineState._() : super._();
 
   @override
@@ -300,6 +300,6 @@ abstract class _TimelineState extends TimelineState {
   (Object, StackTrace)? get error;
   @override
   @JsonKey(ignore: true)
-  _$$_TimelineStateCopyWith<_$_TimelineState> get copyWith =>
+  _$$TimelineStateImplCopyWith<_$TimelineStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

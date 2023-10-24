@@ -464,6 +464,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                   (link) => LinkPreview(
                                     account: AccountScope.of(context),
                                     link: link,
+                                    host: displayNote.user.host,
                                   ),
                                 ),
                               if (displayNote.renoteId != null &&

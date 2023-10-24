@@ -26,6 +26,7 @@ mixin _$AntennaSettings {
   bool get withReplies => throw _privateConstructorUsedError;
   bool get withFile => throw _privateConstructorUsedError;
   bool get notify => throw _privateConstructorUsedError;
+  bool get localOnly => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AntennaSettingsCopyWith<AntennaSettings> get copyWith =>
@@ -48,7 +49,8 @@ abstract class $AntennaSettingsCopyWith<$Res> {
       bool caseSensitive,
       bool withReplies,
       bool withFile,
-      bool notify});
+      bool notify,
+      bool localOnly});
 }
 
 /// @nodoc
@@ -74,6 +76,7 @@ class _$AntennaSettingsCopyWithImpl<$Res, $Val extends AntennaSettings>
     Object? withReplies = null,
     Object? withFile = null,
     Object? notify = null,
+    Object? localOnly = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -116,16 +119,20 @@ class _$AntennaSettingsCopyWithImpl<$Res, $Val extends AntennaSettings>
           ? _value.notify
           : notify // ignore: cast_nullable_to_non_nullable
               as bool,
+      localOnly: null == localOnly
+          ? _value.localOnly
+          : localOnly // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$_AntennaSettingsCopyWith<$Res>
+abstract class _$$AntennaSettingsImplCopyWith<$Res>
     implements $AntennaSettingsCopyWith<$Res> {
-  factory _$$_AntennaSettingsCopyWith(
-          _$_AntennaSettings value, $Res Function(_$_AntennaSettings) then) =
-      __$$_AntennaSettingsCopyWithImpl<$Res>;
+  factory _$$AntennaSettingsImplCopyWith(_$AntennaSettingsImpl value,
+          $Res Function(_$AntennaSettingsImpl) then) =
+      __$$AntennaSettingsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -138,15 +145,16 @@ abstract class _$$_AntennaSettingsCopyWith<$Res>
       bool caseSensitive,
       bool withReplies,
       bool withFile,
-      bool notify});
+      bool notify,
+      bool localOnly});
 }
 
 /// @nodoc
-class __$$_AntennaSettingsCopyWithImpl<$Res>
-    extends _$AntennaSettingsCopyWithImpl<$Res, _$_AntennaSettings>
-    implements _$$_AntennaSettingsCopyWith<$Res> {
-  __$$_AntennaSettingsCopyWithImpl(
-      _$_AntennaSettings _value, $Res Function(_$_AntennaSettings) _then)
+class __$$AntennaSettingsImplCopyWithImpl<$Res>
+    extends _$AntennaSettingsCopyWithImpl<$Res, _$AntennaSettingsImpl>
+    implements _$$AntennaSettingsImplCopyWith<$Res> {
+  __$$AntennaSettingsImplCopyWithImpl(
+      _$AntennaSettingsImpl _value, $Res Function(_$AntennaSettingsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -162,8 +170,9 @@ class __$$_AntennaSettingsCopyWithImpl<$Res>
     Object? withReplies = null,
     Object? withFile = null,
     Object? notify = null,
+    Object? localOnly = null,
   }) {
-    return _then(_$_AntennaSettings(
+    return _then(_$AntennaSettingsImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -204,14 +213,18 @@ class __$$_AntennaSettingsCopyWithImpl<$Res>
           ? _value.notify
           : notify // ignore: cast_nullable_to_non_nullable
               as bool,
+      localOnly: null == localOnly
+          ? _value.localOnly
+          : localOnly // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
 
 /// @nodoc
 
-class _$_AntennaSettings extends _AntennaSettings {
-  const _$_AntennaSettings(
+class _$AntennaSettingsImpl extends _AntennaSettings {
+  const _$AntennaSettingsImpl(
       {this.name = "",
       this.src = AntennaSource.all,
       this.userListId,
@@ -221,7 +234,8 @@ class _$_AntennaSettings extends _AntennaSettings {
       this.caseSensitive = false,
       this.withReplies = false,
       this.withFile = false,
-      this.notify = false})
+      this.notify = false,
+      this.localOnly = false})
       : _keywords = keywords,
         _excludeKeywords = excludeKeywords,
         _users = users,
@@ -274,17 +288,20 @@ class _$_AntennaSettings extends _AntennaSettings {
   @override
   @JsonKey()
   final bool notify;
+  @override
+  @JsonKey()
+  final bool localOnly;
 
   @override
   String toString() {
-    return 'AntennaSettings(name: $name, src: $src, userListId: $userListId, keywords: $keywords, excludeKeywords: $excludeKeywords, users: $users, caseSensitive: $caseSensitive, withReplies: $withReplies, withFile: $withFile, notify: $notify)';
+    return 'AntennaSettings(name: $name, src: $src, userListId: $userListId, keywords: $keywords, excludeKeywords: $excludeKeywords, users: $users, caseSensitive: $caseSensitive, withReplies: $withReplies, withFile: $withFile, notify: $notify, localOnly: $localOnly)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AntennaSettings &&
+            other is _$AntennaSettingsImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.src, src) || other.src == src) &&
             (identical(other.userListId, userListId) ||
@@ -299,7 +316,9 @@ class _$_AntennaSettings extends _AntennaSettings {
                 other.withReplies == withReplies) &&
             (identical(other.withFile, withFile) ||
                 other.withFile == withFile) &&
-            (identical(other.notify, notify) || other.notify == notify));
+            (identical(other.notify, notify) || other.notify == notify) &&
+            (identical(other.localOnly, localOnly) ||
+                other.localOnly == localOnly));
   }
 
   @override
@@ -314,13 +333,15 @@ class _$_AntennaSettings extends _AntennaSettings {
       caseSensitive,
       withReplies,
       withFile,
-      notify);
+      notify,
+      localOnly);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AntennaSettingsCopyWith<_$_AntennaSettings> get copyWith =>
-      __$$_AntennaSettingsCopyWithImpl<_$_AntennaSettings>(this, _$identity);
+  _$$AntennaSettingsImplCopyWith<_$AntennaSettingsImpl> get copyWith =>
+      __$$AntennaSettingsImplCopyWithImpl<_$AntennaSettingsImpl>(
+          this, _$identity);
 }
 
 abstract class _AntennaSettings extends AntennaSettings {
@@ -334,7 +355,8 @@ abstract class _AntennaSettings extends AntennaSettings {
       final bool caseSensitive,
       final bool withReplies,
       final bool withFile,
-      final bool notify}) = _$_AntennaSettings;
+      final bool notify,
+      final bool localOnly}) = _$AntennaSettingsImpl;
   const _AntennaSettings._() : super._();
 
   @override
@@ -358,7 +380,9 @@ abstract class _AntennaSettings extends AntennaSettings {
   @override
   bool get notify;
   @override
+  bool get localOnly;
+  @override
   @JsonKey(ignore: true)
-  _$$_AntennaSettingsCopyWith<_$_AntennaSettings> get copyWith =>
+  _$$AntennaSettingsImplCopyWith<_$AntennaSettingsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

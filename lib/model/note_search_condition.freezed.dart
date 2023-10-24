@@ -90,11 +90,11 @@ class _$NoteSearchConditionCopyWithImpl<$Res, $Val extends NoteSearchCondition>
 }
 
 /// @nodoc
-abstract class _$$_NoteSearchConditionCopyWith<$Res>
+abstract class _$$NoteSearchConditionImplCopyWith<$Res>
     implements $NoteSearchConditionCopyWith<$Res> {
-  factory _$$_NoteSearchConditionCopyWith(_$_NoteSearchCondition value,
-          $Res Function(_$_NoteSearchCondition) then) =
-      __$$_NoteSearchConditionCopyWithImpl<$Res>;
+  factory _$$NoteSearchConditionImplCopyWith(_$NoteSearchConditionImpl value,
+          $Res Function(_$NoteSearchConditionImpl) then) =
+      __$$NoteSearchConditionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -105,11 +105,11 @@ abstract class _$$_NoteSearchConditionCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_NoteSearchConditionCopyWithImpl<$Res>
-    extends _$NoteSearchConditionCopyWithImpl<$Res, _$_NoteSearchCondition>
-    implements _$$_NoteSearchConditionCopyWith<$Res> {
-  __$$_NoteSearchConditionCopyWithImpl(_$_NoteSearchCondition _value,
-      $Res Function(_$_NoteSearchCondition) _then)
+class __$$NoteSearchConditionImplCopyWithImpl<$Res>
+    extends _$NoteSearchConditionCopyWithImpl<$Res, _$NoteSearchConditionImpl>
+    implements _$$NoteSearchConditionImplCopyWith<$Res> {
+  __$$NoteSearchConditionImplCopyWithImpl(_$NoteSearchConditionImpl _value,
+      $Res Function(_$NoteSearchConditionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -120,7 +120,7 @@ class __$$_NoteSearchConditionCopyWithImpl<$Res>
     Object? channel = freezed,
     Object? localOnly = null,
   }) {
-    return _then(_$_NoteSearchCondition(
+    return _then(_$NoteSearchConditionImpl(
       query: null == query
           ? _value.query
           : query // ignore: cast_nullable_to_non_nullable
@@ -143,8 +143,8 @@ class __$$_NoteSearchConditionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_NoteSearchCondition extends _NoteSearchCondition {
-  const _$_NoteSearchCondition(
+class _$NoteSearchConditionImpl extends _NoteSearchCondition {
+  const _$NoteSearchConditionImpl(
       {this.query = "", this.user, this.channel, this.localOnly = false})
       : super._();
 
@@ -168,7 +168,7 @@ class _$_NoteSearchCondition extends _NoteSearchCondition {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_NoteSearchCondition &&
+            other is _$NoteSearchConditionImpl &&
             (identical(other.query, query) || other.query == query) &&
             (identical(other.user, user) || other.user == user) &&
             (identical(other.channel, channel) || other.channel == channel) &&
@@ -182,8 +182,8 @@ class _$_NoteSearchCondition extends _NoteSearchCondition {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_NoteSearchConditionCopyWith<_$_NoteSearchCondition> get copyWith =>
-      __$$_NoteSearchConditionCopyWithImpl<_$_NoteSearchCondition>(
+  _$$NoteSearchConditionImplCopyWith<_$NoteSearchConditionImpl> get copyWith =>
+      __$$NoteSearchConditionImplCopyWithImpl<_$NoteSearchConditionImpl>(
           this, _$identity);
 }
 
@@ -192,7 +192,7 @@ abstract class _NoteSearchCondition extends NoteSearchCondition {
       {final String query,
       final User? user,
       final CommunityChannel? channel,
-      final bool localOnly}) = _$_NoteSearchCondition;
+      final bool localOnly}) = _$NoteSearchConditionImpl;
   const _NoteSearchCondition._() : super._();
 
   @override
@@ -205,6 +205,6 @@ abstract class _NoteSearchCondition extends NoteSearchCondition {
   bool get localOnly;
   @override
   @JsonKey(ignore: true)
-  _$$_NoteSearchConditionCopyWith<_$_NoteSearchCondition> get copyWith =>
+  _$$NoteSearchConditionImplCopyWith<_$NoteSearchConditionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

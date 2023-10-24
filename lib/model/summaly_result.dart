@@ -25,8 +25,8 @@ class SummalyResult with _$SummalyResult {
 class Player with _$Player {
   const factory Player({
     String? url,
-    int? width,
-    int? height,
+    double? width,
+    double? height,
     List<String>? allow,
   }) = _Player;
 

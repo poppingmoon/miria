@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +8,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/summaly_result.dart';
 import 'package:miria/providers.dart';
+import 'package:miria/view/common/error_dialog_handler.dart';
+import 'package:miria/view/common/misskey_notes/link_navigator.dart';
 import 'package:miria/view/common/misskey_notes/player_embed.dart';
 import 'package:miria/view/common/misskey_notes/twitter_embed.dart';
 import 'package:miria/view/themes/app_theme.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 final _summalyProvider =
@@ -52,10 +55,12 @@ class LinkPreview extends ConsumerWidget {
     super.key,
     required this.account,
     required this.link,
+    required this.host,
   });
 
   final Account account;
   final String link;
+  final String? host;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -63,9 +68,10 @@ class LinkPreview extends ConsumerWidget {
     return summalyResult.maybeWhen(
       data: (summalyResult) => LinkPreviewItem(
         link: link,
+        host: host,
         summalyResult: summalyResult,
       ),
-      orElse: () => LinkPreviewTile(link: link),
+      orElse: () => LinkPreviewTile(link: link, host: host),
     );
   }
 }
@@ -75,10 +81,12 @@ class LinkPreviewItem extends StatefulWidget {
     super.key,
     required this.link,
     required this.summalyResult,
+    required this.host,
   });
 
   final String link;
   final SummalyResult summalyResult;
+  final String? host;
 
   @override
   State<LinkPreviewItem> createState() => _LinkPreviewItemState();
@@ -86,7 +94,6 @@ class LinkPreviewItem extends StatefulWidget {
 
 class _LinkPreviewItemState extends State<LinkPreviewItem> {
   bool isPlayerOpen = false;
-  bool isTweetExpanded = false;
 
   String? extractTweetId(String link) {
     final url = Uri.parse(link);
@@ -106,86 +113,81 @@ class _LinkPreviewItemState extends State<LinkPreviewItem> {
 
   @override
   Widget build(BuildContext context) {
+    final playerUrl = widget.summalyResult.player.url;
     final tweetId = extractTweetId(widget.link);
     return Column(
       children: [
-        if (!isPlayerOpen && !isTweetExpanded)
-          LinkPreviewTile(
-            link: widget.link,
-            summalyResult: widget.summalyResult,
+        if (!isPlayerOpen)
+          Row(
+            children: [
+              Expanded(
+                child: LinkPreviewTile(
+                  link: widget.link,
+                  host: widget.host,
+                  summalyResult: widget.summalyResult,
+                ),
+              ),
+              // TODO: WebViewの仕様がAndroidとiOSで違うのでハマったためいったんコメントアウト
+              // if (WebViewPlatform.instance != null &&
+              //     (playerUrl != null || tweetId != null))
+              //   IconButton(
+              //     onPressed: () => setState(() {
+              //       isPlayerOpen = true;
+              //     }),
+              //     icon: const Icon(Icons.play_arrow),
+              //   )
+            ],
           ),
-        if (widget.summalyResult.player.url != null &&
-            WebViewPlatform.instance != null)
+        if (WebViewPlatform.instance != null &&
+            (playerUrl != null || tweetId != null))
           if (isPlayerOpen) ...[
-            PlayerEmbed(player: widget.summalyResult.player),
+            if (playerUrl != null)
+              PlayerEmbed(player: widget.summalyResult.player),
+            if (tweetId != null)
+              TwitterEmbed(
+                tweetId: tweetId,
+                isDark: AppTheme.of(context).isDarkMode,
+                // TODO: l10n
+                lang: "ja",
+              ),
             OutlinedButton.icon(
               onPressed: () => setState(() {
                 isPlayerOpen = false;
               }),
               icon: const Icon(Icons.close),
-              label: const Text("プレイヤーを閉じる"),
+              label: Text(playerUrl != null ? "プレイヤーを閉じる" : "ツイートを閉じる"),
             ),
-          ] else
-            OutlinedButton.icon(
-              onPressed: () => setState(() {
-                isPlayerOpen = true;
-              }),
-              icon: const Icon(Icons.play_arrow),
-              label: const Text("プレイヤーを開く"),
-            ),
-        if (tweetId != null && WebViewPlatform.instance != null)
-          if (isTweetExpanded) ...[
-            TwitterEmbed(
-              tweetId: tweetId,
-              isDark: AppTheme.of(context).isDarkMode,
-              // TODO: l10n
-              lang: "ja",
-            ),
-            OutlinedButton.icon(
-              onPressed: () => setState(() {
-                isTweetExpanded = false;
-              }),
-              icon: const Icon(Icons.close),
-              label: const Text("ツイートを閉じる"),
-            ),
-          ] else
-            OutlinedButton.icon(
-              onPressed: () => setState(() {
-                isTweetExpanded = true;
-              }),
-              icon: const Icon(Icons.play_arrow),
-              label: const Text("ツイートを開く"),
-            ),
+          ],
       ],
     );
   }
 }
 
-class LinkPreviewTile extends StatelessWidget {
+class LinkPreviewTile extends ConsumerWidget {
   const LinkPreviewTile({
     super.key,
     required this.link,
+    required this.host,
     this.summalyResult = const SummalyResult(player: Player()),
   });
 
   final String link;
   final SummalyResult summalyResult;
+  final String? host;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
-    final imageSize = (textTheme.titleSmall?.fontSize ?? 15) * 5;
+    final imageSize = ((textTheme.titleSmall?.fontSize ?? 15) * 5) *
+        min(1, MediaQuery.of(context).textScaleFactor);
     final thumbnail = summalyResult.thumbnail;
     final icon = summalyResult.icon;
     return Padding(
       padding: const EdgeInsets.all(5),
       child: InkWell(
-        onTap: () async {
-          final url = Uri.parse(link);
-          if (await canLaunchUrl(url)) {
-            launchUrl(url, mode: LaunchMode.externalApplication);
-          }
-        },
+        onTap: () => const LinkNavigator()
+            .onTapLink(context, ref, link, host)
+            .expectFailure(context),
         onLongPress: () {
           Clipboard.setData(ClipboardData(text: link));
           ScaffoldMessenger.of(context).showSnackBar(
@@ -201,64 +203,65 @@ class LinkPreviewTile extends StatelessWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(5),
-            child: Row(
-              children: [
-                if (thumbnail == null)
-                  SizedBox(height: imageSize)
-                else
-                  CachedNetworkImage(
-                    imageUrl: thumbnail,
-                    height: imageSize,
-                    width: imageSize,
-                    fit: BoxFit.cover,
-                  ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          summalyResult.title ?? link,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: textTheme.titleSmall,
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          summalyResult.description ?? "",
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: textTheme.bodySmall,
-                        ),
-                        const SizedBox(height: 5),
-                        Row(
-                          children: [
-                            if (icon != null)
-                              Padding(
-                                padding: const EdgeInsets.only(right: 5),
-                                child: CachedNetworkImage(
-                                  imageUrl: icon,
-                                  height: textTheme.labelMedium?.fontSize,
-                                  width: textTheme.labelMedium?.fontSize,
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Row(
+                children: [
+                  if (thumbnail == null)
+                    SizedBox(height: imageSize)
+                  else
+                    CachedNetworkImage(
+                      imageUrl: thumbnail,
+                      height: imageSize,
+                      width: imageSize,
+                      fit: BoxFit.cover,
+                    ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            summalyResult.title ?? link,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: textTheme.titleSmall,
+                          ),
+                          Text(
+                            summalyResult.description ?? "",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: textTheme.bodySmall,
+                          ),
+                          Row(
+                            children: [
+                              if (icon != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: CachedNetworkImage(
+                                    imageUrl: icon,
+                                    height: textTheme.labelMedium?.fontSize,
+                                    width: textTheme.labelMedium?.fontSize,
+                                  ),
+                                ),
+                              Expanded(
+                                child: Text(
+                                  summalyResult.sitename ?? "",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: textTheme.labelMedium,
                                 ),
                               ),
-                            Expanded(
-                              child: Text(
-                                summalyResult.sitename ?? "",
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: textTheme.labelMedium,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

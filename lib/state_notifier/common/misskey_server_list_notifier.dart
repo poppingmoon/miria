@@ -6,12 +6,13 @@ final _queryProvider = StateProvider.autoDispose((ref) {
   return "";
 });
 
-final _instanceInfosProvider =
-    AsyncNotifierProvider<_InstanceInfos, List<JoinMisskeyInstanceInfo>>(
+final _instanceInfosProvider = AsyncNotifierProvider.autoDispose<_InstanceInfos,
+    List<JoinMisskeyInstanceInfo>>(
   _InstanceInfos.new,
 );
 
-class _InstanceInfos extends AsyncNotifier<List<JoinMisskeyInstanceInfo>> {
+class _InstanceInfos
+    extends AutoDisposeAsyncNotifier<List<JoinMisskeyInstanceInfo>> {
   @override
   Future<List<JoinMisskeyInstanceInfo>> build() async {
     final response =

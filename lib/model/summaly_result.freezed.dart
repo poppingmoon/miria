@@ -122,11 +122,11 @@ class _$SummalyResultCopyWithImpl<$Res, $Val extends SummalyResult>
 }
 
 /// @nodoc
-abstract class _$$_SummalyResultCopyWith<$Res>
+abstract class _$$SummalyResultImplCopyWith<$Res>
     implements $SummalyResultCopyWith<$Res> {
-  factory _$$_SummalyResultCopyWith(
-          _$_SummalyResult value, $Res Function(_$_SummalyResult) then) =
-      __$$_SummalyResultCopyWithImpl<$Res>;
+  factory _$$SummalyResultImplCopyWith(
+          _$SummalyResultImpl value, $Res Function(_$SummalyResultImpl) then) =
+      __$$SummalyResultImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -144,11 +144,11 @@ abstract class _$$_SummalyResultCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_SummalyResultCopyWithImpl<$Res>
-    extends _$SummalyResultCopyWithImpl<$Res, _$_SummalyResult>
-    implements _$$_SummalyResultCopyWith<$Res> {
-  __$$_SummalyResultCopyWithImpl(
-      _$_SummalyResult _value, $Res Function(_$_SummalyResult) _then)
+class __$$SummalyResultImplCopyWithImpl<$Res>
+    extends _$SummalyResultCopyWithImpl<$Res, _$SummalyResultImpl>
+    implements _$$SummalyResultImplCopyWith<$Res> {
+  __$$SummalyResultImplCopyWithImpl(
+      _$SummalyResultImpl _value, $Res Function(_$SummalyResultImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -163,7 +163,7 @@ class __$$_SummalyResultCopyWithImpl<$Res>
     Object? sensitive = freezed,
     Object? url = freezed,
   }) {
-    return _then(_$_SummalyResult(
+    return _then(_$SummalyResultImpl(
       title: freezed == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -202,8 +202,8 @@ class __$$_SummalyResultCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_SummalyResult implements _SummalyResult {
-  const _$_SummalyResult(
+class _$SummalyResultImpl implements _SummalyResult {
+  const _$SummalyResultImpl(
       {this.title,
       this.icon,
       this.description,
@@ -213,8 +213,8 @@ class _$_SummalyResult implements _SummalyResult {
       this.sensitive,
       this.url});
 
-  factory _$_SummalyResult.fromJson(Map<String, dynamic> json) =>
-      _$$_SummalyResultFromJson(json);
+  factory _$SummalyResultImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SummalyResultImplFromJson(json);
 
   @override
   final String? title;
@@ -242,7 +242,7 @@ class _$_SummalyResult implements _SummalyResult {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SummalyResult &&
+            other is _$SummalyResultImpl &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.icon, icon) || other.icon == icon) &&
             (identical(other.description, description) ||
@@ -265,12 +265,12 @@ class _$_SummalyResult implements _SummalyResult {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SummalyResultCopyWith<_$_SummalyResult> get copyWith =>
-      __$$_SummalyResultCopyWithImpl<_$_SummalyResult>(this, _$identity);
+  _$$SummalyResultImplCopyWith<_$SummalyResultImpl> get copyWith =>
+      __$$SummalyResultImplCopyWithImpl<_$SummalyResultImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_SummalyResultToJson(
+    return _$$SummalyResultImplToJson(
       this,
     );
   }
@@ -285,10 +285,10 @@ abstract class _SummalyResult implements SummalyResult {
       required final Player player,
       final String? sitename,
       final bool? sensitive,
-      final String? url}) = _$_SummalyResult;
+      final String? url}) = _$SummalyResultImpl;
 
   factory _SummalyResult.fromJson(Map<String, dynamic> json) =
-      _$_SummalyResult.fromJson;
+      _$SummalyResultImpl.fromJson;
 
   @override
   String? get title;
@@ -308,7 +308,7 @@ abstract class _SummalyResult implements SummalyResult {
   String? get url;
   @override
   @JsonKey(ignore: true)
-  _$$_SummalyResultCopyWith<_$_SummalyResult> get copyWith =>
+  _$$SummalyResultImplCopyWith<_$SummalyResultImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -319,8 +319,8 @@ Player _$PlayerFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Player {
   String? get url => throw _privateConstructorUsedError;
-  int? get width => throw _privateConstructorUsedError;
-  int? get height => throw _privateConstructorUsedError;
+  double? get width => throw _privateConstructorUsedError;
+  double? get height => throw _privateConstructorUsedError;
   List<String>? get allow => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -333,7 +333,7 @@ abstract class $PlayerCopyWith<$Res> {
   factory $PlayerCopyWith(Player value, $Res Function(Player) then) =
       _$PlayerCopyWithImpl<$Res, Player>;
   @useResult
-  $Res call({String? url, int? width, int? height, List<String>? allow});
+  $Res call({String? url, double? width, double? height, List<String>? allow});
 }
 
 /// @nodoc
@@ -362,11 +362,11 @@ class _$PlayerCopyWithImpl<$Res, $Val extends Player>
       width: freezed == width
           ? _value.width
           : width // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as double?,
       height: freezed == height
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as double?,
       allow: freezed == allow
           ? _value.allow
           : allow // ignore: cast_nullable_to_non_nullable
@@ -376,19 +376,21 @@ class _$PlayerCopyWithImpl<$Res, $Val extends Player>
 }
 
 /// @nodoc
-abstract class _$$_PlayerCopyWith<$Res> implements $PlayerCopyWith<$Res> {
-  factory _$$_PlayerCopyWith(_$_Player value, $Res Function(_$_Player) then) =
-      __$$_PlayerCopyWithImpl<$Res>;
+abstract class _$$PlayerImplCopyWith<$Res> implements $PlayerCopyWith<$Res> {
+  factory _$$PlayerImplCopyWith(
+          _$PlayerImpl value, $Res Function(_$PlayerImpl) then) =
+      __$$PlayerImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? url, int? width, int? height, List<String>? allow});
+  $Res call({String? url, double? width, double? height, List<String>? allow});
 }
 
 /// @nodoc
-class __$$_PlayerCopyWithImpl<$Res>
-    extends _$PlayerCopyWithImpl<$Res, _$_Player>
-    implements _$$_PlayerCopyWith<$Res> {
-  __$$_PlayerCopyWithImpl(_$_Player _value, $Res Function(_$_Player) _then)
+class __$$PlayerImplCopyWithImpl<$Res>
+    extends _$PlayerCopyWithImpl<$Res, _$PlayerImpl>
+    implements _$$PlayerImplCopyWith<$Res> {
+  __$$PlayerImplCopyWithImpl(
+      _$PlayerImpl _value, $Res Function(_$PlayerImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -399,7 +401,7 @@ class __$$_PlayerCopyWithImpl<$Res>
     Object? height = freezed,
     Object? allow = freezed,
   }) {
-    return _then(_$_Player(
+    return _then(_$PlayerImpl(
       url: freezed == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
@@ -407,11 +409,11 @@ class __$$_PlayerCopyWithImpl<$Res>
       width: freezed == width
           ? _value.width
           : width // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as double?,
       height: freezed == height
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as double?,
       allow: freezed == allow
           ? _value._allow
           : allow // ignore: cast_nullable_to_non_nullable
@@ -422,20 +424,20 @@ class __$$_PlayerCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Player implements _Player {
-  const _$_Player(
+class _$PlayerImpl implements _Player {
+  const _$PlayerImpl(
       {this.url, this.width, this.height, final List<String>? allow})
       : _allow = allow;
 
-  factory _$_Player.fromJson(Map<String, dynamic> json) =>
-      _$$_PlayerFromJson(json);
+  factory _$PlayerImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PlayerImplFromJson(json);
 
   @override
   final String? url;
   @override
-  final int? width;
+  final double? width;
   @override
-  final int? height;
+  final double? height;
   final List<String>? _allow;
   @override
   List<String>? get allow {
@@ -455,7 +457,7 @@ class _$_Player implements _Player {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Player &&
+            other is _$PlayerImpl &&
             (identical(other.url, url) || other.url == url) &&
             (identical(other.width, width) || other.width == width) &&
             (identical(other.height, height) || other.height == height) &&
@@ -470,12 +472,12 @@ class _$_Player implements _Player {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PlayerCopyWith<_$_Player> get copyWith =>
-      __$$_PlayerCopyWithImpl<_$_Player>(this, _$identity);
+  _$$PlayerImplCopyWith<_$PlayerImpl> get copyWith =>
+      __$$PlayerImplCopyWithImpl<_$PlayerImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PlayerToJson(
+    return _$$PlayerImplToJson(
       this,
     );
   }
@@ -484,22 +486,22 @@ class _$_Player implements _Player {
 abstract class _Player implements Player {
   const factory _Player(
       {final String? url,
-      final int? width,
-      final int? height,
-      final List<String>? allow}) = _$_Player;
+      final double? width,
+      final double? height,
+      final List<String>? allow}) = _$PlayerImpl;
 
-  factory _Player.fromJson(Map<String, dynamic> json) = _$_Player.fromJson;
+  factory _Player.fromJson(Map<String, dynamic> json) = _$PlayerImpl.fromJson;
 
   @override
   String? get url;
   @override
-  int? get width;
+  double? get width;
   @override
-  int? get height;
+  double? get height;
   @override
   List<String>? get allow;
   @override
   @JsonKey(ignore: true)
-  _$$_PlayerCopyWith<_$_Player> get copyWith =>
+  _$$PlayerImplCopyWith<_$PlayerImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

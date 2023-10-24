@@ -79,11 +79,11 @@ class _$TimelinePageStateCopyWithImpl<$Res, $Val extends TimelinePageState>
 }
 
 /// @nodoc
-abstract class _$$_TimelinePageStateCopyWith<$Res>
+abstract class _$$TimelinePageStateImplCopyWith<$Res>
     implements $TimelinePageStateCopyWith<$Res> {
-  factory _$$_TimelinePageStateCopyWith(_$_TimelinePageState value,
-          $Res Function(_$_TimelinePageState) then) =
-      __$$_TimelinePageStateCopyWithImpl<$Res>;
+  factory _$$TimelinePageStateImplCopyWith(_$TimelinePageStateImpl value,
+          $Res Function(_$TimelinePageStateImpl) then) =
+      __$$TimelinePageStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({PageController pageController, int index, TabSetting tabSetting});
@@ -93,11 +93,11 @@ abstract class _$$_TimelinePageStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TimelinePageStateCopyWithImpl<$Res>
-    extends _$TimelinePageStateCopyWithImpl<$Res, _$_TimelinePageState>
-    implements _$$_TimelinePageStateCopyWith<$Res> {
-  __$$_TimelinePageStateCopyWithImpl(
-      _$_TimelinePageState _value, $Res Function(_$_TimelinePageState) _then)
+class __$$TimelinePageStateImplCopyWithImpl<$Res>
+    extends _$TimelinePageStateCopyWithImpl<$Res, _$TimelinePageStateImpl>
+    implements _$$TimelinePageStateImplCopyWith<$Res> {
+  __$$TimelinePageStateImplCopyWithImpl(_$TimelinePageStateImpl _value,
+      $Res Function(_$TimelinePageStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -107,7 +107,7 @@ class __$$_TimelinePageStateCopyWithImpl<$Res>
     Object? index = null,
     Object? tabSetting = null,
   }) {
-    return _then(_$_TimelinePageState(
+    return _then(_$TimelinePageStateImpl(
       pageController: null == pageController
           ? _value.pageController
           : pageController // ignore: cast_nullable_to_non_nullable
@@ -126,8 +126,8 @@ class __$$_TimelinePageStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_TimelinePageState extends _TimelinePageState {
-  const _$_TimelinePageState(
+class _$TimelinePageStateImpl extends _TimelinePageState {
+  const _$TimelinePageStateImpl(
       {required this.pageController,
       required this.index,
       required this.tabSetting})
@@ -149,7 +149,7 @@ class _$_TimelinePageState extends _TimelinePageState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TimelinePageState &&
+            other is _$TimelinePageStateImpl &&
             (identical(other.pageController, pageController) ||
                 other.pageController == pageController) &&
             (identical(other.index, index) || other.index == index) &&
@@ -164,8 +164,8 @@ class _$_TimelinePageState extends _TimelinePageState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TimelinePageStateCopyWith<_$_TimelinePageState> get copyWith =>
-      __$$_TimelinePageStateCopyWithImpl<_$_TimelinePageState>(
+  _$$TimelinePageStateImplCopyWith<_$TimelinePageStateImpl> get copyWith =>
+      __$$TimelinePageStateImplCopyWithImpl<_$TimelinePageStateImpl>(
           this, _$identity);
 }
 
@@ -173,7 +173,7 @@ abstract class _TimelinePageState extends TimelinePageState {
   const factory _TimelinePageState(
       {required final PageController pageController,
       required final int index,
-      required final TabSetting tabSetting}) = _$_TimelinePageState;
+      required final TabSetting tabSetting}) = _$TimelinePageStateImpl;
   const _TimelinePageState._() : super._();
 
   @override
@@ -184,6 +184,6 @@ abstract class _TimelinePageState extends TimelinePageState {
   TabSetting get tabSetting;
   @override
   @JsonKey(ignore: true)
-  _$$_TimelinePageStateCopyWith<_$_TimelinePageState> get copyWith =>
+  _$$TimelinePageStateImplCopyWith<_$TimelinePageStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

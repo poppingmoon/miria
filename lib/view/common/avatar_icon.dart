@@ -62,7 +62,7 @@ class AvatarIcon extends StatelessWidget {
                   angle: -0 * pi / 180,
                   child: Transform.translate(
                     offset: Offset(
-                      -height * 0.3 * MediaQuery.of(context).textScaleFactor,
+                      -height * 0.333 * MediaQuery.of(context).textScaleFactor,
                       -height * 0.3 * MediaQuery.of(context).textScaleFactor,
                     ),
                     child: Icon(
