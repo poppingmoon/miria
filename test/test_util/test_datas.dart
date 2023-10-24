@@ -1043,8 +1043,7 @@ class TestData {
   static String detailedUser2ExpectedId = "9gbzuv2cze";
 
   // ユーザー情報
-  static UserDetailed usersShowResponse1 =
-      UserDetailed.fromJson(
+  static UserDetailed usersShowResponse1 = UserDetailed.fromJson(
     JSON5.parse(r'''
 {
   id: '7rkr3b1c1c',
@@ -1729,7 +1728,7 @@ class TestData {
   );
 
   // Dio
-  static DioError response404 = DioError(
+  static DioException response404 = DioException(
     requestOptions: RequestOptions(),
     response: Response(requestOptions: RequestOptions(), statusCode: 404),
   );
