@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/model/tab_setting.dart';
@@ -237,8 +238,24 @@ class TimelinePage extends ConsumerWidget {
             ),
             Row(
               children: [
-                const Expanded(
-                  child: TimelineNoteField(),
+                Expanded(
+                  child: Focus(
+                    onKeyEvent: (node, event) {
+                      if (event is KeyDownEvent) {
+                        if (event.logicalKey == LogicalKeyboardKey.enter &&
+                            RawKeyboard.instance.keysPressed
+                                .contains(LogicalKeyboardKey.controlLeft)) {
+                          ref
+                              .read(timelinePageControllerProvider.notifier)
+                              .note()
+                              .expectFailure(context);
+                          return KeyEventResult.handled;
+                        }
+                      }
+                      return KeyEventResult.ignored;
+                    },
+                    child: const TimelineNoteField(),
+                  ),
                 ),
                 IconButton(
                   onPressed: ref

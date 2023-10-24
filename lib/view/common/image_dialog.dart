@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/misskey_notes/network_image.dart';
@@ -29,6 +30,8 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
   int? listeningId;
   final TransformationController _transformationController =
       TransformationController();
+  static const _duration = Duration(milliseconds: 500);
+  static const _curve = Curves.fastOutSlowIn;
 
   @override
   void initState() {
@@ -106,21 +109,40 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                   },
                   child: Transform.translate(
                     offset: Offset(verticalDragX, verticalDragY),
-                    child: PageView(
-                      controller: pageController,
-                      physics: scale == 1.0
-                          ? const ScrollPhysics()
-                          : const NeverScrollableScrollPhysics(),
-                      children: [
-                        for (final url in imageUrlList)
-                          ScaleNotifierInteractiveViewer(
-                            imageUrl: url,
-                            controller: _transformationController,
-                            onScaleChanged: (scaleUpdated) => setState(() {
-                              scale = scaleUpdated;
-                            }),
-                          ),
-                      ],
+                    child: Focus(
+                      autofocus: true,
+                      onKeyEvent: (node, event) {
+                        if (event is KeyDownEvent) {
+                          if (event.logicalKey ==
+                              LogicalKeyboardKey.arrowLeft) {
+                            pageController.previousPage(
+                                duration: _duration, curve: _curve);
+                            return KeyEventResult.handled;
+                          } else if (event.logicalKey ==
+                              LogicalKeyboardKey.arrowRight) {
+                            pageController.nextPage(
+                                duration: _duration, curve: _curve);
+                            return KeyEventResult.handled;
+                          }
+                        }
+                        return KeyEventResult.ignored;
+                      },
+                      child: PageView(
+                        controller: pageController,
+                        physics: scale == 1.0
+                            ? const ScrollPhysics()
+                            : const NeverScrollableScrollPhysics(),
+                        children: [
+                          for (final url in imageUrlList)
+                            ScaleNotifierInteractiveViewer(
+                              imageUrl: url,
+                              controller: _transformationController,
+                              onScaleChanged: (scaleUpdated) => setState(() {
+                                scale = scaleUpdated;
+                              }),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
