@@ -333,26 +333,38 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                       ),
                       const SizedBox(height: 10),
                       const Text("フォント"),
-                      DropdownButton(
-                        items: [
-                          const DropdownMenuItem<String?>(
-                            child: Text("デフォルト"),
-                          ),
-                          ...GoogleFonts.asMap().keys.map(
-                                (key) => DropdownMenuItem(
-                                  value: key,
-                                  child: Text(
-                                    key,
-                                    style: GoogleFonts.getFont(key),
-                                  ),
-                                ),
-                              ),
-                        ],
-                        value: fontName,
-                        isExpanded: true,
-                        onChanged: (value) {
+                      ListTile(
+                        title: Text(fontName ?? "デフォルト"),
+                        trailing: const Icon(Icons.keyboard_arrow_right),
+                        onTap: () async {
+                          final keys = GoogleFonts.asMap().keys;
+                          final result = await showModalBottomSheet<(String?,)>(
+                            context: context,
+                            builder: (context) => ListView.builder(
+                              itemCount: keys.length,
+                              itemBuilder: (context, index) => index == 0
+                                  ? ListTile(
+                                      title: const Text("デフォルト"),
+                                      onTap: () =>
+                                          Navigator.of(context).pop((null,)),
+                                    )
+                                  : ListTile(
+                                      title: Text(
+                                        keys.elementAt(index - 1),
+                                        style: GoogleFonts.getFont(
+                                          keys.elementAt(index - 1),
+                                        ),
+                                      ),
+                                      onTap: () => Navigator.of(context)
+                                          .pop((keys.elementAt(index - 1),)),
+                                    ),
+                            ),
+                          );
+                          if (result == null) {
+                            return;
+                          }
                           setState(() {
-                            fontName = value;
+                            fontName = result.$1;
                             save();
                           });
                         },
