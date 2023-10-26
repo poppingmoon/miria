@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
@@ -27,6 +28,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   TabPosition tabPosition = TabPosition.top;
   double textScaleFactor = 1.0;
   EmojiType emojiType = EmojiType.twemoji;
+  String? fontName;
 
   @override
   void initState() {
@@ -65,6 +67,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       tabPosition = settings.tabPosition;
       textScaleFactor = settings.textScaleFactor;
       emojiType = settings.emojiType;
+      fontName = settings.fontName;
     });
   }
 
@@ -83,6 +86,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
             tabPosition: tabPosition,
             emojiType: emojiType,
             textScaleFactor: textScaleFactor,
+            fontName: fontName,
           ),
         );
   }
@@ -324,9 +328,37 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "フォントサイズ",
+                        "フォント",
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
+                      const SizedBox(height: 10),
+                      const Text("フォント"),
+                      DropdownButton(
+                        items: [
+                          const DropdownMenuItem<String?>(
+                            child: Text("デフォルト"),
+                          ),
+                          ...GoogleFonts.asMap().keys.map(
+                                (key) => DropdownMenuItem(
+                                  value: key,
+                                  child: Text(
+                                    key,
+                                    style: GoogleFonts.getFont(key),
+                                  ),
+                                ),
+                              ),
+                        ],
+                        value: fontName,
+                        isExpanded: true,
+                        onChanged: (value) {
+                          setState(() {
+                            fontName = value;
+                            save();
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      const Text("フォントサイズ"),
                       Slider(
                         value: textScaleFactor,
                         min: 0.5,
