@@ -273,6 +273,16 @@ abstract class _$AppRouter extends RootStackRouter {
         )),
       );
     },
+    DriveFilesModalRoute.name: (routeData) {
+      final args = routeData.argsAs<DriveFilesModalRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DriveFilesModalSheet(
+          files: args.files,
+          key: args.key,
+        ),
+      );
+    },
     DriveFolderModalRoute.name: (routeData) {
       final args = routeData.argsAs<DriveFolderModalRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -295,6 +305,8 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: DrivePage(
+          selectFile: args.selectFile,
+          selectFiles: args.selectFiles,
           selectFolder: args.selectFolder,
           key: args.key,
         ),
@@ -1788,6 +1800,44 @@ class DriveFileSelectRouteArgs {
 }
 
 /// generated route for
+/// [DriveFilesModalSheet]
+class DriveFilesModalRoute extends PageRouteInfo<DriveFilesModalRouteArgs> {
+  DriveFilesModalRoute({
+    required List<DriveFile> files,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DriveFilesModalRoute.name,
+          args: DriveFilesModalRouteArgs(
+            files: files,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DriveFilesModalRoute';
+
+  static const PageInfo<DriveFilesModalRouteArgs> page =
+      PageInfo<DriveFilesModalRouteArgs>(name);
+}
+
+class DriveFilesModalRouteArgs {
+  const DriveFilesModalRouteArgs({
+    required this.files,
+    this.key,
+  });
+
+  final List<DriveFile> files;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'DriveFilesModalRouteArgs{files: $files, key: $key}';
+  }
+}
+
+/// generated route for
 /// [DriveFolderModalSheet]
 class DriveFolderModalRoute extends PageRouteInfo<DriveFolderModalRouteArgs> {
   DriveFolderModalRoute({
@@ -1843,12 +1893,16 @@ class DriveModalRoute extends PageRouteInfo<void> {
 /// [DrivePage]
 class DriveRoute extends PageRouteInfo<DriveRouteArgs> {
   DriveRoute({
+    bool selectFile = false,
+    bool selectFiles = false,
     bool selectFolder = false,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           DriveRoute.name,
           args: DriveRouteArgs(
+            selectFile: selectFile,
+            selectFiles: selectFiles,
             selectFolder: selectFolder,
             key: key,
           ),
@@ -1862,9 +1916,15 @@ class DriveRoute extends PageRouteInfo<DriveRouteArgs> {
 
 class DriveRouteArgs {
   const DriveRouteArgs({
+    this.selectFile = false,
+    this.selectFiles = false,
     this.selectFolder = false,
     this.key,
   });
+
+  final bool selectFile;
+
+  final bool selectFiles;
 
   final bool selectFolder;
 
@@ -1872,7 +1932,7 @@ class DriveRouteArgs {
 
   @override
   String toString() {
-    return 'DriveRouteArgs{selectFolder: $selectFolder, key: $key}';
+    return 'DriveRouteArgs{selectFile: $selectFile, selectFiles: $selectFiles, selectFolder: $selectFolder, key: $key}';
   }
 }
 

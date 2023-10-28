@@ -10,6 +10,7 @@ import "package:miria/providers.dart";
 import "package:miria/router/app_router.dart";
 import "package:miria/state_notifier/drive_page/drive_files_notifier.dart";
 import "package:miria/state_notifier/drive_page/drive_folders_notifier.dart";
+import "package:miria/state_notifier/drive_page/selected_drive_files_notifier_provider.dart";
 import "package:miria/view/common/pagination_bottom_widget.dart";
 import "package:miria/view/drive_page/drive_file_widget.dart";
 import "package:miria/view/drive_page/drive_folder_widget.dart";
@@ -18,10 +19,14 @@ import "package:misskey_dart/misskey_dart.dart";
 @RoutePage()
 class DrivePage extends HookConsumerWidget {
   const DrivePage({
+    this.selectFile = false,
+    this.selectFiles = false,
     this.selectFolder = false,
     super.key,
   });
 
+  final bool selectFile;
+  final bool selectFiles;
   final bool selectFolder;
 
   static const itemMaxCrossAxisExtent = 300.0;
@@ -40,6 +45,9 @@ class DrivePage extends HookConsumerWidget {
         hierarchyFolders.value.lastOrNull;
     final folders = ref.watch(driveFoldersNotifierProvider(folderId));
     final files = ref.watch(driveFilesNotifierProvider(folderId));
+    final selectedFiles = ref.watch(selectedDriveFilesNotifierProvider);
+    final isSelecting =
+        selectFiles || (!selectFolder && selectedFiles.isNotEmpty);
     final enableInfiniteScroll = ref.watch(
       generalSettingsRepositoryProvider.select(
         (repository) =>
@@ -91,17 +99,36 @@ class DrivePage extends HookConsumerWidget {
     return PopScope(
       canPop: currentFolder == null,
       onPopInvokedWithResult: (_, __) {
-        if (currentFolder != null) {
+        if (!selectFolder && selectedFiles.isNotEmpty) {
+          ref.read(selectedDriveFilesNotifierProvider.notifier).removeAll();
+        } else if (currentFolder != null) {
           hierarchyFolders.value = hierarchyFolders.value
               .sublist(0, hierarchyFolders.value.length - 1);
         }
       },
       child: Scaffold(
         appBar: AppBar(
-          leading: BackButton(onPressed: () async => await context.maybePop()),
-          title: selectFolder
-              ? Text(S.of(context).selectFolder)
-              : Text(S.of(context).drive),
+          leading: selectedFiles.isEmpty
+              ? BackButton(onPressed: () async => await context.maybePop())
+              : CloseButton(onPressed: () async => await context.maybePop()),
+          title: selectFiles || (!selectFolder && selectedFiles.isNotEmpty)
+              ? Text.rich(
+                  TextSpan(
+                    text: S.of(context).chooseFile,
+                    children: [
+                      if (selectedFiles.isNotEmpty)
+                        TextSpan(
+                          text: " (${selectedFiles.length})",
+                          style: TextStyle(
+                            color: appBarForegroundColor.withOpacity(0.5),
+                          ),
+                        ),
+                    ],
+                  ),
+                )
+              : selectFolder
+                  ? Text(S.of(context).selectFolder)
+                  : Text(S.of(context).drive),
           actions: [
             if (!selectFolder)
               IconButton(
@@ -109,7 +136,33 @@ class DrivePage extends HookConsumerWidget {
                     .pushRoute(DriveCreateModalRoute(folder: currentFolder)),
                 icon: const Icon(Icons.add),
               ),
-            if (currentFolder != null)
+            if (isSelecting) ...[
+              if (files.valueOrNull?.items case final files?)
+                if (files.isNotEmpty)
+                  if (files.every(
+                    (file) => selectedFiles.any((e) => e.id == file.id),
+                  ))
+                    IconButton(
+                      onPressed: () => ref
+                          .read(selectedDriveFilesNotifierProvider.notifier)
+                          .removeAll(),
+                      icon: const Icon(Icons.deselect),
+                    )
+                  else
+                    IconButton(
+                      onPressed: () => ref
+                          .read(selectedDriveFilesNotifierProvider.notifier)
+                          .addAll(files),
+                      icon: const Icon(Icons.select_all),
+                    ),
+              IconButton(
+                onPressed: selectedFiles.isNotEmpty
+                    ? () async => await context
+                        .pushRoute(DriveFilesModalRoute(files: selectedFiles))
+                    : null,
+                icon: const Icon(Icons.more_vert),
+              ),
+            ] else if (currentFolder != null)
               IconButton(
                 onPressed: () async {
                   await context.pushRoute(
@@ -249,10 +302,35 @@ class DrivePage extends HookConsumerWidget {
                   itemCount: files.length,
                   itemBuilder: (context, index) {
                     final file = files.elementAt(index);
+                    final isSelected =
+                        selectedFiles.any((e) => e.id == file.id);
                     return DriveFileWidget(
                       file: file,
-                      onTap: () async =>
-                          await context.pushRoute(DriveFileRoute(file: file)),
+                      isSelected: isSelected,
+                      onTap: () async {
+                        if (selectFile) {
+                          await context.router.parent()?.maybePop([file]);
+                        } else if (isSelecting) {
+                          if (isSelected) {
+                            ref
+                                .read(
+                                  selectedDriveFilesNotifierProvider.notifier,
+                                )
+                                .remove(file.id);
+                          } else {
+                            ref
+                                .read(
+                                  selectedDriveFilesNotifierProvider.notifier,
+                                )
+                                .add(file);
+                          }
+                        } else {
+                          await context.pushRoute(DriveFileRoute(file: file));
+                        }
+                      },
+                      onLongPress: () => ref
+                          .read(selectedDriveFilesNotifierProvider.notifier)
+                          .add(file),
                     );
                   },
                 ),
@@ -269,12 +347,19 @@ class DrivePage extends HookConsumerWidget {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: selectFolder
-              ? () async =>
-                  await context.router.parent()?.maybePop((currentFolder,))
-              : () async => await context
-                  .pushRoute(DriveCreateModalRoute(folder: currentFolder)),
-          child: selectFolder ? const Icon(Icons.check) : const Icon(Icons.add),
+          onPressed: selectFiles
+              ? selectedFiles.isNotEmpty
+                  ? () async =>
+                      await context.router.parent()?.maybePop(selectedFiles)
+                  : null
+              : selectFolder
+                  ? () async =>
+                      await context.router.parent()?.maybePop((currentFolder,))
+                  : () async => await context
+                      .pushRoute(DriveCreateModalRoute(folder: currentFolder)),
+          child: selectFiles || selectFolder
+              ? const Icon(Icons.check)
+              : const Icon(Icons.add),
         ),
       ),
     );

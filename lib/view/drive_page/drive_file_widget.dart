@@ -10,11 +10,13 @@ class DriveFileWidget extends ConsumerWidget {
   const DriveFileWidget({
     required this.file,
     super.key,
+    this.isSelected = false,
     this.onTap,
     this.onLongPress,
   });
 
   final DriveFile file;
+  final bool isSelected;
   final void Function()? onTap;
   final void Function()? onLongPress;
 
@@ -22,47 +24,62 @@ class DriveFileWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        onLongPress: onLongPress,
-        child: Column(
-          children: [
-            Expanded(
-              child: Thumbnail.driveFile(
-                file,
-                fit: BoxFit.contain,
-              ),
-            ),
-            Row(
+      color: isSelected ? Theme.of(context).colorScheme.primary : null,
+      child: IconTheme(
+        data: IconThemeData(
+          color: isSelected
+              ? Theme.of(context).colorScheme.onPrimary
+              : Theme.of(context).colorScheme.onSurface,
+        ),
+        child: DefaultTextStyle.merge(
+          style: TextStyle(
+            color: isSelected
+                ? Theme.of(context).colorScheme.onPrimary
+                : Theme.of(context).colorScheme.onSurface,
+          ),
+          child: InkWell(
+            onTap: onTap,
+            onLongPress: onLongPress,
+            child: Column(
               children: [
-                Visibility.maintain(
-                  visible: file.isSensitive,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Tooltip(
-                      message: S.of(context).sensitive,
-                      child: const Icon(Icons.warning_amber),
-                    ),
-                  ),
-                ),
                 Expanded(
-                  child: Center(
-                    child: Text(
-                      file.name,
-                      textAlign: TextAlign.center,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  child: Thumbnail.driveFile(
+                    file,
+                    fit: BoxFit.contain,
                   ),
                 ),
-                IconButton(
-                  onPressed: () async =>
-                      await context.pushRoute(DriveFileModalRoute(file: file)),
-                  icon: const Icon(Icons.more_vert),
+                Row(
+                  children: [
+                    Visibility.maintain(
+                      visible: file.isSensitive,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Tooltip(
+                          message: S.of(context).sensitive,
+                          child: const Icon(Icons.warning_amber),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          file.name,
+                          textAlign: TextAlign.center,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () async => await context
+                          .pushRoute(DriveFileModalRoute(file: file)),
+                      icon: const Icon(Icons.more_vert),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
