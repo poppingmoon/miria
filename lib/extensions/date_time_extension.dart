@@ -9,7 +9,7 @@ extension DateTimeExtension on DateTime {
 
   String get format => DateFormat("yyyy 年 M 月 d 日").format(toUtc().toLocal());
 
-  String get formatUntilSeconds =>
+  String get formatUntilMinutes =>
       DateFormat("yyyy 年 M 月 d 日 HH:mm").format(toUtc().toLocal());
 
   String get formatUntilMilliSeconds =>
