@@ -262,15 +262,14 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     DriveFileSelectRoute.name: (routeData) {
-      final args = routeData.argsAs<DriveFileSelectRouteArgs>();
+      final args = routeData.argsAs<DriveFileSelectRouteArgs>(
+          orElse: () => const DriveFileSelectRouteArgs());
       return AutoRoutePage<List<DriveFile>>(
         routeData: routeData,
-        child: WrappedRoute(
-            child: DriveFileSelectDialog(
-          account: args.account,
-          key: args.key,
+        child: DriveFileSelectDialog(
           allowMultiple: args.allowMultiple,
-        )),
+          key: args.key,
+        ),
       );
     },
     DriveFilesModalRoute.name: (routeData) {
@@ -1760,16 +1759,14 @@ class DriveFileRouteArgs {
 /// [DriveFileSelectDialog]
 class DriveFileSelectRoute extends PageRouteInfo<DriveFileSelectRouteArgs> {
   DriveFileSelectRoute({
-    required Account account,
-    Key? key,
     bool allowMultiple = false,
+    Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           DriveFileSelectRoute.name,
           args: DriveFileSelectRouteArgs(
-            account: account,
-            key: key,
             allowMultiple: allowMultiple,
+            key: key,
           ),
           initialChildren: children,
         );
@@ -1782,20 +1779,17 @@ class DriveFileSelectRoute extends PageRouteInfo<DriveFileSelectRouteArgs> {
 
 class DriveFileSelectRouteArgs {
   const DriveFileSelectRouteArgs({
-    required this.account,
-    this.key,
     this.allowMultiple = false,
+    this.key,
   });
-
-  final Account account;
-
-  final Key? key;
 
   final bool allowMultiple;
 
+  final Key? key;
+
   @override
   String toString() {
-    return 'DriveFileSelectRouteArgs{account: $account, key: $key, allowMultiple: $allowMultiple}';
+    return 'DriveFileSelectRouteArgs{allowMultiple: $allowMultiple, key: $key}';
   }
 }
 

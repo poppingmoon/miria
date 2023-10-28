@@ -555,13 +555,13 @@ class NoteCreateNotifier extends _$NoteCreateNotifier {
         .push<DriveModalSheetReturnValue>(const DriveModalRoute());
 
     if (result == DriveModalSheetReturnValue.drive) {
-      final result = await ref.read(appRouterProvider).push<List<DriveFile>>(
-            DriveFileSelectRoute(
-              account: ref.read(accountContextProvider).postAccount,
-              allowMultiple: true,
+      final result = await ref.read(appRouterProvider).push<dynamic>(
+            DriveShellRoute(
+              accountContext: ref.read(accountContextProvider),
+              children: [DriveRoute(selectFiles: true)],
             ),
           );
-      if (result == null) return;
+      if (result is! List<DriveFile>) return;
       final files = await Future.wait(
         result.map((file) async {
           if (file.type.startsWith("image")) {

@@ -148,6 +148,7 @@ class AppRouter extends _$AppRouter {
       children: [
         AutoRoute(page: DriveRoute.page),
         AutoRoute(page: DriveFileRoute.page),
+        AutoDialogRoute<List<DriveFile>>(page: DriveFileSelectRoute.page),
         AutoModalRouteSheet(page: DriveCreateModalRoute.page),
         AutoModalRouteSheet(page: DriveFileModalRoute.page),
         AutoModalRouteSheet(page: DriveFilesModalRoute.page),
@@ -180,7 +181,6 @@ class AppRouter extends _$AppRouter {
     AutoDialogRoute<UsersListSettings>(page: UsersListSettingsRoute.page),
     AutoDialogRoute<AntennaSettings>(page: AntennaSettingsRoute.page),
     AutoDialogRoute<FolderResult>(page: FolderSelectRoute.page),
-    AutoDialogRoute<List<DriveFile>>(page: DriveFileSelectRoute.page),
     AutoDialogRoute<String>(page: TextFormFieldRoute.page),
 
     // モーダルシート
