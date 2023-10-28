@@ -25,7 +25,8 @@ class DriveFilePage extends ConsumerWidget {
     final misskey = ref.watch(misskeyProvider(account));
     final file = ref.watch(
           driveFilesNotifierProvider((misskey, this.file.folderId)).select(
-            (files) => files.firstWhereOrNull((e) => e.id == this.file.id),
+            (files) => files.valueOrNull
+                ?.firstWhereOrNull((e) => e.id == this.file.id),
           ),
         ) ??
         this.file;
@@ -45,11 +46,12 @@ class DriveFilePage extends ConsumerWidget {
                   ),
                 );
                 final misskey = ref.read(misskeyProvider(account));
-                final siblings = ref
-                    .read(driveFilesNotifierProvider((misskey, file.folderId)));
-                // ファイルが削除されたらpopする
+                final siblings = await ref.read(
+                  driveFilesNotifierProvider((misskey, file.folderId)).future,
+                );
+                // ファイルが削除されたら一つ上のフォルダに戻る
                 if (siblings.every((e) => e.id != file.id)) {
-                  ref.read(breadcrumbsNotifierProvider.notifier).pop();
+                  ref.read(drivePageNotifierProvider.notifier).pop();
                 }
               },
               icon: const Icon(Icons.more_vert),

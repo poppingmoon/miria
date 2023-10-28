@@ -108,6 +108,7 @@ abstract class _$AppRouter extends RootStackRouter {
           account: args.account,
           title: args.title,
           floatingActionButtonBuilder: args.floatingActionButtonBuilder,
+          tapToSelect: args.tapToSelect,
         ),
       );
     },
@@ -788,10 +789,8 @@ class DriveRoute extends PageRouteInfo<DriveRouteArgs> {
     Key? key,
     required Account account,
     Widget? title,
-    Widget Function(
-      BuildContext,
-      DriveFolder?,
-    )? floatingActionButtonBuilder,
+    Widget Function(BuildContext)? floatingActionButtonBuilder,
+    bool tapToSelect = false,
     List<PageRouteInfo>? children,
   }) : super(
           DriveRoute.name,
@@ -800,6 +799,7 @@ class DriveRoute extends PageRouteInfo<DriveRouteArgs> {
             account: account,
             title: title,
             floatingActionButtonBuilder: floatingActionButtonBuilder,
+            tapToSelect: tapToSelect,
           ),
           initialChildren: children,
         );
@@ -815,6 +815,7 @@ class DriveRouteArgs {
     required this.account,
     this.title,
     this.floatingActionButtonBuilder,
+    this.tapToSelect = false,
   });
 
   final Key? key;
@@ -823,14 +824,13 @@ class DriveRouteArgs {
 
   final Widget? title;
 
-  final Widget Function(
-    BuildContext,
-    DriveFolder?,
-  )? floatingActionButtonBuilder;
+  final Widget Function(BuildContext)? floatingActionButtonBuilder;
+
+  final bool tapToSelect;
 
   @override
   String toString() {
-    return 'DriveRouteArgs{key: $key, account: $account, title: $title, floatingActionButtonBuilder: $floatingActionButtonBuilder}';
+    return 'DriveRouteArgs{key: $key, account: $account, title: $title, floatingActionButtonBuilder: $floatingActionButtonBuilder, tapToSelect: $tapToSelect}';
   }
 }
 

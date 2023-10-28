@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/misskey_post_file.dart';
 import 'package:miria/providers.dart';
@@ -13,6 +14,7 @@ import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/dialogs/simple_confirm_dialog.dart';
 import 'package:miria/view/drive_page/drive_folder_select_dialog.dart';
 import 'package:miria/view/note_create_page/file_settings_dialog.dart';
+import 'package:miria/view/note_create_page/thumbnail.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 class DriveFileModalSheet extends ConsumerWidget {
@@ -80,7 +82,7 @@ class DriveFileModalSheet extends ConsumerWidget {
 
   Future<void> download(WidgetRef ref) async {
     final context = ref.context;
-    ref.read(downloadFileNotifierProvider.notifier).downloadFile(file);
+    await ref.read(downloadFileNotifierProvider.notifier).downloadFile(file);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("ファイルを保存しました")),
@@ -124,6 +126,7 @@ class DriveFileModalSheet extends ConsumerWidget {
             driveFilesNotifierProvider((misskey, file.folderId)).notifier,
           )
           .delete(file.id);
+      ref.read(drivePageNotifierProvider.notifier).deselectFile(file);
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("削除しました")),
@@ -137,6 +140,11 @@ class DriveFileModalSheet extends ConsumerWidget {
     return ListView(
       shrinkWrap: true,
       children: [
+        ListTile(
+          leading: Thumbnail.driveFile(file),
+          title: Text(file.name),
+          subtitle: Text(file.createdAt.formatUntilSeconds),
+        ),
         ListTile(
           leading: const Icon(Icons.settings),
           title: const Text("ファイルを編集"),

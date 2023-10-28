@@ -7,11 +7,10 @@ import 'package:miria/model/pagination_state.dart';
 import 'package:miria/providers.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
-class DriveFilesNotifier extends AutoDisposeFamilyNotifier<
+class DriveFilesNotifier extends AutoDisposeFamilyAsyncNotifier<
     PaginationState<DriveFile>, (Misskey, String?)> {
   @override
-  PaginationState<DriveFile> build((Misskey, String?) arg) {
-    Future(loadMore);
+  Future<PaginationState<DriveFile>> build((Misskey, String?) arg) async {
     final link = ref.keepAlive();
     Timer? timer;
     ref.onCancel(() {
@@ -23,37 +22,48 @@ class DriveFilesNotifier extends AutoDisposeFamilyNotifier<
     ref.onDispose(() {
       timer?.cancel();
     });
-    return const PaginationState();
+    final files = await requestFiles();
+    return PaginationState(
+      items: files,
+      isLastLoaded: files.isEmpty,
+    );
   }
 
   Misskey get _misskey => arg.$1;
 
   String? get _folderId => arg.$2;
 
+  PaginationState<DriveFile> get _state =>
+      state.valueOrNull ?? const PaginationState();
+
+  set _state(PaginationState<DriveFile> value) {
+    state = AsyncValue.data(value);
+  }
+
+  Future<List<DriveFile>> requestFiles({String? untilId}) async {
+    final response = await _misskey.drive.files.files(
+      DriveFilesRequest(
+        folderId: _folderId,
+        untilId: untilId,
+      ),
+    );
+    return response.toList();
+  }
+
   Future<void> loadMore() async {
-    if (state.isLoading || state.isLastLoaded) {
+    if (_state.isLoading || _state.isLastLoaded) {
       return;
     }
-    state = state.copyWith(isLoading: true);
-    final untilId = state.lastOrNull?.id;
+    _state = _state.copyWith(isLoading: true);
+    final untilId = _state.lastOrNull?.id;
     try {
-      final response = await _misskey.drive.files.files(
-        DriveFilesRequest(
-          folderId: _folderId,
-          untilId: untilId,
-        ),
+      final files = await requestFiles(untilId: untilId);
+      _state = _state.copyWith(
+        items: [..._state, ...files],
+        isLastLoaded: files.isEmpty,
       );
-      state = state.copyWith(
-        items: [...state, ...response],
-        isLoading: false,
-        isLastLoaded: response.isEmpty,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        isLastLoaded: true,
-      );
-      rethrow;
+    } finally {
+      _state = _state.copyWith(isLoading: false);
     }
   }
 
@@ -65,7 +75,7 @@ class DriveFilesNotifier extends AutoDisposeFamilyNotifier<
       ),
       file,
     );
-    state = state.copyWith(items: [response, ...state]);
+    _state = _state.copyWith(items: [response, ..._state]);
   }
 
   Future<void> uploadAsBinary(
@@ -83,13 +93,13 @@ class DriveFilesNotifier extends AutoDisposeFamilyNotifier<
       ),
       data,
     );
-    state = state.copyWith(items: [response, ...state]);
+    _state = _state.copyWith(items: [response, ..._state]);
   }
 
   Future<void> delete(String fileId) async {
     await _misskey.drive.files.delete(DriveFilesDeleteRequest(fileId: fileId));
-    state = state.copyWith(
-      items: state.where((file) => file.id != fileId).toList(),
+    _state = _state.copyWith(
+      items: _state.where((file) => file.id != fileId).toList(),
     );
   }
 
@@ -107,8 +117,8 @@ class DriveFilesNotifier extends AutoDisposeFamilyNotifier<
         comment: comment,
       ),
     );
-    state = state.copyWith(
-      items: state.map((file) => file.id == fileId ? response : file).toList(),
+    _state = _state.copyWith(
+      items: _state.map((file) => file.id == fileId ? response : file).toList(),
     );
   }
 
@@ -129,8 +139,8 @@ class DriveFilesNotifier extends AutoDisposeFamilyNotifier<
       excludeRemoveNullPredicate: (key, _) => key == "folderId",
     );
     final file = DriveFile.fromJson(response);
-    state = state.copyWith(
-      items: state.where((file) => file.id != fileId).toList(),
+    _state = _state.copyWith(
+      items: _state.where((file) => file.id != fileId).toList(),
     );
     ref
         .read(driveFilesNotifierProvider((_misskey, folderId)).notifier)
@@ -138,6 +148,6 @@ class DriveFilesNotifier extends AutoDisposeFamilyNotifier<
   }
 
   void add(DriveFile file) {
-    state = state.copyWith(items: [file, ...state]);
+    _state = _state.copyWith(items: [file, ..._state]);
   }
 }

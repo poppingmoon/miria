@@ -15,7 +15,9 @@ class Breadcrumbs extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final breadcrumbs = ref.watch(breadcrumbsNotifierProvider);
+    final breadcrumbs = ref.watch(
+      drivePageNotifierProvider.select((state) => state.breadcrumbs),
+    );
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       // ネストが深くなったときに現在のフォルダを表示するため
@@ -28,7 +30,7 @@ class Breadcrumbs extends ConsumerWidget {
             child: IconButton(
               onPressed: breadcrumbs.isNotEmpty
                   ? () => ref
-                      .read(breadcrumbsNotifierProvider.notifier)
+                      .read(drivePageNotifierProvider.notifier)
                       .popUntil(null)
                   : null,
               icon: Icon(
@@ -42,7 +44,7 @@ class Breadcrumbs extends ConsumerWidget {
             TextButton(
               onPressed: folder.id != breadcrumbs.lastOrNull?.id
                   ? () => ref
-                      .read(breadcrumbsNotifierProvider.notifier)
+                      .read(drivePageNotifierProvider.notifier)
                       .popUntil(folder.id)
                   : null,
               style: TextButton.styleFrom(

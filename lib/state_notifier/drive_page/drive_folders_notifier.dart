@@ -5,11 +5,10 @@ import 'package:miria/model/pagination_state.dart';
 import 'package:miria/providers.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
-class DriveFoldersNotifier extends AutoDisposeFamilyNotifier<
+class DriveFoldersNotifier extends AutoDisposeFamilyAsyncNotifier<
     PaginationState<DriveFolder>, (Misskey, String?)> {
   @override
-  PaginationState<DriveFolder> build((Misskey, String?) arg) {
-    Future(loadMore);
+  Future<PaginationState<DriveFolder>> build((Misskey, String?) arg) async {
     final link = ref.keepAlive();
     Timer? timer;
     ref.onCancel(() {
@@ -21,37 +20,48 @@ class DriveFoldersNotifier extends AutoDisposeFamilyNotifier<
     ref.onDispose(() {
       timer?.cancel();
     });
-    return const PaginationState();
+    final folders = await requestFolders();
+    return PaginationState(
+      items: folders,
+      isLastLoaded: folders.isEmpty,
+    );
   }
 
   Misskey get _misskey => arg.$1;
 
   String? get _folderId => arg.$2;
 
+  PaginationState<DriveFolder> get _state =>
+      state.valueOrNull ?? const PaginationState();
+
+  set _state(PaginationState<DriveFolder> value) {
+    state = AsyncValue.data(value);
+  }
+
+  Future<List<DriveFolder>> requestFolders({String? untilId}) async {
+    final response = await _misskey.drive.folders.folders(
+      DriveFoldersRequest(
+        folderId: _folderId,
+        untilId: untilId,
+      ),
+    );
+    return response.toList();
+  }
+
   Future<void> loadMore() async {
-    if (state.isLoading || state.isLastLoaded) {
+    if (_state.isLoading || _state.isLastLoaded) {
       return;
     }
-    state = state.copyWith(isLoading: true);
-    final untilId = state.lastOrNull?.id;
+    _state = _state.copyWith(isLoading: true);
+    final untilId = _state.lastOrNull?.id;
     try {
-      final response = await _misskey.drive.folders.folders(
-        DriveFoldersRequest(
-          folderId: _folderId,
-          untilId: untilId,
-        ),
+      final folders = await requestFolders(untilId: untilId);
+      _state = _state.copyWith(
+        items: [..._state, ...folders],
+        isLastLoaded: folders.isEmpty,
       );
-      state = state.copyWith(
-        items: [...state, ...response],
-        isLoading: false,
-        isLastLoaded: response.isEmpty,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        isLastLoaded: true,
-      );
-      rethrow;
+    } finally {
+      _state = _state.copyWith(isLoading: false);
     }
   }
 
@@ -62,14 +72,14 @@ class DriveFoldersNotifier extends AutoDisposeFamilyNotifier<
         parentId: _folderId,
       ),
     );
-    state = state.copyWith(items: [response, ...state]);
+    _state = _state.copyWith(items: [response, ..._state]);
   }
 
   Future<void> delete(String folderId) async {
     await _misskey.drive.folders
         .delete(DriveFoldersDeleteRequest(folderId: folderId));
-    state = state.copyWith(
-      items: state.where((folder) => folder.id != folderId).toList(),
+    _state = _state.copyWith(
+      items: _state.where((folder) => folder.id != folderId).toList(),
     );
   }
 
@@ -80,8 +90,8 @@ class DriveFoldersNotifier extends AutoDisposeFamilyNotifier<
         name: name,
       ),
     );
-    state = state.copyWith(
-      items: state
+    _state = _state.copyWith(
+      items: _state
           .map((folder) => folder.id == folderId ? response : folder)
           .toList(),
     );
@@ -104,8 +114,8 @@ class DriveFoldersNotifier extends AutoDisposeFamilyNotifier<
       excludeRemoveNullPredicate: (key, _) => key == "parentId",
     );
     final folder = DriveFolder.fromJson(response);
-    state = state.copyWith(
-      items: state.where((file) => file.id != folderId).toList(),
+    _state = _state.copyWith(
+      items: _state.where((file) => file.id != folderId).toList(),
     );
     ref
         .read(driveFoldersNotifierProvider((_misskey, parentId)).notifier)
@@ -113,6 +123,6 @@ class DriveFoldersNotifier extends AutoDisposeFamilyNotifier<
   }
 
   void add(DriveFolder folder) {
-    state = state.copyWith(items: [folder, ...state]);
+    _state = _state.copyWith(items: [folder, ..._state]);
   }
 }
