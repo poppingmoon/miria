@@ -141,8 +141,8 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
     final textTheme = textThemePre.copyWith(
       bodySmall: textThemePre.bodySmall?.copyWith(
         color: theme.isDarkTheme
-            ? theme.foreground.darken(0.1)
-            : theme.foreground.lighten(0.1),
+            ? theme.foreground.darken()
+            : theme.foreground.lighten(),
       ),
     );
 
