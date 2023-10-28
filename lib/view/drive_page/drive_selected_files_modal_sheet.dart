@@ -52,6 +52,7 @@ class DriveSelectedFilesModalSheet extends ConsumerWidget {
             ),
       ),
     );
+    ref.read(drivePageNotifierProvider.notifier).deselectAll();
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("移動しました")),
@@ -78,6 +79,7 @@ class DriveSelectedFilesModalSheet extends ConsumerWidget {
               .delete(file.id),
         ),
       );
+      ref.read(drivePageNotifierProvider.notifier).deselectAll();
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("削除しました")),
