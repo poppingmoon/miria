@@ -44,6 +44,7 @@ class MisskeyNote extends ConsumerStatefulWidget {
   final bool isForceUnvisibleRenote;
   final bool isVisibleAllReactions;
   final bool isForceVisibleLong;
+  final bool? hideAvatar;
 
   const MisskeyNote({
     super.key,
@@ -55,6 +56,7 @@ class MisskeyNote extends ConsumerStatefulWidget {
     this.isForceUnvisibleRenote = false,
     this.isVisibleAllReactions = false,
     this.isForceVisibleLong = false,
+    this.hideAvatar,
   });
 
   @override
@@ -250,6 +252,12 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
 
     final links = extractLinks(displayTextNodes!);
 
+    final bool hideAvatar = widget.hideAvatar ??
+        ref.watch(
+          generalSettingsRepositoryProvider
+              .select((repo) => repo.settings.hideAvatar),
+        );
+
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(
         textScaleFactor: MediaQuery.of(context).textScaleFactor *
@@ -311,18 +319,27 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AvatarIcon(
-                      user: displayNote.user,
-                      onTap: () => ref
-                          .read(misskeyNoteNotifierProvider(account).notifier)
-                          .navigateToUserPage(
-                            context,
-                            displayNote.user,
-                            widget.loginAs,
-                          )
-                          .expectFailure(context),
-                    ),
-                    const Padding(padding: EdgeInsets.only(left: 10)),
+                    if (!hideAvatar) ...[
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 3,
+                          left: 10 * MediaQuery.of(context).textScaleFactor,
+                          right: 10 * MediaQuery.of(context).textScaleFactor,
+                        ),
+                        child: AvatarIcon(
+                          user: displayNote.user,
+                          onTap: () => ref
+                              .read(
+                                  misskeyNoteNotifierProvider(account).notifier)
+                              .navigateToUserPage(
+                                context,
+                                displayNote.user,
+                                widget.loginAs,
+                              )
+                              .expectFailure(context),
+                        ),
+                      ),
+                    ],
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -800,7 +817,17 @@ class NoteHeader1 extends ConsumerWidget {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(top: 2),
-            child: UserInformation(user: displayNote.user),
+            child: GestureDetector(
+              onTap: () => ref
+                  .read(misskeyNoteNotifierProvider(account).notifier)
+                  .navigateToUserPage(
+                    context,
+                    displayNote.user,
+                    loginAs,
+                  )
+                  .expectFailure(context),
+              child: UserInformation(user: displayNote.user),
+            ),
           ),
         ),
         if (displayNote.updatedAt != null)

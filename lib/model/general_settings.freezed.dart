@@ -54,6 +54,9 @@ mixin _$GeneralSettings {
   /// Google Fontsのフォント名
   String? get fontName => throw _privateConstructorUsedError;
 
+  /// タイムラインでアイコンを隠す
+  bool get hideAvatar => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $GeneralSettingsCopyWith<GeneralSettings> get copyWith =>
@@ -79,7 +82,8 @@ abstract class $GeneralSettingsCopyWith<$Res> {
       TabPosition tabPosition,
       double textScaleFactor,
       EmojiType emojiType,
-      String? fontName});
+      String? fontName,
+      bool hideAvatar});
 }
 
 /// @nodoc
@@ -108,6 +112,7 @@ class _$GeneralSettingsCopyWithImpl<$Res, $Val extends GeneralSettings>
     Object? textScaleFactor = null,
     Object? emojiType = null,
     Object? fontName = freezed,
+    Object? hideAvatar = null,
   }) {
     return _then(_value.copyWith(
       lightColorThemeId: null == lightColorThemeId
@@ -162,6 +167,10 @@ class _$GeneralSettingsCopyWithImpl<$Res, $Val extends GeneralSettings>
           ? _value.fontName
           : fontName // ignore: cast_nullable_to_non_nullable
               as String?,
+      hideAvatar: null == hideAvatar
+          ? _value.hideAvatar
+          : hideAvatar // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -187,7 +196,8 @@ abstract class _$$GeneralSettingsImplCopyWith<$Res>
       TabPosition tabPosition,
       double textScaleFactor,
       EmojiType emojiType,
-      String? fontName});
+      String? fontName,
+      bool hideAvatar});
 }
 
 /// @nodoc
@@ -214,6 +224,7 @@ class __$$GeneralSettingsImplCopyWithImpl<$Res>
     Object? textScaleFactor = null,
     Object? emojiType = null,
     Object? fontName = freezed,
+    Object? hideAvatar = null,
   }) {
     return _then(_$GeneralSettingsImpl(
       lightColorThemeId: null == lightColorThemeId
@@ -268,6 +279,10 @@ class __$$GeneralSettingsImplCopyWithImpl<$Res>
           ? _value.fontName
           : fontName // ignore: cast_nullable_to_non_nullable
               as String?,
+      hideAvatar: null == hideAvatar
+          ? _value.hideAvatar
+          : hideAvatar // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -288,7 +303,8 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
       this.tabPosition = TabPosition.top,
       this.textScaleFactor = 1.0,
       this.emojiType = EmojiType.twemoji,
-      this.fontName});
+      this.fontName,
+      this.hideAvatar = false});
 
   factory _$GeneralSettingsImpl.fromJson(Map<String, dynamic> json) =>
       _$$GeneralSettingsImplFromJson(json);
@@ -352,9 +368,14 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
   @override
   final String? fontName;
 
+  /// タイムラインでアイコンを隠す
+  @override
+  @JsonKey()
+  final bool hideAvatar;
+
   @override
   String toString() {
-    return 'GeneralSettings(lightColorThemeId: $lightColorThemeId, darkColorThemeId: $darkColorThemeId, themeColorSystem: $themeColorSystem, nsfwInherit: $nsfwInherit, enableDirectReaction: $enableDirectReaction, automaticPush: $automaticPush, enableAnimatedMFM: $enableAnimatedMFM, enableLongTextElipsed: $enableLongTextElipsed, enableFavoritedRenoteElipsed: $enableFavoritedRenoteElipsed, tabPosition: $tabPosition, textScaleFactor: $textScaleFactor, emojiType: $emojiType, fontName: $fontName)';
+    return 'GeneralSettings(lightColorThemeId: $lightColorThemeId, darkColorThemeId: $darkColorThemeId, themeColorSystem: $themeColorSystem, nsfwInherit: $nsfwInherit, enableDirectReaction: $enableDirectReaction, automaticPush: $automaticPush, enableAnimatedMFM: $enableAnimatedMFM, enableLongTextElipsed: $enableLongTextElipsed, enableFavoritedRenoteElipsed: $enableFavoritedRenoteElipsed, tabPosition: $tabPosition, textScaleFactor: $textScaleFactor, emojiType: $emojiType, fontName: $fontName, hideAvatar: $hideAvatar)';
   }
 
   @override
@@ -389,7 +410,9 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
             (identical(other.emojiType, emojiType) ||
                 other.emojiType == emojiType) &&
             (identical(other.fontName, fontName) ||
-                other.fontName == fontName));
+                other.fontName == fontName) &&
+            (identical(other.hideAvatar, hideAvatar) ||
+                other.hideAvatar == hideAvatar));
   }
 
   @JsonKey(ignore: true)
@@ -408,7 +431,8 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
       tabPosition,
       textScaleFactor,
       emojiType,
-      fontName);
+      fontName,
+      hideAvatar);
 
   @JsonKey(ignore: true)
   @override
@@ -439,7 +463,8 @@ abstract class _GeneralSettings implements GeneralSettings {
       final TabPosition tabPosition,
       final double textScaleFactor,
       final EmojiType emojiType,
-      final String? fontName}) = _$GeneralSettingsImpl;
+      final String? fontName,
+      final bool hideAvatar}) = _$GeneralSettingsImpl;
 
   factory _GeneralSettings.fromJson(Map<String, dynamic> json) =
       _$GeneralSettingsImpl.fromJson;
@@ -490,6 +515,10 @@ abstract class _GeneralSettings implements GeneralSettings {
 
   /// Google Fontsのフォント名
   String? get fontName;
+  @override
+
+  /// タイムラインでアイコンを隠す
+  bool get hideAvatar;
   @override
   @JsonKey(ignore: true)
   _$$GeneralSettingsImplCopyWith<_$GeneralSettingsImpl> get copyWith =>

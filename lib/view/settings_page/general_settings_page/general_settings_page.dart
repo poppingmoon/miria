@@ -29,6 +29,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   double textScaleFactor = 1.0;
   EmojiType emojiType = EmojiType.twemoji;
   String? fontName;
+  bool hideAvatar = false;
 
   @override
   void initState() {
@@ -68,6 +69,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       textScaleFactor = settings.textScaleFactor;
       emojiType = settings.emojiType;
       fontName = settings.fontName;
+      hideAvatar = settings.hideAvatar;
     });
   }
 
@@ -87,6 +89,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
             emojiType: emojiType,
             textScaleFactor: textScaleFactor,
             fontName: fontName,
+            hideAvatar: hideAvatar,
           ),
         );
   }
@@ -194,6 +197,14 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                             save();
                           },
                         ),
+                      ),
+                      CheckboxListTile(
+                        value: hideAvatar,
+                        onChanged: (value) => setState(() {
+                          hideAvatar = value ?? true;
+                          save();
+                        }),
+                        title: const Text("アバターを隠す"),
                       ),
                     ],
                   ),

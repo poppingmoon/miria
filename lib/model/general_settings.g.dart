@@ -32,6 +32,7 @@ _$GeneralSettingsImpl _$$GeneralSettingsImplFromJson(
       emojiType: $enumDecodeNullable(_$EmojiTypeEnumMap, json['emojiType']) ??
           EmojiType.twemoji,
       fontName: json['fontName'] as String?,
+      hideAvatar: json['hideAvatar'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$GeneralSettingsImplToJson(
@@ -50,6 +51,7 @@ Map<String, dynamic> _$$GeneralSettingsImplToJson(
       'textScaleFactor': instance.textScaleFactor,
       'emojiType': _$EmojiTypeEnumMap[instance.emojiType]!,
       'fontName': instance.fontName,
+      'hideAvatar': instance.hideAvatar,
     };
 
 const _$ThemeColorSystemEnumMap = {
