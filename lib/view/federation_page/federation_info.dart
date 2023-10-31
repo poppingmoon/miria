@@ -94,7 +94,7 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
               }
 
               misskeyMeta = await misskeyServer.meta();
-            } catch (e) {}
+            } catch (_) {}
           }
 
           ref.read(federationPageFederationDataProvider.notifier).state =
@@ -118,8 +118,8 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
 
         setState(() {});
       } catch (e, s) {
-        print(e);
-        print(s);
+        debugPrint(e.toString());
+        debugPrint(s.toString());
         setState(() {
           error = (e, s);
         });

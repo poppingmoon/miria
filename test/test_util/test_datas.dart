@@ -6,6 +6,7 @@ import 'package:miria/model/misskey_emoji_data.dart';
 import 'package:miria/repository/emoji_repository.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
+// ignore: avoid_classes_with_only_static_members
 class TestData {
   static Account account =
       Account(host: "example.miria.shiosyakeyakini.info", userId: "ai", i: i1);
@@ -1993,7 +1994,7 @@ class TestData {
   );
 
   // Dio
-  static DioError response404 = DioError(
+  static DioException response404 = DioException(
     requestOptions: RequestOptions(),
     response: Response(requestOptions: RequestOptions(), statusCode: 404),
   );

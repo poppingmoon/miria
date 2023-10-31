@@ -65,8 +65,8 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
     );
   }
 
-  Future<Expire?> getExpire() async {
-    return await showDialog<Expire?>(
+  Future<Expire?> getExpire() {
+    return showDialog<Expire?>(
       context: context,
       builder: (context) => const ExpireSelectDialog(),
     );
@@ -438,18 +438,16 @@ class ExpireSelectDialogState extends State<ExpireSelectDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text("期限を選択してください。"),
-      content: Container(
-        child: DropdownButton<Expire>(
-          items: [
-            for (final value in Expire.values)
-              DropdownMenuItem<Expire>(
-                value: value,
-                child: Text(value.name),
-              ),
-          ],
-          onChanged: (value) => setState(() => selectedExpire = value),
-          value: selectedExpire,
-        ),
+      content: DropdownButton<Expire>(
+        items: [
+          for (final value in Expire.values)
+            DropdownMenuItem<Expire>(
+              value: value,
+              child: Text(value.name),
+            ),
+        ],
+        onChanged: (value) => setState(() => selectedExpire = value),
+        value: selectedExpire,
       ),
       actions: [
         ElevatedButton(

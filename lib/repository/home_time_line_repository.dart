@@ -40,8 +40,8 @@ class HomeTimeLineRepository extends SocketTimelineRepository {
   }
 
   @override
-  Future<Iterable<Note>> requestNotes({String? untilId}) async {
-    return await misskey.notes.homeTimeline(
+  Future<Iterable<Note>> requestNotes({String? untilId}) {
+    return misskey.notes.homeTimeline(
       NotesTimelineRequest(
         limit: 30,
         untilId: untilId,

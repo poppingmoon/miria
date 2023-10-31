@@ -267,7 +267,7 @@ System.out.println("@ai uneune");
           );
 
           await tester.pumpAndSettle();
-          await Future.delayed(const Duration(seconds: 1));
+          await Future<void>.delayed(const Duration(seconds: 1));
           await tester.pumpAndSettle();
 
           expect(
@@ -306,7 +306,7 @@ System.out.println("@ai uneune");
 
           await tester.tap(find.text("閲覧注意"));
           await tester.pumpAndSettle();
-          await Future.delayed(const Duration(seconds: 1));
+          await Future<void>.delayed(const Duration(seconds: 1));
           await tester.pumpAndSettle();
 
           expect(

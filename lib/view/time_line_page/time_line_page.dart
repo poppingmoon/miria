@@ -249,7 +249,7 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                   if (currentTabSetting.tabType == TabType.channel)
                     IconButton(
                       onPressed: () {
-                        showDialog(
+                        showDialog<void>(
                           context: context,
                           builder: (context) => ChannelDialog(
                             channelId: currentTabSetting.channelId ?? "",
@@ -280,7 +280,7 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                     AnnoucementInfo(index: currentIndex),
                     IconButton(
                       onPressed: () {
-                        showDialog(
+                        showDialog<void>(
                           context: context,
                           builder: (context) => ServerDetailDialog(
                             account: account,
@@ -346,28 +346,20 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                 },
               ),
             ),
-            Container(
-              // decoration: filteringInputEmoji.isEmpty
-              //     ? BoxDecoration(
-              //         border: Border(
-              //             top: BorderSide(
-              //                 color: Theme.of(context).primaryColor)))
-              //     : null,
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: TimelineNoteField(),
-                  ),
-                  IconButton(
-                    onPressed: note.expectFailure(context),
-                    icon: const Icon(Icons.edit),
-                  ),
-                  IconButton(
-                    onPressed: noteCreateRoute,
-                    icon: const Icon(Icons.keyboard_arrow_right),
-                  ),
-                ],
-              ),
+            Row(
+              children: [
+                const Expanded(
+                  child: TimelineNoteField(),
+                ),
+                IconButton(
+                  onPressed: note.expectFailure(context),
+                  icon: const Icon(Icons.edit),
+                ),
+                IconButton(
+                  onPressed: noteCreateRoute,
+                  icon: const Icon(Icons.keyboard_arrow_right),
+                ),
+              ],
             ),
             if (ref
                         .read(generalSettingsRepositoryProvider)

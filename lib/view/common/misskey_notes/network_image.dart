@@ -55,7 +55,7 @@ class NetworkImageView extends ConsumerWidget {
         imageUrl: url,
         fit: fit,
         errorWidget: (context, url, error) =>
-            errorBuilder?.call(context, error as Object, StackTrace.current) ??
+            errorBuilder?.call(context, error, StackTrace.current) ??
             Container(),
         cacheManager: ref.read(cacheManagerProvider),
         height: height,

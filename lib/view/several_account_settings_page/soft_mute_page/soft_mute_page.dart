@@ -17,7 +17,7 @@ class SoftMuteState extends ConsumerState<SoftMutePage> {
       body: SingleChildScrollView(
         child: CommonFuture(
           future: () async {
-            return [];
+            return <void>[];
           }(),
           complete: (context, data) {
             return Row(

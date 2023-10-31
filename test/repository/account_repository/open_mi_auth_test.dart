@@ -29,7 +29,8 @@ void main() {
 
   test("Activity Pub非対応サーバーの場合、エラーを返すこと", () {
     final dio = MockDio();
-    when(dio.getUri(any)).thenAnswer((_) async => throw TestData.response404);
+    when(dio.getUri<Map<String, dynamic>>(any))
+        .thenAnswer((_) async => throw TestData.response404);
     final provider =
         ProviderContainer(overrides: [dioProvider.overrideWithValue(dio)]);
     final accountRepository = AccountRepository(
@@ -39,11 +40,11 @@ void main() {
     );
 
     expect(
-      () async => await accountRepository.openMiAuth("sawakai.space"),
+      () => accountRepository.openMiAuth("sawakai.space"),
       throwsA(isA<SpecifiedException>()),
     );
     verify(
-      dio.getUri(
+      dio.getUri<Map<String, dynamic>>(
         argThat(
           equals(
             Uri(
@@ -59,13 +60,13 @@ void main() {
 
   test("非対応のソフトウェアの場合、エラーを返すこと", () async {
     final dio = MockDio();
-    when(dio.getUri(any)).thenAnswer(
+    when(dio.getUri<Map<String, dynamic>>(any)).thenAnswer(
       (_) async => Response(
         requestOptions: RequestOptions(),
         data: AuthTestData.calckeyNodeInfo,
       ),
     );
-    when(dio.get(any)).thenAnswer(
+    when(dio.get<Map<String, dynamic>>(any)).thenAnswer(
       (realInvocation) async => Response(
         requestOptions: RequestOptions(),
         data: AuthTestData.calckeyNodeInfo2,
@@ -86,12 +87,12 @@ void main() {
     );
 
     await expectLater(
-      () async => await accountRepository.openMiAuth("calckey.jp"),
+      () => accountRepository.openMiAuth("calckey.jp"),
       throwsA(isA<SpecifiedException>()),
     );
 
     verifyInOrder([
-      dio.getUri(
+      dio.getUri<Map<String, dynamic>>(
         argThat(
           equals(
             Uri(
@@ -102,19 +103,21 @@ void main() {
           ),
         ),
       ),
-      dio.get(argThat(equals("https://calckey.jp/nodeinfo/2.1"))),
+      dio.get<Map<String, dynamic>>(
+        argThat(equals("https://calckey.jp/nodeinfo/2.1")),
+      ),
     ]);
   });
 
   test("Misskeyの場合でも、バージョンが古い場合、エラーを返すこと", () async {
     final dio = MockDio();
-    when(dio.getUri(any)).thenAnswer(
+    when(dio.getUri<Map<String, dynamic>>(any)).thenAnswer(
       (_) async => Response(
         requestOptions: RequestOptions(),
         data: AuthTestData.oldVerMisskeyNodeInfo,
       ),
     );
-    when(dio.get(any)).thenAnswer(
+    when(dio.get<Map<String, dynamic>>(any)).thenAnswer(
       (realInvocation) async => Response(
         requestOptions: RequestOptions(),
         data: AuthTestData.oldVerMisskeyNodeInfo2,
@@ -135,7 +138,7 @@ void main() {
     );
 
     await expectLater(
-      () async => await accountRepository.openMiAuth("misskey.dev"),
+      () => accountRepository.openMiAuth("misskey.dev"),
       throwsA(isA<SpecifiedException>()),
     );
   });

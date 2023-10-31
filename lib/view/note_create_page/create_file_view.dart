@@ -64,7 +64,7 @@ class CreateFileView extends ConsumerWidget {
             SizedBox(
               height: 200,
               child: GestureDetector(
-                onTap: () async => await onTap(context, ref),
+                onTap: () => onTap(context, ref),
                 child: Image.memory(data.data),
               ),
             ),
@@ -90,7 +90,7 @@ class CreateFileView extends ConsumerWidget {
             SizedBox(
               height: 200,
               child: GestureDetector(
-                onTap: () async => await onTap(context, ref),
+                onTap: () => onTap(context, ref),
                 child: Image.memory(data.data),
               ),
             ),

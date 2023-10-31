@@ -72,9 +72,7 @@ class _AddReactionsDialogState extends State<AddReactionsDialog> {
                                 ),
                         ),
                         const TextSpan(
-                          text: //
-                              " にアクセスして「値 (JSON)」の内容をすべて選択して"
-                              "コピーしてください",
+                          text: " にアクセスして「値 (JSON)」の内容をすべて選択してコピーしてください",
                         ),
                       ],
                     ),

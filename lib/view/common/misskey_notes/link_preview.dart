@@ -185,7 +185,7 @@ class LinkPreviewTile extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(5),
       child: InkWell(
-        onTap: () async => await const LinkNavigator()
+        onTap: () => const LinkNavigator()
             .onTapLink(context, ref, link, host)
             .expectFailure(context),
         onLongPress: () {

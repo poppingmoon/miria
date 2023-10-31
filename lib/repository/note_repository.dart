@@ -39,7 +39,7 @@ class NoteRepository extends ChangeNotifier {
       if (regExp != null) {
         try {
           muteWordRegExps.add(RegExp(regExp.substring(1, regExp.length - 1)));
-        } catch (e) {}
+        } catch (_) {}
       }
     }
   }

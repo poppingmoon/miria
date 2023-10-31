@@ -41,8 +41,8 @@ class HybridTimelineRepository extends SocketTimelineRepository {
   }
 
   @override
-  Future<Iterable<Note>> requestNotes({String? untilId}) async {
-    return await misskey.notes.hybridTimeline(
+  Future<Iterable<Note>> requestNotes({String? untilId}) {
+    return misskey.notes.hybridTimeline(
       NotesHybridTimelineRequest(
         untilId: untilId,
         withRenotes: tabSetting.renoteDisplay,

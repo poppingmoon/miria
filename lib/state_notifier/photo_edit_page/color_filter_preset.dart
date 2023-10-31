@@ -1,3 +1,5 @@
+// ignore_for_file: parameter_assignments
+
 import 'dart:math';
 
 import 'package:image_editor/image_editor.dart';
@@ -352,6 +354,7 @@ ColorOption _sepia(double value) {
   );
 }
 
+// ignore: unused_element
 ColorOption _invert() {
   return ColorOption(
     matrix: [
@@ -379,6 +382,7 @@ ColorOption _invert() {
   );
 }
 
+// ignore: unused_element
 ColorOption _hue(double value) {
   value = value * pi;
 

@@ -100,7 +100,8 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
                 Row(
                   children: [
                     const Expanded(
-                        child: Text("並び順", textAlign: TextAlign.center)),
+                      child: Text("並び順", textAlign: TextAlign.center),
+                    ),
                     Expanded(
                       child: DropdownButton<UsersSortType>(
                         items: [

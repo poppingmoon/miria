@@ -4,7 +4,7 @@ import 'package:miria/view/common/error_notification.dart';
 
 class CommonFuture<T> extends StatelessWidget {
   final Future<T> future;
-  final Function(T)? futureFinished;
+  final void Function(T)? futureFinished;
   final Widget Function(BuildContext, T) complete;
 
   const CommonFuture({

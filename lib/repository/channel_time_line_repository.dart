@@ -37,8 +37,8 @@ class ChannelTimelineRepository extends SocketTimelineRepository {
   }
 
   @override
-  Future<Iterable<Note>> requestNotes({String? untilId}) async {
-    return await misskey.channels.timeline(
+  Future<Iterable<Note>> requestNotes({String? untilId}) {
+    return misskey.channels.timeline(
       ChannelsTimelineRequest(
         channelId: tabSetting.channelId!,
         limit: 30,

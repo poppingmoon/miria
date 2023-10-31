@@ -79,6 +79,7 @@ class Account with _$Account {
           hasUnreadSpecifiedNotes: false,
           mutedWords: [],
           mutedInstances: [],
+          // ignore: deprecated_member_use
           mutingNotificationTypes: [],
           emailNotificationTypes: [],
           achievements: [],

@@ -26,9 +26,9 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
       reactionButtonStyle: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(5),
         elevation: 0,
-        minimumSize: const Size(0, 0),
+        minimumSize: Size.zero,
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        visualDensity: const VisualDensity(),
+        visualDensity: VisualDensity.standard,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       ),
       linkStyle: TextStyle(color: theme.link),
@@ -179,7 +179,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
           shape: MaterialStatePropertyAll(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
           ),
-          visualDensity: const VisualDensity(),
+          visualDensity: VisualDensity.standard,
           tapTargetSize: MaterialTapTargetSize.padded,
         ),
       ),
@@ -189,7 +189,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
           shape: MaterialStatePropertyAll(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
           ),
-          visualDensity: const VisualDensity(),
+          visualDensity: VisualDensity.standard,
           tapTargetSize: MaterialTapTargetSize.padded,
         ),
       ),
