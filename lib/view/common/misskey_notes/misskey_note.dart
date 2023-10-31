@@ -420,7 +420,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                   children: [
                     AvatarIcon(
                       user: displayNote.user,
-                      onTap: () async => await _navigateUserDetailPage(
+                      onTap: () => _navigateUserDetailPage(
                         context,
                         displayNote,
                         widget.loginAs,
@@ -534,8 +534,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                       .read(generalSettingsRepositoryProvider)
                                       .settings
                                       .enableAnimatedMFM,
-                                  onEmojiTap: (emojiData) async =>
-                                      await reactionControl(
+                                  onEmojiTap: (emojiData) => reactionControl(
                                     ref,
                                     context,
                                     displayNote,
@@ -702,13 +701,12 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                         EdgeInsets.zero,
                                       ),
                                       minimumSize: MaterialStatePropertyAll(
-                                        Size(0, 0),
+                                        Size.zero,
                                       ),
                                       tapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
                                     ),
-                                    onPressed: () async =>
-                                        await _navigateDetailPage(
+                                    onPressed: () => _navigateDetailPage(
                                       context,
                                       displayNote,
                                       widget.loginAs,
@@ -740,7 +738,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                         EdgeInsets.zero,
                                       ),
                                       minimumSize: MaterialStatePropertyAll(
-                                        Size(0, 0),
+                                        Size.zero,
                                       ),
                                       tapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
@@ -765,8 +763,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                     displayNote: displayNote,
                                   ),
                                   FooterReactionButton(
-                                    onPressed: () async =>
-                                        await reactionControl(
+                                    onPressed: () => reactionControl(
                                       ref,
                                       context,
                                       displayNote,
@@ -775,7 +772,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      showModalBottomSheet(
+                                      showModalBottomSheet<void>(
                                         context: context,
                                         builder: (builder) {
                                           return NoteModalSheet(
@@ -794,7 +791,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                         EdgeInsets.zero,
                                       ),
                                       minimumSize:
-                                          MaterialStatePropertyAll(Size(0, 0)),
+                                          MaterialStatePropertyAll(Size.zero),
                                       tapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
                                     ),
@@ -873,7 +870,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
           .reactions
           .delete(NotesReactionsDeleteRequest(noteId: displayNote.id));
       if (account.host == "misskey.io") {
-        await Future.delayed(
+        await Future<void>.delayed(
           const Duration(milliseconds: misskeyIOReactionDelay),
         );
       }
@@ -908,7 +905,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
       ),
     );
     if (account.host == "misskey.io") {
-      await Future.delayed(
+      await Future<void>.delayed(
         const Duration(milliseconds: misskeyIOReactionDelay),
       );
     }
@@ -945,9 +942,8 @@ class NoteHeader1 extends StatelessWidget {
             ),
           ),
         GestureDetector(
-          onTap: () async =>
-              await _navigateDetailPage(context, displayNote, loginAs)
-                  .expectFailure(context),
+          onTap: () => _navigateDetailPage(context, displayNote, loginAs)
+              .expectFailure(context),
           child: Text(
             displayNote.createdAt.differenceNow,
             textAlign: TextAlign.right,
@@ -996,7 +992,7 @@ class RenoteHeader extends StatelessWidget {
       children: [
         Expanded(
           child: GestureDetector(
-            onTap: () async => await _navigateUserDetailPage(
+            onTap: () => _navigateUserDetailPage(
               context,
               note,
               loginAs,
@@ -1115,14 +1111,14 @@ class RenoteButton extends StatelessWidget {
     }
 
     return TextButton.icon(
-      onPressed: () => showModalBottomSheet(
+      onPressed: () => showModalBottomSheet<void>(
         context: context,
         builder: (innerContext) => RenoteModalSheet(
           note: displayNote,
           account: AccountScope.of(context),
         ),
       ),
-      onLongPress: () => showDialog(
+      onLongPress: () => showDialog<void>(
         context: context,
         builder: (context) =>
             RenoteUserDialog(account: account, noteId: displayNote.id),
@@ -1138,7 +1134,7 @@ class RenoteButton extends StatelessWidget {
       ),
       style: const ButtonStyle(
         padding: MaterialStatePropertyAll(EdgeInsets.zero),
-        minimumSize: MaterialStatePropertyAll(Size(0, 0)),
+        minimumSize: MaterialStatePropertyAll(Size.zero),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
     );
@@ -1176,7 +1172,7 @@ class FooterReactionButton extends StatelessWidget {
       padding: EdgeInsets.zero,
       style: const ButtonStyle(
         padding: MaterialStatePropertyAll(EdgeInsets.zero),
-        minimumSize: MaterialStatePropertyAll(Size(0, 0)),
+        minimumSize: MaterialStatePropertyAll(Size.zero),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
       icon: Icon(

@@ -1,3 +1,4 @@
+// ignore: avoid_classes_with_only_static_members
 class AuthTestData {
   static Map<String, dynamic> calckeyNodeInfo = {
     "links": [
@@ -21,7 +22,7 @@ class AuthTestData {
     },
     "protocols": ["activitypub"],
     "services": {
-      "inbound": [],
+      "inbound": <String>[],
       "outbound": ["atom1.0", "rss2.0"],
     },
     "openRegistrations": false,
@@ -35,7 +36,7 @@ class AuthTestData {
       "nodeDescription":
           "分散型SNS、Calckeyへようこそ！ここは日本語を話すユーザー向けの非公式サーバーです。利用規約を遵守していただく限り、自由にご利用いただけます。 Welcome to Calckey! This unofficial instance is for Japanese speakers, also welcoming those who are interested in or learning Japanese!\nただいま招待制となっております。招待コードは個別に発行しておりますので、お気軽に @nmkj@calckey.jp までご連絡ください。こちらで他のサーバーを探すこともできます： https://calckey.org/ja/join/",
       "maintainer": {"name": "Namekuji", "email": "nmkj@duck.com"},
-      "langs": [],
+      "langs": <String>[],
       "tosUrl": "https://media.calckey.jp/tos/coc.html",
       "repositoryUrl": "https://codeberg.org/calckey/calckey",
       "feedbackUrl": "https://codeberg.org/calckey/calckey/issues",
@@ -72,17 +73,17 @@ class AuthTestData {
     "software": {"name": "misskey", "version": "11.37.1-20230209223723"},
     "protocols": ["activitypub"],
     "services": {
-      "inbound": [],
+      "inbound": <String>[],
       "outbound": ["atom1.0", "rss2.0"],
     },
     "openRegistrations": true,
-    "usage": {"users": {}},
+    "usage": {"users": <String, dynamic>{}},
     "metadata": {
       "nodeName": "misskey.dev",
       "nodeDescription":
           r'''<h3>Misskey for Developers and any people!</h3>\n<div style=\"margin:-8px 0;\">テクノロジーが好きにゃ人もそうじゃにゃい人も大歓迎！にゃMisskey<span style=\"font-size:0.8rem\">(ミスキー)</span>サーバー<span style=\"font-size:0.8rem\">(旧:インスタンス)</span>です。内容はフリートークでOK！当サーバーでは現在、Misskey めいv11が稼働しております。<div class=\"h4\" style=\"font-size:1.2rem;\"><a href=\"https://s.misskey.dev/howtouse\">How to Use</a> \n   |   <a href=\"https://s.misskey.dev/howtouse-jp\">使い方</a>\n   |   <a href=\"https://misskey.dev/@cv_k/pages/info\">Info・情報<small style=\"font-size:80%\">(登録前に確認！)</small></a></div><div style=\"margin:0px 0 10px 0;\"><span style=\"line-height:1.2;font-size:70%;color:#ff4a4a\">注意:misskey.devには横長絵文字、とある歌人等の絵文字はなく導入する予定もありません。それらの絵文字を使いたい場合は<a href=\"https://join.misskey.page/ja-JP/instances\" style=\"color:#ff0033\" target=\"_blank\" rel=\"noopener\">他のサーバー</a>をご利用ください</span></div>''',
       "maintainer": {"name": "cv_k", "email": r"sitesupport$live.jp"},
-      "langs": [],
+      "langs": <String>[],
       "ToSUrl": "https://misskey.dev/@cv_k/pages/tos",
       "repositoryUrl": "https://github.com/syuilo/misskey",
       "feedbackUrl": "https://github.com/syuilo/misskey/issues/new",

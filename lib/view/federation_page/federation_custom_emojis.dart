@@ -111,7 +111,9 @@ class FederationCustomEmojisState
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.only(
-                                            left: 3, right: 3),
+                                          left: 3,
+                                          right: 3,
+                                        ),
                                         child: Text(
                                           "センシティブ",
                                           style: Theme.of(context)

@@ -83,7 +83,7 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
               .reactions
               .delete(NotesReactionsDeleteRequest(noteId: widget.noteId));
           if (account.host == "misskey.io") {
-            await Future.delayed(
+            await Future<void>.delayed(
               const Duration(milliseconds: misskeyIOReactionDelay),
             );
           }
@@ -117,7 +117,7 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
 
         // misskey.ioはただちにリアクションを反映してくれない
         if (account.host == "misskey.io") {
-          await Future.delayed(
+          await Future<void>.delayed(
             const Duration(milliseconds: misskeyIOReactionDelay),
           );
         }
@@ -125,7 +125,7 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
         await ref.read(notesProvider(account)).refresh(widget.noteId);
       },
       onLongPress: () {
-        showDialog(
+        showDialog<void>(
           context: context,
           builder: (context2) {
             return ReactionUserDialog(

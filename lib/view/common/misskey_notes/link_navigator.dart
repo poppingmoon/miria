@@ -50,6 +50,7 @@ class LinkNavigator {
           .read(misskeyProvider(account))
           .notes
           .show(NotesShowRequest(noteId: uri.pathSegments[1]));
+      if (!context.mounted) return;
       context.pushRoute(NoteDetailRoute(account: account, note: note));
     } else if (uri.pathSegments.length == 3 && uri.pathSegments[1] == "pages") {
       final page = await ref.read(misskeyProvider(account)).pages.show(
@@ -58,6 +59,7 @@ class LinkNavigator {
               username: uri.pathSegments[0].substring(1),
             ),
           );
+      if (!context.mounted) return;
       context.pushRoute(MisskeyRouteRoute(account: account, page: page));
     } else if (uri.pathSegments.length == 1 &&
         uri.pathSegments.first.startsWith("@")) {
@@ -106,6 +108,7 @@ class LinkNavigator {
           ),
         );
 
+    if (!context.mounted) return;
     context.pushRoute(
       UserRoute(userId: response.id, account: AccountScope.of(context)),
     );

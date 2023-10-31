@@ -17,8 +17,8 @@ class SimpleConfirmDialog extends StatelessWidget {
     required String secondary,
     bool isMfm = false,
     Account? account,
-  }) async =>
-      await showDialog(
+  }) =>
+      showDialog<bool>(
         context: context,
         builder: (context) => SimpleConfirmDialog(
           message: message,

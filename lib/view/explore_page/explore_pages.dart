@@ -32,7 +32,9 @@ class ExplorePagesState extends ConsumerState<ExplorePages> {
             onTap: () {
               context.pushRoute(
                 MisskeyRouteRoute(
-                    account: AccountScope.of(context), page: item),
+                  account: AccountScope.of(context),
+                  page: item,
+                ),
               );
             },
             title: MfmText(mfmText: item.title),

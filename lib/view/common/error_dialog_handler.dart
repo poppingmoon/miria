@@ -10,7 +10,7 @@ class SpecifiedException implements Exception {
 
 extension FutureExtension<T> on Future<T> {
   Future<T> expectFailure(BuildContext context) {
-    return catchError((e) {
+    return catchError((Object e) {
       final widgetRef = ProviderScope.containerOf(context, listen: false);
 
       widgetRef.read(errorEventProvider.notifier).state = (e, context);
@@ -20,7 +20,8 @@ extension FutureExtension<T> on Future<T> {
 
 extension FutureFunctionExtension<T> on Future<T> Function() {
   Future<T> Function() expectFailure(BuildContext context) {
-    return () => this.call().catchError((e) {
+    // ignore: body_might_complete_normally_catch_error
+    return () => this.call().catchError((Object e) {
           final widgetRef = ProviderScope.containerOf(context, listen: false);
 
           widgetRef.read(errorEventProvider.notifier).state = (e, context);

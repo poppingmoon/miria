@@ -36,7 +36,11 @@ void main() {
           notes.featured(
             argThat(
               equals(
-                NotesFeaturedRequest(untilId: TestData.note1.id, offset: 1),
+                NotesFeaturedRequest(
+                  untilId: TestData.note1.id,
+                  // ignore: deprecated_member_use
+                  offset: 1,
+                ),
               ),
             ),
           ),

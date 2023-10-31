@@ -319,7 +319,7 @@ class VoteUntilDurationState extends ConsumerState<VoteUntilDuration> {
           child: TextField(
             controller: controller,
             decoration: const InputDecoration(prefixIcon: Icon(Icons.timer)),
-            keyboardType: const TextInputType.numberWithOptions(),
+            keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           ),
         ),

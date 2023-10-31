@@ -138,7 +138,7 @@ class PageContent extends ConsumerWidget {
           ?.thumbnailUrl;
       if (url != null) {
         return GestureDetector(
-          onTap: () => showDialog(
+          onTap: () => showDialog<void>(
             context: context,
             builder: (context) =>
                 ImageDialog(imageUrlList: [url], initialPage: 0),

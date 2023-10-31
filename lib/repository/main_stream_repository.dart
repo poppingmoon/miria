@@ -94,13 +94,15 @@ class MainStreamRepository extends ChangeNotifier {
     if (isReconnecting) {
       // 排他制御
       while (isReconnecting) {
-        await Future.delayed(const Duration(milliseconds: 100));
+        await Future<void>.delayed(const Duration(milliseconds: 100));
       }
       return;
     }
     isReconnecting = true;
     try {
-      print("main stream repository's socket controller will be disconnect");
+      debugPrint(
+        "main stream repository's socket controller will be disconnect",
+      );
       socketController?.disconnect();
       socketController = null;
       await misskey.streamingService.restart();

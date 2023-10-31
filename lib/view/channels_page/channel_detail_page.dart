@@ -57,6 +57,7 @@ class ChannelDetailPage extends ConsumerWidget {
                   .read(misskeyProvider(account))
                   .channels
                   .show(ChannelsShowRequest(channelId: channelId));
+              if (!context.mounted) return;
               context.pushRoute(
                 NoteCreateRoute(
                   initialAccount: account,

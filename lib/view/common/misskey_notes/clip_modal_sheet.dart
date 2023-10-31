@@ -70,9 +70,11 @@ class ClipModalSheetState extends ConsumerState<ClipModalSheet> {
       });
     } catch (e) {
       //TODO: あとでなおす
-      if (e is DioError && e.response?.data != null) {
-        if ((e.response?.data as Map?)?["error"]?["code"] ==
-            "ALREADY_CLIPPED") {
+      if (e is DioException && e.response?.data != null) {
+        final error =
+            (e.response?.data as Map?)?["error"] as Map<String, dynamic>?;
+        if (error?["code"] == "ALREADY_CLIPPED") {
+          if (!context.mounted) return;
           final result = await SimpleConfirmDialog.show(
             context: context,
             message: "すでにクリップに追加されたノートのようです。",

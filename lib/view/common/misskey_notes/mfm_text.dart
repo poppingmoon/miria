@@ -31,7 +31,7 @@ class MfmText extends ConsumerStatefulWidget {
   final bool isNyaize;
   final List<InlineSpan> suffixSpan;
   final List<InlineSpan> prefixSpan;
-  final Function(MisskeyEmojiData)? onEmojiTap;
+  final void Function(MisskeyEmojiData)? onEmojiTap;
   final bool isEnableAnimatedMFM;
 
   const MfmText({

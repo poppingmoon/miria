@@ -72,6 +72,7 @@ class ExploreHighlightState extends ConsumerState<ExploreHighlight> {
                   note =
                       await ref.read(misskeyProvider(account)).notes.featured(
                             NotesFeaturedRequest(
+                              // ignore: deprecated_member_use
                               offset: index,
                               untilId: item.id,
                             ),

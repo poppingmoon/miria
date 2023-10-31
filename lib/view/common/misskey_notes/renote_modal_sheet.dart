@@ -70,7 +70,8 @@ class RenoteModalSheetState extends ConsumerState<RenoteModalSheet> {
                   isExpanded: true,
                   items: [
                     for (final element in NoteVisibility.values.where(
-                        (element) => element != NoteVisibility.specified))
+                      (element) => element != NoteVisibility.specified,
+                    ))
                       DropdownMenuItem(
                         value: element,
                         child: Text(element.displayName),

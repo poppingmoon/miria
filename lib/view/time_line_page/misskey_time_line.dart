@@ -222,7 +222,7 @@ class NoteWrapperState extends ConsumerState<NoteWrapper> {
           .select((note) => note.notes[widget.targetNote.id]),
     );
     if (note == null) {
-      print("note was not found. ${widget.targetNote}");
+      debugPrint("note was not found. ${widget.targetNote}");
       return MisskeyNote(
         note: widget.targetNote,
         key: ValueKey<String>(widget.targetNote.id),

@@ -196,7 +196,7 @@ class NoteModalSheet extends ConsumerWidget {
           onTap: () {
             Navigator.of(context).pop();
 
-            showModalBottomSheet(
+            showModalBottomSheet<void>(
               context: context,
               builder: (context2) =>
                   ClipModalSheet(account: account, noteId: targetNote.id),
@@ -237,7 +237,7 @@ class NoteModalSheet extends ConsumerWidget {
           ListTile(
             title: const Text("削除する"),
             onTap: () async {
-              if (await showDialog(
+              if (await showDialog<bool>(
                     context: context,
                     builder: (context) => const SimpleConfirmDialog(
                       message: "ほんまに消してええな？",
@@ -259,7 +259,7 @@ class NoteModalSheet extends ConsumerWidget {
           ListTile(
             title: const Text("削除してなおす"),
             onTap: () async {
-              if (await showDialog(
+              if (await showDialog<bool>(
                     context: context,
                     builder: (context) => const SimpleConfirmDialog(
                       message: "このノート消してなおす？ついたリアクション、Renote、返信は消えて戻らへんで？",
@@ -312,7 +312,7 @@ class NoteModalSheet extends ConsumerWidget {
             title: const Text("通報する"),
             onTap: () {
               Navigator.of(context).pop();
-              showDialog(
+              showDialog<bool>(
                 context: context,
                 builder: (context) => AbuseDialog(
                   account: account,

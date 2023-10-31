@@ -38,7 +38,7 @@ class AccountListPageState extends ConsumerState<AccountListPage> {
               itemBuilder: (context, index) => ListTile(
                 leading: AvatarIcon.fromIResponse(accounts[index].i),
                 onLongPress: () {
-                  showDialog(
+                  showDialog<void>(
                     context: context,
                     builder: (context) => AlertDialog(
                       content: const Text("ほんまに削除してええな？"),
