@@ -113,12 +113,15 @@ abstract class SocketTimelineRepository extends TimelineRepository {
         if (emoji != null && !value.reaction.endsWith("@.:")) {
           reactionEmojis[emoji.name] = emoji.url;
         }
-        noteRepository.registerNote(registeredNote.copyWith(
+        noteRepository.registerNote(
+          registeredNote.copyWith(
             reactions: reaction,
             reactionEmojis: reactionEmojis,
             myReaction: value.userId == account.i.id
                 ? (emoji?.name != null ? ":${emoji?.name}:" : null)
-                : registeredNote.myReaction,),);
+                : registeredNote.myReaction,
+          ),
+        );
       },
       onUnreacted: (id, value) {
         final registeredNote = noteRepository.notes[id];
@@ -133,11 +136,14 @@ abstract class SocketTimelineRepository extends TimelineRepository {
         if (emoji != null && !value.reaction.endsWith("@.:")) {
           reactionEmojis[emoji.name] = emoji.url;
         }
-        noteRepository.registerNote(registeredNote.copyWith(
+        noteRepository.registerNote(
+          registeredNote.copyWith(
             reactions: reaction,
             reactionEmojis: reactionEmojis,
             myReaction:
-                value.userId == account.i.id ? "" : registeredNote.myReaction,),);
+                value.userId == account.i.id ? "" : registeredNote.myReaction,
+          ),
+        );
       },
       onVoted: (id, value) {
         final registeredNote = noteRepository.notes[id];
@@ -150,13 +156,19 @@ abstract class SocketTimelineRepository extends TimelineRepository {
         choices[value.choice] = choices[value.choice]
             .copyWith(votes: choices[value.choice].votes + 1);
         noteRepository.registerNote(
-            registeredNote.copyWith(poll: poll.copyWith(choices: choices)),);
+          registeredNote.copyWith(poll: poll.copyWith(choices: choices)),
+        );
       },
       onUpdated: (id, value) {
         final note = noteRepository.notes[id];
         if (note == null) return;
-        noteRepository.registerNote(note.copyWith(
-            text: value.text, cw: value.cw, updatedAt: DateTime.now(),),);
+        noteRepository.registerNote(
+          note.copyWith(
+            text: value.text,
+            cw: value.cw,
+            updatedAt: DateTime.now(),
+          ),
+        );
       },
     );
     await misskey.startStreaming();
@@ -224,10 +236,12 @@ abstract class SocketTimelineRepository extends TimelineRepository {
     if (!tabSetting.isSubscribe) return;
     final index =
         subscribedList.indexWhere((element) => element.noteId == item.noteId);
-    final isSubscribed = subscribedList.indexWhere((element) =>
-        element.noteId == item.noteId ||
-        element.renoteId == item.noteId ||
-        element.replyId == item.noteId,);
+    final isSubscribed = subscribedList.indexWhere(
+      (element) =>
+          element.noteId == item.noteId ||
+          element.renoteId == item.noteId ||
+          element.replyId == item.noteId,
+    );
 
     if (index == -1) {
       subscribedList.add(item);
@@ -241,10 +255,12 @@ abstract class SocketTimelineRepository extends TimelineRepository {
     final renoteId = item.renoteId;
 
     if (renoteId != null) {
-      final isRenoteSubscribed = subscribedList.indexWhere((element) =>
-          element.noteId == renoteId ||
-          element.renoteId == renoteId ||
-          element.replyId == renoteId,);
+      final isRenoteSubscribed = subscribedList.indexWhere(
+        (element) =>
+            element.noteId == renoteId ||
+            element.renoteId == renoteId ||
+            element.replyId == renoteId,
+      );
       if (isRenoteSubscribed == -1) {
         socketController?.subNote(renoteId);
       }
@@ -253,10 +269,12 @@ abstract class SocketTimelineRepository extends TimelineRepository {
     final replyId = item.replyId;
     if (replyId != null) {
       socketController?.subNote(replyId);
-      final isRenoteSubscribed = subscribedList.indexWhere((element) =>
-          element.noteId == replyId ||
-          element.renoteId == replyId ||
-          element.replyId == replyId,);
+      final isRenoteSubscribed = subscribedList.indexWhere(
+        (element) =>
+            element.noteId == replyId ||
+            element.renoteId == replyId ||
+            element.replyId == replyId,
+      );
       if (isRenoteSubscribed == -1) {
         socketController?.subNote(replyId);
       }

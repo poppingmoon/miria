@@ -29,20 +29,25 @@ class ChannelDetailPage extends ConsumerWidget {
         child: Scaffold(
           appBar: AppBar(
             title: const Text("チャンネル"),
-            bottom: const TabBar(tabs: [
-              Tab(child: Text("チャンネル情報")),
-              Tab(child: Text("タイムライン")),
-            ],),
+            bottom: const TabBar(
+              tabs: [
+                Tab(child: Text("チャンネル情報")),
+                Tab(child: Text("タイムライン")),
+              ],
+            ),
           ),
           body: TabBarView(
             children: [
               SingleChildScrollView(
-                  child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: ChannelDetailInfo(channelId: channelId),),),
-              Padding(
+                child: Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: ChannelTimeline(channelId: channelId),),
+                  child: ChannelDetailInfo(channelId: channelId),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: ChannelTimeline(channelId: channelId),
+              ),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -52,10 +57,12 @@ class ChannelDetailPage extends ConsumerWidget {
                   .read(misskeyProvider(account))
                   .channels
                   .show(ChannelsShowRequest(channelId: channelId));
-              context.pushRoute(NoteCreateRoute(
-                initialAccount: account,
-                channel: communityChannel,
-              ),);
+              context.pushRoute(
+                NoteCreateRoute(
+                  initialAccount: account,
+                  channel: communityChannel,
+                ),
+              );
             },
           ),
         ),

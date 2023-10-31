@@ -45,7 +45,8 @@ class ReactionDeckPageState extends ConsumerState<ReactionDeckPage> {
     reactions
       ..clear()
       ..addAll(
-          ref.read(emojiRepositoryProvider(widget.account)).defaultEmojis(),);
+        ref.read(emojiRepositoryProvider(widget.account)).defaultEmojis(),
+      );
   }
 
   @override
@@ -89,58 +90,60 @@ class ReactionDeckPageState extends ConsumerState<ReactionDeckPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: ReorderableWrap(
-                      scrollPhysics: const NeverScrollableScrollPhysics(),
-                      spacing: 5,
-                      runSpacing: 5,
-                      children: [
-                        for (final reaction in reactions)
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                reactions.remove(reaction);
-                                save();
-                              });
-                            },
-                            child: CustomEmoji(
-                              emojiData: reaction,
-                              fontSizeRatio: 2,
-                              isAttachTooltip: false,
-                            ),
+                    scrollPhysics: const NeverScrollableScrollPhysics(),
+                    spacing: 5,
+                    runSpacing: 5,
+                    children: [
+                      for (final reaction in reactions)
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              reactions.remove(reaction);
+                              save();
+                            });
+                          },
+                          child: CustomEmoji(
+                            emojiData: reaction,
+                            fontSizeRatio: 2,
+                            isAttachTooltip: false,
                           ),
-                      ],
-                      onReorder: (int oldIndex, int newIndex) {
-                        setState(() {
-                          final element = reactions.removeAt(oldIndex);
-                          reactions.insert(newIndex, element);
-                          save();
-                        });
-                      },),
+                        ),
+                    ],
+                    onReorder: (int oldIndex, int newIndex) {
+                      setState(() {
+                        final element = reactions.removeAt(oldIndex);
+                        reactions.insert(newIndex, element);
+                        save();
+                      });
+                    },
+                  ),
                 ),
               ),
               Row(
                 children: [
                   IconButton(
-                      onPressed: () async {
-                        final reaction = await showDialog<MisskeyEmojiData?>(
-                          context: context,
-                          builder: (context) => ReactionPickerDialog(
-                            account: widget.account,
-                            isAcceptSensitive: true,
-                          ),
-                        );
-                        if (reaction == null) return;
-                        if (reactions.any(
-                          (element) => element.baseName == reaction.baseName,
-                        )) {
-                          // already added.
-                          return;
-                        }
-                        setState(() {
-                          reactions.add(reaction);
-                          save();
-                        });
-                      },
-                      icon: const Icon(Icons.add),),
+                    onPressed: () async {
+                      final reaction = await showDialog<MisskeyEmojiData?>(
+                        context: context,
+                        builder: (context) => ReactionPickerDialog(
+                          account: widget.account,
+                          isAcceptSensitive: true,
+                        ),
+                      );
+                      if (reaction == null) return;
+                      if (reactions.any(
+                        (element) => element.baseName == reaction.baseName,
+                      )) {
+                        // already added.
+                        return;
+                      }
+                      setState(() {
+                        reactions.add(reaction);
+                        save();
+                      });
+                    },
+                    icon: const Icon(Icons.add),
+                  ),
                   const Expanded(child: Text("長押しして並び変え、押して削除、＋を押して追加します。")),
                 ],
               ),
@@ -202,10 +205,11 @@ class ReactionDeckPageState extends ConsumerState<ReactionDeckPage> {
 
   Future<void> clearReactions({required BuildContext context}) async {
     if (await SimpleConfirmDialog.show(
-            context: context,
-            message: "すでに設定済みのリアクションデッキをいったんすべてクリアしますか？",
-            primary: "クリアする",
-            secondary: "やっぱりやめる",) ==
+          context: context,
+          message: "すでに設定済みのリアクションデッキをいったんすべてクリアしますか？",
+          primary: "クリアする",
+          secondary: "やっぱりやめる",
+        ) ==
         true) {
       setState(() {
         reactions.clear();

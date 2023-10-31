@@ -18,16 +18,20 @@ class LoginPageState extends ConsumerState<LoginPage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-          appBar: AppBar(
-            title: const Text("ログイン"),
-            bottom: const TabBar(isScrollable: true, tabs: [
+        appBar: AppBar(
+          title: const Text("ログイン"),
+          bottom: const TabBar(
+            isScrollable: true,
+            tabs: [
               Tab(text: "MiAuthでログイン"),
               Tab(text: "APIキーでログイン"),
-            ],),
+            ],
           ),
-          body: const TabBarView(
-            children: [MiAuthLogin(), ApiKeyLogin()],
-          ),),
+        ),
+        body: const TabBarView(
+          children: [MiAuthLogin(), ApiKeyLogin()],
+        ),
+      ),
     );
   }
 }

@@ -30,18 +30,20 @@ class ExploreHighlightState extends ConsumerState<ExploreHighlight> {
             padding: const EdgeInsets.only(top: 3, bottom: 3),
             child: LayoutBuilder(
               builder: (context, constraints) => ToggleButtons(
-                  constraints: BoxConstraints.expand(
-                      width: constraints.maxWidth / 2 -
-                          Theme.of(context)
-                                  .toggleButtonsTheme
-                                  .borderWidth!
-                                  .toInt() *
-                              2,),
-                  onPressed: (index) => setState(() {
-                        isNote = index == 0;
-                      }),
-                  isSelected: [isNote, !isNote],
-                  children: const [Text("ノート"), Text("アンケート")],),
+                constraints: BoxConstraints.expand(
+                  width: constraints.maxWidth / 2 -
+                      Theme.of(context)
+                              .toggleButtonsTheme
+                              .borderWidth!
+                              .toInt() *
+                          2,
+                ),
+                onPressed: (index) => setState(() {
+                  isNote = index == 0;
+                }),
+                isSelected: [isNote, !isNote],
+                children: const [Text("ノート"), Text("アンケート")],
+              ),
             ),
           ),
           Expanded(
@@ -67,20 +69,21 @@ class ExploreHighlightState extends ConsumerState<ExploreHighlight> {
               nextFuture: (item, index) async {
                 final Iterable<Note> note;
                 if (isNote) {
-                  note = await ref
-                      .read(misskeyProvider(account))
-                      .notes
-                      .featured(NotesFeaturedRequest(
-                        offset: index,
-                        untilId: item.id,
-                      ),);
+                  note =
+                      await ref.read(misskeyProvider(account)).notes.featured(
+                            NotesFeaturedRequest(
+                              offset: index,
+                              untilId: item.id,
+                            ),
+                          );
                 } else {
                   note = await ref
                       .read(misskeyProvider(account))
                       .notes
                       .polls
                       .recommendation(
-                          NotesPollsRecommendationRequest(offset: index),);
+                        NotesPollsRecommendationRequest(offset: index),
+                      );
                 }
                 ref.read(notesProvider(account)).registerAll(note);
 

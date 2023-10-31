@@ -1,4 +1,3 @@
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:miria/providers.dart';
@@ -40,31 +39,35 @@ class AccountListPageState extends ConsumerState<AccountListPage> {
                 leading: AvatarIcon.fromIResponse(accounts[index].i),
                 onLongPress: () {
                   showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            content: const Text("ほんまに削除してええな？"),
-                            actions: [
-                              OutlinedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("やっぱりせえへん"),),
-                              ElevatedButton(
-                                  onPressed: () async {
-                                    await ref
-                                        .read(accountRepository)
-                                        .remove(accounts[index]);
-                                    if (!mounted) return;
-                                    setState(() {});
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("ええで"),),
-                            ],
-                          ),);
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content: const Text("ほんまに削除してええな？"),
+                      actions: [
+                        OutlinedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("やっぱりせえへん"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            await ref
+                                .read(accountRepository)
+                                .remove(accounts[index]);
+                            if (!mounted) return;
+                            setState(() {});
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("ええで"),
+                        ),
+                      ],
+                    ),
+                  );
                 },
                 title: Text(
-                    accounts[index].i.name ?? accounts[index].i.username,
-                    style: Theme.of(context).textTheme.titleMedium,),
+                  accounts[index].i.name ?? accounts[index].i.username,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 subtitle: Text(
                   "@${accounts[index].userId}@${accounts[index].host}",
                   style: Theme.of(context).textTheme.bodySmall,
@@ -76,12 +79,13 @@ class AccountListPageState extends ConsumerState<AccountListPage> {
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: ElevatedButton(
-                  onPressed: () {
-                    context.router
-                      ..removeWhere((route) => true)
-                      ..push(const SplashRoute());
-                  },
-                  child: const Text("アカウント設定をおわる"),),
+                onPressed: () {
+                  context.router
+                    ..removeWhere((route) => true)
+                    ..push(const SplashRoute());
+                },
+                child: const Text("アカウント設定をおわる"),
+              ),
             ),
           ),
         ],

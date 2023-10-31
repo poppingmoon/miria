@@ -120,8 +120,8 @@ class NoteModalSheet extends ConsumerWidget {
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
               Future(() async {
                 final box = context.findRenderObject() as RenderBox?;
-                final boundary = noteBoundaryKey.currentContext
-                    !.findRenderObject()! as RenderRepaintBoundary;
+                final boundary = noteBoundaryKey.currentContext!
+                    .findRenderObject()! as RenderRepaintBoundary;
                 final image = await boundary.toImage(
                   pixelRatio: View.of(context).devicePixelRatio,
                 );
@@ -222,17 +222,18 @@ class NoteModalSheet extends ConsumerWidget {
                 baseNote.files.isEmpty)) ...[
           if (account.i.policies.canEditNote)
             ListTile(
-                title: const Text("編集する"),
-                onTap: () async {
-                  Navigator.of(context).pop();
-                  context.pushRoute(
-                    NoteCreateRoute(
-                      initialAccount: account,
-                      note: targetNote,
-                      noteCreationMode: NoteCreationMode.update,
-                    ),
-                  );
-                },),
+              title: const Text("編集する"),
+              onTap: () async {
+                Navigator.of(context).pop();
+                context.pushRoute(
+                  NoteCreateRoute(
+                    initialAccount: account,
+                    note: targetNote,
+                    noteCreationMode: NoteCreationMode.update,
+                  ),
+                );
+              },
+            ),
           ListTile(
             title: const Text("削除する"),
             onTap: () async {

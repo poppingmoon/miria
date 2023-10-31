@@ -41,23 +41,24 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
               await ref.read(misskeyProvider(account)).stats();
           ref.read(federationPageFederationDataProvider.notifier).state =
               FederationData(
-                  bannerUrl: metaResponse.bannerUrl?.toString(),
-                  faviconUrl: metaResponse.iconUrl?.toString(),
-                  tosUrl: metaResponse.tosUrl?.toString(),
-                  name: metaResponse.name ?? "",
-                  description: metaResponse.description ?? "",
-                  usersCount: statsResponse.originalUsersCount,
-                  notesCount: statsResponse.originalNotesCount,
-                  reactionCount: statsResponse.reactionsCount,
-                  softwareName: "misskey",
-                  softwareVersion: metaResponse.version,
-                  languages: metaResponse.langs,
-                  ads: metaResponse.ads,
+            bannerUrl: metaResponse.bannerUrl?.toString(),
+            faviconUrl: metaResponse.iconUrl?.toString(),
+            tosUrl: metaResponse.tosUrl?.toString(),
+            name: metaResponse.name ?? "",
+            description: metaResponse.description ?? "",
+            usersCount: statsResponse.originalUsersCount,
+            notesCount: statsResponse.originalNotesCount,
+            reactionCount: statsResponse.reactionsCount,
+            softwareName: "misskey",
+            softwareVersion: metaResponse.version,
+            languages: metaResponse.langs,
+            ads: metaResponse.ads,
 
-                  // 自分のサーバーが非対応ということはない
-                  isSupportedAnnouncement: true,
-                  isSupportedEmoji: true,
-                  isSupportedLocalTimeline: true,);
+            // 自分のサーバーが非対応ということはない
+            isSupportedAnnouncement: true,
+            isSupportedEmoji: true,
+            isSupportedLocalTimeline: true,
+          );
         } else {
           final federation = await ref
               .read(misskeyProvider(AccountScope.of(context)))
@@ -140,7 +141,9 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
             children: [
               if (data.bannerUrl != null)
                 NetworkImageView(
-                    url: data.bannerUrl!, type: ImageType.other,),
+                  url: data.bannerUrl!,
+                  type: ImageType.other,
+                ),
               Row(
                 children: [
                   if (data.faviconUrl != null)
@@ -210,26 +213,30 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                     ],
                   ),
                   if (data.languages.isNotEmpty)
-                    TableRow(children: [
-                      const Text("言語", textAlign: TextAlign.center),
-                      Text(
-                        data.languages.join(", "),
-                      ),
-                    ],),
-                  if (data.tosUrl != null)
-                    TableRow(children: [
-                      const Text(
-                        "利用規約",
-                        textAlign: TextAlign.center,
-                      ),
-                      GestureDetector(
-                        onTap: () => launchUrl(Uri.parse(data.tosUrl!)),
-                        child: Text(
-                          data.tosUrl!.tight,
-                          style: AppTheme.of(context).linkStyle,
+                    TableRow(
+                      children: [
+                        const Text("言語", textAlign: TextAlign.center),
+                        Text(
+                          data.languages.join(", "),
                         ),
-                      ),
-                    ],),
+                      ],
+                    ),
+                  if (data.tosUrl != null)
+                    TableRow(
+                      children: [
+                        const Text(
+                          "利用規約",
+                          textAlign: TextAlign.center,
+                        ),
+                        GestureDetector(
+                          onTap: () => launchUrl(Uri.parse(data.tosUrl!)),
+                          child: Text(
+                            data.tosUrl!.tight,
+                            style: AppTheme.of(context).linkStyle,
+                          ),
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ],

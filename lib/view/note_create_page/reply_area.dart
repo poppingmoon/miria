@@ -9,13 +9,16 @@ class ReplyArea extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final reply = ref.watch(noteCreateProvider(AccountScope.of(context))
-        .select((value) => value.reply),);
+    final reply = ref.watch(
+      noteCreateProvider(AccountScope.of(context))
+          .select((value) => value.reply),
+    );
 
     if (reply != null) {
       return MediaQuery(
-          data: const MediaQueryData(textScaleFactor: 0.8),
-          child: MisskeyNote(note: reply),);
+        data: const MediaQueryData(textScaleFactor: 0.8),
+        child: MisskeyNote(note: reply),
+      );
     }
 
     return Container();

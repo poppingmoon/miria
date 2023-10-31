@@ -55,16 +55,18 @@ class MfmText extends ConsumerStatefulWidget {
 class MfmTextState extends ConsumerState<MfmText> {
   Future<void> onSearch(String query) async {
     final uri = Uri(
-        scheme: "https",
-        host: "google.com",
-        pathSegments: ["search"],
-        queryParameters: {"q": query},);
+      scheme: "https",
+      host: "google.com",
+      pathSegments: ["search"],
+      queryParameters: {"q": query},
+    );
     launchUrl(uri);
   }
 
   void onHashtagTap(String hashtag) {
     context.pushRoute(
-        HashtagRoute(account: AccountScope.of(context), hashtag: hashtag),);
+      HashtagRoute(account: AccountScope.of(context), hashtag: hashtag),
+    );
   }
 
   @override
@@ -74,10 +76,11 @@ class MfmTextState extends ConsumerState<MfmText> {
       mfmNode: widget.mfmNode,
       emojiBuilder: (builderContext, emojiName, style) {
         final emojiData = MisskeyEmojiData.fromEmojiName(
-            emojiName: ":$emojiName:",
-            repository: ref
-                .read(emojiRepositoryProvider(AccountScope.of(builderContext))),
-            emojiInfo: widget.emoji,);
+          emojiName: ":$emojiName:",
+          repository: ref
+              .read(emojiRepositoryProvider(AccountScope.of(builderContext))),
+          emojiInfo: widget.emoji,
+        );
         return DefaultTextStyle(
           style: style ?? DefaultTextStyle.of(builderContext).style,
           child: GestureDetector(
@@ -99,13 +102,14 @@ class MfmTextState extends ConsumerState<MfmText> {
         if (ref.read(generalSettingsRepositoryProvider).settings.emojiType ==
             EmojiType.system) {
           return TextSpan(
-              text: emoji,
-              style: style,
-              recognizer: MfmBlurScope.of(builderContext)
-                  ? null
-                  : (TapGestureRecognizer()
-                    ..onTap = () => widget.onEmojiTap
-                        ?.call(UnicodeEmojiData(char: emoji))),);
+            text: emoji,
+            style: style,
+            recognizer: MfmBlurScope.of(builderContext)
+                ? null
+                : (TapGestureRecognizer()
+                  ..onTap = () =>
+                      widget.onEmojiTap?.call(UnicodeEmojiData(char: emoji))),
+          );
         } else {
           return WidgetSpan(
             child: GestureDetector(
@@ -171,20 +175,23 @@ class CodeBlock extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: HighlightView(
-            code,
-            languageId: resolvedLanguage,
-            theme:
-                AppTheme.of(context).isDarkMode ? githubDarkTheme : githubTheme,
-            padding: const EdgeInsets.all(10),
-            textStyle: const TextStyle(fontFamilyFallback: [
+        scrollDirection: Axis.horizontal,
+        child: HighlightView(
+          code,
+          languageId: resolvedLanguage,
+          theme:
+              AppTheme.of(context).isDarkMode ? githubDarkTheme : githubTheme,
+          padding: const EdgeInsets.all(10),
+          textStyle: const TextStyle(
+            fontFamilyFallback: [
               "Monaco",
               "Menlo",
               "Consolas",
               "Noto Mono",
-            ],),
-          ),),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -196,8 +203,10 @@ class EmojiInk extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isEnabled = ref.watch(generalSettingsRepositoryProvider
-        .select((value) => value.settings.enableDirectReaction),);
+    final isEnabled = ref.watch(
+      generalSettingsRepositoryProvider
+          .select((value) => value.settings.enableDirectReaction),
+    );
     if (isEnabled) {
       return InkWell(child: child);
     } else {

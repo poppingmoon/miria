@@ -7,7 +7,6 @@ part 'account.g.dart';
 
 @Freezed(equal: false)
 class Account with _$Account {
-
   const factory Account({
     required String host,
     required String userId,
@@ -38,9 +37,9 @@ class Account with _$Account {
   }
 
   factory Account.demoAccount(String host) => Account(
-      host: host,
-      userId: "",
-      i: IResponse(
+        host: host,
+        userId: "",
+        i: IResponse(
           id: "",
           username: "",
           createdAt: DateTime.now(),
@@ -85,20 +84,23 @@ class Account with _$Account {
           achievements: [],
           loggedInDays: 0,
           policies: const UserPolicies(
-              gtlAvailable: false,
-              ltlAvailable: false,
-              canPublicNote: false,
-              canInvite: false,
-              canManageCustomEmojis: false,
-              canHideAds: false,
-              driveCapacityMb: 0,
-              pinLimit: 0,
-              antennaLimit: 0,
-              wordMuteLimit: 0,
-              webhookLimit: 0,
-              clipLimit: 0,
-              noteEachClipsLimit: 0,
-              userListLimit: 0,
-              userEachUserListsLimit: 0,
-              rateLimitFactor: 0,),),);
+            gtlAvailable: false,
+            ltlAvailable: false,
+            canPublicNote: false,
+            canInvite: false,
+            canManageCustomEmojis: false,
+            canHideAds: false,
+            driveCapacityMb: 0,
+            pinLimit: 0,
+            antennaLimit: 0,
+            wordMuteLimit: 0,
+            webhookLimit: 0,
+            clipLimit: 0,
+            noteEachClipsLimit: 0,
+            userListLimit: 0,
+            userEachUserListsLimit: 0,
+            rateLimitFactor: 0,
+          ),
+        ),
+      );
 }

@@ -42,7 +42,8 @@ class SplashPageState extends ConsumerState<SplashPage> {
       }
 
       LicenseRegistry.addLicense(
-          () => Stream.fromIterable(miriaInheritedLicenses),);
+        () => Stream.fromIterable(miriaInheritedLicenses),
+      );
     }
 
     _isFirst = false;
@@ -52,56 +53,60 @@ class SplashPageState extends ConsumerState<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-          future: initialize(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              final isSigned = ref.read(accountRepository).account.isNotEmpty;
-              final hasTabSetting = ref
-                  .read(tabSettingsRepositoryProvider)
-                  .tabSettings
-                  .isNotEmpty;
+        future: initialize(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            final isSigned = ref.read(accountRepository).account.isNotEmpty;
+            final hasTabSetting =
+                ref.read(tabSettingsRepositoryProvider).tabSettings.isNotEmpty;
 
-              if (isSigned && hasTabSetting) {
-                context.replaceRoute(TimeLineRoute(
-                    initialTabSetting: ref
-                        .read(tabSettingsRepositoryProvider)
-                        .tabSettings
-                        .first,),);
-                if (initialSharingMedias.isNotEmpty ||
-                    initialSharingText.isNotEmpty) {
-                  final accounts = ref.read(accountRepository).account;
-                  if (accounts.length == 1) {
-                    context.pushRoute(NoteCreateRoute(
+            if (isSigned && hasTabSetting) {
+              context.replaceRoute(
+                TimeLineRoute(
+                  initialTabSetting:
+                      ref.read(tabSettingsRepositoryProvider).tabSettings.first,
+                ),
+              );
+              if (initialSharingMedias.isNotEmpty ||
+                  initialSharingText.isNotEmpty) {
+                final accounts = ref.read(accountRepository).account;
+                if (accounts.length == 1) {
+                  context.pushRoute(
+                    NoteCreateRoute(
                       initialMediaFiles: initialSharingMedias,
                       initialText: initialSharingText,
                       initialAccount: accounts.first,
-                    ),);
-                  } else {
-                    context.pushRoute(SharingAccountSelectRoute(
+                    ),
+                  );
+                } else {
+                  context.pushRoute(
+                    SharingAccountSelectRoute(
                       filePath: initialSharingMedias,
                       sharingText: initialSharingText,
-                    ),);
-                  }
+                    ),
+                  );
                 }
-              } else if (isSigned && !hasTabSetting) {
-                // KeyChainに保存したデータだけアンインストールしても残るので
-                // この状況が発生する
-                Future(() async {
-                  final accounts = ref.read(accountRepository).account.toList();
-                  for (final account in accounts) {
-                    await ref.read(accountRepository).remove(account);
-                  }
-                  if (!mounted) return;
-
-                  context.replaceRoute(const LoginRoute());
-                });
-              } else {
-                context.replaceRoute(const LoginRoute());
               }
-            }
+            } else if (isSigned && !hasTabSetting) {
+              // KeyChainに保存したデータだけアンインストールしても残るので
+              // この状況が発生する
+              Future(() async {
+                final accounts = ref.read(accountRepository).account.toList();
+                for (final account in accounts) {
+                  await ref.read(accountRepository).remove(account);
+                }
+                if (!mounted) return;
 
-            return const Center(child: CircularProgressIndicator());
-          },),
+                context.replaceRoute(const LoginRoute());
+              });
+            } else {
+              context.replaceRoute(const LoginRoute());
+            }
+          }
+
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 }

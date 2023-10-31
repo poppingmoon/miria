@@ -175,33 +175,43 @@ final antennaTimelineProvider =
 
 final mainStreamRepositoryProvider =
     ChangeNotifierProvider.family<MainStreamRepository, Account>(
-        (ref, account) => MainStreamRepository(
-            ref.read(misskeyProvider(account)),
-            ref.read(emojiRepositoryProvider(account)),
-            account,
-            ref.read(accountRepository),),);
+  (ref, account) => MainStreamRepository(
+    ref.read(misskeyProvider(account)),
+    ref.read(emojiRepositoryProvider(account)),
+    account,
+    ref.read(accountRepository),
+  ),
+);
 
-final favoriteProvider = ChangeNotifierProvider.autoDispose
-    .family<FavoriteRepository, Account>((ref, account) => FavoriteRepository(
-        ref.read(misskeyProvider(account)), ref.read(notesProvider(account)),),);
+final favoriteProvider =
+    ChangeNotifierProvider.autoDispose.family<FavoriteRepository, Account>(
+  (ref, account) => FavoriteRepository(
+    ref.read(misskeyProvider(account)),
+    ref.read(notesProvider(account)),
+  ),
+);
 
 final notesProvider = ChangeNotifierProvider.family<NoteRepository, Account>(
-    (ref, account) =>
-        NoteRepository(ref.read(misskeyProvider(account)), account),);
+  (ref, account) => NoteRepository(ref.read(misskeyProvider(account)), account),
+);
 
 //TODO: アカウント毎である必要はない ホスト毎
 //TODO: のつもりだったけど、絵文字にロールが関係するようになるとアカウント毎になる
 final emojiRepositoryProvider = Provider.family<EmojiRepository, Account>(
-    (ref, account) => EmojiRepositoryImpl(
-        misskey: ref.read(misskeyProvider(account)),
-        account: account,
-        accountSettingsRepository:
-            ref.read(accountSettingsRepositoryProvider),),);
+  (ref, account) => EmojiRepositoryImpl(
+    misskey: ref.read(misskeyProvider(account)),
+    account: account,
+    accountSettingsRepository: ref.read(accountSettingsRepositoryProvider),
+  ),
+);
 
-final accountRepository = ChangeNotifierProvider((ref) => AccountRepository(
+final accountRepository = ChangeNotifierProvider(
+  (ref) => AccountRepository(
     ref.read(tabSettingsRepositoryProvider),
     ref.read(accountSettingsRepositoryProvider),
-    ref.read,),);
+    ref.read,
+  ),
+);
 
 final accountProvider = Provider.family<Account, Acct>((ref, acct) {
   final repository = ref.watch(accountRepository);
@@ -219,7 +229,8 @@ final generalSettingsRepositoryProvider =
 
 final errorEventProvider =
     StateProvider<(Object? error, BuildContext? context)>(
-        (ref) => (null, null),);
+  (ref) => (null, null),
+);
 
 final photoEditProvider =
     StateNotifierProvider.autoDispose<PhotoEditStateNotifier, PhotoEdit>(
@@ -233,25 +244,27 @@ final importExportRepository =
 final noteCreateProvider = StateNotifierProvider.family
     .autoDispose<NoteCreateNotifier, NoteCreate, Account>(
   (ref, account) => NoteCreateNotifier(
-      NoteCreate(
-          account: account,
-          noteVisibility: ref
-              .read(accountSettingsRepositoryProvider)
-              .fromAccount(account)
-              .defaultNoteVisibility,
-          localOnly: ref
-              .read(accountSettingsRepositoryProvider)
-              .fromAccount(account)
-              .defaultIsLocalOnly,
-          reactionAcceptance: ref
-              .read(accountSettingsRepositoryProvider)
-              .fromAccount(account)
-              .defaultReactionAcceptance,),
-      ref.read(fileSystemProvider),
-      ref.read(dioProvider),
-      ref.read(misskeyProvider(account)),
-      ref.read(errorEventProvider.notifier),
-      ref.read(notesProvider(account)),),
+    NoteCreate(
+      account: account,
+      noteVisibility: ref
+          .read(accountSettingsRepositoryProvider)
+          .fromAccount(account)
+          .defaultNoteVisibility,
+      localOnly: ref
+          .read(accountSettingsRepositoryProvider)
+          .fromAccount(account)
+          .defaultIsLocalOnly,
+      reactionAcceptance: ref
+          .read(accountSettingsRepositoryProvider)
+          .fromAccount(account)
+          .defaultReactionAcceptance,
+    ),
+    ref.read(fileSystemProvider),
+    ref.read(dioProvider),
+    ref.read(misskeyProvider(account)),
+    ref.read(errorEventProvider.notifier),
+    ref.read(notesProvider(account)),
+  ),
 );
 
 final misskeyServerListNotifierProvider = AsyncNotifierProvider.autoDispose<

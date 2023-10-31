@@ -40,12 +40,14 @@ class ReactionPickerContentState extends ConsumerState<ReactionPickerContent> {
 
     categoryList
       ..clear()
-      ..addAll(emojiRepository.emoji
-              ?.map((e) => e.category)
-              .toSet()
-              .toList()
-              .whereNotNull() ??
-          [],);
+      ..addAll(
+        emojiRepository.emoji
+                ?.map((e) => e.category)
+                .toSet()
+                .toList()
+                .whereNotNull() ??
+            [],
+      );
   }
 
   @override
@@ -100,8 +102,8 @@ class ReactionPickerContentState extends ConsumerState<ReactionPickerContent> {
                       runSpacing: 5,
                       children: [
                         for (final emoji in (emojiRepository.emoji ?? []).where(
-                            (element) =>
-                                element.category == categoryList[index],))
+                          (element) => element.category == categoryList[index],
+                        ))
                           EmojiButton(
                             emoji: emoji.emoji,
                             onTap: widget.onTap,
@@ -146,42 +148,49 @@ class EmojiButtonState extends ConsumerState<EmojiButton> {
   Widget build(BuildContext context) {
     final disabled = !widget.isAcceptSensitive && widget.emoji.isSensitive;
     return VisibilityDetector(
-        key: Key(widget.emoji.baseName),
-        onVisibilityChanged: (visibilityInfo) {
-          if (visibilityInfo.visibleFraction != 0) {
-            setState(() {
-              isVisibility = true;
-              isVisibilityOnceMore = true;
-            });
-          }
-        },
-        child: DecoratedBox(
-            decoration: disabled && isVisibility
-                ? BoxDecoration(color: Theme.of(context).disabledColor)
-                : const BoxDecoration(),
-            child: ElevatedButton(
-                style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-                  padding: MaterialStatePropertyAll(EdgeInsets.all(5)),
-                  elevation: MaterialStatePropertyAll(0),
-                  minimumSize: MaterialStatePropertyAll(Size(0, 0)),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      key: Key(widget.emoji.baseName),
+      onVisibilityChanged: (visibilityInfo) {
+        if (visibilityInfo.visibleFraction != 0) {
+          setState(() {
+            isVisibility = true;
+            isVisibilityOnceMore = true;
+          });
+        }
+      },
+      child: DecoratedBox(
+        decoration: disabled && isVisibility
+            ? BoxDecoration(color: Theme.of(context).disabledColor)
+            : const BoxDecoration(),
+        child: ElevatedButton(
+          style: const ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll(Colors.transparent),
+            padding: MaterialStatePropertyAll(EdgeInsets.all(5)),
+            elevation: MaterialStatePropertyAll(0),
+            minimumSize: MaterialStatePropertyAll(Size(0, 0)),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+          onPressed: () async {
+            if (!isVisibility) return;
+            if (disabled) {
+              SimpleMessageDialog.show(
+                context,
+                "ここでセンシティブなカスタム絵文字を使われへんねやわ",
+              );
+            } else {
+              widget.onTap.call(widget.emoji);
+            }
+          },
+          child: isVisibility
+              ? SizedBox(
+                  height: 32 * MediaQuery.of(context).textScaleFactor,
+                  child: CustomEmoji(emojiData: widget.emoji),
+                )
+              : SizedBox(
+                  width: 32 * MediaQuery.of(context).textScaleFactor,
+                  height: 32 * MediaQuery.of(context).textScaleFactor,
                 ),
-                onPressed: () async {
-                  if (!isVisibility) return;
-                  if (disabled) {
-                    SimpleMessageDialog.show(
-                        context, "ここでセンシティブなカスタム絵文字を使われへんねやわ",);
-                  } else {
-                    widget.onTap.call(widget.emoji);
-                  }
-                },
-                child: isVisibility
-                    ? SizedBox(
-                        height: 32 * MediaQuery.of(context).textScaleFactor,
-                        child: CustomEmoji(emojiData: widget.emoji),)
-                    : SizedBox(
-                        width: 32 * MediaQuery.of(context).textScaleFactor,
-                        height: 32 * MediaQuery.of(context).textScaleFactor,),),),);
+        ),
+      ),
+    );
   }
 }

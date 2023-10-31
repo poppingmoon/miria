@@ -18,7 +18,8 @@ enum TabType {
   const TabType(this.displayName);
 
   ChangeNotifierProvider<TimelineRepository> timelineProvider(
-      TabSetting setting,) {
+    TabSetting setting,
+  ) {
     switch (this) {
       case TabType.localTimeline:
         return localTimeLineProvider(setting);

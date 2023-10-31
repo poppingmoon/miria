@@ -21,20 +21,28 @@ void main() {
         when(mockUser.show(any))
             .thenAnswer((_) async => TestData.usersShowResponse1);
 
-        await tester.pumpWidget(ProviderScope(
-          overrides: [misskeyProvider.overrideWith((ref, arg) => mockMisskey)],
-          child: DefaultRootWidget(
-            initialRoute: UserRoute(
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              misskeyProvider.overrideWith((ref, arg) => mockMisskey)
+            ],
+            child: DefaultRootWidget(
+              initialRoute: UserRoute(
                 userId: TestData.usersShowResponse1.id,
-                account: TestData.account,),
+                account: TestData.account,
+              ),
+            ),
           ),
-        ),);
+        );
         await tester.pumpAndSettle();
 
         expect(
-            find.textContaining(TestData.usersShowResponse1.name!,
-                findRichText: true,),
-            findsAtLeastNWidgets(1),);
+          find.textContaining(
+            TestData.usersShowResponse1.name!,
+            findRichText: true,
+          ),
+          findsAtLeastNWidgets(1),
+        );
       });
 
       testWidgets("リモートユーザーの場合、リモートユーザー用のタブが表示されること", (tester) async {
@@ -48,17 +56,21 @@ void main() {
 
         final emojiRepository = MockEmojiRepository();
 
-        await tester.pumpWidget(ProviderScope(
-          overrides: [
-            misskeyProvider.overrideWith((ref, arg) => mockMisskey),
-            emojiRepositoryProvider.overrideWith((ref, arg) => emojiRepository),
-          ],
-          child: DefaultRootWidget(
-            initialRoute: UserRoute(
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              misskeyProvider.overrideWith((ref, arg) => mockMisskey),
+              emojiRepositoryProvider
+                  .overrideWith((ref, arg) => emojiRepository),
+            ],
+            child: DefaultRootWidget(
+              initialRoute: UserRoute(
                 userId: TestData.usersShowResponse1.id,
-                account: TestData.account,),
+                account: TestData.account,
+              ),
+            ),
           ),
-        ),);
+        );
         await tester.pumpAndSettle();
 
         expect(find.text("アカウント情報（リモート）"), findsOneWidget);
@@ -72,19 +84,23 @@ void main() {
           final mockMisskey = MockMisskey();
           final mockUser = MockMisskeyUsers();
           when(mockMisskey.users).thenReturn(mockUser);
-          when(mockUser.show(any)).thenAnswer((_) async =>
-              TestData.usersShowResponse2.copyWith(isFollowed: true),);
+          when(mockUser.show(any)).thenAnswer(
+            (_) async => TestData.usersShowResponse2.copyWith(isFollowed: true),
+          );
 
-          await tester.pumpWidget(ProviderScope(
-            overrides: [
-              misskeyProvider.overrideWith((ref, arg) => mockMisskey),
-            ],
-            child: DefaultRootWidget(
-              initialRoute: UserRoute(
+          await tester.pumpWidget(
+            ProviderScope(
+              overrides: [
+                misskeyProvider.overrideWith((ref, arg) => mockMisskey),
+              ],
+              child: DefaultRootWidget(
+                initialRoute: UserRoute(
                   userId: TestData.usersShowResponse2.id,
-                  account: TestData.account,),
+                  account: TestData.account,
+                ),
+              ),
             ),
-          ),);
+          );
           await tester.pumpAndSettle();
 
           expect(find.text("フォローされています"), findsOneWidget);
@@ -93,19 +109,24 @@ void main() {
           final mockMisskey = MockMisskey();
           final mockUser = MockMisskeyUsers();
           when(mockMisskey.users).thenReturn(mockUser);
-          when(mockUser.show(any)).thenAnswer((_) async =>
-              TestData.usersShowResponse2.copyWith(isFollowed: false),);
+          when(mockUser.show(any)).thenAnswer(
+            (_) async =>
+                TestData.usersShowResponse2.copyWith(isFollowed: false),
+          );
 
-          await tester.pumpWidget(ProviderScope(
-            overrides: [
-              misskeyProvider.overrideWith((ref, arg) => mockMisskey),
-            ],
-            child: DefaultRootWidget(
-              initialRoute: UserRoute(
+          await tester.pumpWidget(
+            ProviderScope(
+              overrides: [
+                misskeyProvider.overrideWith((ref, arg) => mockMisskey),
+              ],
+              child: DefaultRootWidget(
+                initialRoute: UserRoute(
                   userId: TestData.usersShowResponse2.id,
-                  account: TestData.account,),
+                  account: TestData.account,
+                ),
+              ),
             ),
-          ),);
+          );
           await tester.pumpAndSettle();
 
           expect(find.text("フォローされています"), findsNothing);
@@ -114,19 +135,24 @@ void main() {
           final mockMisskey = MockMisskey();
           final mockUser = MockMisskeyUsers();
           when(mockMisskey.users).thenReturn(mockUser);
-          when(mockUser.show(any)).thenAnswer((_) async =>
-              TestData.usersShowResponse2.copyWith(isFollowing: true),);
+          when(mockUser.show(any)).thenAnswer(
+            (_) async =>
+                TestData.usersShowResponse2.copyWith(isFollowing: true),
+          );
 
-          await tester.pumpWidget(ProviderScope(
-            overrides: [
-              misskeyProvider.overrideWith((ref, arg) => mockMisskey),
-            ],
-            child: DefaultRootWidget(
-              initialRoute: UserRoute(
+          await tester.pumpWidget(
+            ProviderScope(
+              overrides: [
+                misskeyProvider.overrideWith((ref, arg) => mockMisskey),
+              ],
+              child: DefaultRootWidget(
+                initialRoute: UserRoute(
                   userId: TestData.usersShowResponse2.id,
-                  account: TestData.account,),
+                  account: TestData.account,
+                ),
+              ),
             ),
-          ),);
+          );
           await tester.pumpAndSettle();
 
           expect(find.text("フォロー解除"), findsOneWidget);
@@ -136,22 +162,27 @@ void main() {
           final mockMisskey = MockMisskey();
           final mockUser = MockMisskeyUsers();
           when(mockMisskey.users).thenReturn(mockUser);
-          when(mockUser.show(any)).thenAnswer((_) async =>
-              TestData.usersShowResponse2.copyWith(
-                  isFollowing: false,
-                  isLocked: false,
-                  autoAcceptFollowed: true,),);
-
-          await tester.pumpWidget(ProviderScope(
-            overrides: [
-              misskeyProvider.overrideWith((ref, arg) => mockMisskey),
-            ],
-            child: DefaultRootWidget(
-              initialRoute: UserRoute(
-                  userId: TestData.usersShowResponse2.id,
-                  account: TestData.account,),
+          when(mockUser.show(any)).thenAnswer(
+            (_) async => TestData.usersShowResponse2.copyWith(
+              isFollowing: false,
+              isLocked: false,
+              autoAcceptFollowed: true,
             ),
-          ),);
+          );
+
+          await tester.pumpWidget(
+            ProviderScope(
+              overrides: [
+                misskeyProvider.overrideWith((ref, arg) => mockMisskey),
+              ],
+              child: DefaultRootWidget(
+                initialRoute: UserRoute(
+                  userId: TestData.usersShowResponse2.id,
+                  account: TestData.account,
+                ),
+              ),
+            ),
+          );
           await tester.pumpAndSettle();
 
           expect(find.text("フォローする"), findsOneWidget);
@@ -161,24 +192,29 @@ void main() {
           final mockMisskey = MockMisskey();
           final mockUser = MockMisskeyUsers();
           when(mockMisskey.users).thenReturn(mockUser);
-          when(mockUser.show(any)).thenAnswer((_) async =>
-              TestData.usersShowResponse2.copyWith(
-                  isFollowing: false,
-                  hasPendingFollowRequestFromYou: false,
-                  isLocked: true,
-                  isFollowed: false,
-                  autoAcceptFollowed: false,),);
-
-          await tester.pumpWidget(ProviderScope(
-            overrides: [
-              misskeyProvider.overrideWith((ref, arg) => mockMisskey),
-            ],
-            child: DefaultRootWidget(
-              initialRoute: UserRoute(
-                  userId: TestData.usersShowResponse2.id,
-                  account: TestData.account,),
+          when(mockUser.show(any)).thenAnswer(
+            (_) async => TestData.usersShowResponse2.copyWith(
+              isFollowing: false,
+              hasPendingFollowRequestFromYou: false,
+              isLocked: true,
+              isFollowed: false,
+              autoAcceptFollowed: false,
             ),
-          ),);
+          );
+
+          await tester.pumpWidget(
+            ProviderScope(
+              overrides: [
+                misskeyProvider.overrideWith((ref, arg) => mockMisskey),
+              ],
+              child: DefaultRootWidget(
+                initialRoute: UserRoute(
+                  userId: TestData.usersShowResponse2.id,
+                  account: TestData.account,
+                ),
+              ),
+            ),
+          );
           await tester.pumpAndSettle();
 
           expect(find.text("フォロー申請"), findsOneWidget);
@@ -187,22 +223,26 @@ void main() {
           final mockMisskey = MockMisskey();
           final mockUser = MockMisskeyUsers();
           when(mockMisskey.users).thenReturn(mockUser);
-          when(mockUser.show(any))
-              .thenAnswer((_) async => TestData.usersShowResponse2.copyWith(
-                    isFollowing: false,
-                    hasPendingFollowRequestFromYou: true,
-                  ),);
-
-          await tester.pumpWidget(ProviderScope(
-            overrides: [
-              misskeyProvider.overrideWith((ref, arg) => mockMisskey),
-            ],
-            child: DefaultRootWidget(
-              initialRoute: UserRoute(
-                  userId: TestData.usersShowResponse2.id,
-                  account: TestData.account,),
+          when(mockUser.show(any)).thenAnswer(
+            (_) async => TestData.usersShowResponse2.copyWith(
+              isFollowing: false,
+              hasPendingFollowRequestFromYou: true,
             ),
-          ),);
+          );
+
+          await tester.pumpWidget(
+            ProviderScope(
+              overrides: [
+                misskeyProvider.overrideWith((ref, arg) => mockMisskey),
+              ],
+              child: DefaultRootWidget(
+                initialRoute: UserRoute(
+                  userId: TestData.usersShowResponse2.id,
+                  account: TestData.account,
+                ),
+              ),
+            ),
+          );
           await tester.pumpAndSettle();
 
           expect(find.text("フォロー許可待ち"), findsOneWidget);
@@ -212,18 +252,22 @@ void main() {
           final mockUser = MockMisskeyUsers();
           when(mockMisskey.users).thenReturn(mockUser);
           when(mockUser.show(any)).thenAnswer(
-              (_) async => TestData.usersShowResponse2.copyWith(isMuted: true),);
+            (_) async => TestData.usersShowResponse2.copyWith(isMuted: true),
+          );
 
-          await tester.pumpWidget(ProviderScope(
-            overrides: [
-              misskeyProvider.overrideWith((ref, arg) => mockMisskey),
-            ],
-            child: DefaultRootWidget(
-              initialRoute: UserRoute(
+          await tester.pumpWidget(
+            ProviderScope(
+              overrides: [
+                misskeyProvider.overrideWith((ref, arg) => mockMisskey),
+              ],
+              child: DefaultRootWidget(
+                initialRoute: UserRoute(
                   userId: TestData.usersShowResponse2.id,
-                  account: TestData.account,),
+                  account: TestData.account,
+                ),
+              ),
             ),
-          ),);
+          );
           await tester.pumpAndSettle();
 
           expect(find.text("ミュート中"), findsOneWidget);
@@ -232,19 +276,23 @@ void main() {
           final mockMisskey = MockMisskey();
           final mockUser = MockMisskeyUsers();
           when(mockMisskey.users).thenReturn(mockUser);
-          when(mockUser.show(any)).thenAnswer((_) async =>
-              TestData.usersShowResponse2.copyWith(isMuted: false),);
+          when(mockUser.show(any)).thenAnswer(
+            (_) async => TestData.usersShowResponse2.copyWith(isMuted: false),
+          );
 
-          await tester.pumpWidget(ProviderScope(
-            overrides: [
-              misskeyProvider.overrideWith((ref, arg) => mockMisskey),
-            ],
-            child: DefaultRootWidget(
-              initialRoute: UserRoute(
+          await tester.pumpWidget(
+            ProviderScope(
+              overrides: [
+                misskeyProvider.overrideWith((ref, arg) => mockMisskey),
+              ],
+              child: DefaultRootWidget(
+                initialRoute: UserRoute(
                   userId: TestData.usersShowResponse2.id,
-                  account: TestData.account,),
+                  account: TestData.account,
+                ),
+              ),
             ),
-          ),);
+          );
           await tester.pumpAndSettle();
 
           expect(find.text("ミュート中"), findsNothing);
@@ -261,17 +309,23 @@ void main() {
         final mockMisskey = MockMisskey();
         final mockUser = MockMisskeyUsers();
         when(mockMisskey.users).thenReturn(mockUser);
-        when(mockUser.show(any)).thenAnswer((_) async =>
-            TestData.usersShowResponse2.copyWith(isFollowed: true),);
+        when(mockUser.show(any)).thenAnswer(
+          (_) async => TestData.usersShowResponse2.copyWith(isFollowed: true),
+        );
 
-        await tester.pumpWidget(ProviderScope(
-          overrides: [misskeyProvider.overrideWith((ref, arg) => mockMisskey)],
-          child: DefaultRootWidget(
-            initialRoute: UserRoute(
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              misskeyProvider.overrideWith((ref, arg) => mockMisskey)
+            ],
+            child: DefaultRootWidget(
+              initialRoute: UserRoute(
                 userId: TestData.usersShowResponse1.id,
-                account: TestData.account,),
+                account: TestData.account,
+              ),
+            ),
           ),
-        ),);
+        );
         await tester.pumpAndSettle();
 
         await tester.ensureVisible(find.byIcon(Icons.edit));
@@ -282,8 +336,18 @@ void main() {
         await tester.tap(find.text("保存する"));
         await tester.pumpAndSettle();
 
-        verify(mockUser.updateMemo(argThat(equals(UsersUpdateMemoRequest(
-            userId: TestData.usersShowResponse2.id, memo: "藍ちゃん吸う",),),),),);
+        verify(
+          mockUser.updateMemo(
+            argThat(
+              equals(
+                UsersUpdateMemoRequest(
+                  userId: TestData.usersShowResponse2.id,
+                  memo: "藍ちゃん吸う",
+                ),
+              ),
+            ),
+          ),
+        );
       });
     });
 
@@ -296,33 +360,55 @@ void main() {
             .thenAnswer((_) async => TestData.usersShowResponse2);
         when(mockUser.notes(any)).thenAnswer((_) async => [TestData.note1]);
 
-        await tester.pumpWidget(ProviderScope(
-          overrides: [misskeyProvider.overrideWith((ref, arg) => mockMisskey)],
-          child: DefaultRootWidget(
-            initialRoute: UserRoute(
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              misskeyProvider.overrideWith((ref, arg) => mockMisskey)
+            ],
+            child: DefaultRootWidget(
+              initialRoute: UserRoute(
                 userId: TestData.usersShowResponse2.id,
-                account: TestData.account,),
+                account: TestData.account,
+              ),
+            ),
           ),
-        ),);
+        );
         await tester.pumpAndSettle();
         await tester.tap(
-            find.descendant(of: find.byType(Tab), matching: find.text("ノート")),);
+          find.descendant(of: find.byType(Tab), matching: find.text("ノート")),
+        );
         await tester.pumpAndSettle();
 
         expect(find.textContaining(TestData.note1.text!), findsOneWidget);
 
-        verify(mockUser.notes(argThat(predicate<UsersNotesRequest>((request) =>
-            request.withReplies == false &&
-            request.withFiles == false &&
-            request.includeMyRenotes == true,),),),).called(1);
+        verify(
+          mockUser.notes(
+            argThat(
+              predicate<UsersNotesRequest>(
+                (request) =>
+                    request.withReplies == false &&
+                    request.withFiles == false &&
+                    request.includeMyRenotes == true,
+              ),
+            ),
+          ),
+        ).called(1);
 
         await tester.pageNation();
 
-        verify(mockUser.notes(argThat(predicate<UsersNotesRequest>((request) =>
-            request.withReplies == false &&
-            request.withFiles == false &&
-            request.includeMyRenotes == true &&
-            request.untilId == TestData.note1.id,),),),).called(1);
+        verify(
+          mockUser.notes(
+            argThat(
+              predicate<UsersNotesRequest>(
+                (request) =>
+                    request.withReplies == false &&
+                    request.withFiles == false &&
+                    request.includeMyRenotes == true &&
+                    request.untilId == TestData.note1.id,
+              ),
+            ),
+          ),
+        ).called(1);
       });
       testWidgets("「返信つき」をタップすると、返信つきのノートが表示されること", (tester) async {
         final mockMisskey = MockMisskey();
@@ -332,23 +418,36 @@ void main() {
             .thenAnswer((_) async => TestData.usersShowResponse2);
         when(mockUser.notes(any)).thenAnswer((_) async => [TestData.note1]);
 
-        await tester.pumpWidget(ProviderScope(
-          overrides: [misskeyProvider.overrideWith((ref, arg) => mockMisskey)],
-          child: DefaultRootWidget(
-            initialRoute: UserRoute(
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              misskeyProvider.overrideWith((ref, arg) => mockMisskey)
+            ],
+            child: DefaultRootWidget(
+              initialRoute: UserRoute(
                 userId: TestData.usersShowResponse2.id,
-                account: TestData.account,),
+                account: TestData.account,
+              ),
+            ),
           ),
-        ),);
+        );
         await tester.pumpAndSettle();
         await tester.tap(
-            find.descendant(of: find.byType(Tab), matching: find.text("ノート")),);
+          find.descendant(of: find.byType(Tab), matching: find.text("ノート")),
+        );
         await tester.pumpAndSettle();
         await tester.tap(find.text("返信つき"));
         await tester.pumpAndSettle();
 
-        verify(mockUser.notes(argThat(predicate<UsersNotesRequest>(
-            (request) => request.withReplies == true,),),),).called(1);
+        verify(
+          mockUser.notes(
+            argThat(
+              predicate<UsersNotesRequest>(
+                (request) => request.withReplies == true,
+              ),
+            ),
+          ),
+        ).called(1);
       });
       testWidgets("「ファイルつき」をタップすると、ファイルつきのノートが表示されること", (tester) async {
         final mockMisskey = MockMisskey();
@@ -358,23 +457,36 @@ void main() {
             .thenAnswer((_) async => TestData.usersShowResponse2);
         when(mockUser.notes(any)).thenAnswer((_) async => [TestData.note1]);
 
-        await tester.pumpWidget(ProviderScope(
-          overrides: [misskeyProvider.overrideWith((ref, arg) => mockMisskey)],
-          child: DefaultRootWidget(
-            initialRoute: UserRoute(
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              misskeyProvider.overrideWith((ref, arg) => mockMisskey)
+            ],
+            child: DefaultRootWidget(
+              initialRoute: UserRoute(
                 userId: TestData.usersShowResponse2.id,
-                account: TestData.account,),
+                account: TestData.account,
+              ),
+            ),
           ),
-        ),);
+        );
         await tester.pumpAndSettle();
         await tester.tap(
-            find.descendant(of: find.byType(Tab), matching: find.text("ノート")),);
+          find.descendant(of: find.byType(Tab), matching: find.text("ノート")),
+        );
         await tester.pumpAndSettle();
         await tester.tap(find.text("ファイルつき"));
         await tester.pumpAndSettle();
 
-        verify(mockUser.notes(argThat(predicate<UsersNotesRequest>(
-            (request) => request.withFiles == true,),),),).called(1);
+        verify(
+          mockUser.notes(
+            argThat(
+              predicate<UsersNotesRequest>(
+                (request) => request.withFiles == true,
+              ),
+            ),
+          ),
+        ).called(1);
       });
       testWidgets("「リノートも」を外すと、リノートを除外したノートが表示されること", (tester) async {
         final mockMisskey = MockMisskey();
@@ -384,23 +496,36 @@ void main() {
             .thenAnswer((_) async => TestData.usersShowResponse2);
         when(mockUser.notes(any)).thenAnswer((_) async => [TestData.note1]);
 
-        await tester.pumpWidget(ProviderScope(
-          overrides: [misskeyProvider.overrideWith((ref, arg) => mockMisskey)],
-          child: DefaultRootWidget(
-            initialRoute: UserRoute(
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              misskeyProvider.overrideWith((ref, arg) => mockMisskey)
+            ],
+            child: DefaultRootWidget(
+              initialRoute: UserRoute(
                 userId: TestData.usersShowResponse2.id,
-                account: TestData.account,),
+                account: TestData.account,
+              ),
+            ),
           ),
-        ),);
+        );
         await tester.pumpAndSettle();
         await tester.tap(
-            find.descendant(of: find.byType(Tab), matching: find.text("ノート")),);
+          find.descendant(of: find.byType(Tab), matching: find.text("ノート")),
+        );
         await tester.pumpAndSettle();
         await tester.tap(find.text("リノートも"));
         await tester.pumpAndSettle();
 
-        verify(mockUser.notes(argThat(predicate<UsersNotesRequest>(
-            (request) => request.includeMyRenotes == false,),),),).called(1);
+        verify(
+          mockUser.notes(
+            argThat(
+              predicate<UsersNotesRequest>(
+                (request) => request.includeMyRenotes == false,
+              ),
+            ),
+          ),
+        ).called(1);
       });
       testWidgets("「ハイライト」をタップすると、ハイライトのノートのみが表示されること", (tester) async {
         final mockMisskey = MockMisskey();
@@ -412,17 +537,23 @@ void main() {
         when(mockUser.featuredNotes(any))
             .thenAnswer((_) async => [TestData.note2]);
 
-        await tester.pumpWidget(ProviderScope(
-          overrides: [misskeyProvider.overrideWith((ref, arg) => mockMisskey)],
-          child: DefaultRootWidget(
-            initialRoute: UserRoute(
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              misskeyProvider.overrideWith((ref, arg) => mockMisskey)
+            ],
+            child: DefaultRootWidget(
+              initialRoute: UserRoute(
                 userId: TestData.usersShowResponse2.id,
-                account: TestData.account,),
+                account: TestData.account,
+              ),
+            ),
           ),
-        ),);
+        );
         await tester.pumpAndSettle();
         await tester.tap(
-            find.descendant(of: find.byType(Tab), matching: find.text("ノート")),);
+          find.descendant(of: find.byType(Tab), matching: find.text("ノート")),
+        );
         await tester.pumpAndSettle();
         await tester.tap(find.text("ハイライト"));
         await tester.pumpAndSettle();
@@ -440,24 +571,39 @@ void main() {
             .thenAnswer((_) async => TestData.usersShowResponse2);
         when(mockUser.clips(any)).thenAnswer((_) async => [TestData.clip]);
 
-        await tester.pumpWidget(ProviderScope(
-          overrides: [misskeyProvider.overrideWith((ref, arg) => mockMisskey)],
-          child: DefaultRootWidget(
-            initialRoute: UserRoute(
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              misskeyProvider.overrideWith((ref, arg) => mockMisskey)
+            ],
+            child: DefaultRootWidget(
+              initialRoute: UserRoute(
                 userId: TestData.usersShowResponse2.id,
-                account: TestData.account,),
+                account: TestData.account,
+              ),
+            ),
           ),
-        ),);
+        );
         await tester.pumpAndSettle();
         await tester.tap(
-            find.descendant(of: find.byType(Tab), matching: find.text("クリップ")),);
+          find.descendant(of: find.byType(Tab), matching: find.text("クリップ")),
+        );
         await tester.pumpAndSettle();
 
         expect(find.text(TestData.clip.name!), findsOneWidget);
         await tester.pageNation();
-        verify(mockUser.clips(argThat(equals(UsersClipsRequest(
-            userId: TestData.usersShowResponse2.id,
-            untilId: TestData.clip.id,),),),),);
+        verify(
+          mockUser.clips(
+            argThat(
+              equals(
+                UsersClipsRequest(
+                  userId: TestData.usersShowResponse2.id,
+                  untilId: TestData.clip.id,
+                ),
+              ),
+            ),
+          ),
+        );
       });
     });
 
@@ -472,34 +618,58 @@ void main() {
         final mockMisskey = MockMisskey();
         final mockUser = MockMisskeyUsers();
         when(mockMisskey.users).thenReturn(mockUser);
-        when(mockUser.show(any)).thenAnswer((_) async =>
-            TestData.usersShowResponse2.copyWith(publicReactions: true),);
-        when(mockUser.reactions(any)).thenAnswer((_) async => [
-              UsersReactionsResponse(
-                  id: "id",
-                  createdAt: DateTime.now(),
-                  user: TestData.user1,
-                  type: "🤯",
-                  note: TestData.note3AsAnotherUser,),
-            ],);
+        when(mockUser.show(any)).thenAnswer(
+          (_) async =>
+              TestData.usersShowResponse2.copyWith(publicReactions: true),
+        );
+        when(mockUser.reactions(any)).thenAnswer(
+          (_) async => [
+            UsersReactionsResponse(
+              id: "id",
+              createdAt: DateTime.now(),
+              user: TestData.user1,
+              type: "🤯",
+              note: TestData.note3AsAnotherUser,
+            ),
+          ],
+        );
 
-        await tester.pumpWidget(ProviderScope(
-          overrides: [misskeyProvider.overrideWith((ref, arg) => mockMisskey)],
-          child: DefaultRootWidget(
-            initialRoute: UserRoute(
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              misskeyProvider.overrideWith((ref, arg) => mockMisskey)
+            ],
+            child: DefaultRootWidget(
+              initialRoute: UserRoute(
                 userId: TestData.usersShowResponse2.id,
-                account: TestData.account,),
+                account: TestData.account,
+              ),
+            ),
           ),
-        ),);
+        );
         await tester.pumpAndSettle();
-        await tester.tap(find.descendant(
-            of: find.byType(Tab), matching: find.text("リアクション"),),);
+        await tester.tap(
+          find.descendant(
+            of: find.byType(Tab),
+            matching: find.text("リアクション"),
+          ),
+        );
         await tester.pumpAndSettle();
 
         expect(find.text(TestData.note3AsAnotherUser.text!), findsOneWidget);
         await tester.pageNation();
-        verify(mockUser.reactions(argThat(equals(UsersReactionsRequest(
-            userId: TestData.usersShowResponse2.id, untilId: "id",),),),),);
+        verify(
+          mockUser.reactions(
+            argThat(
+              equals(
+                UsersReactionsRequest(
+                  userId: TestData.usersShowResponse2.id,
+                  untilId: "id",
+                ),
+              ),
+            ),
+          ),
+        );
       });
     });
 
@@ -508,37 +678,57 @@ void main() {
         final mockMisskey = MockMisskey();
         final mockUser = MockMisskeyUsers();
         when(mockMisskey.users).thenReturn(mockUser);
-        when(mockUser.show(any)).thenAnswer((_) async =>
-            TestData.usersShowResponse2.copyWith(isFollowed: true),);
-        when(mockUser.following(any)).thenAnswer((_) async => [
-              Following(
-                id: "id",
-                createdAt: DateTime.now(),
-                followeeId: TestData.usersShowResponse2.id,
-                followerId: TestData.account.i.id,
-                followee: TestData.detailedUser2,
-                follower: TestData.user1,
-              ),
-            ],);
+        when(mockUser.show(any)).thenAnswer(
+          (_) async => TestData.usersShowResponse2.copyWith(isFollowed: true),
+        );
+        when(mockUser.following(any)).thenAnswer(
+          (_) async => [
+            Following(
+              id: "id",
+              createdAt: DateTime.now(),
+              followeeId: TestData.usersShowResponse2.id,
+              followerId: TestData.account.i.id,
+              followee: TestData.detailedUser2,
+              follower: TestData.user1,
+            ),
+          ],
+        );
 
-        await tester.pumpWidget(ProviderScope(
-          overrides: [misskeyProvider.overrideWith((ref, arg) => mockMisskey)],
-          child: DefaultRootWidget(
-            initialRoute: UserRoute(
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              misskeyProvider.overrideWith((ref, arg) => mockMisskey)
+            ],
+            child: DefaultRootWidget(
+              initialRoute: UserRoute(
                 userId: TestData.usersShowResponse1.id,
-                account: TestData.account,),
+                account: TestData.account,
+              ),
+            ),
           ),
-        ),);
+        );
         await tester.pumpAndSettle();
         await tester.ensureVisible(find.text("フォロー"));
         await tester.tap(find.text("フォロー"));
         await tester.pumpAndSettle();
 
         expect(
-            find.textContaining(TestData.detailedUser2.name!), findsOneWidget,);
+          find.textContaining(TestData.detailedUser2.name!),
+          findsOneWidget,
+        );
         await tester.pageNation();
-        verify(mockUser.following(argThat(equals(UsersFollowingRequest(
-            userId: TestData.usersShowResponse2.id, untilId: "id",),),),),);
+        verify(
+          mockUser.following(
+            argThat(
+              equals(
+                UsersFollowingRequest(
+                  userId: TestData.usersShowResponse2.id,
+                  untilId: "id",
+                ),
+              ),
+            ),
+          ),
+        );
       });
     });
 
@@ -547,37 +737,57 @@ void main() {
         final mockMisskey = MockMisskey();
         final mockUser = MockMisskeyUsers();
         when(mockMisskey.users).thenReturn(mockUser);
-        when(mockUser.show(any)).thenAnswer((_) async =>
-            TestData.usersShowResponse2.copyWith(isFollowed: true),);
-        when(mockUser.followers(any)).thenAnswer((_) async => [
-              Following(
-                id: "id",
-                createdAt: DateTime.now(),
-                followeeId: TestData.account.i.id,
-                followerId: TestData.usersShowResponse2.id,
-                followee: TestData.user1,
-                follower: TestData.detailedUser2,
-              ),
-            ],);
+        when(mockUser.show(any)).thenAnswer(
+          (_) async => TestData.usersShowResponse2.copyWith(isFollowed: true),
+        );
+        when(mockUser.followers(any)).thenAnswer(
+          (_) async => [
+            Following(
+              id: "id",
+              createdAt: DateTime.now(),
+              followeeId: TestData.account.i.id,
+              followerId: TestData.usersShowResponse2.id,
+              followee: TestData.user1,
+              follower: TestData.detailedUser2,
+            ),
+          ],
+        );
 
-        await tester.pumpWidget(ProviderScope(
-          overrides: [misskeyProvider.overrideWith((ref, arg) => mockMisskey)],
-          child: DefaultRootWidget(
-            initialRoute: UserRoute(
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              misskeyProvider.overrideWith((ref, arg) => mockMisskey)
+            ],
+            child: DefaultRootWidget(
+              initialRoute: UserRoute(
                 userId: TestData.usersShowResponse1.id,
-                account: TestData.account,),
+                account: TestData.account,
+              ),
+            ),
           ),
-        ),);
+        );
         await tester.pumpAndSettle();
         await tester.ensureVisible(find.text("フォロワー"));
         await tester.tap(find.text("フォロワー"));
         await tester.pumpAndSettle();
 
         expect(
-            find.textContaining(TestData.detailedUser2.name!), findsOneWidget,);
+          find.textContaining(TestData.detailedUser2.name!),
+          findsOneWidget,
+        );
         await tester.pageNation();
-        verify(mockUser.followers(argThat(equals(UsersFollowersRequest(
-            userId: TestData.usersShowResponse2.id, untilId: "id",),),),),);
+        verify(
+          mockUser.followers(
+            argThat(
+              equals(
+                UsersFollowersRequest(
+                  userId: TestData.usersShowResponse2.id,
+                  untilId: "id",
+                ),
+              ),
+            ),
+          ),
+        );
       });
     });
     group("Play", () {

@@ -145,11 +145,13 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
     final sendText = ref.read(timelineNoteProvider).text;
     ref.read(timelineNoteProvider).text = "";
     final account = ref.read(accountProvider(currentTabSetting.acct));
-    context.pushRoute(NoteCreateRoute(
-      channel: channel,
-      initialText: sendText,
-      initialAccount: account,
-    ),);
+    context.pushRoute(
+      NoteCreateRoute(
+        channel: channel,
+        initialText: sendText,
+        initialAccount: account,
+      ),
+    );
   }
 
   Widget buildAppbar() {
@@ -191,8 +193,9 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
         ),
       ],
       leading: IconButton(
-          onPressed: () => scaffoldKey.currentState?.openDrawer(),
-          icon: const Icon(Icons.menu),),
+        onPressed: () => scaffoldKey.currentState?.openDrawer(),
+        icon: const Icon(Icons.menu),
+      ),
     );
   }
 
@@ -210,10 +213,11 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(0),
-          child: AppBar(
-            automaticallyImplyLeading: false,
-          ),),
+        preferredSize: const Size.fromHeight(0),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -402,9 +406,11 @@ class BannerArea extends ConsumerWidget {
 
     // ダイアログの実装が大変なので（状態管理とか）いったんバナーと一緒に扱う
     final bannerData = bannerAnnouncement
-        .where((element) =>
-            element.display == AnnouncementDisplayType.banner ||
-            element.display == AnnouncementDisplayType.dialog,)
+        .where(
+          (element) =>
+              element.display == AnnouncementDisplayType.banner ||
+              element.display == AnnouncementDisplayType.dialog,
+        )
         .lastOrNull;
 
     if (bannerData == null) return const SizedBox.shrink();
@@ -462,27 +468,32 @@ class AnnoucementInfo extends ConsumerWidget {
 
     if (hasUnread == true) {
       return IconButton(
-          onPressed: () => announcementsRoute(context, ref),
-          icon: Stack(children: [
+        onPressed: () => announcementsRoute(context, ref),
+        icon: Stack(
+          children: [
             const Icon(Icons.campaign),
             Transform.translate(
-                offset: const Offset(12, 12),
-                child: SizedBox(
-                  width: 14,
-                  height: 14,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white, width: 1.5),
-                      borderRadius: BorderRadius.circular(20),
-                      color: Theme.of(context).primaryColor,
-                    ),
+              offset: const Offset(12, 12),
+              child: SizedBox(
+                width: 14,
+                height: 14,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 1.5),
+                    borderRadius: BorderRadius.circular(20),
+                    color: Theme.of(context).primaryColor,
                   ),
-                ),),
-          ],),);
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
     } else {
       return IconButton(
-          onPressed: () => announcementsRoute(context, ref),
-          icon: const Icon(Icons.campaign),);
+        onPressed: () => announcementsRoute(context, ref),
+        icon: const Icon(Icons.campaign),
+      );
     }
   }
 }

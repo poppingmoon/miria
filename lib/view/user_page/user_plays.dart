@@ -34,11 +34,13 @@ class UserPlays extends ConsumerWidget {
           subtitle: Text(play.summary),
           onTap: () {
             launchUrl(
-                Uri(
-                    scheme: "https",
-                    host: AccountScope.of(context).host,
-                    pathSegments: ["play", play.id],),
-                mode: LaunchMode.externalApplication,);
+              Uri(
+                scheme: "https",
+                host: AccountScope.of(context).host,
+                pathSegments: ["play", play.id],
+              ),
+              mode: LaunchMode.externalApplication,
+            );
           },
         );
       },

@@ -22,15 +22,18 @@ class ChannelSearchState extends ConsumerState<ChannelSearch> {
       children: [
         const Padding(padding: EdgeInsets.only(top: 5)),
         TextField(
-            decoration: const InputDecoration(prefixIcon: Icon(Icons.search)),
-            textInputAction: TextInputAction.done,
-            onSubmitted: (value) {
-              ref.read(channelSearchProvider.notifier).state = value;
-            },),
+          decoration: const InputDecoration(prefixIcon: Icon(Icons.search)),
+          textInputAction: TextInputAction.done,
+          onSubmitted: (value) {
+            ref.read(channelSearchProvider.notifier).state = value;
+          },
+        ),
         const Expanded(
-            child: Padding(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: ChannelSearchList(),),),
+          child: Padding(
+            padding: EdgeInsets.only(left: 10, right: 10),
+            child: ChannelSearchList(),
+          ),
+        ),
       ],
     );
   }
@@ -48,24 +51,29 @@ class ChannelSearchList extends ConsumerWidget {
     }
 
     return PushableListView(
-        listKey: searchValue,
-        initializeFuture: () async {
-          final channels = await ref
-              .read(misskeyProvider(AccountScope.of(context)))
-              .channels
-              .search(ChannelsSearchRequest(query: searchValue));
-          return channels.toList();
-        },
-        nextFuture: (lastItem, _) async {
-          final channels = await ref
-              .read(misskeyProvider(AccountScope.of(context)))
-              .channels
-              .search(ChannelsSearchRequest(
-                  query: searchValue, untilId: lastItem.id,),);
-          return channels.toList();
-        },
-        itemBuilder: (context, item) {
-          return CommunityChannelView(channel: item);
-        },);
+      listKey: searchValue,
+      initializeFuture: () async {
+        final channels = await ref
+            .read(misskeyProvider(AccountScope.of(context)))
+            .channels
+            .search(ChannelsSearchRequest(query: searchValue));
+        return channels.toList();
+      },
+      nextFuture: (lastItem, _) async {
+        final channels = await ref
+            .read(misskeyProvider(AccountScope.of(context)))
+            .channels
+            .search(
+              ChannelsSearchRequest(
+                query: searchValue,
+                untilId: lastItem.id,
+              ),
+            );
+        return channels.toList();
+      },
+      itemBuilder: (context, item) {
+        return CommunityChannelView(channel: item);
+      },
+    );
   }
 }

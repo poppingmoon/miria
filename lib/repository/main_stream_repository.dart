@@ -26,21 +26,25 @@ class MainStreamRepository extends ChangeNotifier {
   Future<void> latestMarkAs(String id) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(
-        "latestReadNotification@${account.userId}@${account.host}", id,);
+      "latestReadNotification@${account.userId}@${account.host}",
+      id,
+    );
     hasUnreadNotification = false;
     notifyListeners();
   }
 
   Future<void> confirmNotification() async {
     final notifications = await misskey.i.notifications(
-        const INotificationsRequest(markAsRead: false, limit: 1),);
+      const INotificationsRequest(markAsRead: false, limit: 1),
+    );
     final prefs = await SharedPreferences.getInstance();
 
     if (notifications.isEmpty) return;
 
     // 最後に読んだものと違うものがプッシュ通知にあれば通知をオン
     if (prefs.getString(
-            "latestReadNotification@${account.userId}@${account.host}",) ==
+          "latestReadNotification@${account.userId}@${account.host}",
+        ) ==
         notifications.firstOrNull?.id) {
       hasUnreadNotification = false;
     } else {
@@ -56,7 +60,8 @@ class MainStreamRepository extends ChangeNotifier {
         hasUnreadNotification = false;
         Future(() async {
           final notifications = await misskey.i.notifications(
-              const INotificationsRequest(markAsRead: false, limit: 1),);
+            const INotificationsRequest(markAsRead: false, limit: 1),
+          );
 
           // 最後に読んだものとして記憶しておく
           latestMarkAs(notifications.firstOrNull?.id ?? "");

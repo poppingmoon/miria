@@ -34,11 +34,10 @@ class ExploreRoleUsersPage extends ConsumerWidget {
             return response.toList();
           },
           nextFuture: (lastItem, _) async {
-            final response = await ref
-                .read(misskeyProvider(account))
-                .roles
-                .users(
-                    RolesUsersRequest(roleId: item.id, untilId: lastItem.id),);
+            final response =
+                await ref.read(misskeyProvider(account)).roles.users(
+                      RolesUsersRequest(roleId: item.id, untilId: lastItem.id),
+                    );
             return response.toList();
           },
           itemBuilder: (context, item) => UserListItem(user: item.user),

@@ -22,10 +22,8 @@ class RoleSelectDialogState extends ConsumerState<RoleSelectDialog> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     Future(() async {
-      final rolesList = await ref
-          .read(misskeyProvider(widget.account))
-          .roles
-          .list();
+      final rolesList =
+          await ref.read(misskeyProvider(widget.account)).roles.list();
       roles
         ..clear()
         ..addAll(rolesList);
@@ -51,16 +49,18 @@ class RoleSelectDialogState extends ConsumerState<RoleSelectDialog> {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: roles.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                          onTap: () {
-                            Navigator.of(context).pop(roles[index]);
-                          },
-                          title: Text(roles[index].name),);
-                    },),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: roles.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      onTap: () {
+                        Navigator.of(context).pop(roles[index]);
+                      },
+                      title: Text(roles[index].name),
+                    );
+                  },
+                ),
               ],
             ),
           ),

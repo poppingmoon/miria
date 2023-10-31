@@ -34,11 +34,13 @@ class UserFolloweePage extends ConsumerWidget {
             return response.toList();
           },
           nextFuture: (lastItem, _) async {
-            final response = await ref
-                .read(misskeyProvider(account))
-                .users
-                .following(UsersFollowingRequest(
-                    userId: userId, untilId: lastItem.id,),);
+            final response =
+                await ref.read(misskeyProvider(account)).users.following(
+                      UsersFollowingRequest(
+                        userId: userId,
+                        untilId: lastItem.id,
+                      ),
+                    );
             return response.toList();
           },
           itemBuilder: (context, item) => UserListItem(user: item.followee!),

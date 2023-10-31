@@ -90,9 +90,10 @@ class HardMutePageState extends ConsumerState<HardMutePage> {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   ElevatedButton.icon(
-                      onPressed: save,
-                      icon: const Icon(Icons.save),
-                      label: const Text("保存"),),
+                    onPressed: save,
+                    icon: const Icon(Icons.save),
+                    label: const Text("保存"),
+                  ),
                 ],
               );
             },

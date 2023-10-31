@@ -61,8 +61,9 @@ class InstanceMutePageState extends ConsumerState<InstanceMutePage> {
                     child: Padding(
                       padding: EdgeInsets.all(10),
                       child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text("設定したサーバーのノートを隠します。"),),
+                        alignment: Alignment.topLeft,
+                        child: Text("設定したサーバーのノートを隠します。"),
+                      ),
                     ),
                   ),
                   const Padding(
@@ -79,9 +80,10 @@ class InstanceMutePageState extends ConsumerState<InstanceMutePage> {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   ElevatedButton.icon(
-                      onPressed: save,
-                      icon: const Icon(Icons.save),
-                      label: const Text("保存"),),
+                    onPressed: save,
+                    icon: const Icon(Icons.save),
+                    label: const Text("保存"),
+                  ),
                 ],
               );
             },
