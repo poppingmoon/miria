@@ -393,13 +393,13 @@ class Chart extends StatelessWidget {
       height: 100,
       child: LineChart(
         LineChartData(
-          gridData: FlGridData(
+          gridData: const FlGridData(
             drawHorizontalLine: false,
             drawVerticalLine: false,
           ),
-          titlesData: FlTitlesData(show: false),
+          titlesData: const FlTitlesData(show: false),
           borderData: FlBorderData(show: false),
-          lineTouchData: LineTouchData(enabled: false),
+          lineTouchData: const LineTouchData(enabled: false),
           minX: 0,
           maxX: 40,
           minY: 0,
@@ -415,7 +415,7 @@ class Chart extends StatelessWidget {
                 show: true,
                 color: Theme.of(context).textTheme.bodyMedium?.color,
               ),
-              dotData: FlDotData(show: false),
+              dotData: const FlDotData(show: false),
             ),
           ],
         ),
