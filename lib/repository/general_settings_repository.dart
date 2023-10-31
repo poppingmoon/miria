@@ -16,7 +16,9 @@ class GeneralSettingsRepository extends ChangeNotifier {
     }
 
     try {
-      _settings = GeneralSettings.fromJson(jsonDecode(storedData));
+      _settings = GeneralSettings.fromJson(
+        jsonDecode(storedData) as Map<String, dynamic>,
+      );
       notifyListeners();
     } catch (e) {
       if (kDebugMode) print(e);

@@ -161,7 +161,7 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                   onPressed: () async {
                     final page = pageController.page?.toInt();
                     if (page == null) return;
-                    final response = await ref.read(dioProvider).get(
+                    final response = await ref.read(dioProvider).get<Uint8List>(
                           widget.imageUrlList[page],
                           options: Options(responseType: ResponseType.bytes),
                         );
@@ -182,7 +182,7 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                       }
                     }
 
-                    await ImageGallerySaver.saveImage(response.data);
+                    await ImageGallerySaver.saveImage(response.data!);
                     if (!mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("画像保存したで")),

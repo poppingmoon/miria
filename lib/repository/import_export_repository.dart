@@ -60,10 +60,12 @@ class ImportExportRepository extends ChangeNotifier {
 
     final importFile = alreadyExists.first;
 
-    final response = await reader(dioProvider)
-        .get(importFile.url, options: Options(responseType: ResponseType.json));
+    final response = await reader(dioProvider).get<String>(
+      importFile.url,
+      options: Options(responseType: ResponseType.json),
+    );
 
-    final json = jsonDecode(response.data);
+    final json = jsonDecode(response.data!) as Map<String, dynamic>;
 
     final importedSettings = ExportedSetting.fromJson(json);
 

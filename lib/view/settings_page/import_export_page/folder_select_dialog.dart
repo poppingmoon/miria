@@ -100,7 +100,7 @@ class FolderSelectDialogState extends ConsumerState<FolderSelectDialog> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   future: () async {
-                    final list = [];
+                    final list = <DriveFile>[];
                     for (final element in widget.fileShowTarget!) {
                       list.addAll(
                         await ref

@@ -23,9 +23,9 @@ class TimelinePageTest {
 
   TimelinePageTest({
     required TabType tabType,
-    isSubscribe = false,
-    isIncludeReplies = false,
-    isMediaOnly = false,
+    bool isSubscribe = false,
+    bool isIncludeReplies = false,
+    bool isMediaOnly = false,
     String? roleId,
     String? antennaId,
     String? channelId,
