@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
 import 'package:miria/view/channels_page/channel_detail_info.dart';
 import 'package:miria/view/channels_page/channel_timeline.dart';
 import 'package:miria/view/common/account_scope.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 @RoutePage()

@@ -1,7 +1,7 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/repository/time_line_repository.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum TabType {
   localTimeline("ローカルタイムライン"),
