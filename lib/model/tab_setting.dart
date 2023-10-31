@@ -22,7 +22,6 @@ Map<String, dynamic> _readAcct(Map<dynamic, dynamic> json, String name) {
 
 @freezed
 class TabSetting with _$TabSetting {
-
   const factory TabSetting({
     @IconDataConverter() required TabIcon icon,
 

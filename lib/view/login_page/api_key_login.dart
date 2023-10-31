@@ -34,9 +34,12 @@ class APiKeyLoginState extends ConsumerState<ApiKeyLogin> {
           .loginAsToken(serverController.text, apiKeyController.text);
 
       if (!mounted) return;
-      context.pushRoute(TimeLineRoute(
+      context.pushRoute(
+        TimeLineRoute(
           initialTabSetting:
-              ref.read(tabSettingsRepositoryProvider).tabSettings.first,),);
+              ref.read(tabSettingsRepositoryProvider).tabSettings.first,
+        ),
+      );
     } catch (e) {
       rethrow;
     } finally {
@@ -57,52 +60,64 @@ class APiKeyLoginState extends ConsumerState<ApiKeyLogin> {
               1: FlexColumnWidth(),
             },
             children: [
-              TableRow(children: [
-                const Text("サーバー"),
-                TextField(
-                  controller: serverController,
-                  decoration: InputDecoration(
+              TableRow(
+                children: [
+                  const Text("サーバー"),
+                  TextField(
+                    controller: serverController,
+                    decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.dns),
                       suffixIcon: IconButton(
-                          onPressed: () async {
-                            final url = await showDialog<String?>(
-                                context: context,
-                                builder: (context) =>
-                                    const MisskeyServerListDialog(),);
-                            if (url != null && url.isNotEmpty) {
-                              serverController.text = url;
-                            }
-                          },
-                          icon: const Icon(Icons.search),),),
-                ),
-              ],),
-              TableRow(children: [
-                const Padding(padding: EdgeInsets.only(bottom: 10)),
-                Container(),
-              ],),
-              TableRow(children: [
-                const Padding(
-                  padding: EdgeInsets.only(right: 20),
-                  child: Text("APIキー"),
-                ),
-                TextField(
-                  controller: apiKeyController,
-                  decoration:
-                      const InputDecoration(prefixIcon: Icon(Icons.key)),
-                ),
-              ],),
+                        onPressed: () async {
+                          final url = await showDialog<String?>(
+                            context: context,
+                            builder: (context) =>
+                                const MisskeyServerListDialog(),
+                          );
+                          if (url != null && url.isNotEmpty) {
+                            serverController.text = url;
+                          }
+                        },
+                        icon: const Icon(Icons.search),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              TableRow(
+                children: [
+                  const Padding(padding: EdgeInsets.only(bottom: 10)),
+                  Container(),
+                ],
+              ),
+              TableRow(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 20),
+                    child: Text("APIキー"),
+                  ),
+                  TextField(
+                    controller: apiKeyController,
+                    decoration:
+                        const InputDecoration(prefixIcon: Icon(Icons.key)),
+                  ),
+                ],
+              ),
               // ],
-              TableRow(children: [
-                Container(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: ElevatedButton(
+              TableRow(
+                children: [
+                  Container(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: ElevatedButton(
                       onPressed: () {
                         login().expectFailure(context);
                       },
-                      child: const Text("ログイン"),),
-                ),
-              ],),
+                      child: const Text("ログイン"),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ],

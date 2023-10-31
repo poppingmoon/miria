@@ -37,7 +37,8 @@ class AppInfoPageState extends ConsumerState<AppInfoPage> {
             account: ref.read(accountRepository).account.first,
             child: Column(
               children: [
-                MfmText(mfmText: '''
+                MfmText(
+                  mfmText: '''
 <center>\$[x3 Miria]</center>
 パッケージ名：${packageInfo?.packageName ?? ""}
 バージョン:${packageInfo?.version ?? ""}+${packageInfo?.buildNumber ?? ""}
@@ -49,7 +50,8 @@ class AppInfoPageState extends ConsumerState<AppInfoPage> {
 [GitHub](https://github.com/shiosyakeyakini-info/miria)
 
 \$[x2 **オープンソースライセンス**]
-                ''',),
+                ''',
+                ),
                 ElevatedButton(
                   onPressed: () async {
                     showLicensePage(

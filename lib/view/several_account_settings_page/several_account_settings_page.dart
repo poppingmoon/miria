@@ -19,15 +19,17 @@ class SeveralAccountSettingsPage extends StatelessWidget {
           ListTile(
             onTap: () {
               context.pushRoute(
-                  SeveralAccountGeneralSettingsRoute(account: account),);
+                SeveralAccountGeneralSettingsRoute(account: account),
+              );
             },
             title: const Text("全般設定"),
           ),
           ListTile(
-              onTap: () {
-                context.pushRoute(ReactionDeckRoute(account: account));
-              },
-              title: const Text("リアクションデッキ"),),
+            onTap: () {
+              context.pushRoute(ReactionDeckRoute(account: account));
+            },
+            title: const Text("リアクションデッキ"),
+          ),
           // ListTile(onTap: () {}, title: const Text("ソフトミュート")),
           ListTile(
             onTap: () {

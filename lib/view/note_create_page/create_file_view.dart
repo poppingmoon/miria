@@ -21,20 +21,25 @@ class CreateFileView extends ConsumerWidget {
 
   Future<void> onTap(BuildContext context, WidgetRef ref) async {
     final account = AccountScope.of(context);
-    context.pushRoute<Uint8List?>(PhotoEditRoute(
+    context.pushRoute<Uint8List?>(
+      PhotoEditRoute(
         account: AccountScope.of(context),
         file: file,
         onSubmit: (result) {
           ref
               .read(noteCreateProvider(account).notifier)
               .setFileContent(file, result);
-        },),);
+        },
+      ),
+    );
   }
 
   Future<void> detailTap(BuildContext context, WidgetRef ref) async {
     final account = AccountScope.of(context);
     final result = await showDialog<FileSettingsDialogResult?>(
-        context: context, builder: (context) => FileSettingsDialog(file: file),);
+      context: context,
+      builder: (context) => FileSettingsDialog(file: file),
+    );
     if (result == null) return;
 
     ref
@@ -59,19 +64,22 @@ class CreateFileView extends ConsumerWidget {
             SizedBox(
               height: 200,
               child: GestureDetector(
-                  onTap: () async => await onTap(context, ref),
-                  child: Image.memory(data.data),),
+                onTap: () async => await onTap(context, ref),
+                child: Image.memory(data.data),
+              ),
             ),
             Row(
               children: [
                 if (data.isNsfw) const Icon(Icons.details_rounded),
                 Text(data.fileName),
                 IconButton(
-                    onPressed: () => detailTap(context, ref),
-                    icon: const Icon(Icons.more_vert),),
+                  onPressed: () => detailTap(context, ref),
+                  icon: const Icon(Icons.more_vert),
+                ),
                 IconButton(
-                    onPressed: () => delete(context, ref),
-                    icon: const Icon(Icons.delete),),
+                  onPressed: () => delete(context, ref),
+                  icon: const Icon(Icons.delete),
+                ),
               ],
             ),
           ],
@@ -82,19 +90,22 @@ class CreateFileView extends ConsumerWidget {
             SizedBox(
               height: 200,
               child: GestureDetector(
-                  onTap: () async => await onTap(context, ref),
-                  child: Image.memory(data.data),),
+                onTap: () async => await onTap(context, ref),
+                child: Image.memory(data.data),
+              ),
             ),
             Row(
               children: [
                 if (data.isNsfw) const Icon(Icons.details_rounded),
                 Text(data.fileName),
                 IconButton(
-                    onPressed: () => detailTap(context, ref),
-                    icon: const Icon(Icons.more_vert),),
+                  onPressed: () => detailTap(context, ref),
+                  icon: const Icon(Icons.more_vert),
+                ),
                 IconButton(
-                    onPressed: () => delete(context, ref),
-                    icon: const Icon(Icons.delete),),
+                  onPressed: () => delete(context, ref),
+                  icon: const Icon(Icons.delete),
+                ),
               ],
             ),
           ],

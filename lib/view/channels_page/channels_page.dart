@@ -33,23 +33,29 @@ class ChannelsPage extends StatelessWidget {
           ),
         ),
         body: AccountScope(
-            account: account,
-            child: const TabBarView(children: [
+          account: account,
+          child: const TabBarView(
+            children: [
               Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  child: ChannelSearch(),),
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: ChannelSearch(),
+              ),
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: ChannelTrend(),
               ),
               Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  child: ChannelFavorited(),),
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: ChannelFavorited(),
+              ),
               Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  child: ChannelFollowed(),),
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: ChannelFollowed(),
+              ),
               Text("作成中"),
-            ],),),
+            ],
+          ),
+        ),
       ),
     );
   }

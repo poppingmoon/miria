@@ -46,69 +46,83 @@ class MiAuthLoginState extends ConsumerState<MiAuthLogin> {
   @override
   Widget build(BuildContext context) {
     return CenteringWidget(
-        child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Table(
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          columnWidths: const {
-            0: IntrinsicColumnWidth(),
-            1: FlexColumnWidth(),
-          },
-          children: [
-            TableRow(children: [
-              const Text("サーバー"),
-              TextField(
-                controller: serverController,
-                decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.dns),
-                    suffixIcon: IconButton(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            columnWidths: const {
+              0: IntrinsicColumnWidth(),
+              1: FlexColumnWidth(),
+            },
+            children: [
+              TableRow(
+                children: [
+                  const Text("サーバー"),
+                  TextField(
+                    controller: serverController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.dns),
+                      suffixIcon: IconButton(
                         onPressed: () async {
                           final url = await showDialog<String?>(
-                              context: context,
-                              builder: (context) =>
-                                  const MisskeyServerListDialog(),);
+                            context: context,
+                            builder: (context) =>
+                                const MisskeyServerListDialog(),
+                          );
                           if (url != null && url.isNotEmpty) {
                             serverController.text = url;
                           }
                         },
-                        icon: const Icon(Icons.search),),),
+                        icon: const Icon(Icons.search),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],),
-            TableRow(children: [
-              const Padding(padding: EdgeInsets.only(bottom: 10)),
-              Container(),
-            ],),
-            TableRow(children: [
-              Container(),
-              ElevatedButton(
-                onPressed: () {
-                  ref
-                      .read(accountRepository)
-                      .openMiAuth(serverController.text)
-                      .expectFailure(context);
-                  setState(() {
-                    isAuthed = true;
-                  });
-                },
-                child: Text(isAuthed ? "再度認証をする" : "認証をする"),
+              TableRow(
+                children: [
+                  const Padding(padding: EdgeInsets.only(bottom: 10)),
+                  Container(),
+                ],
               ),
-            ],),
-            TableRow(children: [
-              const Padding(padding: EdgeInsets.only(bottom: 10)),
-              Container(),
-            ],),
-            if (isAuthed)
-              TableRow(children: [
-                Container(),
-                ElevatedButton(
-                  onPressed: () => login().expectFailure(context),
-                  child: const Text("認証してきた"),
+              TableRow(
+                children: [
+                  Container(),
+                  ElevatedButton(
+                    onPressed: () {
+                      ref
+                          .read(accountRepository)
+                          .openMiAuth(serverController.text)
+                          .expectFailure(context);
+                      setState(() {
+                        isAuthed = true;
+                      });
+                    },
+                    child: Text(isAuthed ? "再度認証をする" : "認証をする"),
+                  ),
+                ],
+              ),
+              TableRow(
+                children: [
+                  const Padding(padding: EdgeInsets.only(bottom: 10)),
+                  Container(),
+                ],
+              ),
+              if (isAuthed)
+                TableRow(
+                  children: [
+                    Container(),
+                    ElevatedButton(
+                      onPressed: () => login().expectFailure(context),
+                      child: const Text("認証してきた"),
+                    ),
+                  ],
                 ),
-              ],),
-          ],
-        ),
-      ],
-    ),);
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

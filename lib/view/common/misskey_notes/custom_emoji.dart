@@ -107,9 +107,10 @@ class CustomEmojiState extends ConsumerState<CustomEmoji> {
               child: Text(
                 emojiData.char,
                 strutStyle: StrutStyle(
-                    height: 1.0,
-                    forceStrutHeight: true,
-                    fontSize: scopedFontSize,),
+                  height: 1.0,
+                  forceStrutHeight: true,
+                  fontSize: scopedFontSize,
+                ),
                 style: style.merge(AppTheme.of(context).unicodeEmojiStyle),
               ),
             );

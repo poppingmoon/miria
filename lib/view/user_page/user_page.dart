@@ -136,13 +136,15 @@ class UserPageState extends ConsumerState<UserPage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: UserMisskeyPage(
-                              userId: userInfo.remoteResponse!.id,),
+                            userId: userInfo.remoteResponse!.id,
+                          ),
                         ),
                       )
                     else
                       Padding(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
-                          child: UserMisskeyPage(userId: widget.userId),),
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: UserMisskeyPage(userId: widget.userId),
+                      ),
 
                     // Play
                     if (isRemoteUser)

@@ -19,7 +19,8 @@ class ErrorNotification extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
-              border: Border.all(color: Theme.of(context).dividerColor),),
+            border: Border.all(color: Theme.of(context).dividerColor),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

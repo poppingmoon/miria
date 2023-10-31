@@ -67,7 +67,9 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
 
   Future<Expire?> getExpire() async {
     return await showDialog<Expire?>(
-        context: context, builder: (context) => const ExpireSelectDialog(),);
+      context: context,
+      builder: (context) => const ExpireSelectDialog(),
+    );
   }
 
   Future<void> renoteMuteCreate() async {
@@ -95,7 +97,8 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
         ? null
         : DateTime.now().add(expires.expires!);
     await ref.read(misskeyProvider(widget.account)).mute.create(
-        MuteCreateRequest(userId: widget.response.id, expiresAt: expiresDate),);
+          MuteCreateRequest(userId: widget.response.id, expiresAt: expiresDate),
+        );
     if (!mounted) return;
     Navigator.of(context).pop(UserControl.createMute);
   }
@@ -111,10 +114,11 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
 
   Future<void> blockingCreate() async {
     if (await SimpleConfirmDialog.show(
-            context: context,
-            message: "ブロックしてもええか？",
-            primary: "ブロックする",
-            secondary: "やっぱりやめる",) !=
+          context: context,
+          message: "ブロックしてもええか？",
+          primary: "ブロックする",
+          secondary: "やっぱりやめる",
+        ) !=
         true) {
       return;
     }
@@ -138,103 +142,105 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: [
-      ListTile(
-        onTap: () {
-          Clipboard.setData(
-            ClipboardData(
-              text: Uri(
+    return ListView(
+      children: [
+        ListTile(
+          onTap: () {
+            Clipboard.setData(
+              ClipboardData(
+                text: Uri(
+                  scheme: "https",
+                  host: widget.account.host,
+                  path: widget.response.acct,
+                ).toString(),
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("コピーしました")),
+            );
+            Navigator.of(context).pop();
+          },
+          title: const Text("リンクをコピー"),
+        ),
+        ListTile(
+          onTap: () {
+            Clipboard.setData(
+              ClipboardData(
+                text: widget.response.name ?? widget.response.username,
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("コピーしました")),
+            );
+            Navigator.of(context).pop();
+          },
+          title: const Text("ユーザー名をコピー"),
+        ),
+        ListTile(
+          onTap: () {
+            Clipboard.setData(ClipboardData(text: widget.response.acct));
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("コピーしました")),
+            );
+            Navigator.of(context).pop();
+          },
+          title: const Text("ユーザースクリーン名をコピー"),
+        ),
+        ListTile(
+          title: const Text("ブラウザで開く"),
+          onTap: () {
+            launchUrl(
+              Uri(
                 scheme: "https",
                 host: widget.account.host,
                 path: widget.response.acct,
-              ).toString(),
+              ),
+            );
+            Navigator.of(context).pop();
+          },
+        ),
+        ListTile(
+          onTap: addToList,
+          title: const Text("リストに追加"),
+        ),
+        ListTile(
+          onTap: addToAntenna,
+          title: const Text("アンテナに追加"),
+        ),
+        if (!widget.isMe) ...[
+          if (widget.response.isRenoteMuted ?? false)
+            ListTile(
+              onTap: renoteMuteDelete,
+              title: const Text("Renoteのミュート解除する"),
+            )
+          else
+            ListTile(
+              onTap: renoteMuteCreate,
+              title: const Text("Renoteをミュートする"),
             ),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("コピーしました")),
-          );
-          Navigator.of(context).pop();
-        },
-        title: const Text("リンクをコピー"),
-      ),
-      ListTile(
-        onTap: () {
-          Clipboard.setData(
-            ClipboardData(
-              text: widget.response.name ?? widget.response.username,
+          if (widget.response.isMuted ?? false)
+            ListTile(
+              onTap: muteDelete,
+              title: const Text("ミュート解除する"),
+            )
+          else
+            ListTile(
+              onTap: muteCreate,
+              title: const Text("ミュートする"),
             ),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("コピーしました")),
-          );
-          Navigator.of(context).pop();
-        },
-        title: const Text("ユーザー名をコピー"),
-      ),
-      ListTile(
-        onTap: () {
-          Clipboard.setData(ClipboardData(text: widget.response.acct));
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("コピーしました")),
-          );
-          Navigator.of(context).pop();
-        },
-        title: const Text("ユーザースクリーン名をコピー"),
-      ),
-      ListTile(
-        title: const Text("ブラウザで開く"),
-        onTap: () {
-          launchUrl(
-            Uri(
-              scheme: "https",
-              host: widget.account.host,
-              path: widget.response.acct,
+          if (widget.response.isBlocked ?? false)
+            ListTile(
+              onTap: blockingDelete,
+              title: const Text("ブロックを解除する"),
+            )
+          else
+            ListTile(
+              onTap: blockingCreate,
+              title: const Text("ブロックする"),
             ),
-          );
-          Navigator.of(context).pop();
-        },
-      ),
-      ListTile(
-        onTap: addToList,
-        title: const Text("リストに追加"),
-      ),
-      ListTile(
-        onTap: addToAntenna,
-        title: const Text("アンテナに追加"),
-      ),
-      if (!widget.isMe) ...[
-        if (widget.response.isRenoteMuted ?? false)
-          ListTile(
-            onTap: renoteMuteDelete,
-            title: const Text("Renoteのミュート解除する"),
-          )
-        else
-          ListTile(
-            onTap: renoteMuteCreate,
-            title: const Text("Renoteをミュートする"),
-          ),
-        if (widget.response.isMuted ?? false)
-          ListTile(
-            onTap: muteDelete,
-            title: const Text("ミュート解除する"),
-          )
-        else
-          ListTile(
-            onTap: muteCreate,
-            title: const Text("ミュートする"),
-          ),
-        if (widget.response.isBlocked ?? false)
-          ListTile(
-            onTap: blockingDelete,
-            title: const Text("ブロックを解除する"),
-          )
-        else
-          ListTile(
-            onTap: blockingCreate,
-            title: const Text("ブロックする"),
-          ),
+        ],
       ],
-    ],);
+    );
   }
 }
 
@@ -447,10 +453,11 @@ class ExpireSelectDialogState extends State<ExpireSelectDialog> {
       ),
       actions: [
         ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop(selectedExpire);
-            },
-            child: const Text("ほい"),),
+          onPressed: () {
+            Navigator.of(context).pop(selectedExpire);
+          },
+          child: const Text("ほい"),
+        ),
       ],
     );
   }

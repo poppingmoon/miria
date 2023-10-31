@@ -24,8 +24,10 @@ class TabSettingsListPageState extends ConsumerState<TabSettingsListPage> {
   @override
   Widget build(BuildContext context) {
     final tabSettings = ref
-        .watch(tabSettingsRepositoryProvider
-            .select((repository) => repository.tabSettings),)
+        .watch(
+          tabSettingsRepositoryProvider
+              .select((repository) => repository.tabSettings),
+        )
         .toList();
     return Scaffold(
       appBar: AppBar(
@@ -33,55 +35,58 @@ class TabSettingsListPageState extends ConsumerState<TabSettingsListPage> {
         title: const Text("タブ設定"),
         actions: [
           IconButton(
-              onPressed: () {
-                context.pushRoute(TabSettingsRoute());
-              },
-              icon: const Icon(Icons.add),),
+            onPressed: () {
+              context.pushRoute(TabSettingsRoute());
+            },
+            icon: const Icon(Icons.add),
+          ),
         ],
       ),
       body: Column(
         children: [
           Expanded(
             child: ReorderableListView.builder(
-                itemBuilder: (context, index) {
-                  final tabSetting = tabSettings[index];
-                  final account = ref.watch(accountProvider(tabSetting.acct));
-                  return ListTile(
-                    key: Key("$index"),
-                    leading: AccountScope(
-                      account: account,
-                      child: TabIconView(icon: tabSettings[index].icon),
-                    ),
-                    title: Text(tabSettings[index].name),
-                    subtitle: Text(
-                      "${tabSetting.tabType.displayName} / ${account.acct}",
-                    ),
-                    onTap: () =>
-                        context.pushRoute(TabSettingsRoute(tabIndex: index)),
-                  );
-                },
-                itemCount: tabSettings.length,
-                onReorder: (oldIndex, newIndex) {
-                  setState(() {
-                    if (oldIndex < newIndex) {
-                      newIndex -= 1;
-                    }
-                    final item = tabSettings.removeAt(oldIndex);
-                    tabSettings.insert(newIndex, item);
-                    save(tabSettings);
-                  });
-                },),
+              itemBuilder: (context, index) {
+                final tabSetting = tabSettings[index];
+                final account = ref.watch(accountProvider(tabSetting.acct));
+                return ListTile(
+                  key: Key("$index"),
+                  leading: AccountScope(
+                    account: account,
+                    child: TabIconView(icon: tabSettings[index].icon),
+                  ),
+                  title: Text(tabSettings[index].name),
+                  subtitle: Text(
+                    "${tabSetting.tabType.displayName} / ${account.acct}",
+                  ),
+                  onTap: () =>
+                      context.pushRoute(TabSettingsRoute(tabIndex: index)),
+                );
+              },
+              itemCount: tabSettings.length,
+              onReorder: (oldIndex, newIndex) {
+                setState(() {
+                  if (oldIndex < newIndex) {
+                    newIndex -= 1;
+                  }
+                  final item = tabSettings.removeAt(oldIndex);
+                  tabSettings.insert(newIndex, item);
+                  save(tabSettings);
+                });
+              },
+            ),
           ),
           Align(
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: ElevatedButton(
-                  onPressed: () {
-                    context.router
-                      ..removeWhere((route) => true)
-                      ..push(const SplashRoute());
-                  },
-                  child: const Text("反映する"),),
+                onPressed: () {
+                  context.router
+                    ..removeWhere((route) => true)
+                    ..push(const SplashRoute());
+                },
+                child: const Text("反映する"),
+              ),
             ),
           ),
         ],

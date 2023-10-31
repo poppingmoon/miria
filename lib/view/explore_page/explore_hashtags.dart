@@ -30,67 +30,77 @@ class ExploreHashtagsState extends ConsumerState<ExploreHashtags> {
     return Column(
       children: [
         Padding(
-            padding: const EdgeInsets.only(top: 3, bottom: 3),
-            child: LayoutBuilder(
-                builder: (context, constraints) => ToggleButtons(
-                        constraints: BoxConstraints.expand(
-                            width: constraints.maxWidth / 3 -
-                                Theme.of(context)
-                                        .toggleButtonsTheme
-                                        .borderWidth!
-                                        .toInt() *
-                                    3,),
-                        onPressed: (index) => setState(() {
-                              hashtagListType = HashtagListType.values[index];
-                            }),
-                        isSelected: [
-                          for (final element in HashtagListType.values)
-                            element == hashtagListType,
-                        ],
-                        children: const [
-                          Text("トレンド"),
-                          Text("ローカル"),
-                          Text("リモート"),
-                        ],),),),
+          padding: const EdgeInsets.only(top: 3, bottom: 3),
+          child: LayoutBuilder(
+            builder: (context, constraints) => ToggleButtons(
+              constraints: BoxConstraints.expand(
+                width: constraints.maxWidth / 3 -
+                    Theme.of(context).toggleButtonsTheme.borderWidth!.toInt() *
+                        3,
+              ),
+              onPressed: (index) => setState(() {
+                hashtagListType = HashtagListType.values[index];
+              }),
+              isSelected: [
+                for (final element in HashtagListType.values)
+                  element == hashtagListType,
+              ],
+              children: const [
+                Text("トレンド"),
+                Text("ローカル"),
+                Text("リモート"),
+              ],
+            ),
+          ),
+        ),
         if (hashtagListType == HashtagListType.localTrend)
           Expanded(
             child: FutureListView(
-                future: ref
-                    .read(misskeyProvider(AccountScope.of(context)))
-                    .hashtags
-                    .trend(),
-                builder: (context, item) =>
-                    Hashtag(hashtag: item.tag, usersCount: item.usersCount),),
+              future: ref
+                  .read(misskeyProvider(AccountScope.of(context)))
+                  .hashtags
+                  .trend(),
+              builder: (context, item) =>
+                  Hashtag(hashtag: item.tag, usersCount: item.usersCount),
+            ),
           ),
         if (hashtagListType == HashtagListType.local)
           Expanded(
             child: FutureListView(
-                future: ref
-                    .read(misskeyProvider(AccountScope.of(context)))
-                    .hashtags
-                    .list(const HashtagsListRequest(
-                        limit: 50,
-                        attachedToLocalUserOnly: true,
-                        sort:
-                            HashtagsListSortType.attachedLocalUsersDescendant,),),
-                builder: (context, item) => Hashtag(
-                    hashtag: item.tag,
-                    usersCount: item.attachedLocalUsersCount,),),
+              future: ref
+                  .read(misskeyProvider(AccountScope.of(context)))
+                  .hashtags
+                  .list(
+                    const HashtagsListRequest(
+                      limit: 50,
+                      attachedToLocalUserOnly: true,
+                      sort: HashtagsListSortType.attachedLocalUsersDescendant,
+                    ),
+                  ),
+              builder: (context, item) => Hashtag(
+                hashtag: item.tag,
+                usersCount: item.attachedLocalUsersCount,
+              ),
+            ),
           ),
         if (hashtagListType == HashtagListType.remote)
           Expanded(
             child: FutureListView(
-                future: ref
-                    .read(misskeyProvider(AccountScope.of(context)))
-                    .hashtags
-                    .list(const HashtagsListRequest(
-                        limit: 50,
-                        attachedToRemoteUserOnly: true,
-                        sort: HashtagsListSortType
-                            .attachedRemoteUsersDescendant,),),
-                builder: (context, item) => Hashtag(
-                    hashtag: item.tag,
-                    usersCount: item.attachedRemoteUsersCount,),),
+              future: ref
+                  .read(misskeyProvider(AccountScope.of(context)))
+                  .hashtags
+                  .list(
+                    const HashtagsListRequest(
+                      limit: 50,
+                      attachedToRemoteUserOnly: true,
+                      sort: HashtagsListSortType.attachedRemoteUsersDescendant,
+                    ),
+                  ),
+              builder: (context, item) => Hashtag(
+                hashtag: item.tag,
+                usersCount: item.attachedRemoteUsersCount,
+              ),
+            ),
           ),
       ],
     );
@@ -107,15 +117,18 @@ class Hashtag extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () => context.pushRoute(
-          HashtagRoute(hashtag: hashtag, account: AccountScope.of(context)),),
+        HashtagRoute(hashtag: hashtag, account: AccountScope.of(context)),
+      ),
       title: Text("#$hashtag", style: AppTheme.of(context).hashtagStyle),
       trailing: Text.rich(
-        TextSpan(children: [
-          TextSpan(
-            text: usersCount.format(),
-          ),
-          TextSpan(text: "人", style: Theme.of(context).textTheme.bodySmall),
-        ],),
+        TextSpan(
+          children: [
+            TextSpan(
+              text: usersCount.format(),
+            ),
+            TextSpan(text: "人", style: Theme.of(context).textTheme.bodySmall),
+          ],
+        ),
         textScaleFactor: MediaQuery.of(context).textScaleFactor,
       ),
     );

@@ -9,7 +9,8 @@ class ColorFilterImagePreview extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final previewImages = ref
         .watch(
-            photoEditProvider.select((value) => value.colorFilterPreviewImages),)
+          photoEditProvider.select((value) => value.colorFilterPreviewImages),
+        )
         .toList();
     final previewMode =
         ref.watch(photoEditProvider.select((value) => value.colorFilterMode));

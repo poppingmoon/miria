@@ -21,8 +21,9 @@ class TabSettingsRepository extends ChangeNotifier {
     try {
       _tabSettings
         ..clear()
-        ..addAll((jsonDecode(storedData) as List)
-            .map((e) => TabSetting.fromJson(e)),);
+        ..addAll(
+          (jsonDecode(storedData) as List).map((e) => TabSetting.fromJson(e)),
+        );
     } catch (e) {
       if (kDebugMode) print(e);
     }
@@ -31,8 +32,10 @@ class TabSettingsRepository extends ChangeNotifier {
   Future<void> save(List<TabSetting> tabSettings) async {
     _tabSettings = tabSettings.toList();
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("tab_settings",
-        jsonEncode(_tabSettings.map((e) => e.toJson()).toList()),);
+    await prefs.setString(
+      "tab_settings",
+      jsonEncode(_tabSettings.map((e) => e.toJson()).toList()),
+    );
     notifyListeners();
   }
 

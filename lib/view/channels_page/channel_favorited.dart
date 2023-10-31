@@ -13,10 +13,11 @@ class ChannelFavorited extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final account = AccountScope.of(context);
     return FutureListView(
-        future: ref
-            .read(misskeyProvider(account))
-            .channels
-            .myFavorite(const ChannelsMyFavoriteRequest()),
-        builder: (context, item) => CommunityChannelView(channel: item),);
+      future: ref
+          .read(misskeyProvider(account))
+          .channels
+          .myFavorite(const ChannelsMyFavoriteRequest()),
+      builder: (context, item) => CommunityChannelView(channel: item),
+    );
   }
 }

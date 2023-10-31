@@ -29,7 +29,10 @@ class AccountRepository extends ChangeNotifier {
   final T Function<T>(ProviderListenable<T> provider) reader;
 
   AccountRepository(
-      this.tabSettingsRepository, this.accountSettingsRepository, this.reader,);
+    this.tabSettingsRepository,
+    this.accountSettingsRepository,
+    this.reader,
+  );
 
   Future<void> load() async {
     const prefs = FlutterSecureStorage();
@@ -41,7 +44,8 @@ class AccountRepository extends ChangeNotifier {
       _account
         ..clear()
         ..addAll(
-            (jsonDecode(storedData) as List).map((e) => Account.fromJson(e)),);
+          (jsonDecode(storedData) as List).map((e) => Account.fromJson(e)),
+        );
 
       accountDataValidated
         ..clear()
@@ -69,12 +73,15 @@ class AccountRepository extends ChangeNotifier {
   }
 
   Future<void> createUnreadAnnouncement(
-      Account account, AnnouncementsResponse announcement,) async {
+    Account account,
+    AnnouncementsResponse announcement,
+  ) async {
     final i = _account[_account.indexOf(account)].i.copyWith(
-        unreadAnnouncements: [
-          ..._account[_account.indexOf(account)].i.unreadAnnouncements,
-          announcement,
-        ],);
+      unreadAnnouncements: [
+        ..._account[_account.indexOf(account)].i.unreadAnnouncements,
+        announcement,
+      ],
+    );
     _account[_account.indexOf(account)] =
         _account[_account.indexOf(account)].copyWith(i: i);
     notifyListeners();
@@ -129,12 +136,14 @@ class AccountRepository extends ChangeNotifier {
     final Uri uri;
     try {
       uri = Uri(
-          scheme: "https",
-          host: server,
-          pathSegments: [".well-known", "nodeinfo"],);
+        scheme: "https",
+        host: server,
+        pathSegments: [".well-known", "nodeinfo"],
+      );
     } catch (e) {
       throw SpecifiedException(
-          "$server はサーバーとして認識できませんでした。\nサーバーには、「misskey.io」などを入力してください。",);
+        "$server はサーバーとして認識できませんでした。\nサーバーには、「misskey.io」などを入力してください。",
+      );
     }
 
     try {
@@ -162,7 +171,10 @@ class AccountRepository extends ChangeNotifier {
   }
 
   Future<void> loginAsPassword(
-      String server, String userId, String password,) async {
+    String server,
+    String userId,
+    String password,
+  ) async {
     final token =
         await MisskeyServer().loginAsPassword(server, userId, password);
     final i = await Misskey(token: token, host: server).i.i();
@@ -185,8 +197,12 @@ class AccountRepository extends ChangeNotifier {
 
     sessionId = const Uuid().v4();
     await launchUrl(
-      MisskeyServer().buildMiAuthURL(server, sessionId,
-          name: "Miria", permission: Permission.values,),
+      MisskeyServer().buildMiAuthURL(
+        server,
+        sessionId,
+        name: "Miria",
+        permission: Permission.values,
+      ),
       mode: LaunchMode.externalApplication,
     );
   }
@@ -195,7 +211,8 @@ class AccountRepository extends ChangeNotifier {
     final token = await MisskeyServer().checkMiAuthToken(server, sessionId);
     final i = await Misskey(token: token, host: server).i.i();
     await addAccount(
-        Account(host: server, userId: i.username, token: token, i: i),);
+      Account(host: server, userId: i.username, token: token, i: i),
+    );
     await _addIfTabSettingNothing();
   }
 
@@ -210,7 +227,8 @@ class AccountRepository extends ChangeNotifier {
   Future<void> save() async {
     const prefs = FlutterSecureStorage();
     await prefs.write(
-        key: "accounts",
-        value: jsonEncode(_account.map((e) => e.toJson()).toList()),);
+      key: "accounts",
+      value: jsonEncode(_account.map((e) => e.toJson()).toList()),
+    );
   }
 }

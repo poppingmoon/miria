@@ -7,7 +7,6 @@ part 'account_settings.g.dart';
 
 @freezed
 class AccountSettings with _$AccountSettings {
-
   const factory AccountSettings({
     required String userId,
     required String host,

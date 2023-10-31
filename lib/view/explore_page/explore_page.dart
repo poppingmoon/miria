@@ -28,37 +28,38 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     return AccountScope(
-        account: widget.account,
-        child: DefaultTabController(
-          length: 7,
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text("みつける"),
-              bottom: const TabBar(
-                isScrollable: true,
-                tabs: [
-                  Tab(text: "ハイライト"),
-                  Tab(text: "ユーザー"),
-                  Tab(text: "ロール"),
-                  Tab(text: "ページ"),
-                  Tab(text: "Play"),
-                  Tab(text: "ハッシュタグ"),
-                  Tab(text: "よそのサーバー"),
-                ],
-              ),
-            ),
-            body: const TabBarView(
-              children: [
-                ExploreHighlight(),
-                ExploreUsers(),
-                ExploreRole(),
-                ExplorePages(),
-                ExplorePlay(),
-                ExploreHashtags(),
-                ExploreServer(),
+      account: widget.account,
+      child: DefaultTabController(
+        length: 7,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("みつける"),
+            bottom: const TabBar(
+              isScrollable: true,
+              tabs: [
+                Tab(text: "ハイライト"),
+                Tab(text: "ユーザー"),
+                Tab(text: "ロール"),
+                Tab(text: "ページ"),
+                Tab(text: "Play"),
+                Tab(text: "ハッシュタグ"),
+                Tab(text: "よそのサーバー"),
               ],
             ),
           ),
-        ),);
+          body: const TabBarView(
+            children: [
+              ExploreHighlight(),
+              ExploreUsers(),
+              ExploreRole(),
+              ExplorePages(),
+              ExplorePlay(),
+              ExploreHashtags(),
+              ExploreServer(),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

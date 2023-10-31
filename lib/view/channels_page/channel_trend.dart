@@ -12,10 +12,11 @@ class ChannelTrend extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FutureListView(
-        future: ref
-            .read(misskeyProvider(AccountScope.of(context)))
-            .channels
-            .featured(),
-        builder: (context, item) => CommunityChannelView(channel: item),);
+      future: ref
+          .read(misskeyProvider(AccountScope.of(context)))
+          .channels
+          .featured(),
+      builder: (context, item) => CommunityChannelView(channel: item),
+    );
   }
 }

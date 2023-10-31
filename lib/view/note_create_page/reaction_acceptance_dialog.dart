@@ -38,7 +38,8 @@ class ReactionAcceptanceDialog extends StatelessWidget {
         ),
         ListTile(
           onTap: () => Navigator.of(context).pop(
-              ReactionAcceptance.nonSensitiveOnlyForLocalLikeOnlyForRemote,),
+            ReactionAcceptance.nonSensitiveOnlyForLocalLikeOnlyForRemote,
+          ),
           leading: const Icon(Icons.add_moderator_outlined),
           title: const Text("非センシティブのみ（リモートからはいいねのみ）"),
         ),
