@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/view/channels_page/channel_detail_info.dart';
 import 'package:miria/view/common/account_scope.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ChannelDialog extends ConsumerWidget {
   final String channelId;

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
+import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/constants.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/common/image_dialog.dart';
@@ -15,7 +16,6 @@ import 'package:miria/view/dialogs/simple_message_dialog.dart';
 import 'package:miria/view/themes/app_theme.dart';
 import 'package:miria/view/user_page/user_list_item.dart';
 import 'package:misskey_dart/misskey_dart.dart' as misskey;
-import 'package:miria/view/common/account_scope.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/view/common/account_scope.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/view/reaction_picker_dialog/reaction_picker_content.dart';
 
 class ReactionPickerDialog extends ConsumerStatefulWidget {

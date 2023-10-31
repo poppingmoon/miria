@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:miria/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/providers.dart';
 
 class MainStream extends ConsumerStatefulWidget {
   const MainStream({required this.child, super.key});

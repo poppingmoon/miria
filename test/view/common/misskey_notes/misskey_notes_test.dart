@@ -11,12 +11,12 @@ import 'package:miria/view/common/misskey_notes/network_image.dart';
 import 'package:miria/view/common/misskey_notes/reaction_button.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 import 'package:mockito/mockito.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../../../test_util/default_root_widget.dart';
 import '../../../test_util/mock.mocks.dart';
 import '../../../test_util/test_datas.dart';
 import '../../../test_util/widget_tester_extension.dart';
-import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 Widget buildTestWidget({
   List<Override> overrides = const [],

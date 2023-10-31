@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/text_editing_controller_extension.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/misskey_emoji_data.dart';
@@ -9,22 +10,20 @@ import 'package:miria/state_notifier/note_create_page/note_create_state_notifier
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/common/modal_indicator.dart';
-import 'package:miria/view/note_create_page/renote_area.dart';
-import 'package:miria/view/note_create_page/reply_area.dart';
-import 'package:miria/view/note_create_page/reply_to_area.dart';
-import 'package:miria/view/note_create_page/vote_area.dart';
-import 'package:miria/view/themes/app_theme.dart';
-import 'package:miria/view/note_create_page/note_create_setting_top.dart';
-import 'package:miria/view/note_create_page/note_emoji.dart';
-import 'package:miria/view/reaction_picker_dialog/reaction_picker_dialog.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:misskey_dart/misskey_dart.dart';
-
 import 'package:miria/view/note_create_page/channel_area.dart';
 import 'package:miria/view/note_create_page/cw_text_area.dart';
 import 'package:miria/view/note_create_page/cw_toggle_button.dart';
 import 'package:miria/view/note_create_page/file_preview.dart';
 import 'package:miria/view/note_create_page/mfm_preview.dart';
+import 'package:miria/view/note_create_page/note_create_setting_top.dart';
+import 'package:miria/view/note_create_page/note_emoji.dart';
+import 'package:miria/view/note_create_page/renote_area.dart';
+import 'package:miria/view/note_create_page/reply_area.dart';
+import 'package:miria/view/note_create_page/reply_to_area.dart';
+import 'package:miria/view/note_create_page/vote_area.dart';
+import 'package:miria/view/reaction_picker_dialog/reaction_picker_dialog.dart';
+import 'package:miria/view/themes/app_theme.dart';
+import 'package:misskey_dart/misskey_dart.dart';
 
 final noteInputTextProvider =
     ChangeNotifierProvider.autoDispose<TextEditingController>((ref) {

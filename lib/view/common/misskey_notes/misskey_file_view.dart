@@ -5,10 +5,9 @@ import 'package:miria/model/general_settings.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/image_dialog.dart';
 import 'package:miria/view/common/misskey_notes/in_note_button.dart';
+import 'package:miria/view/common/misskey_notes/network_image.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'package:miria/view/common/misskey_notes/network_image.dart';
 
 class MisskeyFileView extends ConsumerStatefulWidget {
   final List<DriveFile> files;

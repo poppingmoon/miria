@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/model/misskey_emoji_data.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/misskey_notes/network_image.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/view/themes/app_theme.dart';
 import 'package:twemoji_v2/twemoji_v2.dart';
 

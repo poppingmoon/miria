@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/text_editing_controller_extension.dart';
 import 'package:miria/model/input_completion_type.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/note_create/basic_keyboard.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/view/common/note_create/emoji_keyboard.dart';
 import 'package:miria/view/common/note_create/hashtag_keyboard.dart';
 import 'package:miria/view/common/note_create/mfm_fn_keyboard.dart';

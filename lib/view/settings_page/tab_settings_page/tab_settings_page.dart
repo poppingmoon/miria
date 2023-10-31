@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/users_lists_show_response_extension.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/tab_icon.dart';
@@ -7,14 +8,13 @@ import 'package:miria/model/tab_setting.dart';
 import 'package:miria/model/tab_type.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
-import 'package:miria/view/dialogs/simple_message_dialog.dart';
 import 'package:miria/view/common/tab_icon_view.dart';
-import 'package:miria/view/settings_page/tab_settings_page/role_select_dialog.dart';
+import 'package:miria/view/dialogs/simple_message_dialog.dart';
 import 'package:miria/view/settings_page/tab_settings_page/antenna_select_dialog.dart';
 import 'package:miria/view/settings_page/tab_settings_page/channel_select_dialog.dart';
 import 'package:miria/view/settings_page/tab_settings_page/icon_select_dialog.dart';
+import 'package:miria/view/settings_page/tab_settings_page/role_select_dialog.dart';
 import 'package:miria/view/settings_page/tab_settings_page/user_list_select_dialog.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 @RoutePage()
