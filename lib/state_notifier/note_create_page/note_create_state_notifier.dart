@@ -156,14 +156,14 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
       final files = <MisskeyPostFile>[];
       for (final file in note.files) {
         if (file.type.startsWith("image")) {
-          final response = await dio.get(
+          final response = await dio.get<Uint8List>(
             file.url,
             options: Options(responseType: ResponseType.bytes),
           );
           files.add(
             ImageFileAlreadyPostedFile(
               fileName: file.name,
-              data: response.data,
+              data: response.data!,
               id: file.id,
               isNsfw: file.isSensitive,
               caption: file.comment,

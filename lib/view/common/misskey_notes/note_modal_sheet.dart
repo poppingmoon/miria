@@ -220,7 +220,7 @@ class NoteModalSheet extends ConsumerWidget {
                 baseNote.renote != null &&
                 baseNote.poll == null &&
                 baseNote.files.isEmpty)) ...[
-          if (account.i.policies.canEditNote)
+          if (account.i.policies.canEditNote as bool)
             ListTile(
               title: const Text("編集する"),
               onTap: () async {

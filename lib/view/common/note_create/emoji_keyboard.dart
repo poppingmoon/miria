@@ -102,7 +102,7 @@ class EmojiKeyboard extends ConsumerWidget {
           ),
         TextButton.icon(
           onPressed: () async {
-            final selected = await showDialog(
+            final selected = await showDialog<MisskeyEmojiData>(
               context: context,
               builder: (context2) => ReactionPickerDialog(
                 account: account,

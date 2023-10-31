@@ -88,7 +88,7 @@ Future<void> _navigateDetailPage(
     final resultNote = await ref
         .read(misskeyProvider(loginAs))
         .notes
-        .show(NotesShowRequest(noteId: result.object["id"]));
+        .show(NotesShowRequest(noteId: result.object["id"] as String));
     pushRoute(NoteDetailRoute(note: resultNote, account: loginAs));
   }
 }
@@ -132,7 +132,9 @@ Future<void> _navigateUserDetailPage(
           ),
         );
     // よくかんがえたら無駄
-    pushRoute(UserRoute(userId: result.object["id"], account: loginAs));
+    pushRoute(
+      UserRoute(userId: result.object["id"] as String, account: loginAs),
+    );
   }
 }
 

@@ -333,7 +333,7 @@ class TestData {
   securityKeysList: [],
 }
 
-"""),
+""") as Map<String, dynamic>,
   );
 
   // note
@@ -379,9 +379,9 @@ class TestData {
   files: [],
   replyId: null,
   renoteId: null,
-}  
-  
-  '''),
+}
+
+  ''') as Map<String, dynamic>,
   );
 
   static Note note2 = Note.fromJson(
@@ -420,8 +420,8 @@ class TestData {
   files: [],
   replyId: null,
   renoteId: null,
-}  
-  '''),
+}
+  ''') as Map<String, dynamic>,
   );
 
   /// 自身でないノート１
@@ -467,8 +467,8 @@ class TestData {
   files: [],
   replyId: null,
   renoteId: null,
-}  
-  '''),
+}
+  ''') as Map<String, dynamic>,
   );
 
   /// 自身のノート（投票込みのノート）
@@ -539,7 +539,7 @@ class TestData {
   },
 }
 
-'''),
+''') as Map<String, dynamic>,
   );
 
   /// 自身でないノート２
@@ -652,8 +652,8 @@ class TestData {
   replyId: null,
   renoteId: null,
   myReaction: ':ultra_igyo@.:',
-}  
-  '''),
+}
+  ''') as Map<String, dynamic>,
   );
 
   /// Renote
@@ -748,7 +748,7 @@ class TestData {
       myReaction: ':miria@.:',
     },
   }
-'''),
+''') as Map<String, dynamic>,
   );
 
   // ドライブ（フォルダ）
@@ -759,7 +759,7 @@ class TestData {
     createdAt: '2023-05-16T12:35:31.447Z',
     name: '秘蔵の藍ちゃんフォルダ',
     parentId: null,
-  }'''),
+  }''') as Map<String, dynamic>,
   );
 
   static DriveFolder folder1Child = DriveFolder.fromJson(
@@ -769,7 +769,7 @@ class TestData {
     createdAt: '2023-05-16T12:35:31.447Z',
     name: 'えっちなやつ',
     parentId: '9ettn0mv95',
-  }'''),
+  }''') as Map<String, dynamic>,
   );
 
   // ドライブ（ファイル）
@@ -795,8 +795,8 @@ class TestData {
     folder: null,
     userId: null,
     user: null,
-  }  
-  '''),
+  }
+  ''') as Map<String, dynamic>,
   );
 
   static DriveFile drive2AsVideo = DriveFile.fromJson(
@@ -819,7 +819,7 @@ class TestData {
   userId: null,
   user: null,
 }
-  '''),
+  ''') as Map<String, dynamic>,
   );
 
   static Future<Uint8List> get binaryImage async => Uint8List.fromList(
@@ -847,7 +847,7 @@ class TestData {
   emojis: {},
   onlineStatus: 'online',
   badgeRoles: [],
-}'''),
+}''') as Map<String, dynamic>,
   );
   static String user1ExpectId = "7rkr3b1c1c";
 
@@ -1019,7 +1019,7 @@ class TestData {
   isBlocked: false,
   isMuted: false,
   isRenoteMuted: false,
-}  '''),
+}  ''') as Map<String, dynamic>,
   );
 
   static User detailedUser2 = User.fromJson(
@@ -1130,7 +1130,7 @@ class TestData {
   isBlocked: false,
   isMuted: false,
   isRenoteMuted: false,
-}'''),
+}''') as Map<String, dynamic>,
   );
 
   static String detailedUser2ExpectedId = "9gbzuv2cze";
@@ -1244,9 +1244,9 @@ class TestData {
   isBlocked: false,
   isMuted: false,
   isRenoteMuted: false,
-}  
-  
-  '''),
+}
+
+  ''') as Map<String, dynamic>,
   );
 
   static UsersShowResponse usersShowResponse2 = UsersShowResponse.fromJson(
@@ -1419,9 +1419,9 @@ class TestData {
   isBlocked: false,
   isMuted: false,
   isRenoteMuted: false,
-}  
-  
-  '''),
+}
+
+  ''') as Map<String, dynamic>,
   );
 
   static UsersShowResponse usersShowResponse3AsRemoteUser =
@@ -1504,7 +1504,7 @@ class TestData {
   isMuted: false,
   isRenoteMuted: false,
 }
-'''),
+''') as Map<String, dynamic>,
   );
 
   static UsersShowResponse usersShowResponse3AsLocalUser =
@@ -1593,7 +1593,7 @@ class TestData {
   notify: 'none',
 }
 
-'''),
+''') as Map<String, dynamic>,
   );
 
   // カスタム絵文字
@@ -1690,7 +1690,7 @@ class TestData {
     isFavorited: true,
     hasUnreadNote: false,
   }
-  '''),
+  ''') as Map<String, dynamic>,
   );
 
   static String expectChannel1DescriptionContaining = "ありがとうブルーアーカイブ";
@@ -1715,8 +1715,8 @@ class TestData {
   isFollowing: true,
   isFavorited: true,
   hasUnreadNote: false,
-}  
-  '''),
+}
+  ''') as Map<String, dynamic>,
   );
 
   // アンテナ
@@ -1754,7 +1754,7 @@ class TestData {
     isActive: true,
     hasUnreadNote: false,
   }
-'''),
+''') as Map<String, dynamic>,
   );
 
   static Clip clip = Clip.fromJson(
@@ -1784,7 +1784,7 @@ class TestData {
     isFavorited: false,
   }
 
-'''),
+''') as Map<String, dynamic>,
   );
 
   static RolesListResponse role = RolesListResponse.fromJson(
@@ -1944,7 +1944,7 @@ class TestData {
     },
     usersCount: 0,
   }
-'''),
+''') as Map<String, dynamic>,
   );
 
   static HashtagsTrendResponse hashtagTrends = HashtagsTrendResponse.fromJson(
@@ -1975,7 +1975,7 @@ class TestData {
     ],
     usersCount: 15,
   }
-'''),
+''') as Map<String, dynamic>,
   );
 
   static Hashtag hashtag = Hashtag.fromJson(
@@ -1989,7 +1989,7 @@ class TestData {
     attachedLocalUsersCount: 2,
     attachedRemoteUsersCount: 65,
   }
-'''),
+''') as Map<String, dynamic>,
   );
 
   // Dio
