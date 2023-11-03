@@ -14,11 +14,11 @@ import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/server_detail_dialog.dart';
 import 'package:miria/view/themes/app_theme.dart';
 import 'package:miria/view/common/common_drawer.dart';
-import 'package:miria/view/common/misskey_notes/network_image.dart';
 import 'package:miria/view/common/notification_icon.dart';
 import 'package:miria/view/common/tab_icon_view.dart';
 import 'package:miria/view/common/timeline_listview.dart';
 import 'package:miria/view/time_line_page/misskey_time_line.dart';
+import 'package:miria/view/time_line_page/nyanpuppu.dart';
 import 'package:miria/view/time_line_page/timeline_emoji.dart';
 import 'package:miria/view/time_line_page/timeline_note.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,7 +35,7 @@ class TimeLinePage extends ConsumerStatefulWidget {
 }
 
 class TimeLinePageState extends ConsumerState<TimeLinePage> {
-  late final List<TabSetting> tabSettings;
+  late List<TabSetting> tabSettings;
   late int currentIndex;
   late final PageController pageController;
   late final List<TimelineScrollController> scrollControllers;
@@ -70,16 +70,18 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
     try {
       final accountSettings = ref
           .read(accountSettingsRepositoryProvider)
-          .fromAccount(currentTabSetting.account);
+          .fromAcct(currentTabSetting.acct);
       ref.read(timelineNoteProvider).clear();
       FocusManager.instance.primaryFocus?.unfocus();
 
-      await ref.read(misskeyProvider(currentTabSetting.account)).notes.create(
+      final account = ref.read(accountProvider(currentTabSetting.acct));
+      await ref.read(misskeyProvider(account)).notes.create(
             NotesCreateRequest(
               text: text,
               channelId: currentTabSetting.channelId,
               visibility: accountSettings.defaultNoteVisibility,
-              localOnly: accountSettings.defaultIsLocalOnly,
+              localOnly: currentTabSetting.channelId != null ||
+                  accountSettings.defaultIsLocalOnly,
               reactionAcceptance: accountSettings.defaultReactionAcceptance,
             ),
           );
@@ -142,46 +144,49 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
     }
     final sendText = ref.read(timelineNoteProvider).text;
     ref.read(timelineNoteProvider).text = "";
+    final account = ref.read(accountProvider(currentTabSetting.acct));
     context.pushRoute(NoteCreateRoute(
       channel: channel,
       initialText: sendText,
-      initialAccount: currentTabSetting.account,
+      initialAccount: account,
     ));
   }
 
   Widget buildAppbar() {
+    final account = ref.watch(accountProvider(currentTabSetting.acct));
     return AppBar(
       title: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: tabSettings
-              .mapIndexed(
-                (index, tabSetting) => Ink(
-                  color: tabSetting == currentTabSetting
-                      ? AppTheme.of(context).currentDisplayTabColor
-                      : Colors.transparent,
-                  child: AccountScope(
-                    account: tabSetting.account,
-                    child: IconButton(
-                      icon: TabIconView(
-                        icon: tabSetting.icon,
-                        color: tabSetting == currentTabSetting
-                            ? Theme.of(context).primaryColor
-                            : Colors.white,
-                      ),
-                      onPressed: () => tabSetting == currentTabSetting
-                          ? reload()
-                          : pageController.jumpToPage(index),
+          children: tabSettings.mapIndexed(
+            (index, tabSetting) {
+              final account = ref.watch(accountProvider(tabSetting.acct));
+              return Ink(
+                color: tabSetting == currentTabSetting
+                    ? AppTheme.of(context).currentDisplayTabColor
+                    : Colors.transparent,
+                child: AccountScope(
+                  account: account,
+                  child: IconButton(
+                    icon: TabIconView(
+                      icon: tabSetting.icon,
+                      color: tabSetting == currentTabSetting
+                          ? Theme.of(context).primaryColor
+                          : Colors.white,
                     ),
+                    onPressed: () => tabSetting == currentTabSetting
+                        ? reload()
+                        : pageController.jumpToPage(index),
                   ),
                 ),
-              )
-              .toList(),
+              );
+            },
+          ).toList(),
         ),
       ),
       actions: [
         AccountScope(
-          account: currentTabSetting.account,
+          account: account,
           child: const NotificationIcon(),
         ),
       ],
@@ -197,6 +202,10 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
     final socketTimeline = socketTimelineBase is SocketTimelineRepository
         ? socketTimelineBase
         : null;
+    tabSettings = ref.watch(
+      tabSettingsRepositoryProvider.select((repo) => repo.tabSettings.toList()),
+    );
+    final account = ref.watch(accountProvider(currentTabSetting.acct));
 
     return Scaffold(
       key: scaffoldKey,
@@ -232,14 +241,7 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                       child: Text(currentTabSetting.name),
                     ),
                   ),
-                  const SizedBox(
-                    height: 24,
-                    child: NetworkImageView(
-                      url:
-                          "https://nos3.arkjp.net/image.webp?url=https%3A%2F%2Fs3.arkjp.net%2Fmisskey%2Fc8a26f2b-7541-4fc6-bebb-036482b53cec.gif&emoji=1",
-                      type: ImageType.customEmoji,
-                    ),
-                  ),
+                  const Nyanpuppu(),
                   if (currentTabSetting.tabType == TabType.channel)
                     IconButton(
                       onPressed: () {
@@ -247,29 +249,43 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                           context: context,
                           builder: (context) => ChannelDialog(
                             channelId: currentTabSetting.channelId ?? "",
-                            account: currentTabSetting.account,
+                            account: account,
                           ),
                         );
                       },
                       icon: const Icon(Icons.info_outline),
+                    )
+                  else if (currentTabSetting.tabType == TabType.userList)
+                    IconButton(
+                      icon: const Icon(Icons.info_outline),
+                      onPressed: () {
+                        context.pushRoute(
+                          UsersListDetailRoute(
+                            account: account,
+                            listId: currentTabSetting.listId!,
+                          ),
+                        );
+                      },
                     )
                   else if ([
                     TabType.hybridTimeline,
                     TabType.localTimeline,
                     TabType.globalTimeline,
                     TabType.homeTimeline,
-                  ].contains(currentTabSetting.tabType))
+                  ].contains(currentTabSetting.tabType)) ...[
+                    AnnoucementInfo(index: currentIndex),
                     IconButton(
                       onPressed: () {
                         showDialog(
                           context: context,
                           builder: (context) => ServerDetailDialog(
-                            account: currentTabSetting.account,
+                            account: account,
                           ),
                         );
                       },
                       icon: const Icon(Icons.smart_toy_outlined),
                     ),
+                  ],
                   const Padding(
                     padding: EdgeInsets.only(right: 5),
                   ),
@@ -280,7 +296,10 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                               .timelineProvider(currentTabSetting),
                         )
                         .reconnect(),
-                    icon: const Icon(Icons.refresh),
+                    icon:
+                        socketTimeline != null && socketTimeline.isReconnecting
+                            ? CircularProgressIndicator()
+                            : const Icon(Icons.refresh),
                   )
                 ],
               ),
@@ -291,7 +310,10 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                 child: Center(child: CircularProgressIndicator()),
               ),
             if (socketTimeline?.error != null)
-              ErrorDetail(error: socketTimeline?.error!),
+              ErrorDetail(
+                error: socketTimeline?.error?.$1,
+                stackTrace: socketTimeline?.error?.$2,
+              ),
             Expanded(
               child: PageView.builder(
                 controller: pageController,
@@ -299,13 +321,15 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                 onPageChanged: (index) => changeTab(index),
                 itemBuilder: (_, index) {
                   final tabSetting = tabSettings[index];
+                  final account = ref.watch(accountProvider(tabSetting.acct));
                   return AccountScope(
-                    account: tabSetting.account,
+                    account: account,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
+                        BannerArea(index: currentIndex),
                         Expanded(
                           child: MisskeyTimeline(
                             controller: scrollControllers[index],
@@ -356,8 +380,134 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
       resizeToAvoidBottomInset: true,
       drawerEnableOpenDragGesture: true,
       drawer: CommonDrawer(
-        initialOpenAccount: currentTabSetting.account,
+        initialOpenAcct: currentTabSetting.acct,
       ),
     );
+  }
+}
+
+class BannerArea extends ConsumerWidget {
+  final int index;
+
+  const BannerArea({super.key, required this.index});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final acct = ref.watch(
+      tabSettingsRepositoryProvider
+          .select((repository) => repository.tabSettings.toList()[index].acct),
+    );
+    final bannerAnnouncement = ref.watch(
+      accountProvider(acct).select(
+        (account) => account.i.unreadAnnouncements,
+      ),
+    );
+
+    // ダイアログの実装が大変なので（状態管理とか）いったんバナーと一緒に扱う
+    final bannerData = bannerAnnouncement
+        .where((element) =>
+            element.display == AnnouncementDisplayType.banner ||
+            element.display == AnnouncementDisplayType.dialog)
+        .lastOrNull;
+
+    if (bannerData == null) return const SizedBox.shrink();
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(left: 10, top: 3, bottom: 3),
+      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+      child: Row(
+        children: [
+          if (bannerData.icon != null)
+            AnnouncementIcon(iconType: bannerData.icon!),
+          const Padding(padding: EdgeInsets.only(left: 10)),
+          Expanded(
+            child: Text(
+              "${bannerData.title}　${bannerData.text.replaceAll("\n", "　")}",
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AnnoucementInfo extends ConsumerWidget {
+  final int index;
+
+  const AnnoucementInfo({super.key, required this.index});
+
+  void announcementsRoute(BuildContext context, WidgetRef ref) {
+    final acct = ref
+        .read(tabSettingsRepositoryProvider)
+        .tabSettings
+        .toList()[index]
+        .acct;
+    final account = ref.read(accountProvider(acct));
+    context.pushRoute(AnnouncementRoute(account: account));
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final acct = ref.watch(
+      tabSettingsRepositoryProvider
+          .select((repository) => repository.tabSettings.toList()[index].acct),
+    );
+    final hasUnread = ref.watch(
+      accountProvider(acct)
+          .select((account) => account.i.unreadAnnouncements.isNotEmpty),
+    );
+
+    if (hasUnread == true) {
+      return IconButton(
+          onPressed: () => announcementsRoute(context, ref),
+          icon: Stack(children: [
+            const Icon(Icons.campaign),
+            Transform.translate(
+                offset: const Offset(12, 12),
+                child: SizedBox(
+                  width: 14,
+                  height: 14,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 1.5),
+                      borderRadius: BorderRadius.circular(20),
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                )),
+          ]));
+    } else {
+      return IconButton(
+          onPressed: () => announcementsRoute(context, ref),
+          icon: const Icon(Icons.campaign));
+    }
+  }
+}
+
+class AnnouncementIcon extends StatelessWidget {
+  final AnnouncementIconType iconType;
+
+  const AnnouncementIcon({super.key, required this.iconType});
+
+  @override
+  Widget build(BuildContext context) {
+    switch (iconType) {
+      case AnnouncementIconType.info:
+        return const Icon(Icons.info, color: Colors.white);
+      case AnnouncementIconType.warning:
+        return const Icon(Icons.warning, color: Colors.white);
+      case AnnouncementIconType.error:
+        return const Icon(Icons.error, color: Colors.white);
+      case AnnouncementIconType.success:
+        return const Icon(Icons.check, color: Colors.white);
+      default:
+        return const SizedBox.shrink();
+    }
   }
 }

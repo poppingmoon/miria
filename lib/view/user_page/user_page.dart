@@ -7,8 +7,10 @@ import 'package:miria/view/common/error_detail.dart';
 import 'package:miria/view/common/misskey_notes/mfm_text.dart';
 import 'package:miria/view/user_page/user_clips.dart';
 import 'package:miria/view/user_page/user_detail.dart';
+import 'package:miria/view/user_page/user_misskey_page.dart';
 import 'package:miria/view/user_page/user_notes.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/view/user_page/user_plays.dart';
 import 'package:miria/view/user_page/user_reactions.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
@@ -51,7 +53,7 @@ class UserPageState extends ConsumerState<UserPage> {
     return AccountScope(
       account: widget.account,
       child: DefaultTabController(
-        length: 3 + (isReactionAvailable ? 1 : 0) + (isRemoteUser ? 2 : 0),
+        length: 5 + (isReactionAvailable ? 1 : 0) + (isRemoteUser ? 2 : 0),
         child: Scaffold(
           appBar: AppBar(
             title: SimpleMfmText(
@@ -62,15 +64,19 @@ class UserPageState extends ConsumerState<UserPage> {
             bottom: TabBar(
               tabs: [
                 Tab(
-                    text:
-                        "アカウント情報${userInfo?.remoteResponse != null ? "（ローカル）" : ""}"),
+                  text:
+                      "アカウント情報${userInfo?.remoteResponse != null ? "（ローカル）" : ""}",
+                ),
                 if (isRemoteUser) const Tab(text: "アカウント情報（リモート）"),
                 Tab(
-                    text:
-                        "ノート${userInfo?.remoteResponse != null ? "（ローカル）" : ""}"),
+                  text:
+                      "ノート${userInfo?.remoteResponse != null ? "（ローカル）" : ""}",
+                ),
                 if (isRemoteUser) const Tab(text: "ノート（リモート）"),
                 const Tab(text: "クリップ"),
-                if (isReactionAvailable) const Tab(text: "リアクション")
+                if (isReactionAvailable) const Tab(text: "リアクション"),
+                const Tab(text: "ページ"),
+                const Tab(text: "Play"),
               ],
               isScrollable: true,
             ),
@@ -97,7 +103,6 @@ class UserPageState extends ConsumerState<UserPage> {
                       padding: const EdgeInsets.only(left: 10, right: 10),
                       child: UserNotes(
                         userId: widget.userId,
-                        actualAccount: null,
                       ),
                     ),
                     if (isRemoteUser)
@@ -106,23 +111,56 @@ class UserPageState extends ConsumerState<UserPage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           child: UserNotes(
-                            userId: userInfo.remoteResponse!.id,
+                            userId: widget.userId,
+                            remoteUserId: userInfo.remoteResponse!.id,
                             actualAccount: widget.account,
                           ),
                         ),
                       ),
                     Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: UserClips(
-                          userId: widget.userId,
-                        )),
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: UserClips(
+                        userId: widget.userId,
+                      ),
+                    ),
                     if (isReactionAvailable)
                       Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: UserReactions(userId: widget.userId),
+                      ),
+
+                    // ページ
+                    if (isRemoteUser)
+                      AccountScope(
+                        account: Account.demoAccount(userInfo!.response!.host!),
+                        child: Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
-                          child: UserReactions(userId: widget.userId)),
+                          child: UserMisskeyPage(
+                              userId: userInfo.remoteResponse!.id),
+                        ),
+                      )
+                    else
+                      Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: UserMisskeyPage(userId: widget.userId)),
+
+                    // Play
+                    if (isRemoteUser)
+                      AccountScope(
+                        account: Account.demoAccount(userInfo!.response!.host!),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: UserPlays(userId: userInfo.remoteResponse!.id),
+                        ),
+                      )
+                    else
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: UserPlays(userId: widget.userId),
+                      ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -143,7 +181,7 @@ class UserDetailTab extends ConsumerStatefulWidget {
 class UserDetailTabState extends ConsumerState<UserDetailTab> {
   UsersShowResponse? response;
   UsersShowResponse? remoteResponse;
-  Object? error;
+  (Object?, StackTrace)? error;
 
   @override
   void initState() {
@@ -164,10 +202,11 @@ class UserDetailTabState extends ConsumerState<UserDetailTab> {
             .read(notesProvider(account))
             .registerAll(response?.pinnedNotes ?? []);
         ref.read(userInfoProvider(widget.userId).notifier).state = UserInfo(
-            userId: widget.userId,
-            response: response,
-            remoteUserId: null,
-            remoteResponse: null);
+          userId: widget.userId,
+          response: response,
+          remoteUserId: null,
+          remoteResponse: null,
+        );
 
         final remoteHost = response?.host;
         if (remoteHost != null) {
@@ -175,7 +214,8 @@ class UserDetailTabState extends ConsumerState<UserDetailTab> {
               .read(misskeyProvider(Account.demoAccount(remoteHost)))
               .users
               .showByName(
-                  UsersShowByUserNameRequest(userName: response!.username));
+                UsersShowByUserNameRequest(userName: response!.username),
+              );
 
           await ref
               .read(emojiRepositoryProvider(Account.demoAccount(remoteHost)))
@@ -185,14 +225,15 @@ class UserDetailTabState extends ConsumerState<UserDetailTab> {
               .read(notesProvider(Account.demoAccount(remoteHost)))
               .registerAll(remoteResponse.pinnedNotes ?? []);
           ref.read(userInfoProvider(widget.userId).notifier).state = UserInfo(
-              userId: widget.userId,
-              response: response,
-              remoteUserId: remoteResponse.id,
-              remoteResponse: remoteResponse);
+            userId: widget.userId,
+            response: response,
+            remoteUserId: remoteResponse.id,
+            remoteResponse: remoteResponse,
+          );
         }
-      } catch (e) {
+      } catch (e, s) {
         setState(() {
-          error = e;
+          error = (e, s);
         });
       }
     });
@@ -210,7 +251,10 @@ class UserDetailTabState extends ConsumerState<UserDetailTab> {
       );
     }
     if (error != null) {
-      return ErrorDetail(error: error);
+      return ErrorDetail(
+        error: error?.$1,
+        stackTrace: error?.$2,
+      );
     }
 
     return const Center(

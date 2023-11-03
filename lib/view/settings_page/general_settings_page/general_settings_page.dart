@@ -25,6 +25,8 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   bool enableLongTextElipsed = false;
   bool enableFavoritedRenoteElipsed = true;
   TabPosition tabPosition = TabPosition.top;
+  double textScaleFactor = 1.0;
+  EmojiType emojiType = EmojiType.twemoji;
 
   @override
   void initState() {
@@ -44,7 +46,9 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
             .id;
       }
       darkModeTheme = settings.darkColorThemeId;
-      if (darkModeTheme.isEmpty) {
+      if (darkModeTheme.isEmpty ||
+          builtInColorThemes.every((element) =>
+              !element.isDarkTheme || element.id != darkModeTheme)) {
         darkModeTheme =
             builtInColorThemes.where((element) => element.isDarkTheme).first.id;
       }
@@ -56,22 +60,27 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       enableLongTextElipsed = settings.enableLongTextElipsed;
       enableFavoritedRenoteElipsed = settings.enableFavoritedRenoteElipsed;
       tabPosition = settings.tabPosition;
+      textScaleFactor = settings.textScaleFactor;
+      emojiType = settings.emojiType;
     });
   }
 
   Future<void> save() async {
     ref.read(generalSettingsRepositoryProvider).update(
           GeneralSettings(
-              lightColorThemeId: lightModeTheme,
-              darkColorThemeId: darkModeTheme,
-              themeColorSystem: colorSystem,
-              nsfwInherit: nsfwInherit,
-              enableDirectReaction: enableDirectReaction,
-              automaticPush: automaticPush,
-              enableAnimatedMFM: enableAnimatedMFM,
-              enableFavoritedRenoteElipsed: enableFavoritedRenoteElipsed,
-              enableLongTextElipsed: enableLongTextElipsed,
-              tabPosition: tabPosition),
+            lightColorThemeId: lightModeTheme,
+            darkColorThemeId: darkModeTheme,
+            themeColorSystem: colorSystem,
+            nsfwInherit: nsfwInherit,
+            enableDirectReaction: enableDirectReaction,
+            automaticPush: automaticPush,
+            enableAnimatedMFM: enableAnimatedMFM,
+            enableFavoritedRenoteElipsed: enableFavoritedRenoteElipsed,
+            enableLongTextElipsed: enableLongTextElipsed,
+            tabPosition: tabPosition,
+            emojiType: emojiType,
+            textScaleFactor: textScaleFactor,
+          ),
         );
   }
 
@@ -269,11 +278,58 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                               enableDirectReaction = !enableDirectReaction;
                               save();
                             });
-                          })
+                          }),
+                      const Padding(padding: EdgeInsets.only(top: 10)),
+                      const Text("絵文字のスタイル"),
+                      DropdownButton(
+                          items: [
+                            for (final type in EmojiType.values)
+                              DropdownMenuItem(
+                                value: type,
+                                child: Text(type.displayName),
+                              )
+                          ],
+                          value: emojiType,
+                          isExpanded: true,
+                          onChanged: (value) {
+                            setState(() {
+                              emojiType = value ?? EmojiType.twemoji;
+                              save();
+                            });
+                          }),
                     ],
                   ),
                 ),
-              )
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "フォントサイズ",
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      Slider(
+                        value: textScaleFactor,
+                        min: 0.5,
+                        max: 1.5,
+                        divisions: 10,
+                        label: "${(textScaleFactor * 100).toInt()}%",
+                        onChanged: (value) {
+                          setState(() {
+                            textScaleFactor = value;
+                            save();
+                          });
+                        },
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),

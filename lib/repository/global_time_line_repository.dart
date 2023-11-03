@@ -16,12 +16,18 @@ class GlobalTimeLineRepository extends TimelineRepository {
 
   @override
   void startTimeLine() {
-    socketController = misskey.globalTimelineStream((note) {
-      newerNotes.add(note);
+    socketController = misskey.globalTimelineStream(
+      parameter: GlobalTimelineParameter(
+        withRenotes: tabSetting.renoteDisplay,
+        withFiles: tabSetting.isMediaOnly,
+      ),
+      onNoteReceived: (note) {
+        newerNotes.add(note);
 
-      notifyListeners();
-    })
-      ..startStreaming();
+        notifyListeners();
+      },
+    );
+    misskey.startStreaming();
   }
 
   @override
@@ -30,8 +36,8 @@ class GlobalTimeLineRepository extends TimelineRepository {
   }
 
   @override
-  void reconnect() {
-    super.reconnect();
+  Future<void> reconnect() async {
+    await super.reconnect();
     socketController?.reconnect();
   }
 

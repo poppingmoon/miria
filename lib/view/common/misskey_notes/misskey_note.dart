@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
@@ -5,18 +6,20 @@ import 'package:collection/collection.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:mfm_parser/mfm_parser.dart' as parser;
+import 'package:miria/const.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/extensions/note_visibility_extension.dart';
 import 'package:miria/extensions/user_extension.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/misskey_emoji_data.dart';
 import 'package:miria/providers.dart';
-import 'package:miria/repository/note_repository.dart';
 import 'package:miria/router/app_router.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/avatar_icon.dart';
 import 'package:miria/view/common/constants.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
+import 'package:miria/view/common/misskey_notes/in_note_button.dart';
+import 'package:miria/view/common/misskey_notes/link_preview.dart';
 import 'package:miria/view/common/misskey_notes/local_only_icon.dart';
 import 'package:miria/view/common/misskey_notes/mfm_text.dart';
 import 'package:miria/view/common/misskey_notes/misskey_file_view.dart';
@@ -25,6 +28,7 @@ import 'package:miria/view/common/misskey_notes/note_vote.dart';
 import 'package:miria/view/common/misskey_notes/reaction_button.dart';
 import 'package:miria/view/common/misskey_notes/renote_modal_sheet.dart';
 import 'package:miria/view/common/misskey_notes/renote_user_dialog.dart';
+import 'package:miria/view/dialogs/simple_confirm_dialog.dart';
 import 'package:miria/view/reaction_picker_dialog/reaction_picker_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/view/themes/app_theme.dart';
@@ -145,6 +149,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
   bool isLongVisibleInitialized = false;
 
   List<parser.MfmNode>? displayTextNodes;
+  DateTime? latestUpdatedAt;
 
   bool shouldCollaposed(List<parser.MfmNode> node) {
     final result = nodeMaxTextLength(node);
@@ -180,6 +185,38 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
     return (thisNodeCount, newLinesCount);
   }
 
+  // https://github.com/misskey-dev/misskey/blob/2023.9.2/packages/frontend/src/scripts/extract-url-from-mfm.ts
+  List<String> extractLinks(List<parser.MfmNode> nodes) {
+    String removeHash(String link) {
+      final hashIndex = link.lastIndexOf("#");
+      if (hashIndex < 0) {
+        return link;
+      } else {
+        return link.substring(0, hashIndex);
+      }
+    }
+
+    // # より前の部分が重複しているものを取り除く
+    final links = LinkedHashSet<String>(
+      equals: (link, other) => removeHash(link) == removeHash(other),
+      hashCode: (link) => removeHash(link).hashCode,
+    );
+    for (final node in nodes) {
+      final children = node.children;
+      if (children != null) {
+        links.addAll(extractLinks(children));
+      }
+      if (node is parser.MfmURL) {
+        links.add(node.value);
+      } else if (node is parser.MfmLink) {
+        if (!node.silent) {
+          links.add(node.url);
+        }
+      }
+    }
+    return links.toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final latestActualNote = ref.watch(notesProvider(AccountScope.of(context))
@@ -210,10 +247,34 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
       return Container();
     }
 
+    if (latestUpdatedAt != displayNote.updatedAt) {
+      latestUpdatedAt = displayNote.updatedAt;
+      displayTextNodes = null;
+    }
+
     displayTextNodes ??= const parser.MfmParser().parse(displayNote.text ?? "");
 
     final noteStatus = ref.watch(notesProvider(AccountScope.of(context))
         .select((value) => value.noteStatuses[widget.note.id]))!;
+
+    if (noteStatus.isIncludeMuteWord && !noteStatus.isMuteOpened) {
+      return SizedBox(
+        width: double.infinity,
+        child: GestureDetector(
+            onTap: () => ref
+                .read(notesProvider(AccountScope.of(context)))
+                .updateNoteStatus(displayNote.id,
+                    (status) => status.copyWith(isMuteOpened: true)),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+              child: Text(
+                "${displayNote.user.name ?? displayNote.user.username}が何か言うとるわ",
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            )),
+      );
+    }
+
     if (!noteStatus.isLongVisibleInitialized ||
         widget.isForceUnvisibleRenote ||
         widget.isForceUnvisibleReply ||
@@ -236,13 +297,14 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
           shouldCollaposed(displayTextNodes!));
 
       ref.read(notesProvider(AccountScope.of(context))).updateNoteStatus(
-          widget.note.id,
-          (status) => NoteStatus(
-              isCwOpened: false,
+            widget.note.id,
+            (status) => status.copyWith(
               isLongVisible: isLongVisible,
               isReactionedRenote: isReactionedRenote,
-              isLongVisibleInitialized: true),
-          isNotify: false);
+              isLongVisibleInitialized: true,
+            ),
+            isNotify: false,
+          );
     }
 
     final userId =
@@ -255,6 +317,8 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
             (value) => value.noteStatuses[widget.note.id]!.isReactionedRenote));
     final isLongVisible = ref.watch(notesProvider(AccountScope.of(context))
         .select((value) => value.noteStatuses[widget.note.id]!.isLongVisible));
+
+    final links = extractLinks(displayTextNodes!);
 
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(
@@ -363,38 +427,20 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                   .read(generalSettingsRepositoryProvider)
                                   .settings
                                   .enableAnimatedMFM,
-                              suffixSpan: [
-                                WidgetSpan(
-                                  alignment: PlaceholderAlignment.middle,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 0,
-                                      padding: const EdgeInsets.all(5),
-                                      textStyle: TextStyle(
-                                          fontSize: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.fontSize),
-                                      minimumSize: const Size(0, 0),
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    onPressed: () {
-                                      ref
-                                          .read(notesProvider(
-                                              AccountScope.of(context)))
-                                          .updateNoteStatus(
-                                              widget.note.id,
-                                              (status) => status.copyWith(
-                                                  isCwOpened:
-                                                      !status.isCwOpened));
-                                    },
-                                    child: Text(
-                                      isCwOpened ? "隠す" : "続きを見る",
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            ),
+                            InNoteButton(
+                              onPressed: () {
+                                ref
+                                    .read(
+                                        notesProvider(AccountScope.of(context)))
+                                    .updateNoteStatus(
+                                        widget.note.id,
+                                        (status) => status.copyWith(
+                                            isCwOpened: !status.isCwOpened));
+                              },
+                              child: Text(
+                                isCwOpened ? "隠す" : "続きを見る",
+                              ),
                             ),
                           ],
                           if (displayNote.cw == null ||
@@ -403,31 +449,21 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                               SimpleMfmText(
                                 "${(displayNote.text ?? "").substring(0, min((displayNote.text ?? "").length, 50))}..."
                                     .replaceAll("\n\n", "\n"),
+                                isNyaize: displayNote.user.isCat,
                                 emojis: displayNote.emojis,
                                 suffixSpan: [
                                   WidgetSpan(
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        elevation: 0,
-                                        padding: const EdgeInsets.all(5),
-                                        textStyle: TextStyle(
-                                            fontSize: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall
-                                                ?.fontSize),
-                                        minimumSize: const Size(0, 0),
-                                        tapTargetSize:
-                                            MaterialTapTargetSize.shrinkWrap,
-                                      ),
+                                    child: InNoteButton(
                                       onPressed: () {
                                         ref
                                             .read(notesProvider(
                                                 AccountScope.of(context)))
                                             .updateNoteStatus(
-                                                widget.note.id,
-                                                (status) => status.copyWith(
-                                                    isReactionedRenote: !status
-                                                        .isReactionedRenote));
+                                              widget.note.id,
+                                              (status) => status.copyWith(
+                                                  isReactionedRenote: !status
+                                                      .isReactionedRenote),
+                                            );
                                       },
                                       child: const Text("続きを表示"),
                                     ),
@@ -440,6 +476,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                   mfmNode: displayTextNodes,
                                   host: displayNote.user.host,
                                   emoji: displayNote.emojis,
+                                  isNyaize: displayNote.user.isCat,
                                   isEnableAnimatedMFM: ref
                                       .read(generalSettingsRepositoryProvider)
                                       .settings
@@ -467,21 +504,10 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                   "${(displayNote.text ?? "").substring(0, min((displayNote.text ?? "").length, 150))}..."
                                       .replaceAll("\n\n", "\n"),
                                   emojis: displayNote.emojis,
+                                  isNyaize: displayNote.user.isCat,
                                   suffixSpan: [
                                     WidgetSpan(
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          elevation: 0,
-                                          padding: const EdgeInsets.all(5),
-                                          textStyle: TextStyle(
-                                              fontSize: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall
-                                                  ?.fontSize),
-                                          minimumSize: const Size(0, 0),
-                                          tapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
-                                        ),
+                                      child: InNoteButton(
                                         onPressed: () {
                                           ref
                                               .read(notesProvider(
@@ -507,6 +533,13 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                   displayNote: displayNote,
                                   poll: displayNote.poll!,
                                   loginAs: widget.loginAs,
+                                ),
+                              if (isLongVisible && widget.recursive < 2)
+                                ...links.map(
+                                  (link) => LinkPreview(
+                                      account: AccountScope.of(context),
+                                      link: link,
+                                      host: displayNote.user.host),
                                 ),
                               if (displayNote.renoteId != null &&
                                   (widget.recursive < 2 &&
@@ -736,11 +769,24 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
       return;
     }
     if (displayNote.myReaction != null && requestEmoji == null) {
+      if (await SimpleConfirmDialog.show(
+              context: context,
+              message: "リアクション取り消してもええか？",
+              primary: "取り消す",
+              secondary: "やっぱりやめる") !=
+          true) {
+        return;
+      }
+
       await ref
           .read(misskeyProvider(account))
           .notes
           .reactions
           .delete(NotesReactionsDeleteRequest(noteId: displayNote.id));
+      if (account.host == "misskey.io") {
+        await Future.delayed(
+            const Duration(milliseconds: misskeyIOReactionDelay));
+      }
       await ref.read(notesProvider(account)).refresh(displayNote.id);
       return;
     }
@@ -767,6 +813,10 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
     if (selectedEmoji == null) return;
     await misskey.notes.reactions.create(NotesReactionsCreateRequest(
         noteId: displayNote.id, reaction: ":${selectedEmoji.baseName}:"));
+    if (account.host == "misskey.io") {
+      await Future.delayed(
+          const Duration(milliseconds: misskeyIOReactionDelay));
+    }
     await note.refresh(displayNote.id);
   }
 }
@@ -788,6 +838,12 @@ class NoteHeader1 extends StatelessWidget {
             child: Padding(
                 padding: const EdgeInsets.only(top: 2),
                 child: UserInformation(user: displayNote.user))),
+        if (displayNote.updatedAt != null)
+          Padding(
+              padding: const EdgeInsets.only(left: 5, right: 5),
+              child: Icon(Icons.edit,
+                  size: Theme.of(context).textTheme.bodySmall?.fontSize,
+                  color: Theme.of(context).textTheme.bodySmall?.color)),
         GestureDetector(
           onTap: () async =>
               await _navigateDetailPage(context, displayNote, loginAs)
@@ -861,6 +917,15 @@ class RenoteHeader extends StatelessWidget {
             ),
           ),
         ),
+        if (note.updatedAt != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 5.0, right: 5.0),
+            child: Icon(
+              Icons.edit,
+              size: renoteTextStyle?.fontSize,
+              color: renoteTextStyle?.color,
+            ),
+          ),
         Text(
           note.createdAt.differenceNow,
           textAlign: TextAlign.right,
@@ -938,7 +1003,7 @@ class RenoteButton extends StatelessWidget {
     // 他人のノートで、ダイレクトまたはフォロワーのみへの公開の場合、リノート不可
     if ((displayNote.visibility == NoteVisibility.specified ||
             displayNote.visibility == NoteVisibility.followers) &&
-        !(account.host == displayNote.user.host &&
+        !(displayNote.user.host == null &&
             account.userId == displayNote.user.username)) {
       return Icon(
         Icons.block,

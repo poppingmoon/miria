@@ -9,6 +9,7 @@ class PushableListView<T> extends ConsumerStatefulWidget {
   final Future<List<T>> Function() initializeFuture;
   final Future<List<T>> Function(T, int) nextFuture;
   final Widget Function(BuildContext, T) itemBuilder;
+  final Widget Function(BuildContext, Object?)? additionalErrorInfo;
   final Object listKey;
   final bool shrinkWrap;
   final ScrollPhysics? physics;
@@ -21,6 +22,7 @@ class PushableListView<T> extends ConsumerStatefulWidget {
     this.listKey = "",
     this.shrinkWrap = false,
     this.physics,
+    this.additionalErrorInfo,
   });
 
   @override
@@ -30,7 +32,7 @@ class PushableListView<T> extends ConsumerStatefulWidget {
 
 class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
   var isLoading = false;
-  Object? error;
+  (Object?, StackTrace)? error;
   var isFinalPage = false;
   final scrollController = ScrollController();
 
@@ -48,10 +50,10 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
         });
         scrollController.animateTo(-scrollController.position.pixels,
             duration: const Duration(milliseconds: 100), curve: Curves.easeIn);
-      } catch (e) {
+      } catch (e, s) {
         if (kDebugMode) print(e);
         setState(() {
-          error = e;
+          error = (e, s);
           isLoading = false;
         });
         rethrow;
@@ -122,7 +124,19 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
 
           return Column(
             children: [
-              if (error != null) ErrorNotification(error: error),
+              if (error != null)
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ErrorNotification(
+                      error: error?.$1,
+                      stackTrace: error?.$2,
+                    ),
+                    widget.additionalErrorInfo?.call(context, error) ??
+                        const SizedBox.shrink()
+                  ],
+                ),
               Center(
                 child: !isLoading
                     ? Padding(

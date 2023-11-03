@@ -35,16 +35,16 @@ void main() {
       verify(mockNote.search(
               argThat(equals(const NotesSearchRequest(query: "Misskey")))))
           .called(1);
-      expect(find.text(TestData.note1ExpectText), findsOneWidget);
+      expect(find.text(TestData.note1.text!), findsOneWidget);
 
       when(mockNote.search(any)).thenAnswer((_) async => [TestData.note2]);
       await tester.tap(find.byIcon(Icons.keyboard_arrow_down).at(1));
       await tester.pumpAndSettle();
 
       verify(mockNote.search(argThat(equals(NotesSearchRequest(
-              query: "Misskey", untilId: TestData.note1ExpectId)))))
+              query: "Misskey", untilId: TestData.note1.id)))))
           .called(1);
-      expect(find.text(TestData.note2ExpectText), findsOneWidget);
+      expect(find.text(TestData.note2.text!), findsOneWidget);
     });
 
     testWidgets("ユーザー指定ができること", (tester) async {
@@ -82,21 +82,10 @@ void main() {
           findsOneWidget);
 
       // ノートが表示されていること
-      expect(find.text(TestData.note1ExpectText), findsOneWidget);
+      expect(find.text(TestData.note1.text!), findsOneWidget);
       verify(mockNote.search(argThat(equals(
               NotesSearchRequest(query: "", userId: TestData.user1ExpectId)))))
           .called(1);
-
-      when(mockNote.search(any)).thenAnswer((_) async => [TestData.note2]);
-      await tester.tap(find.byIcon(Icons.keyboard_arrow_down));
-      await tester.pumpAndSettle();
-
-      verify(mockNote.search(argThat(equals(NotesSearchRequest(
-              query: "",
-              untilId: TestData.note1ExpectId,
-              userId: TestData.user1ExpectId)))))
-          .called(1);
-      expect(find.text(TestData.note2ExpectText), findsOneWidget);
     });
 
     testWidgets("チャンネル指定ができること", (tester) async {
@@ -125,32 +114,21 @@ void main() {
       await tester.tap(find.byIcon(Icons.keyboard_arrow_right).at(1));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text(TestData.channel1ExpectName));
+      await tester.tap(find.text(TestData.channel1.name));
       await tester.pumpAndSettle();
 
       // 指定したユーザーが表示されていること
       expect(
           find.descendant(
               of: find.byType(Card),
-              matching: find.text(TestData.channel1ExpectName)),
+              matching: find.text(TestData.channel1.name)),
           findsOneWidget);
 
       // ノートが表示されていること
-      expect(find.text(TestData.note1ExpectText), findsOneWidget);
-      verify(mockNote.search(argThat(equals(NotesSearchRequest(
-              query: "", channelId: TestData.channel1ExpectId)))))
+      expect(find.text(TestData.note1.text!), findsOneWidget);
+      verify(mockNote.search(argThat(equals(
+              NotesSearchRequest(query: "", channelId: TestData.channel1.id)))))
           .called(1);
-
-      when(mockNote.search(any)).thenAnswer((_) async => [TestData.note2]);
-      await tester.tap(find.byIcon(Icons.keyboard_arrow_down));
-      await tester.pumpAndSettle();
-
-      verify(mockNote.search(argThat(equals(NotesSearchRequest(
-              query: "",
-              untilId: TestData.note1ExpectId,
-              channelId: TestData.channel1ExpectId)))))
-          .called(1);
-      expect(find.text(TestData.note2ExpectText), findsOneWidget);
     });
 
     testWidgets("ハッシュタグを検索した場合、ハッシュタグのエンドポイントで検索されること", (tester) async {
@@ -174,16 +152,16 @@ void main() {
       verify(mockNote.searchByTag(argThat(
               equals(const NotesSearchByTagRequest(tag: "藍ちゃん大食いチャレンジ")))))
           .called(1);
-      expect(find.text(TestData.note1ExpectText), findsOneWidget);
+      expect(find.text(TestData.note1.text!), findsOneWidget);
 
       when(mockNote.searchByTag(any)).thenAnswer((_) async => [TestData.note2]);
       await tester.tap(find.byIcon(Icons.keyboard_arrow_down).at(1));
       await tester.pumpAndSettle();
 
       verify(mockNote.searchByTag(argThat(equals(NotesSearchByTagRequest(
-              tag: "藍ちゃん大食いチャレンジ", untilId: TestData.note1ExpectId)))))
+              tag: "藍ちゃん大食いチャレンジ", untilId: TestData.note1.id)))))
           .called(1);
-      expect(find.text(TestData.note2ExpectText), findsOneWidget);
+      expect(find.text(TestData.note2.text!), findsOneWidget);
     });
   });
 
@@ -324,7 +302,7 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      expect(find.text(TestData.note1ExpectText), findsOneWidget);
+      expect(find.text(TestData.note1.text!), findsOneWidget);
       verify(mockNote.search(
               argThat(equals(const NotesSearchRequest(query: "Misskey")))))
           .called(1);

@@ -22,7 +22,7 @@ class ChannelDetailInfo extends ConsumerStatefulWidget {
 
 class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
   CommunityChannel? data;
-  Object? error;
+  (Object?, StackTrace)? error;
 
   Future<void> follow() async {
     await ref
@@ -79,9 +79,9 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
         setState(() {
           data = result;
         });
-      } catch (e) {
+      } catch (e, s) {
         setState(() {
-          error = e;
+          error = (e, s);
         });
       }
     });
@@ -90,11 +90,14 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
   @override
   Widget build(BuildContext context) {
     final data = this.data;
+    final isFavorited = data?.isFavorited;
+    final isFollowing = data?.isFollowing;
+
     if (data == null) {
       if (error == null) {
         return const Center(child: CircularProgressIndicator());
       } else {
-        return ErrorDetail(error: error);
+        return ErrorDetail(error: error?.$1, stackTrace: error?.$2);
       }
     }
 
@@ -129,28 +132,45 @@ class ChannelDetailInfoState extends ConsumerState<ChannelDetailInfo> {
             ),
           ),
         ),
+        if (data.isSensitive)
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: DecoratedBox(
+                decoration:
+                    BoxDecoration(color: Theme.of(context).primaryColor),
+                child: const Text(
+                  " センシティブ ",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ),
         const Padding(padding: EdgeInsets.only(top: 10)),
         Align(
             alignment: Alignment.centerRight,
             child: Wrap(
               children: [
-                data.isFavorited
-                    ? ElevatedButton.icon(
-                        onPressed: unfavorite.expectFailure(context),
-                        icon: const Icon(Icons.favorite_border),
-                        label: const Text("お気に入り中"))
-                    : OutlinedButton(
-                        onPressed: favorite.expectFailure(context),
-                        child: const Text("お気に入りにいれる")),
+                if (isFavorited != null)
+                  isFavorited
+                      ? ElevatedButton.icon(
+                          onPressed: unfavorite.expectFailure(context),
+                          icon: const Icon(Icons.favorite_border),
+                          label: const Text("お気に入り中"))
+                      : OutlinedButton(
+                          onPressed: favorite.expectFailure(context),
+                          child: const Text("お気に入りにいれる")),
                 const Padding(padding: EdgeInsets.only(left: 10)),
-                data.isFollowing
-                    ? ElevatedButton.icon(
-                        onPressed: unfollow.expectFailure(context),
-                        icon: const Icon(Icons.check),
-                        label: const Text("フォローしています"))
-                    : OutlinedButton(
-                        onPressed: follow.expectFailure(context),
-                        child: const Text("フォローする"))
+                if (isFollowing != null)
+                  isFollowing
+                      ? ElevatedButton.icon(
+                          onPressed: unfollow.expectFailure(context),
+                          icon: const Icon(Icons.check),
+                          label: const Text("フォローしています"))
+                      : OutlinedButton(
+                          onPressed: follow.expectFailure(context),
+                          child: const Text("フォローする"))
               ],
             )),
         MfmText(mfmText: data.description ?? ""),

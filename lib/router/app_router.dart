@@ -1,10 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Page;
 import 'package:miria/model/account.dart';
 import 'package:miria/model/image_file.dart';
 import 'package:miria/model/tab_setting.dart';
+import 'package:miria/view/announcements_page/announcements_page.dart';
 import 'package:miria/view/antenna_page/antenna_page.dart';
 import 'package:miria/view/channels_page/channels_page.dart';
 import 'package:miria/view/clip_list_page/clip_detail_page.dart';
@@ -14,6 +15,7 @@ import 'package:miria/view/explore_page/explore_role_users_page.dart';
 import 'package:miria/view/favorited_note_page/favorited_note_page.dart';
 import 'package:miria/view/federation_page/federation_page.dart';
 import 'package:miria/view/hashtag_page/hashtag_page.dart';
+import 'package:miria/view/misskey_page_page/misskey_page_page.dart';
 import 'package:miria/view/note_create_page/note_create_page.dart';
 import 'package:miria/view/note_detail_page/note_detail_page.dart';
 import 'package:miria/view/notes_after_renote_page/notes_after_renote_page.dart';
@@ -35,6 +37,7 @@ import 'package:miria/view/time_line_page/time_line_page.dart';
 import 'package:miria/view/user_page/user_followee.dart';
 import 'package:miria/view/user_page/user_follower.dart';
 import 'package:miria/view/user_page/user_page.dart';
+import 'package:miria/view/users_list_page/users_list_detail_page.dart';
 import 'package:miria/view/users_list_page/users_list_page.dart';
 import 'package:miria/view/users_list_page/users_list_timeline_page.dart';
 import 'package:miria/view/splash_page/splash_page.dart';
@@ -65,6 +68,7 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: AntennaNotesRoute.page),
     AutoRoute(page: UsersListRoute.page),
     AutoRoute(page: UsersListTimelineRoute.page),
+    AutoRoute(page: UsersListDetailRoute.page),
     AutoRoute(page: NotificationRoute.page),
     AutoRoute(page: FavoritedNoteRoute.page),
     AutoRoute(page: ClipListRoute.page),
@@ -76,6 +80,7 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: ExploreRoleUsersRoute.page),
     AutoRoute(page: SearchRoute.page),
     AutoRoute(page: FederationRoute.page),
+    AutoRoute(page: AnnouncementRoute.page),
     AutoRoute(page: LoginRoute.page),
     AutoRoute(page: SettingsRoute.page),
     AutoRoute(page: GeneralSettingsRoute.page),
@@ -90,5 +95,7 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: InstanceMuteRoute.page),
     AutoRoute(page: SeveralAccountGeneralSettingsRoute.page),
     AutoRoute(page: SharingAccountSelectRoute.page),
+    // きしょ……
+    AutoRoute(page: MisskeyRouteRoute.page),
   ];
 }

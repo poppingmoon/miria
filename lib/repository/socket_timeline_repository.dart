@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:miria/extensions/date_time_extension.dart';
+import 'package:miria/model/account.dart';
 import 'package:miria/repository/account_repository.dart';
 import 'package:miria/repository/emoji_repository.dart';
 import 'package:miria/repository/main_stream_repository.dart';
@@ -11,14 +13,19 @@ import 'package:misskey_dart/misskey_dart.dart';
 
 abstract class SocketTimelineRepository extends TimelineRepository {
   SocketController? socketController;
+  final Misskey misskey;
+  final Account account;
   final MainStreamRepository mainStreamRepository;
   final AccountRepository accountRepository;
   final EmojiRepository emojiRepository;
+  bool isReconnecting = false;
 
   bool isLoading = true;
-  Object? error;
+  (Object?, StackTrace)? error;
 
   SocketTimelineRepository(
+    this.misskey,
+    this.account,
     super.noteRepository,
     super.globalNotificationRepository,
     super.generalSettingsRepository,
@@ -34,7 +41,10 @@ abstract class SocketTimelineRepository extends TimelineRepository {
     required void Function(Note note) onReceived,
     required FutureOr<void> Function(String id, TimelineReacted reaction)
         onReacted,
+    required FutureOr<void> Function(String id, TimelineReacted reaction)
+        onUnreacted,
     required FutureOr<void> Function(String id, TimelineVoted vote) onVoted,
+    required FutureOr<void> Function(String id, NoteEdited vote) onUpdated,
   });
 
   void reloadLatestNotes() {
@@ -69,61 +79,88 @@ abstract class SocketTimelineRepository extends TimelineRepository {
   }
 
   @override
-  void startTimeLine() {
-    Future(() async {
-      try {
-        await emojiRepository.loadFromSourceIfNeed();
-        await accountRepository.loadFromSourceIfNeed(tabSetting.account);
-        mainStreamRepository.reconnect();
-        isLoading = false;
-        error = null;
+  Future<void> startTimeLine() async {
+    try {
+      await emojiRepository.loadFromSourceIfNeed();
+      await accountRepository.loadFromSourceIfNeed(tabSetting.acct);
+      await mainStreamRepository.reconnect();
+      isLoading = false;
+      error = null;
+      notifyListeners();
+    } catch (e, s) {
+      error = (e, s);
+      isLoading = false;
+      notifyListeners();
+    }
+
+    if (socketController != null) {
+      socketController?.disconnect();
+    }
+
+    socketController = createSocketController(
+      onReceived: (note) {
+        newerNotes.add(note);
+
         notifyListeners();
-      } catch (e) {
-        error = e;
-        isLoading = false;
-        notifyListeners();
-      }
-
-      if (socketController != null) {
-        socketController?.disconnect();
-      }
-
-      socketController = createSocketController(
-        onReceived: (note) {
-          newerNotes.add(note);
-
-          notifyListeners();
-        },
-        onReacted: (id, value) {
-          final registeredNote = noteRepository.notes[id];
-          if (registeredNote == null) return;
-          final reaction = Map.of(registeredNote.reactions);
-          reaction[value.reaction] = (reaction[value.reaction] ?? 0) + 1;
-          final emoji = value.emoji;
-          final reactionEmojis = Map.of(registeredNote.reactionEmojis);
-          if (emoji != null && !value.reaction.endsWith("@.:")) {
-            reactionEmojis[emoji.name] = emoji.url;
-          }
-          noteRepository.registerNote(registeredNote.copyWith(
+      },
+      onReacted: (id, value) {
+        final registeredNote = noteRepository.notes[id];
+        if (registeredNote == null) return;
+        final reaction = Map.of(registeredNote.reactions);
+        reaction[value.reaction] = (reaction[value.reaction] ?? 0) + 1;
+        final emoji = value.emoji;
+        final reactionEmojis = Map.of(registeredNote.reactionEmojis);
+        if (emoji != null && !value.reaction.endsWith("@.:")) {
+          reactionEmojis[emoji.name] = emoji.url;
+        }
+        noteRepository.registerNote(registeredNote.copyWith(
             reactions: reaction,
             reactionEmojis: reactionEmojis,
-          ));
-        },
-        onVoted: (id, value) {
-          final registeredNote = noteRepository.notes[id];
-          if (registeredNote == null) return;
+            myReaction: value.userId == account.i.id
+                ? (emoji?.name != null ? ":${emoji?.name}:" : null)
+                : registeredNote.myReaction));
+      },
+      onUnreacted: (id, value) {
+        final registeredNote = noteRepository.notes[id];
+        if (registeredNote == null) return;
+        final reaction = Map.of(registeredNote.reactions);
+        reaction[value.reaction] = max((reaction[value.reaction] ?? 0) - 1, 0);
+        if (reaction[value.reaction] == 0) {
+          reaction.remove(value.reaction);
+        }
+        final emoji = value.emoji;
+        final reactionEmojis = Map.of(registeredNote.reactionEmojis);
+        if (emoji != null && !value.reaction.endsWith("@.:")) {
+          reactionEmojis[emoji.name] = emoji.url;
+        }
+        noteRepository.registerNote(registeredNote.copyWith(
+            reactions: reaction,
+            reactionEmojis: reactionEmojis,
+            myReaction:
+                value.userId == account.i.id ? "" : registeredNote.myReaction));
+      },
+      onVoted: (id, value) {
+        final registeredNote = noteRepository.notes[id];
+        if (registeredNote == null) return;
 
-          final poll = registeredNote.poll;
-          if (poll == null) return;
+        final poll = registeredNote.poll;
+        if (poll == null) return;
 
-          final choices = poll.choices.toList();
-          choices[value.choice] = choices[value.choice]
-              .copyWith(votes: choices[value.choice].votes + 1);
-          noteRepository.registerNote(
-              registeredNote.copyWith(poll: poll.copyWith(choices: choices)));
-        },
-      )..startStreaming();
-
+        final choices = poll.choices.toList();
+        choices[value.choice] = choices[value.choice]
+            .copyWith(votes: choices[value.choice].votes + 1);
+        noteRepository.registerNote(
+            registeredNote.copyWith(poll: poll.copyWith(choices: choices)));
+      },
+      onUpdated: (id, value) {
+        final note = noteRepository.notes[id];
+        if (note == null) return;
+        noteRepository.registerNote(note.copyWith(
+            text: value.text, cw: value.cw, updatedAt: DateTime.now()));
+      },
+    );
+    await misskey.startStreaming();
+    Future(() async {
       if (olderNotes.isEmpty) {
         try {
           final resultNotes = await requestNotes();
@@ -147,11 +184,19 @@ abstract class SocketTimelineRepository extends TimelineRepository {
   }
 
   @override
-  void reconnect() {
-    super.reconnect();
-    socketController?.reconnect();
-    mainStreamRepository.reconnect();
-    reloadLatestNotes();
+  Future<void> reconnect() async {
+    if (isReconnecting) return;
+    isReconnecting = true;
+    notifyListeners();
+    try {
+      await super.reconnect();
+      socketController = null;
+      await startTimeLine();
+      error = null;
+    } finally {
+      isReconnecting = false;
+      notifyListeners();
+    }
   }
 
   @override

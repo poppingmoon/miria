@@ -13,8 +13,13 @@ import 'package:misskey_dart/misskey_dart.dart';
 
 class NoteSearch extends ConsumerStatefulWidget {
   final String? initialSearchText;
+  final FocusNode? focusNode;
 
-  const NoteSearch({super.key, required this.initialSearchText});
+  const NoteSearch({
+    super.key,
+    required this.initialSearchText,
+    this.focusNode,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => NoteSearchState();
@@ -37,6 +42,12 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final selectedUser = ref.watch(noteSearchUserProvider);
     final selectedChannel = ref.watch(noteSearchChannelProvider);
@@ -52,6 +63,7 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.search),
                     ),
+                    focusNode: widget.focusNode,
                     autofocus: true,
                     textInputAction: TextInputAction.done,
                     onSubmitted: (value) {
@@ -155,6 +167,21 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                                         const Icon(Icons.keyboard_arrow_right))
                               ],
                             )
+                          ]),
+                          TableRow(children: [
+                            const Text("ローカルのみ"),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  value: ref.watch(noteSearchLocalOnlyProvider),
+                                  onChanged: (value) => ref
+                                          .read(noteSearchLocalOnlyProvider
+                                              .notifier)
+                                          .state =
+                                      !ref.read(noteSearchLocalOnlyProvider),
+                                ),
+                              ],
+                            )
                           ])
                         ],
                       ),
@@ -181,6 +208,7 @@ class NoteSearchList extends ConsumerWidget {
     final searchValue = ref.watch(noteSearchProvider);
     final channel = ref.watch(noteSearchChannelProvider);
     final user = ref.watch(noteSearchUserProvider);
+    final localOnly = ref.watch(noteSearchLocalOnlyProvider);
     final account = AccountScope.of(context);
     final parsedSearchValue = const MfmParser().parse(searchValue);
     final isHashtagOnly =
@@ -195,6 +223,7 @@ class NoteSearchList extends ConsumerWidget {
           searchValue,
           user?.id,
           channel?.id,
+          localOnly,
         ]),
         initializeFuture: () async {
           final Iterable<Note> notes;
@@ -207,7 +236,8 @@ class NoteSearchList extends ConsumerWidget {
                 NotesSearchRequest(
                     query: searchValue,
                     userId: user?.id,
-                    channelId: channel?.id));
+                    channelId: channel?.id,
+                    host: localOnly ? "." : null));
           }
 
           ref.read(notesProvider(account)).registerAll(notes);
@@ -228,7 +258,8 @@ class NoteSearchList extends ConsumerWidget {
                     query: searchValue,
                     userId: user?.id,
                     channelId: channel?.id,
-                    untilId: lastItem.id));
+                    untilId: lastItem.id,
+                    host: localOnly ? "." : null));
           }
           ref.read(notesProvider(account)).registerAll(notes);
           return notes.toList();

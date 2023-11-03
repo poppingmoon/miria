@@ -1,10 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:miria/const.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/misskey_emoji_data.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
+import 'package:miria/view/dialogs/simple_confirm_dialog.dart';
 import 'package:miria/view/themes/app_theme.dart';
 import 'package:miria/view/common/misskey_notes/custom_emoji.dart';
 import 'package:miria/view/common/misskey_notes/reaction_user_dialog.dart';
@@ -65,11 +67,24 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
           // リアクション取り消し
           final account = AccountScope.of(context);
           if (isMyReaction) {
+            if (await SimpleConfirmDialog.show(
+                    context: context,
+                    message: "リアクション取り消してもええか？",
+                    primary: "取り消す",
+                    secondary: "やっぱりやめる") !=
+                true) {
+              return;
+            }
+
             await ref
                 .read(misskeyProvider(account))
                 .notes
                 .reactions
                 .delete(NotesReactionsDeleteRequest(noteId: widget.noteId));
+            if (account.host == "misskey.io") {
+              await Future.delayed(
+                  const Duration(milliseconds: misskeyIOReactionDelay));
+            }
 
             await ref.read(notesProvider(account)).refresh(widget.noteId);
 
@@ -96,6 +111,13 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
           await ref.read(misskeyProvider(account)).notes.reactions.create(
               NotesReactionsCreateRequest(
                   noteId: widget.noteId, reaction: reactionString));
+
+          // misskey.ioはただちにリアクションを反映してくれない
+          if (account.host == "misskey.io") {
+            await Future.delayed(
+                const Duration(milliseconds: misskeyIOReactionDelay));
+          }
+
           await ref.read(notesProvider(account)).refresh(widget.noteId);
         },
         onLongPress: () {
@@ -112,6 +134,8 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
             backgroundColor: MaterialStatePropertyAll(backgroundColor)),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ConstrainedBox(
                 constraints: BoxConstraints(

@@ -4,10 +4,9 @@ import 'package:miria/repository/socket_timeline_repository.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 class UserListTimelineRepository extends SocketTimelineRepository {
-  final Misskey misskey;
-
   UserListTimelineRepository(
-    this.misskey,
+    super.misskey,
+    super.account,
     super.noteRepository,
     super.globalNotificationRepository,
     super.generalSettingsRepository,
@@ -22,14 +21,29 @@ class UserListTimelineRepository extends SocketTimelineRepository {
     required void Function(Note note) onReceived,
     required FutureOr<void> Function(String id, TimelineReacted reaction)
         onReacted,
+    required FutureOr<void> Function(String id, TimelineReacted reaction)
+        onUnreacted,
     required FutureOr<void> Function(String id, TimelineVoted vote) onVoted,
+    required FutureOr<void> Function(String id, NoteEdited note) onUpdated,
   }) {
-    return misskey.userListStream(tabSetting.listId!, onReceived, onReacted);
+    return misskey.userListStream(
+      listId: tabSetting.listId!,
+      onNoteReceived: onReceived,
+      onReacted: onReacted,
+      onVoted: onVoted,
+      onUpdated: onUpdated,
+    );
   }
 
   @override
   Future<Iterable<Note>> requestNotes({String? untilId}) async {
-    return await misskey.notes.userListTimeline(UserListTimelineRequest(
-        listId: tabSetting.listId!, limit: 30, untilId: untilId));
+    return await misskey.notes.userListTimeline(
+      UserListTimelineRequest(
+        listId: tabSetting.listId!,
+        untilId: untilId,
+        withRenotes: tabSetting.renoteDisplay,
+        withFiles: tabSetting.isMediaOnly,
+      ),
+    );
   }
 }
