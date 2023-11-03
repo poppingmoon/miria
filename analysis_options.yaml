@@ -6,6 +6,7 @@ analyzer:
   exclude:
     - "**/*.freezed.dart"
     - "**/*.g.dart"
+    - "**/*.mocks.dart"
   language:
     strict-casts: true
     strict-inference: true
