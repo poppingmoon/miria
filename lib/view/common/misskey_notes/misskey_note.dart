@@ -6,7 +6,6 @@ import 'package:collection/collection.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:mfm_parser/mfm_parser.dart' as parser;
-import 'package:miria/const.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/extensions/note_visibility_extension.dart';
 import 'package:miria/extensions/user_extension.dart';
@@ -783,11 +782,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
           .notes
           .reactions
           .delete(NotesReactionsDeleteRequest(noteId: displayNote.id));
-      if (account.host == "misskey.io") {
-        await Future.delayed(
-            const Duration(milliseconds: misskeyIOReactionDelay));
-      }
-      await ref.read(notesProvider(account)).refresh(displayNote.id);
+      ref.read(notesProvider(account)).removeMyReaction(displayNote.id);
       return;
     }
     final misskey = ref.read(misskeyProvider(account));
@@ -797,27 +792,32 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
       selectedEmoji = const UnicodeEmojiData(char: '❤️');
     } else if (requestEmoji == null) {
       selectedEmoji = await showDialog<MisskeyEmojiData?>(
-          context: context,
-          builder: (context) => ReactionPickerDialog(
-                account: account,
-                isAcceptSensitive: displayNote.reactionAcceptance !=
-                        ReactionAcceptance.nonSensitiveOnly &&
-                    displayNote.reactionAcceptance !=
-                        ReactionAcceptance
-                            .nonSensitiveOnlyForLocalLikeOnlyForRemote,
-              ));
+        context: context,
+        builder: (context) => ReactionPickerDialog(
+          account: account,
+          isAcceptSensitive: displayNote.reactionAcceptance !=
+                  ReactionAcceptance.nonSensitiveOnly &&
+              displayNote.reactionAcceptance !=
+                  ReactionAcceptance.nonSensitiveOnlyForLocalLikeOnlyForRemote,
+        ),
+      );
     } else {
       selectedEmoji = requestEmoji;
     }
 
     if (selectedEmoji == null) return;
-    await misskey.notes.reactions.create(NotesReactionsCreateRequest(
-        noteId: displayNote.id, reaction: ":${selectedEmoji.baseName}:"));
-    if (account.host == "misskey.io") {
-      await Future.delayed(
-          const Duration(milliseconds: misskeyIOReactionDelay));
-    }
-    await note.refresh(displayNote.id);
+    final reactionString = switch (selectedEmoji) {
+      UnicodeEmojiData(:final char) => char,
+      CustomEmojiData(:final baseName) => ":$baseName@.:",
+      NotEmojiData(:final name) => name,
+    };
+    await misskey.notes.reactions.create(
+      NotesReactionsCreateRequest(
+        noteId: displayNote.id,
+        reaction: reactionString,
+      ),
+    );
+    note.addMyReaction(displayNote.id, reactionString);
   }
 }
 
