@@ -40,6 +40,7 @@ dependencies:
   mfm_parser: ^1.0.3
   mfm_renderer:
     git: https://github.com/shiosyakeyakini-info/mfm_renderer.git
+  mime: ^1.0.4
   misskey_dart:
     git: https://github.com/shiosyakeyakini-info/misskey_dart.git
   package_info_plus: ^4.0.0
