@@ -4,7 +4,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart' hide Page;
 import 'package:miria/model/account.dart';
 import 'package:miria/model/image_file.dart';
-import 'package:miria/model/tab_setting.dart';
 import 'package:miria/view/announcements_page/announcements_page.dart';
 import 'package:miria/view/antenna_page/antenna_notes_page.dart';
 import 'package:miria/view/antenna_page/antenna_page.dart';
@@ -39,7 +38,7 @@ import 'package:miria/view/several_account_settings_page/several_account_general
 import 'package:miria/view/several_account_settings_page/several_account_settings_page.dart';
 import 'package:miria/view/sharing_account_select_page/account_select_page.dart';
 import 'package:miria/view/splash_page/splash_page.dart';
-import 'package:miria/view/time_line_page/time_line_page.dart';
+import 'package:miria/view/timeline_page/timeline_page.dart';
 import 'package:miria/view/user_page/user_followee.dart';
 import 'package:miria/view/user_page/user_follower.dart';
 import 'package:miria/view/user_page/user_page.dart';
@@ -55,7 +54,7 @@ class AppRouter extends _$AppRouter {
   @override
   final List<AutoRoute> routes = [
     AutoRoute(page: SplashRoute.page, initial: true),
-    AutoRoute(page: TimeLineRoute.page),
+    AutoRoute(page: TimelineRoute.page),
     AutoRoute(page: NoteDetailRoute.page),
     AutoRoute(page: UserRoute.page),
     AutoRoute(page: UserFollowerRoute.page),

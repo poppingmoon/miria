@@ -32,14 +32,7 @@ void main() {
 
       verify(
         mockMisskeyAntenna.notes(
-          argThat(
-            equals(
-              const AntennasNotesRequest(
-                antennaId: "abcdefg",
-                limit: 30,
-              ),
-            ),
-          ),
+          argThat(equals(const AntennasNotesRequest(antennaId: "abcdefg"))),
         ),
       );
     });
