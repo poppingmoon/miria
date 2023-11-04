@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:miria/extensions/users_show_response_extension.dart';
+import 'package:miria/extensions/user_extension.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
@@ -21,14 +21,12 @@ enum UserControl {
 
 class UserControlDialog extends ConsumerStatefulWidget {
   final Account account;
-  final UsersShowResponse response;
-  final bool isMe;
+  final UserDetailed response;
 
   const UserControlDialog({
     super.key,
     required this.account,
     required this.response,
-    required this.isMe,
   });
 
   @override
@@ -142,6 +140,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final user = widget.response;
     return ListView(
       children: [
         ListTile(
@@ -151,7 +150,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
                 text: Uri(
                   scheme: "https",
                   host: widget.account.host,
-                  path: widget.response.acct,
+                  path: user.acct,
                 ).toString(),
               ),
             );
@@ -166,7 +165,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
           onTap: () {
             Clipboard.setData(
               ClipboardData(
-                text: widget.response.name ?? widget.response.username,
+                text: user.name ?? user.username,
               ),
             );
             ScaffoldMessenger.of(context).showSnackBar(
@@ -178,7 +177,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
         ),
         ListTile(
           onTap: () {
-            Clipboard.setData(ClipboardData(text: widget.response.acct));
+            Clipboard.setData(ClipboardData(text: user.acct));
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("コピーしました")),
             );
@@ -193,7 +192,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
               Uri(
                 scheme: "https",
                 host: widget.account.host,
-                path: widget.response.acct,
+                path: user.acct,
               ),
             );
             Navigator.of(context).pop();
@@ -207,8 +206,8 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
           onTap: addToAntenna,
           title: const Text("アンテナに追加"),
         ),
-        if (!widget.isMe) ...[
-          if (widget.response.isRenoteMuted ?? false)
+        if (user is UserDetailedNotMeWithRelations) ...[
+          if (user.isRenoteMuted)
             ListTile(
               onTap: renoteMuteDelete,
               title: const Text("Renoteのミュート解除する"),
@@ -218,7 +217,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
               onTap: renoteMuteCreate,
               title: const Text("Renoteをミュートする"),
             ),
-          if (widget.response.isMuted ?? false)
+          if (user.isMuted)
             ListTile(
               onTap: muteDelete,
               title: const Text("ミュート解除する"),
@@ -228,7 +227,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
               onTap: muteCreate,
               title: const Text("ミュートする"),
             ),
-          if (widget.response.isBlocked ?? false)
+          if (user.isBlocked)
             ListTile(
               onTap: blockingDelete,
               title: const Text("ブロックを解除する"),
