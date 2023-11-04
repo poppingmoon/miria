@@ -37,6 +37,9 @@ dependencies:
   json5: ^0.8.0
   json_annotation: ^4.8.0
   kana_kit: ^2.0.0
+  media_kit: ^1.1.8+2
+  media_kit_libs_video: ^1.0.3
+  media_kit_video: ^1.2.1
   mfm_parser: ^1.0.3
   mfm_renderer:
     git: https://github.com/shiosyakeyakini-info/mfm_renderer.git

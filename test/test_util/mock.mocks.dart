@@ -6736,6 +6736,7 @@ class MockFilePickerPlatform extends _i1.Mock
     bool? withData = false,
     bool? withReadStream = false,
     bool? lockParentWindow = false,
+    bool? readSequential = false,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -6752,6 +6753,7 @@ class MockFilePickerPlatform extends _i1.Mock
             #withData: withData,
             #withReadStream: withReadStream,
             #lockParentWindow: lockParentWindow,
+            #readSequential: readSequential,
           },
         ),
         returnValue: _i17.Future<_i36.FilePickerResult?>.value(),
