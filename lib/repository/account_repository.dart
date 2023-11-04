@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -206,6 +207,7 @@ class AccountRepository extends ChangeNotifier {
         server,
         sessionId,
         name: "Miria",
+        callback: Platform.isAndroid ? "miria://miria/miauth" : null,
         permission: Permission.values,
       ),
       mode: LaunchMode.externalApplication,
