@@ -116,10 +116,12 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
           );
         }
 
+        if (!mounted) return;
         setState(() {});
       } catch (e, s) {
         debugPrint(e.toString());
         debugPrint(s.toString());
+        if (!mounted) return;
         setState(() {
           error = (e, s);
         });
