@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
-
 import 'package:miria/view/common/account_scope.dart';
 
 class VoteArea extends ConsumerStatefulWidget {
