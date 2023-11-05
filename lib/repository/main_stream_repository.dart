@@ -7,7 +7,7 @@ import 'package:misskey_dart/misskey_dart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainStreamRepository extends ChangeNotifier {
-  var hasUnreadNotification = false;
+  bool hasUnreadNotification = false;
 
   final Misskey misskey;
   final EmojiRepository emojiRepository;
@@ -26,21 +26,25 @@ class MainStreamRepository extends ChangeNotifier {
   Future<void> latestMarkAs(String id) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(
-        "latestReadNotification@${account.userId}@${account.host}", id);
+      "latestReadNotification@${account.userId}@${account.host}",
+      id,
+    );
     hasUnreadNotification = false;
     notifyListeners();
   }
 
   Future<void> confirmNotification() async {
     final notifications = await misskey.i.notifications(
-        const INotificationsRequest(markAsRead: false, limit: 1));
+      const INotificationsRequest(markAsRead: false, limit: 1),
+    );
     final prefs = await SharedPreferences.getInstance();
 
     if (notifications.isEmpty) return;
 
     // 最後に読んだものと違うものがプッシュ通知にあれば通知をオン
     if (prefs.getString(
-            "latestReadNotification@${account.userId}@${account.host}") ==
+          "latestReadNotification@${account.userId}@${account.host}",
+        ) ==
         notifications.firstOrNull?.id) {
       hasUnreadNotification = false;
     } else {
@@ -56,7 +60,8 @@ class MainStreamRepository extends ChangeNotifier {
         hasUnreadNotification = false;
         Future(() async {
           final notifications = await misskey.i.notifications(
-              const INotificationsRequest(markAsRead: false, limit: 1));
+            const INotificationsRequest(markAsRead: false, limit: 1),
+          );
 
           // 最後に読んだものとして記憶しておく
           latestMarkAs(notifications.firstOrNull?.id ?? "");
@@ -89,13 +94,15 @@ class MainStreamRepository extends ChangeNotifier {
     if (isReconnecting) {
       // 排他制御
       while (isReconnecting) {
-        await Future.delayed(const Duration(milliseconds: 100));
+        await Future<void>.delayed(const Duration(milliseconds: 100));
       }
       return;
     }
     isReconnecting = true;
     try {
-      print("main stream repository's socket controller will be disconnect");
+      debugPrint(
+        "main stream repository's socket controller will be disconnect",
+      );
       socketController?.disconnect();
       socketController = null;
       await misskey.streamingService.restart();

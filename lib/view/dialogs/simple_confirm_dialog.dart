@@ -17,16 +17,17 @@ class SimpleConfirmDialog extends StatelessWidget {
     required String secondary,
     bool isMfm = false,
     Account? account,
-  }) async =>
-      await showDialog(
-          context: context,
-          builder: (context) => SimpleConfirmDialog(
-                message: message,
-                primary: primary,
-                secondary: secondary,
-                isMfm: isMfm,
-                account: account,
-              ));
+  }) =>
+      showDialog<bool>(
+        context: context,
+        builder: (context) => SimpleConfirmDialog(
+          message: message,
+          primary: primary,
+          secondary: secondary,
+          isMfm: isMfm,
+          account: account,
+        ),
+      );
 
   const SimpleConfirmDialog({
     super.key,
@@ -41,29 +42,34 @@ class SimpleConfirmDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isMfm) {
       return AccountScope(
-          account: account!,
-          child: AlertDialog(
-            content: SimpleMfmText(message),
-            actions: [
-              OutlinedButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(secondary)),
-              ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(primary))
-            ],
-          ));
+        account: account!,
+        child: AlertDialog(
+          content: SimpleMfmText(message),
+          actions: [
+            OutlinedButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(secondary),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(primary),
+            ),
+          ],
+        ),
+      );
     }
 
     return AlertDialog(
       content: Text(message),
       actions: [
         OutlinedButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(secondary)),
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text(secondary),
+        ),
         ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(primary))
+          onPressed: () => Navigator.of(context).pop(true),
+          child: Text(primary),
+        ),
       ],
     );
   }

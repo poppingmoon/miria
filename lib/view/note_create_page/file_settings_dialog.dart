@@ -7,8 +7,11 @@ class FileSettingsDialogResult {
   final bool isNsfw;
   final String caption;
 
-  const FileSettingsDialogResult(
-      {required this.fileName, required this.isNsfw, required this.caption});
+  const FileSettingsDialogResult({
+    required this.fileName,
+    required this.isNsfw,
+    required this.caption,
+  });
 }
 
 class FileSettingsDialog extends ConsumerStatefulWidget {
@@ -43,42 +46,42 @@ class FileSettingsDialogState extends ConsumerState<FileSettingsDialog> {
   }
 
   String generateRandomText() {
-    var str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    final str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         .split("");
     str.shuffle();
-    return str.take(10).join("");
+    return str.take(10).join();
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: EdgeInsets.all(10),
+      contentPadding: const EdgeInsets.all(10),
       content: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text("ファイル名"),
               TextField(
                 controller: fileNameController,
                 decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.badge_outlined)),
+                  prefixIcon: Icon(Icons.badge_outlined),
+                ),
               ),
               TextButton(
-                  onPressed: () {
-                    final period = fileNameController.text.lastIndexOf(".");
-                    if (period == -1) {
-                      fileNameController.text = generateRandomText();
-                    } else {
-                      fileNameController.text = generateRandomText() +
-                          fileNameController.text.substring(period);
-                    }
-                  },
-                  child: const Text("ファイル名をランダムにする")),
+                onPressed: () {
+                  final period = fileNameController.text.lastIndexOf(".");
+                  if (period == -1) {
+                    fileNameController.text = generateRandomText();
+                  } else {
+                    fileNameController.text = generateRandomText() +
+                        fileNameController.text.substring(period);
+                  }
+                },
+                child: const Text("ファイル名をランダムにする"),
+              ),
               const Padding(padding: EdgeInsets.only(top: 10)),
               CheckboxListTile(
                 value: isNsfw,
@@ -94,7 +97,8 @@ class FileSettingsDialogState extends ConsumerState<FileSettingsDialog> {
                 maxLines: null,
                 minLines: 5,
                 decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.subtitles_outlined)),
+                  prefixIcon: Icon(Icons.subtitles_outlined),
+                ),
               ),
             ],
           ),
@@ -102,14 +106,17 @@ class FileSettingsDialogState extends ConsumerState<FileSettingsDialog> {
       ),
       actions: [
         ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop(FileSettingsDialogResult(
+          onPressed: () {
+            Navigator.of(context).pop(
+              FileSettingsDialogResult(
                 fileName: fileNameController.text,
                 isNsfw: isNsfw,
                 caption: captionController.text,
-              ));
-            },
-            child: const Text("これでええわ")),
+              ),
+            );
+          },
+          child: const Text("これでええわ"),
+        ),
       ],
     );
   }

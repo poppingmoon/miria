@@ -5,21 +5,21 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
 import 'package:miria/view/common/misskey_notes/abuse_dialog.dart';
 import 'package:miria/view/common/misskey_notes/clip_modal_sheet.dart';
 import 'package:miria/view/common/misskey_notes/open_another_account.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/view/dialogs/simple_confirm_dialog.dart';
 import 'package:miria/view/note_create_page/note_create_page.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:share_plus/share_plus.dart';
 
 final noteModalSheetSharingModeProviding = StateProvider((ref) => false);
 
@@ -120,8 +120,8 @@ class NoteModalSheet extends ConsumerWidget {
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
               Future(() async {
                 final box = context.findRenderObject() as RenderBox?;
-                final boundary = noteBoundaryKey.currentContext
-                    ?.findRenderObject() as RenderRepaintBoundary;
+                final boundary = noteBoundaryKey.currentContext!
+                    .findRenderObject()! as RenderRepaintBoundary;
                 final image = await boundary.toImage(
                   pixelRatio: View.of(context).devicePixelRatio,
                 );
@@ -196,7 +196,7 @@ class NoteModalSheet extends ConsumerWidget {
           onTap: () {
             Navigator.of(context).pop();
 
-            showModalBottomSheet(
+            showModalBottomSheet<void>(
               context: context,
               builder: (context2) =>
                   ClipModalSheet(account: account, noteId: targetNote.id),
@@ -220,23 +220,24 @@ class NoteModalSheet extends ConsumerWidget {
                 baseNote.renote != null &&
                 baseNote.poll == null &&
                 baseNote.files.isEmpty)) ...[
-          if (account.i.policies.canEditNote)
+          if (account.i.policies.canEditNote as bool)
             ListTile(
-                title: const Text("編集する"),
-                onTap: () async {
-                  Navigator.of(context).pop();
-                  context.pushRoute(
-                    NoteCreateRoute(
-                      initialAccount: account,
-                      note: targetNote,
-                      noteCreationMode: NoteCreationMode.update,
-                    ),
-                  );
-                }),
+              title: const Text("編集する"),
+              onTap: () async {
+                Navigator.of(context).pop();
+                context.pushRoute(
+                  NoteCreateRoute(
+                    initialAccount: account,
+                    note: targetNote,
+                    noteCreationMode: NoteCreationMode.update,
+                  ),
+                );
+              },
+            ),
           ListTile(
             title: const Text("削除する"),
             onTap: () async {
-              if (await showDialog(
+              if (await showDialog<bool>(
                     context: context,
                     builder: (context) => const SimpleConfirmDialog(
                       message: "ほんまに消してええな？",
@@ -258,7 +259,7 @@ class NoteModalSheet extends ConsumerWidget {
           ListTile(
             title: const Text("削除してなおす"),
             onTap: () async {
-              if (await showDialog(
+              if (await showDialog<bool>(
                     context: context,
                     builder: (context) => const SimpleConfirmDialog(
                       message: "このノート消してなおす？ついたリアクション、Renote、返信は消えて戻らへんで？",
@@ -311,7 +312,7 @@ class NoteModalSheet extends ConsumerWidget {
             title: const Text("通報する"),
             onTap: () {
               Navigator.of(context).pop();
-              showDialog(
+              showDialog<bool>(
                 context: context,
                 builder: (context) => AbuseDialog(
                   account: account,

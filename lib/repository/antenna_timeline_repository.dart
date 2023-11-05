@@ -27,17 +27,18 @@ class AntennaTimelineRepository extends SocketTimelineRepository {
     required FutureOr<void> Function(String id, NoteEdited note) onUpdated,
   }) {
     return misskey.antennaStream(
-        antennaId: tabSetting.antennaId!,
-        onNoteReceived: onReceived,
-        onReacted: onReacted,
-        onUnreacted: onUnreacted,
-        onVoted: onVoted,
-        onUpdated: onUpdated);
+      antennaId: tabSetting.antennaId!,
+      onNoteReceived: onReceived,
+      onReacted: onReacted,
+      onUnreacted: onUnreacted,
+      onVoted: onVoted,
+      onUpdated: onUpdated,
+    );
   }
 
   @override
-  Future<Iterable<Note>> requestNotes({String? untilId}) async {
-    return await misskey.antennas.notes(
+  Future<Iterable<Note>> requestNotes({String? untilId}) {
+    return misskey.antennas.notes(
       AntennasNotesRequest(
         antennaId: tabSetting.antennaId!,
         limit: 30,

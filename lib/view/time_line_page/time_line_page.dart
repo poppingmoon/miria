@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/model/tab_type.dart';
@@ -9,19 +10,18 @@ import 'package:miria/repository/socket_timeline_repository.dart';
 import 'package:miria/router/app_router.dart';
 import 'package:miria/view/channel_dialog.dart';
 import 'package:miria/view/common/account_scope.dart';
+import 'package:miria/view/common/common_drawer.dart';
 import 'package:miria/view/common/error_detail.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
-import 'package:miria/view/server_detail_dialog.dart';
-import 'package:miria/view/themes/app_theme.dart';
-import 'package:miria/view/common/common_drawer.dart';
 import 'package:miria/view/common/notification_icon.dart';
 import 'package:miria/view/common/tab_icon_view.dart';
 import 'package:miria/view/common/timeline_listview.dart';
+import 'package:miria/view/server_detail_dialog.dart';
+import 'package:miria/view/themes/app_theme.dart';
 import 'package:miria/view/time_line_page/misskey_time_line.dart';
 import 'package:miria/view/time_line_page/nyanpuppu.dart';
 import 'package:miria/view/time_line_page/timeline_emoji.dart';
 import 'package:miria/view/time_line_page/timeline_note.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 @RoutePage()
@@ -145,11 +145,13 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
     final sendText = ref.read(timelineNoteProvider).text;
     ref.read(timelineNoteProvider).text = "";
     final account = ref.read(accountProvider(currentTabSetting.acct));
-    context.pushRoute(NoteCreateRoute(
-      channel: channel,
-      initialText: sendText,
-      initialAccount: account,
-    ));
+    context.pushRoute(
+      NoteCreateRoute(
+        channel: channel,
+        initialText: sendText,
+        initialAccount: account,
+      ),
+    );
   }
 
   Widget buildAppbar() {
@@ -191,8 +193,9 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
         ),
       ],
       leading: IconButton(
-          onPressed: () => scaffoldKey.currentState?.openDrawer(),
-          icon: const Icon(Icons.menu)),
+        onPressed: () => scaffoldKey.currentState?.openDrawer(),
+        icon: const Icon(Icons.menu),
+      ),
     );
   }
 
@@ -210,10 +213,11 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(0),
-          child: AppBar(
-            automaticallyImplyLeading: false,
-          )),
+        preferredSize: const Size.fromHeight(0),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -245,7 +249,7 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                   if (currentTabSetting.tabType == TabType.channel)
                     IconButton(
                       onPressed: () {
-                        showDialog(
+                        showDialog<void>(
                           context: context,
                           builder: (context) => ChannelDialog(
                             channelId: currentTabSetting.channelId ?? "",
@@ -276,7 +280,7 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                     AnnoucementInfo(index: currentIndex),
                     IconButton(
                       onPressed: () {
-                        showDialog(
+                        showDialog<void>(
                           context: context,
                           builder: (context) => ServerDetailDialog(
                             account: account,
@@ -298,9 +302,9 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                         .reconnect(),
                     icon:
                         socketTimeline != null && socketTimeline.isReconnecting
-                            ? CircularProgressIndicator()
+                            ? const CircularProgressIndicator()
                             : const Icon(Icons.refresh),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -325,9 +329,7 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                   return AccountScope(
                     account: account,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
                       children: [
                         BannerArea(index: currentIndex),
                         Expanded(
@@ -344,28 +346,20 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
                 },
               ),
             ),
-            Container(
-              // decoration: filteringInputEmoji.isEmpty
-              //     ? BoxDecoration(
-              //         border: Border(
-              //             top: BorderSide(
-              //                 color: Theme.of(context).primaryColor)))
-              //     : null,
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: TimelineNoteField(),
-                  ),
-                  IconButton(
-                    onPressed: note.expectFailure(context),
-                    icon: const Icon(Icons.edit),
-                  ),
-                  IconButton(
-                    onPressed: noteCreateRoute,
-                    icon: const Icon(Icons.keyboard_arrow_right),
-                  )
-                ],
-              ),
+            Row(
+              children: [
+                const Expanded(
+                  child: TimelineNoteField(),
+                ),
+                IconButton(
+                  onPressed: note.expectFailure(context),
+                  icon: const Icon(Icons.edit),
+                ),
+                IconButton(
+                  onPressed: noteCreateRoute,
+                  icon: const Icon(Icons.keyboard_arrow_right),
+                ),
+              ],
             ),
             if (ref
                         .read(generalSettingsRepositoryProvider)
@@ -378,7 +372,6 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
         ),
       ),
       resizeToAvoidBottomInset: true,
-      drawerEnableOpenDragGesture: true,
       drawer: CommonDrawer(
         initialOpenAcct: currentTabSetting.acct,
       ),
@@ -405,9 +398,11 @@ class BannerArea extends ConsumerWidget {
 
     // ダイアログの実装が大変なので（状態管理とか）いったんバナーと一緒に扱う
     final bannerData = bannerAnnouncement
-        .where((element) =>
-            element.display == AnnouncementDisplayType.banner ||
-            element.display == AnnouncementDisplayType.dialog)
+        .where(
+          (element) =>
+              element.display == AnnouncementDisplayType.banner ||
+              element.display == AnnouncementDisplayType.dialog,
+        )
         .lastOrNull;
 
     if (bannerData == null) return const SizedBox.shrink();
@@ -465,27 +460,32 @@ class AnnoucementInfo extends ConsumerWidget {
 
     if (hasUnread == true) {
       return IconButton(
-          onPressed: () => announcementsRoute(context, ref),
-          icon: Stack(children: [
+        onPressed: () => announcementsRoute(context, ref),
+        icon: Stack(
+          children: [
             const Icon(Icons.campaign),
             Transform.translate(
-                offset: const Offset(12, 12),
-                child: SizedBox(
-                  width: 14,
-                  height: 14,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white, width: 1.5),
-                      borderRadius: BorderRadius.circular(20),
-                      color: Theme.of(context).primaryColor,
-                    ),
+              offset: const Offset(12, 12),
+              child: SizedBox(
+                width: 14,
+                height: 14,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 1.5),
+                    borderRadius: BorderRadius.circular(20),
+                    color: Theme.of(context).primaryColor,
                   ),
-                )),
-          ]));
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
     } else {
       return IconButton(
-          onPressed: () => announcementsRoute(context, ref),
-          icon: const Icon(Icons.campaign));
+        onPressed: () => announcementsRoute(context, ref),
+        icon: const Icon(Icons.campaign),
+      );
     }
   }
 }

@@ -27,20 +27,21 @@ class HomeTimeLineRepository extends SocketTimelineRepository {
     required FutureOr<void> Function(String id, NoteEdited note) onUpdated,
   }) {
     return misskey.homeTimelineStream(
-        parameter: HomeTimelineParameter(
-          withRenotes: tabSetting.renoteDisplay,
-          withFiles: tabSetting.isMediaOnly,
-        ),
-        onNoteReceived: onReceived,
-        onReacted: onReacted,
-        onUnreacted: onUnreacted,
-        onVoted: onVoted,
-        onUpdated: onUpdated);
+      parameter: HomeTimelineParameter(
+        withRenotes: tabSetting.renoteDisplay,
+        withFiles: tabSetting.isMediaOnly,
+      ),
+      onNoteReceived: onReceived,
+      onReacted: onReacted,
+      onUnreacted: onUnreacted,
+      onVoted: onVoted,
+      onUpdated: onUpdated,
+    );
   }
 
   @override
-  Future<Iterable<Note>> requestNotes({String? untilId}) async {
-    return await misskey.notes.homeTimeline(
+  Future<Iterable<Note>> requestNotes({String? untilId}) {
+    return misskey.notes.homeTimeline(
       NotesTimelineRequest(
         limit: 30,
         untilId: untilId,

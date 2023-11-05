@@ -83,9 +83,10 @@ class AvatarIcon extends StatelessWidget {
           },
       child: Padding(
         padding: EdgeInsets.only(
-            top: 3,
-            left: 10 * MediaQuery.of(context).textScaleFactor,
-            right: 5 * MediaQuery.of(context).textScaleFactor),
+          top: 3,
+          left: 10 * MediaQuery.of(context).textScaleFactor,
+          right: 5 * MediaQuery.of(context).textScaleFactor,
+        ),
         child: Stack(
           children: [
             if (user.isCat)
@@ -146,27 +147,32 @@ class AvatarIcon extends StatelessWidget {
             ),
             for (final decoration in user.avatarDecorations)
               Transform.scale(
-                  scaleX: 2,
-                  scaleY: 2,
-                  child: Transform.rotate(
-                    angle: (decoration.angle ?? 0) * 2 * pi,
-                    alignment: Alignment.center,
-                    child: decoration.flipH
-                        ? Transform.flip(
-                            flipX: true,
-                            child: SizedBox(
-                              width: MediaQuery.of(context).textScaleFactor *
-                                  height,
-                              child: NetworkImageView(
-                                  url: decoration.url, type: ImageType.other),
-                            ),
-                          )
-                        : SizedBox(
+                scaleX: 2,
+                scaleY: 2,
+                child: Transform.rotate(
+                  angle: (decoration.angle ?? 0) * 2 * pi,
+                  child: decoration.flipH
+                      ? Transform.flip(
+                          flipX: true,
+                          child: SizedBox(
                             width:
                                 MediaQuery.of(context).textScaleFactor * height,
                             child: NetworkImageView(
-                                url: decoration.url, type: ImageType.other)),
-                  )),
+                              url: decoration.url,
+                              type: ImageType.other,
+                            ),
+                          ),
+                        )
+                      : SizedBox(
+                          width:
+                              MediaQuery.of(context).textScaleFactor * height,
+                          child: NetworkImageView(
+                            url: decoration.url,
+                            type: ImageType.other,
+                          ),
+                        ),
+                ),
+              ),
           ],
         ),
       ),

@@ -157,7 +157,7 @@ class _LinkPreviewItemState extends State<LinkPreviewItem> {
               icon: const Icon(Icons.close),
               label: Text(playerUrl != null ? "プレイヤーを閉じる" : "ツイートを閉じる"),
             ),
-          ]
+          ],
       ],
     );
   }
@@ -185,7 +185,7 @@ class LinkPreviewTile extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(5),
       child: InkWell(
-        onTap: () async => await const LinkNavigator()
+        onTap: () => const LinkNavigator()
             .onTapLink(context, ref, link, host)
             .expectFailure(context),
         onLongPress: () {

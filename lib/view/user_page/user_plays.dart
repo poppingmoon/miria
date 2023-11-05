@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
@@ -35,11 +34,13 @@ class UserPlays extends ConsumerWidget {
           subtitle: Text(play.summary),
           onTap: () {
             launchUrl(
-                Uri(
-                    scheme: "https",
-                    host: AccountScope.of(context).host,
-                    pathSegments: ["play", play.id]),
-                mode: LaunchMode.externalApplication);
+              Uri(
+                scheme: "https",
+                host: AccountScope.of(context).host,
+                pathSegments: ["play", play.id],
+              ),
+              mode: LaunchMode.externalApplication,
+            );
           },
         );
       },

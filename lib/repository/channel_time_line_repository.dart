@@ -27,17 +27,18 @@ class ChannelTimelineRepository extends SocketTimelineRepository {
     required FutureOr<void> Function(String id, NoteEdited note) onUpdated,
   }) {
     return misskey.channelStream(
-        channelId: tabSetting.channelId!,
-        onNoteReceived: onReceived,
-        onReacted: onReacted,
-        onUnreacted: onUnreacted,
-        onVoted: onVoted,
-        onUpdated: onUpdated);
+      channelId: tabSetting.channelId!,
+      onNoteReceived: onReceived,
+      onReacted: onReacted,
+      onUnreacted: onUnreacted,
+      onVoted: onVoted,
+      onUpdated: onUpdated,
+    );
   }
 
   @override
-  Future<Iterable<Note>> requestNotes({String? untilId}) async {
-    return await misskey.channels.timeline(
+  Future<Iterable<Note>> requestNotes({String? untilId}) {
+    return misskey.channels.timeline(
       ChannelsTimelineRequest(
         channelId: tabSetting.channelId!,
         limit: 30,

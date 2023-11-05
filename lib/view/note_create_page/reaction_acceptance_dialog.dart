@@ -13,7 +13,10 @@ class ReactionAcceptanceDialog extends StatelessWidget {
           onTap: () => Navigator.of(context).pop(null),
           leading: SvgPicture.asset(
             "assets/images/play_shapes_FILL0_wght400_GRAD0_opsz48.svg",
-            color: Theme.of(context).textTheme.bodyMedium!.color,
+            colorFilter: ColorFilter.mode(
+              Theme.of(context).textTheme.bodyMedium!.color!,
+              BlendMode.srcIn,
+            ),
             width: 28,
             height: 28,
           ),
@@ -38,10 +41,11 @@ class ReactionAcceptanceDialog extends StatelessWidget {
         ),
         ListTile(
           onTap: () => Navigator.of(context).pop(
-              ReactionAcceptance.nonSensitiveOnlyForLocalLikeOnlyForRemote),
+            ReactionAcceptance.nonSensitiveOnlyForLocalLikeOnlyForRemote,
+          ),
           leading: const Icon(Icons.add_moderator_outlined),
           title: const Text("非センシティブのみ（リモートからはいいねのみ）"),
-        )
+        ),
       ],
     );
   }

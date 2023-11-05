@@ -121,12 +121,17 @@ class ServerDetailDialogState extends ConsumerState<ServerDetailDialog> {
         children: [
           Expanded(child: Text(widget.account.host)),
           IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                context.pushRoute(FederationRoute(
-                    account: widget.account, host: widget.account.host));
-              },
-              icon: const Icon(Icons.keyboard_arrow_right))
+            onPressed: () {
+              Navigator.of(context).pop();
+              context.pushRoute(
+                FederationRoute(
+                  account: widget.account,
+                  host: widget.account.host,
+                ),
+              );
+            },
+            icon: const Icon(Icons.keyboard_arrow_right),
+          ),
         ],
       ),
       content: SizedBox(
@@ -134,52 +139,66 @@ class ServerDetailDialogState extends ConsumerState<ServerDetailDialog> {
         height: MediaQuery.of(context).size.height * 0.8,
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text("サーバーオンライン人数"),
               if (onlineUsers != null)
-                Text.rich(TextSpan(children: [
+                Text.rich(
                   TextSpan(
-                      text: onlineUsers.format(),
-                      style: Theme.of(context).textTheme.headlineSmall),
-                  TextSpan(
-                      text: " 人", style: Theme.of(context).textTheme.bodyMedium)
-                ])),
+                    children: [
+                      TextSpan(
+                        text: onlineUsers.format(),
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      TextSpan(
+                        text: " 人",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
+                  ),
+                ),
               const Padding(padding: EdgeInsets.only(top: 10)),
               Row(
                 children: [
                   Expanded(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("CPU使用率"),
                         if (currentStat != null)
-                          Text.rich(TextSpan(children: [
+                          Text.rich(
                             TextSpan(
-                                text: ((currentStat.cpu * 10000).toInt() / 100)
-                                    .toString(),
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall),
-                            TextSpan(
-                                text: " %",
-                                style: Theme.of(context).textTheme.bodyMedium)
-                          ])),
+                              children: [
+                                TextSpan(
+                                  text:
+                                      ((currentStat.cpu * 10000).toInt() / 100)
+                                          .toString(),
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall,
+                                ),
+                                TextSpan(
+                                  text: " %",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
+                          ),
                         if (logged.isNotEmpty)
                           Chart(
-                              data: logged
-                                  .skip(max(0, logged.length - 41))
-                                  .mapIndexed((index, element) =>
-                                      FlSpot(index.toDouble(), element.cpu))
-                                  .toList())
+                            data: logged
+                                .skip(max(0, logged.length - 41))
+                                .mapIndexed(
+                                  (index, element) =>
+                                      FlSpot(index.toDouble(), element.cpu),
+                                )
+                                .toList(),
+                          ),
                       ],
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(left: 10)),
                   Expanded(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("メモリ使用率"),
@@ -188,62 +207,70 @@ class ServerDetailDialogState extends ConsumerState<ServerDetailDialog> {
                             TextSpan(
                               children: [
                                 TextSpan(
-                                    text: format(
-                                        currentStat.mem.used / totalMemories!),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall),
+                                  text: format(
+                                    currentStat.mem.used / totalMemories!,
+                                  ),
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall,
+                                ),
                                 TextSpan(
-                                    text: " %",
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium)
+                                  text: " %",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
                               ],
                             ),
                           ),
                         if (totalMemories != null && logged.isNotEmpty)
                           Chart(
-                              data: logged
-                                  .skip(max(0, logged.length - 41))
-                                  .mapIndexed((index, element) => FlSpot(
-                                      index.toDouble(),
-                                      element.mem.used / totalMemories!))
-                                  .toList())
+                            data: logged
+                                .skip(max(0, logged.length - 41))
+                                .mapIndexed(
+                                  (index, element) => FlSpot(
+                                    index.toDouble(),
+                                    element.mem.used / totalMemories!,
+                                  ),
+                                )
+                                .toList(),
+                          ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
               const Padding(padding: EdgeInsets.only(top: 10)),
               Row(
                 children: [
                   Expanded(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         const Text("応答時間"),
                         if (ping != null)
                           Text.rich(
                             TextSpan(
                               children: [
                                 TextSpan(
-                                    text: ping.format(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall),
+                                  text: ping.format(),
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall,
+                                ),
                                 TextSpan(
-                                    text: " ミリ秒",
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium),
+                                  text: " ミリ秒",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
                                 WidgetSpan(
-                                    alignment: PlaceholderAlignment.middle,
-                                    child: IconButton(
-                                        onPressed: () => refreshPing(),
-                                        icon: const Icon(Icons.refresh)))
+                                  alignment: PlaceholderAlignment.middle,
+                                  child: IconButton(
+                                    onPressed: () => refreshPing(),
+                                    icon: const Icon(Icons.refresh),
+                                  ),
+                                ),
                               ],
                             ),
-                          )
-                      ])),
+                          ),
+                      ],
+                    ),
+                  ),
                   Expanded(child: Container()),
                 ],
               ),
@@ -295,7 +322,7 @@ class ServerDetailDialogState extends ConsumerState<ServerDetailDialog> {
                       ),
                     ),
                   ],
-                )
+                ),
               ],
               const Padding(padding: EdgeInsets.only(top: 10)),
               const Text("ジョブキュー(Deliver queue)"),
@@ -345,7 +372,7 @@ class ServerDetailDialogState extends ConsumerState<ServerDetailDialog> {
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ],
           ),
@@ -366,13 +393,13 @@ class Chart extends StatelessWidget {
       height: 100,
       child: LineChart(
         LineChartData(
-          gridData: FlGridData(
+          gridData: const FlGridData(
             drawHorizontalLine: false,
             drawVerticalLine: false,
           ),
-          titlesData: FlTitlesData(show: false),
+          titlesData: const FlTitlesData(show: false),
           borderData: FlBorderData(show: false),
-          lineTouchData: LineTouchData(enabled: false),
+          lineTouchData: const LineTouchData(enabled: false),
           minX: 0,
           maxX: 40,
           minY: 0,
@@ -385,10 +412,11 @@ class Chart extends StatelessWidget {
                   Theme.of(context).textTheme.bodyMedium?.color?.withAlpha(200),
               barWidth: 4,
               belowBarData: BarAreaData(
-                  show: true,
-                  color: Theme.of(context).textTheme.bodyMedium?.color),
-              dotData: FlDotData(show: false),
-            )
+                show: true,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
+              ),
+              dotData: const FlDotData(show: false),
+            ),
           ],
         ),
       ),

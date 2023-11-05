@@ -35,11 +35,13 @@ class RoleTimelineRepository extends SocketTimelineRepository {
   }
 
   @override
-  Future<Iterable<Note>> requestNotes({String? untilId}) async {
-    return await misskey.roles.notes(RolesNotesRequest(
-      roleId: tabSetting.roleId!,
-      limit: 30,
-      untilId: untilId,
-    ));
+  Future<Iterable<Note>> requestNotes({String? untilId}) {
+    return misskey.roles.notes(
+      RolesNotesRequest(
+        roleId: tabSetting.roleId!,
+        limit: 30,
+        untilId: untilId,
+      ),
+    );
   }
 }

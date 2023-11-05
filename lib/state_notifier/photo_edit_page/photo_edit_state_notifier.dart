@@ -27,7 +27,7 @@ class PhotoEdit with _$PhotoEdit {
     @Default(false) bool isInitialized,
     Uint8List? initialImage,
     Uint8List? editedImage,
-    @Default(Offset(0, 0)) Offset cropOffset,
+    @Default(Offset.zero) Offset cropOffset,
     @Default(Size.zero) Size cropSize,
     @Default(Size.zero) Size defaultSize,
     @Default(Size.zero) Size actualSize,
@@ -65,10 +65,8 @@ class PhotoEditStateNotifier extends StateNotifier<PhotoEdit> {
     switch (file) {
       case ImageFile():
         initialImage = file.data;
-        break;
       case ImageFileAlreadyPostedFile():
         initialImage = file.data;
-        break;
       default:
         throw UnsupportedError("$file is unsupported.");
     }
@@ -361,7 +359,6 @@ class PhotoEditStateNotifier extends StateNotifier<PhotoEdit> {
           _acceptReactions.add(reaction.baseName);
         }
 
-        break;
       case UnicodeEmojiData():
         break;
       default:

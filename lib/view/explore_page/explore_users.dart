@@ -21,9 +21,9 @@ enum ExploreUserType {
 
 class ExploreUsersState extends ConsumerState<ExploreUsers> {
   final List<User> pinnedUser = [];
-  var exploreUserType = ExploreUserType.pinned;
-  var sortType = UsersSortType.followerDescendant;
-  var isDetailOpen = false;
+  ExploreUserType exploreUserType = ExploreUserType.pinned;
+  UsersSortType sortType = UsersSortType.followerDescendant;
+  bool isDetailOpen = false;
 
   @override
   void didChangeDependencies() {
@@ -45,7 +45,6 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
@@ -57,61 +56,69 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
                       padding: const EdgeInsets.only(top: 3, bottom: 3),
                       child: LayoutBuilder(
                         builder: (context, constraints) => ToggleButtons(
-                            constraints: BoxConstraints.expand(
-                                width: constraints.maxWidth / 3 -
-                                    Theme.of(context)
-                                            .toggleButtonsTheme
-                                            .borderWidth!
-                                            .toInt() *
-                                        3),
-                            onPressed: (index) => setState(() {
-                                  exploreUserType =
-                                      ExploreUserType.values[index];
-                                }),
-                            isSelected: [
-                              for (final element in ExploreUserType.values)
-                                element == exploreUserType
-                            ],
-                            children: const [
-                              Text("ピンどめ"),
-                              Text("ローカル"),
-                              Text("リモート"),
-                            ]),
+                          constraints: BoxConstraints.expand(
+                            width: constraints.maxWidth / 3 -
+                                Theme.of(context)
+                                        .toggleButtonsTheme
+                                        .borderWidth!
+                                        .toInt() *
+                                    3,
+                          ),
+                          onPressed: (index) => setState(() {
+                            exploreUserType = ExploreUserType.values[index];
+                          }),
+                          isSelected: [
+                            for (final element in ExploreUserType.values)
+                              element == exploreUserType,
+                          ],
+                          children: const [
+                            Text("ピンどめ"),
+                            Text("ローカル"),
+                            Text("リモート"),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                   IconButton(
-                      onPressed: exploreUserType == ExploreUserType.pinned
-                          ? null
-                          : () {
-                              setState(() {
-                                isDetailOpen = !isDetailOpen;
-                              });
-                            },
-                      icon: Icon(isDetailOpen
+                    onPressed: exploreUserType == ExploreUserType.pinned
+                        ? null
+                        : () {
+                            setState(() {
+                              isDetailOpen = !isDetailOpen;
+                            });
+                          },
+                    icon: Icon(
+                      isDetailOpen
                           ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down)),
+                          : Icons.keyboard_arrow_down,
+                    ),
+                  ),
                 ],
               ),
               if (isDetailOpen) ...[
                 Row(
                   children: [
-                    const Expanded(child: Text("並び順", textAlign: TextAlign.center)),
+                    const Expanded(
+                      child: Text("並び順", textAlign: TextAlign.center),
+                    ),
                     Expanded(
                       child: DropdownButton<UsersSortType>(
-                          items: [
-                            for (final sortType in UsersSortType.values)
-                              DropdownMenuItem(
-                                  value: sortType,
-                                  child: Text(sortType.displayName))
-                          ],
-                          value: sortType,
-                          onChanged: (e) {
-                            setState(() {
-                              sortType = e ?? UsersSortType.followerDescendant;
-                            });
-                          }),
-                    )
+                        items: [
+                          for (final sortType in UsersSortType.values)
+                            DropdownMenuItem(
+                              value: sortType,
+                              child: Text(sortType.displayName),
+                            ),
+                        ],
+                        value: sortType,
+                        onChanged: (e) {
+                          setState(() {
+                            sortType = e ?? UsersSortType.followerDescendant;
+                          });
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -134,32 +141,36 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
                   final response = await ref
                       .read(misskeyProvider(AccountScope.of(context)))
                       .users
-                      .users(UsersUsersRequest(
-                        sort: sortType,
-                        state: UsersState.alive,
-                        origin: exploreUserType == ExploreUserType.remote
-                            ? Origin.remote
-                            : Origin.local,
-                      ));
+                      .users(
+                        UsersUsersRequest(
+                          sort: sortType,
+                          state: UsersState.alive,
+                          origin: exploreUserType == ExploreUserType.remote
+                              ? Origin.remote
+                              : Origin.local,
+                        ),
+                      );
                   return response.toList();
                 },
                 nextFuture: (_, index) async {
                   final response = await ref
                       .read(misskeyProvider(AccountScope.of(context)))
                       .users
-                      .users(UsersUsersRequest(
-                        sort: sortType,
-                        state: UsersState.alive,
-                        offset: index,
-                        origin: exploreUserType == ExploreUserType.remote
-                            ? Origin.remote
-                            : Origin.local,
-                      ));
+                      .users(
+                        UsersUsersRequest(
+                          sort: sortType,
+                          state: UsersState.alive,
+                          offset: index,
+                          origin: exploreUserType == ExploreUserType.remote
+                              ? Origin.remote
+                              : Origin.local,
+                        ),
+                      );
                   return response.toList();
                 },
                 itemBuilder: (context, user) => UserListItem(user: user),
               ),
-            )
+            ),
         ],
       ),
     );

@@ -23,9 +23,9 @@ class TimelinePageTest {
 
   TimelinePageTest({
     required TabType tabType,
-    isSubscribe = false,
-    isIncludeReplies = false,
-    isMediaOnly = false,
+    bool isSubscribe = false,
+    bool isIncludeReplies = false,
+    bool isMediaOnly = false,
     String? roleId,
     String? antennaId,
     String? channelId,
@@ -67,7 +67,7 @@ class TimelinePageTest {
             .overrideWith((ref) => mockTabSettingsRepository),
         accountRepository.overrideWith((ref) => mockAccountRepository),
         emojiRepositoryProvider
-            .overrideWith((ref, arg) => MockEmojiRepository())
+            .overrideWith((ref, arg) => MockEmojiRepository()),
       ],
       child: DefaultRootWidget(
         initialRoute: TimeLineRoute(initialTabSetting: tabSetting),

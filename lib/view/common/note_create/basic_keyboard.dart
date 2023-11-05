@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import 'custom_keyboard_button.dart';
+import 'package:miria/view/common/note_create/custom_keyboard_button.dart';
 
 class BasicKeyboard extends StatelessWidget {
   final TextEditingController controller;
@@ -15,9 +15,6 @@ class BasicKeyboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         CustomKeyboardButton(
           keyboard: ":",

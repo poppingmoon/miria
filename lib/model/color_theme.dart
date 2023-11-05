@@ -30,7 +30,7 @@ class ColorTheme with _$ColorTheme {
   factory ColorTheme.misskey(MisskeyTheme theme) {
     final isDarkTheme = theme.base == "dark";
     final props = {
-      ...isDarkTheme ? defaultDarkThemeProps : defaultLightThemeProps
+      ...isDarkTheme ? defaultDarkThemeProps : defaultLightThemeProps,
     };
     props.addAll(theme.props);
     props
@@ -64,7 +64,7 @@ class ColorTheme with _$ColorTheme {
       if (input.startsWith("rgb(") && input.endsWith(")")) {
         final rgb = input
             .substring(4, input.length - 1)
-            .split(RegExp(r"[, ]+"))
+            .split(RegExp("[, ]+"))
             .map(int.parse)
             .toList();
         return Color.fromRGBO(rgb[0], rgb[1], rgb[2], 1);

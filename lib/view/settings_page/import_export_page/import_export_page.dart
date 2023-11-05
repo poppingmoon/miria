@@ -25,7 +25,6 @@ class ImportExportPageState extends ConsumerState<ImportExportPage> {
       body: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(

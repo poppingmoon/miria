@@ -41,12 +41,14 @@ class LocalTimeLineRepository extends SocketTimelineRepository {
   }
 
   @override
-  Future<Iterable<Note>> requestNotes({String? untilId}) async {
-    return await misskey.notes.localTimeline(NotesLocalTimelineRequest(
-      untilId: untilId,
-      withRenotes: tabSetting.renoteDisplay,
-      withReplies: tabSetting.isIncludeReplies,
-      withFiles: tabSetting.isMediaOnly,
-    ));
+  Future<Iterable<Note>> requestNotes({String? untilId}) {
+    return misskey.notes.localTimeline(
+      NotesLocalTimelineRequest(
+        untilId: untilId,
+        withRenotes: tabSetting.renoteDisplay,
+        withReplies: tabSetting.isIncludeReplies,
+        withFiles: tabSetting.isMediaOnly,
+      ),
+    );
   }
 }

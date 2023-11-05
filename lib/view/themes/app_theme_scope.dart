@@ -24,13 +24,13 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
       isDarkMode: theme.isDarkTheme,
       noteTextStyle: const InputDecoration(),
       reactionButtonStyle: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(5),
-          elevation: 0,
-          minimumSize: const Size(0, 0),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          visualDensity: const VisualDensity(horizontal: 0, vertical: 0),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
+        padding: const EdgeInsets.all(5),
+        elevation: 0,
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        visualDensity: VisualDensity.standard,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      ),
       linkStyle: TextStyle(color: theme.link),
       hashtagStyle: TextStyle(color: theme.hashtag),
       mentionStyle: TextStyle(color: theme.mention),
@@ -95,39 +95,46 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
     if (defaultTargetPlatform == TargetPlatform.iOS ||
         defaultTargetPlatform == TargetPlatform.macOS) {
       return const TextStyle(
-          fontFamily: "Apple Color Emoji",
-          fontFamilyFallback: [
-            "Apple Color Emoji",
-            "Hiragino Maru Gothic ProN"
-          ]);
+        fontFamily: "Apple Color Emoji",
+        fontFamilyFallback: [
+          "Apple Color Emoji",
+          "Hiragino Maru Gothic ProN",
+        ],
+      );
     }
     if (defaultTargetPlatform == TargetPlatform.windows) {
       return const TextStyle(
-          fontFamily: "Segoe UI Emoji",
-          fontFamilyFallback: ["Segoe UI Emoji", "Noto Color Emoji", "Meiryo"]);
+        fontFamily: "Segoe UI Emoji",
+        fontFamilyFallback: ["Segoe UI Emoji", "Noto Color Emoji", "Meiryo"],
+      );
     }
     if (defaultTargetPlatform == TargetPlatform.android ||
         defaultTargetPlatform == TargetPlatform.linux) {
       return const TextStyle(
-          fontFamily: "Noto Color Emoji",
-          fontFamilyFallback: ["Noto Color Emoji", "Noto Sans JP"]);
+        fontFamily: "Noto Color Emoji",
+        fontFamilyFallback: ["Noto Color Emoji", "Noto Sans JP"],
+      );
     }
     return const TextStyle();
   }
 
   ThemeData buildTheme(BuildContext context, ColorTheme theme) {
     final textThemePre = Theme.of(context).textTheme.merge(
-        (theme.isDarkTheme ? ThemeData.dark() : ThemeData.light())
-            .textTheme
-            .apply(
+          (theme.isDarkTheme ? ThemeData.dark() : ThemeData.light())
+              .textTheme
+              .apply(
                 fontFamily: resolveFontFamilyName(),
                 fontFamilyFallback: resolveFontFamilyCallback(),
-                bodyColor: theme.foreground));
+                bodyColor: theme.foreground,
+              ),
+        );
     final textTheme = textThemePre.copyWith(
-        bodySmall: textThemePre.bodySmall?.copyWith(
-            color: theme.isDarkTheme
-                ? theme.foreground.darken(0.1)
-                : theme.foreground.lighten(0.1)));
+      bodySmall: textThemePre.bodySmall?.copyWith(
+        color: theme.isDarkTheme
+            ? theme.foreground.darken()
+            : theme.foreground.lighten(),
+      ),
+    );
 
     final themeData = ThemeData(
       brightness: theme.isDarkTheme ? Brightness.dark : Brightness.light,
@@ -172,7 +179,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
           shape: MaterialStatePropertyAll(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
           ),
-          visualDensity: const VisualDensity(horizontal: 0, vertical: 0),
+          visualDensity: VisualDensity.standard,
           tapTargetSize: MaterialTapTargetSize.padded,
         ),
       ),
@@ -182,7 +189,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
           shape: MaterialStatePropertyAll(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
           ),
-          visualDensity: const VisualDensity(horizontal: 0, vertical: 0),
+          visualDensity: VisualDensity.standard,
           tapTargetSize: MaterialTapTargetSize.padded,
         ),
       ),
@@ -204,7 +211,6 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
           borderSide: BorderSide(
             color:
                 theme.isDarkTheme ? theme.primaryDarken : theme.primaryLighten,
-            width: 1.0,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
@@ -267,12 +273,18 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
 
   @override
   Widget build(BuildContext context) {
-    final colorSystem = ref.watch(generalSettingsRepositoryProvider
-        .select((value) => value.settings.themeColorSystem));
-    final lightTheme = ref.watch(generalSettingsRepositoryProvider
-        .select((value) => value.settings.lightColorThemeId));
-    final darkTheme = ref.watch(generalSettingsRepositoryProvider
-        .select((value) => value.settings.darkColorThemeId));
+    final colorSystem = ref.watch(
+      generalSettingsRepositoryProvider
+          .select((value) => value.settings.themeColorSystem),
+    );
+    final lightTheme = ref.watch(
+      generalSettingsRepositoryProvider
+          .select((value) => value.settings.lightColorThemeId),
+    );
+    final darkTheme = ref.watch(
+      generalSettingsRepositoryProvider
+          .select((value) => value.settings.darkColorThemeId),
+    );
     final textScaleFactor = ref.watch(
       generalSettingsRepositoryProvider
           .select((value) => value.settings.textScaleFactor),
@@ -288,9 +300,11 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
       isDark = false;
     }
 
-    final foundColorTheme = builtInColorThemes.firstWhereOrNull((e) =>
-            e.isDarkTheme == isDark &&
-            e.id == (isDark ? darkTheme : lightTheme)) ??
+    final foundColorTheme = builtInColorThemes.firstWhereOrNull(
+          (e) =>
+              e.isDarkTheme == isDark &&
+              e.id == (isDark ? darkTheme : lightTheme),
+        ) ??
         builtInColorThemes
             .firstWhere((element) => element.isDarkTheme == isDark);
 

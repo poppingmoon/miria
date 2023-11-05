@@ -47,8 +47,9 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       }
       darkModeTheme = settings.darkColorThemeId;
       if (darkModeTheme.isEmpty ||
-          builtInColorThemes.every((element) =>
-              !element.isDarkTheme || element.id != darkModeTheme)) {
+          builtInColorThemes.every(
+            (element) => !element.isDarkTheme || element.id != darkModeTheme,
+          )) {
         darkModeTheme =
             builtInColorThemes.where((element) => element.isDarkTheme).first.id;
       }
@@ -92,16 +93,12 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("全般", style: Theme.of(context).textTheme.titleLarge),
@@ -114,7 +111,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                             DropdownMenuItem(
                               value: element,
                               child: Text(element.displayName),
-                            )
+                            ),
                         ],
                         value: nsfwInherit,
                         onChanged: (value) => setState(
@@ -133,7 +130,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                             DropdownMenuItem(
                               value: element,
                               child: Text(element.displayName),
-                            )
+                            ),
                         ],
                         value: automaticPush,
                         onChanged: (value) => setState(
@@ -180,7 +177,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                             DropdownMenuItem(
                               value: element,
                               child: Text("${element.displayName}に表示する"),
-                            )
+                            ),
                         ],
                         value: tabPosition,
                         onChanged: (value) => setState(
@@ -198,12 +195,12 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("テーマ",
-                          style: Theme.of(context).textTheme.titleLarge),
+                      Text(
+                        "テーマ",
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       const Text("ライトモードで使うテーマ"),
                       DropdownButton<String>(
@@ -213,7 +210,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                             DropdownMenuItem(
                               value: element.id,
                               child: Text("${element.name}っぽいの"),
-                            )
+                            ),
                         ],
                         value: lightModeTheme,
                         onChanged: (value) => setState(
@@ -226,34 +223,36 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       const Text("ダークモードで使うテーマ"),
                       DropdownButton<String>(
-                          items: [
-                            for (final element in builtInColorThemes
-                                .where((element) => element.isDarkTheme))
-                              DropdownMenuItem(
-                                value: element.id,
-                                child: Text("${element.name}っぽいの"),
-                              )
-                          ],
-                          value: darkModeTheme,
-                          onChanged: (value) => setState(() {
-                                darkModeTheme = value ?? "";
-                                save();
-                              })),
+                        items: [
+                          for (final element in builtInColorThemes
+                              .where((element) => element.isDarkTheme))
+                            DropdownMenuItem(
+                              value: element.id,
+                              child: Text("${element.name}っぽいの"),
+                            ),
+                        ],
+                        value: darkModeTheme,
+                        onChanged: (value) => setState(() {
+                          darkModeTheme = value ?? "";
+                          save();
+                        }),
+                      ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       const Text("ライトモード・ダークモードのつかいわけ"),
                       DropdownButton<ThemeColorSystem>(
-                          items: [
-                            for (final colorSystem in ThemeColorSystem.values)
-                              DropdownMenuItem(
-                                value: colorSystem,
-                                child: Text(colorSystem.displayName),
-                              )
-                          ],
-                          value: colorSystem,
-                          onChanged: (value) => setState(() {
-                                colorSystem = value ?? ThemeColorSystem.system;
-                                save();
-                              }))
+                        items: [
+                          for (final colorSystem in ThemeColorSystem.values)
+                            DropdownMenuItem(
+                              value: colorSystem,
+                              child: Text(colorSystem.displayName),
+                            ),
+                        ],
+                        value: colorSystem,
+                        onChanged: (value) => setState(() {
+                          colorSystem = value ?? ThemeColorSystem.system;
+                          save();
+                        }),
+                      ),
                     ],
                   ),
                 ),
@@ -262,41 +261,44 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("リアクション",
-                          style: Theme.of(context).textTheme.titleLarge),
+                      Text(
+                        "リアクション",
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                       CheckboxListTile(
-                          value: enableDirectReaction,
-                          title: const Text("ノート内の絵文字タップでリアクションする"),
-                          subtitle: const Text(
-                              "ノート内の絵文字をタップしてリアクションします。MFMや外部サーバーの絵文字の場合うまく機能しないことがあります。"),
-                          onChanged: (value) {
-                            setState(() {
-                              enableDirectReaction = !enableDirectReaction;
-                              save();
-                            });
-                          }),
+                        value: enableDirectReaction,
+                        title: const Text("ノート内の絵文字タップでリアクションする"),
+                        subtitle: const Text(
+                          "ノート内の絵文字をタップしてリアクションします。MFMや外部サーバーの絵文字の場合うまく機能しないことがあります。",
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            enableDirectReaction = !enableDirectReaction;
+                            save();
+                          });
+                        },
+                      ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       const Text("絵文字のスタイル"),
                       DropdownButton(
-                          items: [
-                            for (final type in EmojiType.values)
-                              DropdownMenuItem(
-                                value: type,
-                                child: Text(type.displayName),
-                              )
-                          ],
-                          value: emojiType,
-                          isExpanded: true,
-                          onChanged: (value) {
-                            setState(() {
-                              emojiType = value ?? EmojiType.twemoji;
-                              save();
-                            });
-                          }),
+                        items: [
+                          for (final type in EmojiType.values)
+                            DropdownMenuItem(
+                              value: type,
+                              child: Text(type.displayName),
+                            ),
+                        ],
+                        value: emojiType,
+                        isExpanded: true,
+                        onChanged: (value) {
+                          setState(() {
+                            emojiType = value ?? EmojiType.twemoji;
+                            save();
+                          });
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -305,8 +307,6 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -325,7 +325,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                             save();
                           });
                         },
-                      )
+                      ),
                     ],
                   ),
                 ),

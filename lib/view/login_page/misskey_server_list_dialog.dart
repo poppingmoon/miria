@@ -17,11 +17,12 @@ class MisskeyServerListDialogState
     return AlertDialog(
       title: const Text("ログインするサーバーをえらんでください"),
       content: SizedBox(
-          width: double.maxFinite,
-          child: MisskeyServerList(
-            isDisableUnloginable: true,
-            onTap: (item) => Navigator.of(context).pop(item.url),
-          )),
+        width: double.maxFinite,
+        child: MisskeyServerList(
+          isDisableUnloginable: true,
+          onTap: (item) => Navigator.of(context).pop(item.url),
+        ),
+      ),
     );
   }
 }

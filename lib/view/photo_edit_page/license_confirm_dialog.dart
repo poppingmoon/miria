@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
@@ -13,8 +11,11 @@ class LicenseConfirmDialog extends ConsumerStatefulWidget {
   final String emoji;
   final Account account;
 
-  const LicenseConfirmDialog(
-      {super.key, required this.emoji, required this.account});
+  const LicenseConfirmDialog({
+    super.key,
+    required this.emoji,
+    required this.account,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -22,7 +23,7 @@ class LicenseConfirmDialog extends ConsumerStatefulWidget {
 }
 
 class LicenseConfirmDialogState extends ConsumerState<LicenseConfirmDialog> {
-  var isLoading = true;
+  bool isLoading = true;
   Object? error;
 
   EmojiResponse? data;
@@ -69,18 +70,21 @@ class LicenseConfirmDialogState extends ConsumerState<LicenseConfirmDialog> {
                   "このカスタム絵文字はこのようにライセンスされています。",
                 ),
                 MfmText(
-                    mfmText: data.license ?? "※このカスタム絵文字に対してライセンスは設定されていません。")
+                  mfmText: data.license ?? "※このカスタム絵文字に対してライセンスは設定されていません。",
+                ),
               ],
             ),
           ),
         ),
         actions: [
           OutlinedButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text("わからへんからやめとく")),
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text("わからへんからやめとく"),
+          ),
           ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text("使ってもだいじょうぶ"))
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text("使ってもだいじょうぶ"),
+          ),
         ],
       ),
     );

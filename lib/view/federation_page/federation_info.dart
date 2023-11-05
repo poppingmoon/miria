@@ -41,23 +41,24 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
               await ref.read(misskeyProvider(account)).stats();
           ref.read(federationPageFederationDataProvider.notifier).state =
               FederationData(
-                  bannerUrl: metaResponse.bannerUrl?.toString(),
-                  faviconUrl: metaResponse.iconUrl?.toString(),
-                  tosUrl: metaResponse.tosUrl?.toString(),
-                  name: metaResponse.name ?? "",
-                  description: metaResponse.description ?? "",
-                  usersCount: statsResponse.originalUsersCount,
-                  notesCount: statsResponse.originalNotesCount,
-                  reactionCount: statsResponse.reactionsCount,
-                  softwareName: "misskey",
-                  softwareVersion: metaResponse.version,
-                  languages: metaResponse.langs,
-                  ads: metaResponse.ads,
+            bannerUrl: metaResponse.bannerUrl?.toString(),
+            faviconUrl: metaResponse.iconUrl?.toString(),
+            tosUrl: metaResponse.tosUrl?.toString(),
+            name: metaResponse.name ?? "",
+            description: metaResponse.description ?? "",
+            usersCount: statsResponse.originalUsersCount,
+            notesCount: statsResponse.originalNotesCount,
+            reactionCount: statsResponse.reactionsCount,
+            softwareName: "misskey",
+            softwareVersion: metaResponse.version,
+            languages: metaResponse.langs,
+            ads: metaResponse.ads,
 
-                  // 自分のサーバーが非対応ということはない
-                  isSupportedAnnouncement: true,
-                  isSupportedEmoji: true,
-                  isSupportedLocalTimeline: true);
+            // 自分のサーバーが非対応ということはない
+            isSupportedAnnouncement: true,
+            isSupportedEmoji: true,
+            isSupportedLocalTimeline: true,
+          );
         } else {
           final federation = await ref
               .read(misskeyProvider(AccountScope.of(context)))
@@ -93,8 +94,7 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
               }
 
               misskeyMeta = await misskeyServer.meta();
-            } catch (e) {}
-            ;
+            } catch (_) {}
           }
 
           ref.read(federationPageFederationDataProvider.notifier).state =
@@ -118,8 +118,8 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
 
         setState(() {});
       } catch (e, s) {
-        print(e);
-        print(s);
+        debugPrint(e.toString());
+        debugPrint(s.toString());
         setState(() {
           error = (e, s);
         });
@@ -137,20 +137,20 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
           padding:
               const EdgeInsets.only(left: 10, top: 10, right: 10, bottom: 20),
           child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (data.bannerUrl != null)
                 NetworkImageView(
-                    url: data.bannerUrl!.toString(), type: ImageType.other),
+                  url: data.bannerUrl!,
+                  type: ImageType.other,
+                ),
               Row(
                 children: [
                   if (data.faviconUrl != null)
                     SizedBox(
                       width: 32,
                       child: NetworkImageView(
-                        url: data.faviconUrl!.toString(),
+                        url: data.faviconUrl!,
                         type: ImageType.serverIcon,
                       ),
                     ),
@@ -160,7 +160,7 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                       data.name,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
-                  )
+                  ),
                 ],
               ),
               const Padding(padding: EdgeInsets.only(top: 5)),
@@ -209,30 +209,34 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                       ),
                       Text(
                         "${data.softwareName} ${data.softwareVersion}",
-                      )
+                      ),
                     ],
                   ),
                   if (data.languages.isNotEmpty)
-                    TableRow(children: [
-                      const Text("言語", textAlign: TextAlign.center),
-                      Text(
-                        data.languages.join(", "),
-                      )
-                    ]),
-                  if (data.tosUrl != null)
-                    TableRow(children: [
-                      const Text(
-                        "利用規約",
-                        textAlign: TextAlign.center,
-                      ),
-                      GestureDetector(
-                        onTap: () => launchUrl(Uri.parse(data.tosUrl!)),
-                        child: Text(
-                          data.tosUrl!.toString().tight,
-                          style: AppTheme.of(context).linkStyle,
+                    TableRow(
+                      children: [
+                        const Text("言語", textAlign: TextAlign.center),
+                        Text(
+                          data.languages.join(", "),
                         ),
-                      )
-                    ])
+                      ],
+                    ),
+                  if (data.tosUrl != null)
+                    TableRow(
+                      children: [
+                        const Text(
+                          "利用規約",
+                          textAlign: TextAlign.center,
+                        ),
+                        GestureDetector(
+                          onTap: () => launchUrl(Uri.parse(data.tosUrl!)),
+                          child: Text(
+                            data.tosUrl!.tight,
+                            style: AppTheme.of(context).linkStyle,
+                          ),
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ],
