@@ -32,14 +32,7 @@ void main() {
 
       verify(
         mockMisskeyChannel.timeline(
-          argThat(
-            equals(
-              const ChannelsTimelineRequest(
-                channelId: "abcdefg",
-                limit: 30,
-              ),
-            ),
-          ),
+          argThat(equals(const ChannelsTimelineRequest(channelId: "abcdefg"))),
         ),
       );
     });
