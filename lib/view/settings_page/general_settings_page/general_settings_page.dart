@@ -27,6 +27,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   TabPosition tabPosition = TabPosition.top;
   double textScaleFactor = 1.0;
   EmojiType emojiType = EmojiType.twemoji;
+  bool isChicken = false;
 
   @override
   void initState() {
@@ -62,6 +63,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       tabPosition = settings.tabPosition;
       textScaleFactor = settings.textScaleFactor;
       emojiType = settings.emojiType;
+      isChicken = settings.isChicken;
     });
   }
 
@@ -80,6 +82,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
             tabPosition: tabPosition,
             emojiType: emojiType,
             textScaleFactor: textScaleFactor,
+            isChicken: isChicken,
           ),
         );
   }
@@ -279,6 +282,16 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                               save();
                             });
                           }),
+                      CheckboxListTile(
+                        value: isChicken,
+                        title: const Text("🐔"),
+                        onChanged: (value) {
+                          setState(() {
+                            isChicken = value ?? false;
+                            save();
+                          });
+                        },
+                      ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       const Text("絵文字のスタイル"),
                       DropdownButton(

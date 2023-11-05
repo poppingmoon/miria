@@ -94,6 +94,18 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
           // すでに別のリアクションを行っている
           if (widget.myReaction != null) return;
 
+          if (ref.read(generalSettingsRepositoryProvider).settings.isChicken) {
+            final result = await SimpleConfirmDialog.show(
+              context: context,
+              message: "リアクションしてもええか？",
+              primary: "する",
+              secondary: "やっぱりやめる",
+            );
+            if (!(result ?? false)) {
+              return;
+            }
+          }
+
           final String reactionString;
           final emojiData = widget.emojiData;
           switch (emojiData) {

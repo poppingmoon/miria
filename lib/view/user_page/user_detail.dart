@@ -40,6 +40,17 @@ class UserDetailState extends ConsumerState<UserDetail> {
 
   Future<void> followCreate() async {
     if (isFollowEditing) return;
+    if (ref.read(generalSettingsRepositoryProvider).settings.isChicken) {
+      final result = await SimpleConfirmDialog.show(
+        context: context,
+        message: "フォローしてもええか？",
+        primary: "する",
+        secondary: "やっぱりやめる",
+      );
+      if (!(result ?? false)) {
+        return;
+      }
+    }
     setState(() {
       isFollowEditing = true;
     });
