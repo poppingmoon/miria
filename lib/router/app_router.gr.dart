@@ -181,6 +181,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ImportExportPage(),
       );
     },
+    InstalledThemesRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const InstalledThemesPage(),
+      );
+    },
     InstanceMuteRoute.name: (routeData) {
       final args = routeData.argsAs<InstanceMuteRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -1017,6 +1023,20 @@ class ImportExportRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ImportExportRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [InstalledThemesPage]
+class InstalledThemesRoute extends PageRouteInfo<void> {
+  const InstalledThemesRoute({List<PageRouteInfo>? children})
+      : super(
+          InstalledThemesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'InstalledThemesRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

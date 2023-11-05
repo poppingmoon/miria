@@ -6,12 +6,14 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/acct.dart';
+import 'package:miria/model/color_theme.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/model/timeline_controller_state.dart';
 import 'package:miria/model/timeline_page_state.dart';
 import 'package:miria/model/timeline_state.dart';
 import 'package:miria/repository/account_repository.dart';
 import 'package:miria/repository/account_settings_repository.dart';
+import 'package:miria/repository/color_theme_repository.dart';
 import 'package:miria/repository/emoji_repository.dart';
 import 'package:miria/repository/favorite_repository.dart';
 import 'package:miria/repository/general_settings_repository.dart';
@@ -156,6 +158,17 @@ final misskeyServerListNotifierProvider = AsyncNotifierProvider.autoDispose<
 );
 
 final cacheManagerProvider = Provider<BaseCacheManager?>((ref) => null);
+
 final miAuthCallbackProvider = StateProvider.autoDispose<Uri?>(
   (ref) => null,
+);
+
+final colorThemeRepositoryProvider =
+    NotifierProvider<ColorThemeRepository, List<ColorTheme>>(
+  ColorThemeRepository.new,
+);
+
+final installedThemeCodeRepositoryProvider =
+    NotifierProvider<InstalledThemeCodeRepository, List<String>>(
+  InstalledThemeCodeRepository.new,
 );
