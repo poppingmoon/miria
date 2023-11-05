@@ -103,8 +103,7 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           onReacted: onReacted,
           onUnreacted: onUnreacted,
           onVoted: onVoted,
-          // TODO: misskey_dartを修正
-          // onUpdated: onUpdated,
+          onUpdated: onUpdated,
         ),
       TabType.channel => _misskey.channelStream(
           channelId: _tabSetting.channelId!,
