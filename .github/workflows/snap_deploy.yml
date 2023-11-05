@@ -1,0 +1,39 @@
+name: デプロイ(snap)
+run-name: Building Miria's Snap package
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: ビルド（Snap）
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build snap
+        uses: snapcore/action-build@v1
+        id: snapcraft
+
+      - name: Get Build Version
+        run: |
+          pwd
+          echo "VERSION=$(cat pubspec.yaml | grep version | cut -d ' ' -f 2)" >> $GITHUB_ENV
+
+      - name: Upload snap file
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload v$VERSION ${{ steps.snapcraft.outputs.snap }}
+
+      # https://github.com/snapcore/action-publish
+      # 以下をコメントアウトを解除することでSnap Storeへアップロードすることが可能です。
+      # Snap Storeでの公開後は、上記のCreate releaseをコメントアウトしてください（通常、SnapファイルをそのままStore外で公開することはありません）。
+      #- name: Upload snap store
+      #  uses: snapcore/action-publish@v1
+      #  env:
+      #    SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+      #  with:
+      #    snap: ${{ steps.snapcraft.outputs.snap }}
+      #    release: edge
