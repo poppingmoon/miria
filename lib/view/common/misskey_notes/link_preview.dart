@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -128,14 +129,13 @@ class _LinkPreviewItemState extends State<LinkPreviewItem> {
                 ),
               ),
               // TODO: WebViewの仕様がAndroidとiOSで違うのでハマったためいったんコメントアウト
-              // if (WebViewPlatform.instance != null &&
-              //     (playerUrl != null || tweetId != null))
-              //   IconButton(
-              //     onPressed: () => setState(() {
-              //       isPlayerOpen = true;
-              //     }),
-              //     icon: const Icon(Icons.play_arrow),
-              //   )
+              if (Platform.isAndroid && (playerUrl != null || tweetId != null))
+                IconButton(
+                  onPressed: () => setState(() {
+                    isPlayerOpen = true;
+                  }),
+                  icon: const Icon(Icons.play_arrow),
+                ),
             ],
           ),
         if (WebViewPlatform.instance != null &&
