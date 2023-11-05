@@ -8,6 +8,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mfm_parser/mfm_parser.dart';
+import 'package:miria/extensions/user_extension.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/misskey_post_file.dart';
 import 'package:miria/repository/note_repository.dart';
@@ -346,7 +347,7 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
       visibleUserIds.addAll(mentionTargetUsers.map((e) => e.id));
 
       final baseText =
-          "${state.replyTo.map((e) => "@${e.username}${e.host == null ? " " : "@${e.host} "}").join()}${state.text}";
+          "${state.replyTo.map((e) => e.acct).join(" ")}${state.text}";
       final postText = baseText.isNotEmpty ? baseText : null;
 
       final durationType = state.voteDurationType;

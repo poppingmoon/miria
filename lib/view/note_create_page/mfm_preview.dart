@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/extensions/user_extension.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/misskey_notes/mfm_text.dart';
@@ -19,8 +20,8 @@ class MfmPreview extends ConsumerWidget {
           noteCreateProvider(AccountScope.of(context))
               .select((value) => value.replyTo),
         )
-        .map((e) => "@${e.username}${e.host == null ? " " : "@${e.host}"} ")
-        .join();
+        .map((e) => e.acct)
+        .join(" ");
 
     return Padding(
       padding: const EdgeInsets.all(5),

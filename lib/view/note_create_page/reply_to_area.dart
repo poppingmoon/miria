@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/extensions/user_extension.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/avatar_icon.dart';
@@ -40,7 +41,7 @@ class ReplyToArea extends ConsumerWidget {
                 ),
                 const Padding(padding: EdgeInsets.only(left: 5)),
                 Text(
-                  "@${replyTo.username}${replyTo.host == null ? "" : "@${replyTo.host}"}",
+                  replyTo.acct,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppTheme.of(context).mentionStyle.color,
                       ),

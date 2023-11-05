@@ -232,9 +232,6 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
           );
     }
 
-    final userId =
-        "@${displayNote.user.username}${displayNote.user.host == null ? "" : "@${displayNote.user.host}"}";
-
     final isCwOpened = ref.watch(
       notesProvider(account)
           .select((value) => value.noteStatuses[widget.note.id]!.isCwOpened),
@@ -345,7 +342,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  userId,
+                                  displayNote.user.acct,
                                   style: Theme.of(context).textTheme.bodySmall,
                                   maxLines: 1,
                                   overflow: TextOverflow.clip,

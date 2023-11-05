@@ -53,7 +53,7 @@ class ImportExportPageState extends ConsumerState<ImportExportPage> {
                       for (final account in accounts)
                         DropdownMenuItem(
                           value: account,
-                          child: Text("@${account.userId}@${account.host}"),
+                          child: Text(account.acct.toString()),
                         ),
                     ],
                     value: selectedImportAccount,

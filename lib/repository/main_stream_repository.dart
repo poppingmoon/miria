@@ -26,7 +26,7 @@ class MainStreamRepository extends ChangeNotifier {
   Future<void> latestMarkAs(String id) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(
-      "latestReadNotification@${account.userId}@${account.host}",
+      "latestReadNotification${account.acct}",
       id,
     );
     hasUnreadNotification = false;
@@ -43,7 +43,7 @@ class MainStreamRepository extends ChangeNotifier {
 
     // 最後に読んだものと違うものがプッシュ通知にあれば通知をオン
     if (prefs.getString(
-          "latestReadNotification@${account.userId}@${account.host}",
+          "latestReadNotification${account.acct}",
         ) ==
         notifications.firstOrNull?.id) {
       hasUnreadNotification = false;
