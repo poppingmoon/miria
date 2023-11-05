@@ -101,8 +101,7 @@ class AccountSelectDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final accounts =
-        ref.watch(accountRepository.select((value) => value.account));
+    final accounts = ref.watch(accountsProvider);
     return AlertDialog(
       title: const Text("開くアカウント選んでや"),
       content: SizedBox(
@@ -120,7 +119,7 @@ class AccountSelectDialog extends ConsumerWidget {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   subtitle: Text(
-                    "@${account.userId}@${account.host}",
+                    account.acct.toString(),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   onTap: () {

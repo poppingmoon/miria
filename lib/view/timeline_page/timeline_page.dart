@@ -333,7 +333,7 @@ class AnnoucementInfo extends ConsumerWidget {
       accountProvider(tabSetting.acct)
           .select((account) => account.i.unreadAnnouncements.isNotEmpty),
     );
-    if (hasUnread == true) {
+    if (hasUnread) {
       return IconButton(
         onPressed: () => announcementsRoute(context, ref),
         icon: Stack(

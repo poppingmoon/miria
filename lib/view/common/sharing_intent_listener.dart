@@ -87,7 +87,7 @@ class SharingIntentListenerState extends ConsumerState<SharingIntentListener> {
 
   @override
   Widget build(BuildContext context) {
-    account = ref.watch(accountRepository.select((value) => value.account));
+    account = ref.watch(accountsProvider);
     return widget.child;
   }
 }

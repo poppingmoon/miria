@@ -30,7 +30,9 @@ class MiAuthLoginState extends ConsumerState<MiAuthLogin> {
   Future<void> login() async {
     try {
       IndicatorView.showIndicator(context);
-      await ref.read(accountRepository).validateMiAuth(serverController.text);
+      await ref
+          .read(accountRepositoryProvider.notifier)
+          .validateMiAuth(serverController.text);
       if (!mounted) return;
       context.pushRoute(
         TimelineRoute(),
@@ -47,10 +49,14 @@ class MiAuthLoginState extends ConsumerState<MiAuthLogin> {
     if (isAuthed) {
       if (Platform.isAndroid) {
         ref.listen(miAuthCallbackProvider, (_, uri) async {
-          final sessionId =
-              ref.watch(accountRepository.select((repo) => repo.sessionId));
-          if (uri?.queryParameters["session"] == sessionId) {
-            await login().expectFailure(context);
+          final sessionId = uri?.queryParameters["session"];
+          if (sessionId != null) {
+            final isSameId = ref
+                .read(accountRepositoryProvider.notifier)
+                .verifySessionId(sessionId);
+            if (isSameId) {
+              await login().expectFailure(context);
+            }
           }
         });
       }
@@ -103,7 +109,7 @@ class MiAuthLoginState extends ConsumerState<MiAuthLogin> {
                   ElevatedButton(
                     onPressed: () {
                       ref
-                          .read(accountRepository)
+                          .read(accountRepositoryProvider.notifier)
                           .openMiAuth(serverController.text)
                           .expectFailure(context);
                       setState(() {

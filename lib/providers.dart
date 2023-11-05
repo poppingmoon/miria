@@ -59,7 +59,7 @@ final mainStreamRepositoryProvider =
     ref.read(misskeyProvider(account)),
     ref.read(emojiRepositoryProvider(account)),
     account,
-    ref.read(accountRepository),
+    ref.read(accountRepositoryProvider.notifier),
   ),
 );
 
@@ -85,18 +85,21 @@ final emojiRepositoryProvider = Provider.family<EmojiRepository, Account>(
   ),
 );
 
-final accountRepository = ChangeNotifierProvider(
-  (ref) => AccountRepository(
-    ref.read(tabSettingsRepositoryProvider),
-    ref.read(accountSettingsRepositoryProvider),
-    ref.read,
+final accountRepositoryProvider =
+    NotifierProvider<AccountRepository, List<Account>>(AccountRepository.new);
+
+final accountsProvider =
+    Provider<List<Account>>((ref) => ref.watch(accountRepositoryProvider));
+
+final accountProvider = Provider.family<Account, Acct>(
+  (ref, acct) => ref.watch(
+    accountsProvider.select(
+      (accounts) => accounts.firstWhere(
+        (account) => account.acct == acct,
+      ),
+    ),
   ),
 );
-
-final accountProvider = Provider.family<Account, Acct>((ref, acct) {
-  final repository = ref.watch(accountRepository);
-  return repository.account.firstWhere((element) => element.acct == acct);
-});
 
 final tabSettingsRepositoryProvider =
     ChangeNotifierProvider((ref) => TabSettingsRepository());
