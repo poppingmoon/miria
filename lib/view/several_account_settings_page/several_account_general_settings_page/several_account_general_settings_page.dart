@@ -44,6 +44,7 @@ class SeveralAccountGeneralSettingsPageState
           );
       if (loadedSettings != null) {
         accountSettings = loadedSettings;
+        if (!mounted) return;
         setState(() {
           defaultIsLocalOnly = loadedSettings.defaultIsLocalOnly;
           defaultNoteVisibility = loadedSettings.defaultNoteVisibility;
