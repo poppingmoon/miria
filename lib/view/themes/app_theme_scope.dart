@@ -21,6 +21,7 @@ class AppThemeScope extends ConsumerStatefulWidget {
 class AppThemeScopeState extends ConsumerState<AppThemeScope> {
   AppThemeData buildDarkAppThemeData(BuildContext context, ColorTheme theme) {
     return AppThemeData(
+      colorTheme: theme,
       isDarkMode: theme.isDarkTheme,
       noteTextStyle: const InputDecoration(),
       reactionButtonStyle: ElevatedButton.styleFrom(
@@ -46,12 +47,6 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
       buttonBackground: theme.buttonBackground,
       currentDisplayTabColor:
           theme.isDarkTheme ? theme.primaryDarken : theme.primaryLighten,
-      voteColor1: theme.isDarkTheme
-          ? theme.primaryLighten.lighten()
-          : theme.primaryDarken.darken(),
-      voteColor2: theme.isDarkTheme
-          ? theme.primaryDarken.darken()
-          : theme.primaryLighten.lighten(),
       unicodeEmojiStyle: resolveUnicodeEmojiStyle(),
     );
   }
