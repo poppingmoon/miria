@@ -263,7 +263,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
               title: const Text("ミュートする"),
               onTap: muteCreate.expectFailure(context),
             ),
-          if (user.isBlocked)
+          if (user.isBlocking)
             ListTile(
               leading: const Icon(Icons.block),
               title: const Text("ブロックを解除する"),
