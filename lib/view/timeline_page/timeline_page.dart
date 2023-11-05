@@ -90,7 +90,7 @@ class TimelinePage extends ConsumerWidget {
                                 .contains(LogicalKeyboardKey.controlLeft)) {
                           ref
                               .read(timelinePageControllerProvider.notifier)
-                              .note
+                              .note(context)
                               .expectFailure(context);
                           return KeyEventResult.handled;
                         }
@@ -101,9 +101,9 @@ class TimelinePage extends ConsumerWidget {
                   ),
                 ),
                 IconButton(
-                  onPressed: ref
+                  onPressed: () => ref
                       .read(timelinePageControllerProvider.notifier)
-                      .note
+                      .note(context)
                       .expectFailure(context),
                   icon: const Icon(Icons.edit),
                 ),

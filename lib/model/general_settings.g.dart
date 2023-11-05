@@ -33,6 +33,7 @@ _$GeneralSettingsImpl _$$GeneralSettingsImplFromJson(
           EmojiType.twemoji,
       fontName: json['fontName'] as String?,
       hideAvatar: json['hideAvatar'] as bool? ?? false,
+      isChicken: json['isChicken'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$GeneralSettingsImplToJson(
@@ -52,6 +53,7 @@ Map<String, dynamic> _$$GeneralSettingsImplToJson(
       'emojiType': _$EmojiTypeEnumMap[instance.emojiType]!,
       'fontName': instance.fontName,
       'hideAvatar': instance.hideAvatar,
+      'isChicken': instance.isChicken,
     };
 
 const _$ThemeColorSystemEnumMap = {

@@ -90,6 +90,9 @@ class GeneralSettings with _$GeneralSettings {
 
     /// ユーザーのアバターを隠す
     @Default(false) bool hideAvatar,
+
+    /// チキンモード
+    @Default(false) bool isChicken,
   }) = _GeneralSettings;
 
   factory GeneralSettings.fromJson(Map<String, dynamic> json) =>

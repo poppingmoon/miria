@@ -30,6 +30,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   EmojiType emojiType = EmojiType.twemoji;
   String? fontName;
   bool hideAvatar = false;
+  bool isChicken = false;
 
   @override
   void initState() {
@@ -70,6 +71,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       emojiType = settings.emojiType;
       fontName = settings.fontName;
       hideAvatar = settings.hideAvatar;
+      isChicken = settings.isChicken;
     });
   }
 
@@ -90,6 +92,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
             textScaleFactor: textScaleFactor,
             fontName: fontName,
             hideAvatar: hideAvatar,
+            isChicken: isChicken,
           ),
         );
   }
@@ -305,6 +308,16 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                         onChanged: (value) {
                           setState(() {
                             enableDirectReaction = !enableDirectReaction;
+                            save();
+                          });
+                        },
+                      ),
+                      CheckboxListTile(
+                        value: isChicken,
+                        title: const Text("🐔"),
+                        onChanged: (value) {
+                          setState(() {
+                            isChicken = value ?? false;
                             save();
                           });
                         },

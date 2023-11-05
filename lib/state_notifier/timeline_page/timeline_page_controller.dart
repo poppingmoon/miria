@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/timeline_page_state.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
+import 'package:miria/view/dialogs/simple_confirm_dialog.dart';
 import 'package:miria/view/timeline_page/timeline_note.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
@@ -42,9 +43,20 @@ class TimelinePageController extends AutoDisposeNotifier<TimelinePageState> {
     forceScrollToTop();
   }
 
-  Future<void> note() async {
+  Future<void> note(BuildContext context) async {
     final text = ref.read(timelineNoteProvider).value.text;
     if (text.isEmpty) return;
+    if (ref.read(generalSettingsRepositoryProvider).settings.isChicken) {
+      final result = await SimpleConfirmDialog.show(
+        context: context,
+        message: "ノートしてもええか？",
+        primary: "する",
+        secondary: "やっぱりやめる",
+      );
+      if (!(result ?? false)) {
+        return;
+      }
+    }
     try {
       final accountSettings = ref
           .read(accountSettingsRepositoryProvider)

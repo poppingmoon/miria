@@ -48,6 +48,18 @@ class UserDetailState extends ConsumerState<UserDetail> {
       return;
     }
 
+    if (ref.read(generalSettingsRepositoryProvider).settings.isChicken) {
+      final result = await SimpleConfirmDialog.show(
+        context: context,
+        message: "フォローしてもええか？",
+        primary: "する",
+        secondary: "やっぱりやめる",
+      );
+      if (!(result ?? false)) {
+        return;
+      }
+    }
+    if (!mounted) return;
     setState(() {
       isFollowEditing = true;
     });
