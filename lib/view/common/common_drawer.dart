@@ -54,6 +54,14 @@ class CommonDrawer extends ConsumerWidget {
                       },
                     ),
                     ListTile(
+                      leading: const Icon(Icons.cloud),
+                      title: const Text("ドライブ"),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        context.pushRoute(DriveRoute(account: account));
+                      },
+                    ),
+                    ListTile(
                       leading: const Icon(Icons.list),
                       title: const Text("リスト"),
                       onTap: () {
