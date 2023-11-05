@@ -27,6 +27,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   TabPosition tabPosition = TabPosition.top;
   double textScaleFactor = 1.0;
   EmojiType emojiType = EmojiType.twemoji;
+  bool hideAvatar = false;
 
   @override
   void initState() {
@@ -63,6 +64,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       tabPosition = settings.tabPosition;
       textScaleFactor = settings.textScaleFactor;
       emojiType = settings.emojiType;
+      hideAvatar = settings.hideAvatar;
     });
   }
 
@@ -81,6 +83,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
             tabPosition: tabPosition,
             emojiType: emojiType,
             textScaleFactor: textScaleFactor,
+            hideAvatar: hideAvatar,
           ),
         );
   }
@@ -167,6 +170,14 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                           save();
                         }),
                         title: const Text("長いノートを省略します。"),
+                      ),
+                      CheckboxListTile(
+                        value: hideAvatar,
+                        onChanged: (value) => setState(() {
+                          hideAvatar = value ?? true;
+                          save();
+                        }),
+                        title: const Text("ユーザーのアバターを非表示にします。"),
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       const Text("タブの位置"),
