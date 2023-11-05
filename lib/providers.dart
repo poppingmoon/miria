@@ -22,11 +22,15 @@ import 'package:miria/repository/main_stream_repository.dart';
 import 'package:miria/repository/note_repository.dart';
 import 'package:miria/repository/tab_settings_repository.dart';
 import 'package:miria/repository/timeline_repository.dart';
+import 'package:miria/state_notifier/antenna_page/antennas_notifier.dart';
+import 'package:miria/state_notifier/clip_list_page/clips_notifier.dart';
+import 'package:miria/state_notifier/common/misskey_notes/misskey_note_notifier.dart';
 import 'package:miria/state_notifier/common/misskey_server_list_notifier.dart';
 import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
 import 'package:miria/state_notifier/photo_edit_page/photo_edit_state_notifier.dart';
 import 'package:miria/state_notifier/timeline_page/timeline_controller.dart';
 import 'package:miria/state_notifier/timeline_page/timeline_page_controller.dart';
+import 'package:miria/state_notifier/user_list_page/users_lists_notifier.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 final dioProvider = Provider((ref) => Dio());
@@ -172,3 +176,21 @@ final installedThemeCodeRepositoryProvider =
     NotifierProvider<InstalledThemeCodeRepository, List<String>>(
   InstalledThemeCodeRepository.new,
 );
+
+final misskeyNoteNotifierProvider =
+    NotifierProvider.family<MisskeyNoteNotifier, void, Account>(
+  MisskeyNoteNotifier.new,
+);
+
+final usersListsNotifierProvider = AsyncNotifierProvider.autoDispose
+    .family<UsersListsNotifier, List<UsersList>, Misskey>(
+  UsersListsNotifier.new,
+);
+
+final antennasNotifierProvider = AsyncNotifierProvider.autoDispose
+    .family<AntennasNotifier, List<Antenna>, Misskey>(
+  AntennasNotifier.new,
+);
+
+final clipsNotifierProvider = AsyncNotifierProvider.autoDispose
+    .family<ClipsNotifier, List<Clip>, Misskey>(ClipsNotifier.new);
