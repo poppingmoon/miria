@@ -1442,6 +1442,22 @@ class MockNoteRepository extends _i1.Mock implements _i26.NoteRepository {
       );
 
   @override
+  void addMyReaction(
+    String? noteId,
+    String? reaction,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #addMyReaction,
+          [
+            noteId,
+            reaction,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   void removeReaction(
     String? noteId,
     _i5.TimelineReacted? reaction,
@@ -1453,6 +1469,15 @@ class MockNoteRepository extends _i1.Mock implements _i26.NoteRepository {
             noteId,
             reaction,
           ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeMyReaction(String? noteId) => super.noSuchMethod(
+        Invocation.method(
+          #removeMyReaction,
+          [noteId],
         ),
         returnValueForMissingStub: null,
       );

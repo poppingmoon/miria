@@ -117,6 +117,11 @@ class NoteRepository extends ChangeNotifier {
     final registeredNote = _notes[noteId];
     if (registeredNote == null) return;
 
+    final isMyReaction = reaction.userId == account.i.id;
+    if (isMyReaction && registeredNote.myReaction == reaction.reaction) {
+      return;
+    }
+
     final reactions = Map.of(registeredNote.reactions);
     reactions[reaction.reaction] = (reactions[reaction.reaction] ?? 0) + 1;
     final emoji = reaction.emoji;
@@ -129,9 +134,19 @@ class NoteRepository extends ChangeNotifier {
       registeredNote.copyWith(
         reactions: reactions,
         reactionEmojis: reactionEmojis,
-        myReaction: reaction.userId == account.i.id
-            ? (emoji?.name != null ? ":${emoji?.name}:" : null)
-            : registeredNote.myReaction,
+        myReaction:
+            isMyReaction ? reaction.reaction : registeredNote.myReaction,
+      ),
+    );
+  }
+
+  void addMyReaction(String noteId, String reaction) {
+    addReaction(
+      noteId,
+      TimelineReacted(
+        reaction: reaction,
+        emoji: null,
+        userId: account.i.id,
       ),
     );
   }
@@ -139,6 +154,11 @@ class NoteRepository extends ChangeNotifier {
   void removeReaction(String noteId, TimelineReacted reaction) {
     final registeredNote = _notes[noteId];
     if (registeredNote == null) return;
+
+    final isMyReaction = reaction.userId == account.i.id;
+    if (isMyReaction && registeredNote.myReaction == null) {
+      return;
+    }
 
     final reactions = Map.of(registeredNote.reactions);
     final reactionCount = reactions[reaction.reaction];
@@ -155,8 +175,21 @@ class NoteRepository extends ChangeNotifier {
       registeredNote.copyWith(
         reactions: reactions,
         // https://github.com/rrousselGit/freezed/issues/906
-        myReaction:
-            reaction.userId == account.i.id ? "" : registeredNote.myReaction,
+        myReaction: isMyReaction ? "" : registeredNote.myReaction,
+      ),
+    );
+  }
+
+  void removeMyReaction(String noteId) {
+    final myReaction = _notes[noteId]?.myReaction;
+    if (myReaction == null) return;
+
+    removeReaction(
+      noteId,
+      TimelineReacted(
+        reaction: myReaction,
+        emoji: null,
+        userId: account.i.id,
       ),
     );
   }
