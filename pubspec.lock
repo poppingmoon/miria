@@ -853,9 +853,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: "02ecdfd42e0cad0f27215d5a7f76e7065819d7a9"
-      url: "https://github.com/shiosyakeyakini-info/misskey_dart.git"
+      ref: b58beb73d513261c5402c8a383d5fe541bfbe9ec
+      resolved-ref: b58beb73d513261c5402c8a383d5fe541bfbe9ec
+      url: "https://github.com/poppingmoon/misskey_dart.git"
     source: git
     version: "1.0.0"
   mockito:
