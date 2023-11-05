@@ -281,7 +281,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                                       (context, child, chunkEvent) => SizedBox(
                                     width: double.infinity,
                                     height: widget.height,
-                                    child: widget,
+                                    child: child,
                                   ),
                                 ),
                               ),
