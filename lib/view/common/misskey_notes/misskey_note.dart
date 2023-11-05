@@ -944,10 +944,13 @@ class NoteHeader1 extends StatelessWidget {
         GestureDetector(
           onTap: () => _navigateDetailPage(context, displayNote, loginAs)
               .expectFailure(context),
-          child: Text(
-            displayNote.createdAt.differenceNow,
-            textAlign: TextAlign.right,
-            style: Theme.of(context).textTheme.bodySmall,
+          child: Tooltip(
+            message: displayNote.createdAt.formatUntilMilliSeconds,
+            child: Text(
+              displayNote.createdAt.differenceNow,
+              textAlign: TextAlign.right,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           ),
         ),
         if (displayNote.visibility != NoteVisibility.public)
@@ -1022,10 +1025,13 @@ class RenoteHeader extends StatelessWidget {
               color: renoteTextStyle?.color,
             ),
           ),
-        Text(
-          note.createdAt.differenceNow,
-          textAlign: TextAlign.right,
-          style: renoteTextStyle,
+        Tooltip(
+          message: note.createdAt.formatUntilMilliSeconds,
+          child: Text(
+            note.createdAt.differenceNow,
+            textAlign: TextAlign.right,
+            style: renoteTextStyle,
+          ),
         ),
         if (note.visibility != NoteVisibility.public)
           Padding(
