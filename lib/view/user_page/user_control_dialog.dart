@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:miria/extensions/users_show_response_extension.dart';
+import 'package:miria/extensions/user_extension.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/note_search_condition.dart';
 import 'package:miria/providers.dart';
@@ -25,14 +25,12 @@ enum UserControl {
 
 class UserControlDialog extends ConsumerStatefulWidget {
   final Account account;
-  final UsersShowResponse response;
-  final bool isMe;
+  final UserDetailed response;
 
   const UserControlDialog({
     super.key,
     required this.account,
     required this.response,
-    required this.isMe,
   });
 
   @override
@@ -46,7 +44,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
       context: context,
       builder: (context) => UsersListModalSheet(
         account: widget.account,
-        user: widget.response.toUser(),
+        user: widget.response,
       ),
     );
   }
@@ -56,7 +54,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
       context: context,
       builder: (context) => AntennaModalSheet(
         account: widget.account,
-        user: widget.response.toUser(),
+        user: widget.response,
       ),
     );
   }
@@ -138,6 +136,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final user = widget.response;
     return ListView(
       children: [
         ListTile(
@@ -175,7 +174,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
                 text: Uri(
                   scheme: "https",
                   host: widget.account.host,
-                  path: widget.response.acct,
+                  path: user.acct,
                 ).toString(),
               ),
             );
@@ -193,7 +192,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
               Uri(
                 scheme: "https",
                 host: widget.account.host,
-                path: widget.response.acct,
+                path: user.acct,
               ),
               mode: LaunchMode.inAppWebView,
             );
@@ -217,9 +216,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
           onTap: () => context.pushRoute(
             SearchRoute(
               account: widget.account,
-              initialNoteSearchCondition: NoteSearchCondition(
-                user: widget.response.toUser(),
-              ),
+              initialNoteSearchCondition: NoteSearchCondition(user: user),
             ),
           ),
         ),
@@ -228,7 +225,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
           title: const Text("別のアカウントで開く"),
           onTap: () => ref
               .read(misskeyNoteNotifierProvider(widget.account).notifier)
-              .openUserInOtherAccount(context, widget.response.toUser())
+              .openUserInOtherAccount(context, user)
               .expectFailure(context),
         ),
         ListTile(
@@ -241,8 +238,8 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
           title: const Text("アンテナに追加"),
           onTap: addToAntenna,
         ),
-        if (!widget.isMe) ...[
-          if (widget.response.isRenoteMuted ?? false)
+        if (user is UserDetailedNotMeWithRelations) ...[
+          if (user.isRenoteMuted)
             ListTile(
               leading: const Icon(Icons.repeat_rounded),
               title: const Text("Renoteのミュート解除する"),
@@ -254,7 +251,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
               title: const Text("Renoteをミュートする"),
               onTap: renoteMuteCreate,
             ),
-          if (widget.response.isMuted ?? false)
+          if (user.isMuted)
             ListTile(
               leading: const Icon(Icons.visibility),
               title: const Text("ミュート解除する"),
@@ -266,7 +263,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
               title: const Text("ミュートする"),
               onTap: muteCreate,
             ),
-          if (widget.response.isBlocked ?? false)
+          if (user.isBlocked)
             ListTile(
               leading: const Icon(Icons.block),
               title: const Text("ブロックを解除する"),
