@@ -10,6 +10,7 @@ import 'package:miria/router/app_router.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/avatar_icon.dart';
 import 'package:miria/view/common/constants.dart';
+import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/common/misskey_notes/mfm_text.dart';
 import 'package:miria/view/common/misskey_notes/misskey_note.dart';
 import 'package:miria/view/dialogs/simple_confirm_dialog.dart';
@@ -50,19 +51,27 @@ class UserDetailState extends ConsumerState<UserDetail> {
     setState(() {
       isFollowEditing = true;
     });
-    await ref
-        .read(misskeyProvider(AccountScope.of(context)))
-        .following
-        .create(FollowingCreateRequest(userId: response.id));
-    if (!mounted) return;
-    final requiresFollowRequest = user.isLocked && !user.isFollowed;
-    setState(() {
-      isFollowEditing = false;
-      response = user.copyWith(
-        isFollowing: !requiresFollowRequest,
-        hasPendingFollowRequestFromYou: requiresFollowRequest,
-      );
-    });
+    try {
+      await ref
+          .read(misskeyProvider(AccountScope.of(context)))
+          .following
+          .create(FollowingCreateRequest(userId: user.id));
+      if (!mounted) return;
+      final requiresFollowRequest = user.isLocked && !user.isFollowed;
+      setState(() {
+        isFollowEditing = false;
+        response = user.copyWith(
+          isFollowing: !requiresFollowRequest,
+          hasPendingFollowRequestFromYou: requiresFollowRequest,
+        );
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        isFollowEditing = false;
+      });
+      rethrow;
+    }
   }
 
   Future<void> followDelete() async {
@@ -86,15 +95,23 @@ class UserDetailState extends ConsumerState<UserDetail> {
     setState(() {
       isFollowEditing = true;
     });
-    await ref
-        .read(misskeyProvider(account))
-        .following
-        .delete(FollowingDeleteRequest(userId: response.id));
-    if (!mounted) return;
-    setState(() {
-      isFollowEditing = false;
-      response = user.copyWith(isFollowing: false);
-    });
+    try {
+      await ref
+          .read(misskeyProvider(account))
+          .following
+          .delete(FollowingDeleteRequest(userId: user.id));
+      if (!mounted) return;
+      setState(() {
+        isFollowEditing = false;
+        response = user.copyWith(isFollowing: false);
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        isFollowEditing = false;
+      });
+      rethrow;
+    }
   }
 
   Future<void> followRequestCancel() async {
@@ -108,16 +125,24 @@ class UserDetailState extends ConsumerState<UserDetail> {
     setState(() {
       isFollowEditing = true;
     });
-    await ref
-        .read(misskeyProvider(AccountScope.of(context)))
-        .following
-        .requests
-        .cancel(FollowingRequestsCancelRequest(userId: response.id));
-    if (!mounted) return;
-    setState(() {
-      isFollowEditing = false;
-      response = user.copyWith(hasPendingFollowRequestFromYou: false);
-    });
+    try {
+      await ref
+          .read(misskeyProvider(AccountScope.of(context)))
+          .following
+          .requests
+          .cancel(FollowingRequestsCancelRequest(userId: user.id));
+      if (!mounted) return;
+      setState(() {
+        isFollowEditing = false;
+        response = user.copyWith(hasPendingFollowRequestFromYou: false);
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        isFollowEditing = false;
+      });
+      rethrow;
+    }
   }
 
   Future<void> userControl() async {
@@ -154,11 +179,11 @@ class UserDetailState extends ConsumerState<UserDetail> {
         });
       case UserControl.createBlock:
         setState(() {
-          response = user.copyWith(isBlocked: true);
+          response = user.copyWith(isBlocking: true);
         });
       case UserControl.deleteBlock:
         setState(() {
-          response = user.copyWith(isBlocked: false);
+          response = user.copyWith(isBlocking: false);
         });
     }
   }
@@ -204,7 +229,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                                   child: Text("ミュート中"),
                                 ),
                               ),
-                            if (user.isBlocked)
+                            if (user.isBlocking)
                               const Card(
                                 child: Padding(
                                   padding: EdgeInsets.all(10),
@@ -224,17 +249,20 @@ class UserDetailState extends ConsumerState<UserDetail> {
                             if (!isFollowEditing)
                               if (user.isFollowing)
                                 ElevatedButton(
-                                  onPressed: followDelete,
+                                  onPressed:
+                                      followDelete.expectFailure(context),
                                   child: const Text("フォロー解除"),
                                 )
                               else if (user.hasPendingFollowRequestFromYou)
                                 ElevatedButton(
-                                  onPressed: followRequestCancel,
+                                  onPressed: followRequestCancel
+                                      .expectFailure(context),
                                   child: const Text("フォロー許可待ち"),
                                 )
                               else
                                 OutlinedButton(
-                                  onPressed: followCreate,
+                                  onPressed:
+                                      followCreate.expectFailure(context),
                                   child: Text(
                                     user.isLocked ? "フォロー申請" : "フォローする",
                                   ),
