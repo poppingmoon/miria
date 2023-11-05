@@ -81,6 +81,7 @@ class NoteDetailPageState extends ConsumerState<NoteDetailPage> {
                               note: conversations[index],
                               isForceUnvisibleRenote: true,
                               isForceUnvisibleReply: true,
+                              hideAvatar: false,
                             );
                           }),
                       MisskeyNote(
@@ -89,6 +90,7 @@ class NoteDetailPageState extends ConsumerState<NoteDetailPage> {
                         isForceUnvisibleReply: true,
                         isDisplayBorder: false,
                         isForceVisibleLong: true,
+                        hideAvatar: false,
                       ),
                       const Padding(padding: EdgeInsets.only(top: 5)),
                       Text(
@@ -130,6 +132,7 @@ class NoteDetailPageState extends ConsumerState<NoteDetailPage> {
                                 recursive: 1,
                                 isForceUnvisibleRenote: true,
                                 isForceUnvisibleReply: true,
+                                hideAvatar: false,
                               );
                             }),
                       ),
