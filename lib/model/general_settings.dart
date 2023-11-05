@@ -87,6 +87,9 @@ class GeneralSettings with _$GeneralSettings {
 
     /// Google Fontsのフォント名
     String? fontName,
+
+    /// ユーザーのアバターを隠す
+    @Default(false) bool hideAvatar,
   }) = _GeneralSettings;
 
   factory GeneralSettings.fromJson(Map<String, dynamic> json) =>
