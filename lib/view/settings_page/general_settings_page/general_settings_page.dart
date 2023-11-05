@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/themes/built_in_color_themes.dart';
@@ -27,6 +28,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   TabPosition tabPosition = TabPosition.top;
   double textScaleFactor = 1.0;
   EmojiType emojiType = EmojiType.twemoji;
+  String? fontName;
 
   @override
   void initState() {
@@ -63,6 +65,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       tabPosition = settings.tabPosition;
       textScaleFactor = settings.textScaleFactor;
       emojiType = settings.emojiType;
+      fontName = settings.fontName;
     });
   }
 
@@ -81,6 +84,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
             tabPosition: tabPosition,
             emojiType: emojiType,
             textScaleFactor: textScaleFactor,
+            fontName: fontName,
           ),
         );
   }
@@ -310,9 +314,49 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "フォントサイズ",
+                        "フォント",
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
+                      const SizedBox(height: 10),
+                      const Text("フォント"),
+                      ListTile(
+                        title: Text(fontName ?? "デフォルト"),
+                        trailing: const Icon(Icons.keyboard_arrow_right),
+                        onTap: () async {
+                          final keys = GoogleFonts.asMap().keys;
+                          final result = await showModalBottomSheet<(String?,)>(
+                            context: context,
+                            builder: (context) => ListView.builder(
+                              itemCount: keys.length,
+                              itemBuilder: (context, index) => index == 0
+                                  ? ListTile(
+                                      title: const Text("デフォルト"),
+                                      onTap: () =>
+                                          Navigator.of(context).pop((null,)),
+                                    )
+                                  : ListTile(
+                                      title: Text(
+                                        keys.elementAt(index - 1),
+                                        style: GoogleFonts.getFont(
+                                          keys.elementAt(index - 1),
+                                        ),
+                                      ),
+                                      onTap: () => Navigator.of(context)
+                                          .pop((keys.elementAt(index - 1),)),
+                                    ),
+                            ),
+                          );
+                          if (result == null) {
+                            return;
+                          }
+                          setState(() {
+                            fontName = result.$1;
+                            save();
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      const Text("フォントサイズ"),
                       Slider(
                         value: textScaleFactor,
                         min: 0.5,
