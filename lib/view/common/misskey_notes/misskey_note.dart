@@ -898,6 +898,18 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
     }
 
     if (selectedEmoji == null) return;
+    if (!mounted) return;
+    if (ref.read(generalSettingsRepositoryProvider).settings.isChicken) {
+      final result = await SimpleConfirmDialog.show(
+        context: context,
+        message: "リアクションしてもええか？",
+        primary: "する",
+        secondary: "やっぱりやめる",
+      );
+      if (!(result ?? false)) {
+        return;
+      }
+    }
     await misskey.notes.reactions.create(
       NotesReactionsCreateRequest(
         noteId: displayNote.id,

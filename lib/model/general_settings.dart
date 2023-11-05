@@ -84,6 +84,9 @@ class GeneralSettings with _$GeneralSettings {
 
     /// 使用するUnicodeの絵文字種別
     @Default(EmojiType.twemoji) EmojiType emojiType,
+
+    /// チキンモード
+    @Default(false) bool isChicken,
   }) = _GeneralSettings;
 
   factory GeneralSettings.fromJson(Map<String, dynamic> json) =>

@@ -16,6 +16,7 @@ import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/common/notification_icon.dart';
 import 'package:miria/view/common/tab_icon_view.dart';
 import 'package:miria/view/common/timeline_listview.dart';
+import 'package:miria/view/dialogs/simple_confirm_dialog.dart';
 import 'package:miria/view/server_detail_dialog.dart';
 import 'package:miria/view/themes/app_theme.dart';
 import 'package:miria/view/time_line_page/misskey_time_line.dart';
@@ -67,6 +68,17 @@ class TimeLinePageState extends ConsumerState<TimeLinePage> {
   Future<void> note() async {
     final text = ref.read(timelineNoteProvider).value.text;
     if (text.isEmpty) return;
+    if (ref.read(generalSettingsRepositoryProvider).settings.isChicken) {
+      final result = await SimpleConfirmDialog.show(
+        context: context,
+        message: "ノートしてもええか？",
+        primary: "する",
+        secondary: "やっぱりやめる",
+      );
+      if (!(result ?? false)) {
+        return;
+      }
+    }
     try {
       final accountSettings = ref
           .read(accountSettingsRepositoryProvider)

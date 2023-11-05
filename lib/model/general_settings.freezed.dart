@@ -51,6 +51,9 @@ mixin _$GeneralSettings {
   /// 使用するUnicodeの絵文字種別
   EmojiType get emojiType => throw _privateConstructorUsedError;
 
+  /// チキンモード
+  bool get isChicken => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $GeneralSettingsCopyWith<GeneralSettings> get copyWith =>
@@ -75,7 +78,8 @@ abstract class $GeneralSettingsCopyWith<$Res> {
       bool enableFavoritedRenoteElipsed,
       TabPosition tabPosition,
       double textScaleFactor,
-      EmojiType emojiType});
+      EmojiType emojiType,
+      bool isChicken});
 }
 
 /// @nodoc
@@ -103,6 +107,7 @@ class _$GeneralSettingsCopyWithImpl<$Res, $Val extends GeneralSettings>
     Object? tabPosition = null,
     Object? textScaleFactor = null,
     Object? emojiType = null,
+    Object? isChicken = null,
   }) {
     return _then(_value.copyWith(
       lightColorThemeId: null == lightColorThemeId
@@ -153,6 +158,10 @@ class _$GeneralSettingsCopyWithImpl<$Res, $Val extends GeneralSettings>
           ? _value.emojiType
           : emojiType // ignore: cast_nullable_to_non_nullable
               as EmojiType,
+      isChicken: null == isChicken
+          ? _value.isChicken
+          : isChicken // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -177,7 +186,8 @@ abstract class _$$GeneralSettingsImplCopyWith<$Res>
       bool enableFavoritedRenoteElipsed,
       TabPosition tabPosition,
       double textScaleFactor,
-      EmojiType emojiType});
+      EmojiType emojiType,
+      bool isChicken});
 }
 
 /// @nodoc
@@ -203,6 +213,7 @@ class __$$GeneralSettingsImplCopyWithImpl<$Res>
     Object? tabPosition = null,
     Object? textScaleFactor = null,
     Object? emojiType = null,
+    Object? isChicken = null,
   }) {
     return _then(_$GeneralSettingsImpl(
       lightColorThemeId: null == lightColorThemeId
@@ -253,6 +264,10 @@ class __$$GeneralSettingsImplCopyWithImpl<$Res>
           ? _value.emojiType
           : emojiType // ignore: cast_nullable_to_non_nullable
               as EmojiType,
+      isChicken: null == isChicken
+          ? _value.isChicken
+          : isChicken // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -272,7 +287,8 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
       this.enableFavoritedRenoteElipsed = true,
       this.tabPosition = TabPosition.top,
       this.textScaleFactor = 1.0,
-      this.emojiType = EmojiType.twemoji});
+      this.emojiType = EmojiType.twemoji,
+      this.isChicken = false});
 
   factory _$GeneralSettingsImpl.fromJson(Map<String, dynamic> json) =>
       _$$GeneralSettingsImplFromJson(json);
@@ -332,9 +348,14 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
   @JsonKey()
   final EmojiType emojiType;
 
+  /// チキンモード
+  @override
+  @JsonKey()
+  final bool isChicken;
+
   @override
   String toString() {
-    return 'GeneralSettings(lightColorThemeId: $lightColorThemeId, darkColorThemeId: $darkColorThemeId, themeColorSystem: $themeColorSystem, nsfwInherit: $nsfwInherit, enableDirectReaction: $enableDirectReaction, automaticPush: $automaticPush, enableAnimatedMFM: $enableAnimatedMFM, enableLongTextElipsed: $enableLongTextElipsed, enableFavoritedRenoteElipsed: $enableFavoritedRenoteElipsed, tabPosition: $tabPosition, textScaleFactor: $textScaleFactor, emojiType: $emojiType)';
+    return 'GeneralSettings(lightColorThemeId: $lightColorThemeId, darkColorThemeId: $darkColorThemeId, themeColorSystem: $themeColorSystem, nsfwInherit: $nsfwInherit, enableDirectReaction: $enableDirectReaction, automaticPush: $automaticPush, enableAnimatedMFM: $enableAnimatedMFM, enableLongTextElipsed: $enableLongTextElipsed, enableFavoritedRenoteElipsed: $enableFavoritedRenoteElipsed, tabPosition: $tabPosition, textScaleFactor: $textScaleFactor, emojiType: $emojiType, isChicken: $isChicken)';
   }
 
   @override
@@ -367,7 +388,9 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
             (identical(other.textScaleFactor, textScaleFactor) ||
                 other.textScaleFactor == textScaleFactor) &&
             (identical(other.emojiType, emojiType) ||
-                other.emojiType == emojiType));
+                other.emojiType == emojiType) &&
+            (identical(other.isChicken, isChicken) ||
+                other.isChicken == isChicken));
   }
 
   @JsonKey(ignore: true)
@@ -385,7 +408,8 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
       enableFavoritedRenoteElipsed,
       tabPosition,
       textScaleFactor,
-      emojiType);
+      emojiType,
+      isChicken);
 
   @JsonKey(ignore: true)
   @override
@@ -415,7 +439,8 @@ abstract class _GeneralSettings implements GeneralSettings {
       final bool enableFavoritedRenoteElipsed,
       final TabPosition tabPosition,
       final double textScaleFactor,
-      final EmojiType emojiType}) = _$GeneralSettingsImpl;
+      final EmojiType emojiType,
+      final bool isChicken}) = _$GeneralSettingsImpl;
 
   factory _GeneralSettings.fromJson(Map<String, dynamic> json) =
       _$GeneralSettingsImpl.fromJson;
@@ -462,6 +487,10 @@ abstract class _GeneralSettings implements GeneralSettings {
 
   /// 使用するUnicodeの絵文字種別
   EmojiType get emojiType;
+  @override
+
+  /// チキンモード
+  bool get isChicken;
   @override
   @JsonKey(ignore: true)
   _$$GeneralSettingsImplCopyWith<_$GeneralSettingsImpl> get copyWith =>
