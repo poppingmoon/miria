@@ -33,7 +33,9 @@ class ImportExportPageState extends ConsumerState<ImportExportPage> {
               "設定ファイルの管理",
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const Text("現在の設定から、「全般設定」「アカウントごとの設定」「タブ設定」を設定ファイルに出力して管理することができます。"),
+            const Text(
+              "現在の設定から、「全般設定」「アカウントごとの設定」「タブ設定」を設定ファイルに出力して管理することができます。",
+            ),
             const Text("・ログイン情報は記録されません。"),
             const Text("・設定ファイルは、指定したアカウントの「ドライブ」に保存されます。"),
             const Text("・作成できる設定ファイルは、「ドライブ」のフォルダごとに1つまでです。"),
