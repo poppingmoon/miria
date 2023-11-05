@@ -43,7 +43,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
             child: MisskeyImage(
               isSensitive: targetFile.isSensitive,
               thumbnailUrl: targetFile.thumbnailUrl,
-              targetFiles: [targetFile.url.toString()],
+              targetFiles: [targetFile],
               fileType: targetFile.type,
               name: targetFile.name,
               position: 0,
@@ -70,7 +70,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
                     child: MisskeyImage(
                       isSensitive: targetFile.element.isSensitive,
                       thumbnailUrl: targetFile.element.thumbnailUrl,
-                      targetFiles: targetFiles.map((e) => e.url).toList(),
+                      targetFiles: targetFiles,
                       fileType: targetFile.element.type,
                       name: targetFile.element.name,
                       position: targetFile.index,
@@ -92,7 +92,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
 class MisskeyImage extends ConsumerStatefulWidget {
   final bool isSensitive;
   final String? thumbnailUrl;
-  final List<String> targetFiles;
+  final List<DriveFile> targetFiles;
   final int position;
   final String fileType;
   final String name;
@@ -168,21 +168,24 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
             } else {
               if (widget.fileType.startsWith("image")) {
                 showDialog(
-                    context: context,
-                    builder: (context) => ImageDialog(
-                          imageUrlList: widget.targetFiles,
-                          initialPage: widget.position,
-                        ));
+                  context: context,
+                  builder: (context) => ImageDialog(
+                    driveFiles: widget.targetFiles,
+                    initialPage: widget.position,
+                  ),
+                );
               } else if (widget.fileType.startsWith("video")) {
                 showDialog(
                   context: context,
                   builder: (context) => VideoDialog(
-                    url: widget.targetFiles[widget.position],
+                    url: widget.targetFiles[widget.position].url,
                   ),
                 );
               } else {
-                launchUrl(Uri.parse(widget.targetFiles[widget.position]),
-                    mode: LaunchMode.externalApplication);
+                launchUrl(
+                  Uri.parse(widget.targetFiles[widget.position].url),
+                  mode: LaunchMode.externalApplication,
+                );
               }
             }
           }, child: Builder(
@@ -238,7 +241,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                         height: 200,
                         child: NetworkImageView(
                           url: widget.thumbnailUrl ??
-                              widget.targetFiles[widget.position],
+                              widget.targetFiles[widget.position].url,
                           type: ImageType.imageThumbnail,
                           loadingBuilder: (context, widget, chunkEvent) =>
                               SizedBox(
@@ -275,7 +278,9 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                       cachedWidget = TextButton.icon(
                           onPressed: () {
                             launchUrl(
-                                Uri.parse(widget.targetFiles[widget.position]),
+                                Uri.parse(
+                                  widget.targetFiles[widget.position].url,
+                                ),
                                 mode: LaunchMode.externalApplication);
                           },
                           icon: const Icon(Icons.file_download_outlined),
