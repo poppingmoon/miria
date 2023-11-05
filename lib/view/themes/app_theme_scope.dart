@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:miria/extensions/color_extension.dart';
 import 'package:miria/model/color_theme.dart';
 import 'package:miria/model/general_settings.dart';
@@ -66,6 +67,12 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
     return "KosugiMaru";
   }
 
+  TextTheme applyGoogleFont(TextTheme textTheme, String? fontName) {
+    return fontName != null && GoogleFonts.asMap().containsKey(fontName)
+        ? GoogleFonts.getTextTheme(fontName, textTheme)
+        : textTheme;
+  }
+
   List<String> resolveFontFamilyCallback() {
     if (defaultTargetPlatform == TargetPlatform.iOS ||
         defaultTargetPlatform == TargetPlatform.macOS) {
@@ -113,16 +120,23 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
     return const TextStyle();
   }
 
-  ThemeData buildTheme(BuildContext context, ColorTheme theme) {
-    final textThemePre = Theme.of(context).textTheme.merge(
-          (theme.isDarkTheme ? ThemeData.dark() : ThemeData.light())
-              .textTheme
-              .apply(
-                fontFamily: resolveFontFamilyName(),
-                fontFamilyFallback: resolveFontFamilyCallback(),
-                bodyColor: theme.foreground,
-              ),
-        );
+  ThemeData buildTheme(
+    BuildContext context,
+    ColorTheme theme,
+    String? fontName,
+  ) {
+    final textThemePre = applyGoogleFont(
+      Theme.of(context).textTheme.merge(
+            (theme.isDarkTheme ? ThemeData.dark() : ThemeData.light())
+                .textTheme
+                .apply(
+                  fontFamily: resolveFontFamilyName(),
+                  fontFamilyFallback: resolveFontFamilyCallback(),
+                  bodyColor: theme.foreground,
+                ),
+          ),
+      fontName,
+    );
     final textTheme = textThemePre.copyWith(
       bodySmall: textThemePre.bodySmall?.copyWith(
         color: theme.isDarkTheme
@@ -287,6 +301,10 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
           .select((value) => value.settings.textScaleFactor),
     );
     final colorThemes = ref.watch(colorThemeRepositoryProvider);
+    final fontName = ref.watch(
+      generalSettingsRepositoryProvider
+          .select((value) => value.settings.fontName),
+    );
 
     final bool isDark;
     if (colorSystem == ThemeColorSystem.system) {
@@ -306,7 +324,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
         colorThemes.firstWhere((element) => element.isDarkTheme == isDark);
 
     return Theme(
-      data: buildTheme(context, foundColorTheme),
+      data: buildTheme(context, foundColorTheme, fontName),
       child: AppTheme(
         themeData: buildDarkAppThemeData(context, foundColorTheme),
         child: MediaQuery(
