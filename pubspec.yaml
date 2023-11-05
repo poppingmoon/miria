@@ -39,7 +39,9 @@ dependencies:
   kana_kit: ^2.0.0
   mfm_parser: ^1.0.3
   mfm_renderer:
-    git: https://github.com/shiosyakeyakini-info/mfm_renderer.git
+    git:
+      url: https://github.com/poppingmoon/mfm_renderer.git
+      ref: c930ea393f33848ab8102817d498f87b866293af
   misskey_dart:
     git: https://github.com/shiosyakeyakini-info/misskey_dart.git
   package_info_plus: ^4.0.0

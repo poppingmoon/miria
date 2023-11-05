@@ -756,9 +756,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: "0790b9e54e71cd447f3fb7f0777e69a9c2c8cef5"
-      url: "https://github.com/shiosyakeyakini-info/mfm_renderer.git"
+      ref: c930ea393f33848ab8102817d498f87b866293af
+      resolved-ref: c930ea393f33848ab8102817d498f87b866293af
+      url: "https://github.com/poppingmoon/mfm_renderer.git"
     source: git
     version: "0.0.1"
   mime:
