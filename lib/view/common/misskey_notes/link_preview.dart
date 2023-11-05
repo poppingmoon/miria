@@ -203,65 +203,62 @@ class LinkPreviewTile extends ConsumerWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(5),
-            child: Padding(
-              padding: const EdgeInsets.all(4),
-              child: Row(
-                children: [
-                  if (thumbnail == null)
-                    SizedBox(height: imageSize)
-                  else
-                    CachedNetworkImage(
-                      imageUrl: thumbnail,
-                      height: imageSize,
-                      width: imageSize,
-                      fit: BoxFit.cover,
-                    ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            summalyResult.title ?? link,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: textTheme.titleSmall,
-                          ),
-                          Text(
-                            summalyResult.description ?? "",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: textTheme.bodySmall,
-                          ),
-                          Row(
-                            children: [
-                              if (icon != null)
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 5),
-                                  child: CachedNetworkImage(
-                                    imageUrl: icon,
-                                    height: textTheme.labelMedium?.fontSize,
-                                    width: textTheme.labelMedium?.fontSize,
-                                  ),
-                                ),
-                              Expanded(
-                                child: Text(
-                                  summalyResult.sitename ?? "",
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  style: textTheme.labelMedium,
+            child: Row(
+              children: [
+                if (thumbnail == null)
+                  SizedBox(height: imageSize)
+                else
+                  CachedNetworkImage(
+                    imageUrl: thumbnail,
+                    height: imageSize,
+                    width: imageSize,
+                    fit: BoxFit.cover,
+                  ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          summalyResult.title ?? link,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: textTheme.titleSmall,
+                        ),
+                        Text(
+                          summalyResult.description ?? "",
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: textTheme.bodySmall,
+                        ),
+                        Row(
+                          children: [
+                            if (icon != null)
+                              Padding(
+                                padding: const EdgeInsets.only(right: 5),
+                                child: CachedNetworkImage(
+                                  imageUrl: icon,
+                                  height: textTheme.labelMedium?.fontSize,
+                                  width: textTheme.labelMedium?.fontSize,
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            Expanded(
+                              child: Text(
+                                summalyResult.sitename ?? "",
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: textTheme.labelMedium,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
