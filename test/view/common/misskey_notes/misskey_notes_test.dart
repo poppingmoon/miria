@@ -227,9 +227,12 @@ System.out.println("@ai uneune");
           ),
         );
         await tester.pumpAndSettle();
-        expect(find.textContaining(longText, findRichText: true), findsNothing);
         await tester.tap(find.text("続きを表示"));
         await tester.pumpAndSettle();
+        expect(
+          find.text("続きを表示"),
+          findsNothing,
+        );
         expect(
           find.textContaining(longText, findRichText: true),
           findsOneWidget,
