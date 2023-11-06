@@ -19,7 +19,7 @@ void main() {
           onUnreacted: anyNamed("onUnreacted"),
           onDeleted: anyNamed("onDeleted"),
           onVoted: anyNamed("onVoted"),
-          //onUpdated: anyNamed("onUpdated"),
+          onUpdated: anyNamed("onUpdated"),
         ),
       ).thenReturn(timelineTester.mockSocketController);
       final mockMisskeyRoles = MockMisskeyRoles();
