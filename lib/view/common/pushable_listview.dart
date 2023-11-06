@@ -50,6 +50,7 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
           ..addAll(result);
         if (!mounted) return;
         setState(() {
+          isFinalPage = result.isEmpty;
           isLoading = false;
           if (result.isEmpty) isFinalPage = true;
         });
@@ -100,10 +101,10 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
           isLoading = true;
         });
         final result = await widget.nextFuture(items.last, items.length);
-        if (result.isEmpty) isFinalPage = true;
         items.addAll(result);
         if (!mounted) return;
         setState(() {
+          isFinalPage = result.isEmpty;
           isLoading = false;
         });
       } catch (e) {
