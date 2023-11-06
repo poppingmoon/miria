@@ -44,6 +44,7 @@ class AccountRepository extends Notifier<List<Account>> {
     if (_validatedAccts.contains(acct)) return;
 
     final index = state.indexWhere((e) => e.acct == acct);
+    if (index < 0) return;
     final account = state[index];
     final i = await ref.read(misskeyProvider(account)).i.i();
     ref.read(notesProvider(account)).updateMute(i.mutedWords);
