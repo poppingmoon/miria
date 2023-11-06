@@ -204,6 +204,7 @@ void main() {
             argThat(
               equals(
                 const UsersUsersRequest(
+                  state: UsersState.alive,
                   origin: Origin.remote,
                   sort: UsersSortType.followerDescendant,
                   offset: 1,
@@ -213,6 +214,9 @@ void main() {
           ),
         );
       });
+    });
+
+    group("ロール", () {
       testWidgets("公開ロールを表示できること", (tester) async {
         final misskey = MockMisskey();
         final roles = MockMisskeyRoles();
