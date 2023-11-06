@@ -15,12 +15,14 @@ class CommonDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final accounts = ref.watch(accountsProvider);
+
     return Drawer(
       child: Padding(
         padding: const EdgeInsets.all(5),
         child: ListView(
           children: [
-            for (final account in ref.read(accountRepository).account) ...[
+            for (final account in accounts) ...[
               AccountScope(
                 account: account,
                 child: ExpansionTile(
@@ -31,7 +33,7 @@ class CommonDrawer extends ConsumerWidget {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   subtitle: Text(
-                    "@${account.userId}@${account.host}",
+                    account.acct.toString(),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   children: [
