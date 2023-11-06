@@ -20,8 +20,8 @@ class MfmPreview extends ConsumerWidget {
           noteCreateProvider(AccountScope.of(context))
               .select((value) => value.replyTo),
         )
-        .map((e) => e.acct)
-        .join(" ");
+        .map((e) => "${e.acct} ")
+        .join();
 
     return Padding(
       padding: const EdgeInsets.all(5),

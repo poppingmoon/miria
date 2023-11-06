@@ -347,7 +347,7 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
       visibleUserIds.addAll(mentionTargetUsers.map((e) => e.id));
 
       final baseText =
-          "${state.replyTo.map((e) => e.acct).join(" ")}${state.text}";
+          "${state.replyTo.map((e) => "${e.acct} ").join()}${state.text}";
       final postText = baseText.isNotEmpty ? baseText : null;
 
       final durationType = state.voteDurationType;
