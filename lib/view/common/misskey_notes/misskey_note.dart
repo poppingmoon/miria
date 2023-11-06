@@ -494,95 +494,67 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                           ],
                           if (displayNote.cw == null ||
                               displayNote.cw != null && isCwOpened) ...[
-                            if (isReactionedRenote)
-                              SimpleMfmText(
-                                "${(displayNote.text ?? "").substring(0, min((displayNote.text ?? "").length, 50))}..."
-                                    .replaceAll("\n\n", "\n"),
-                                isNyaize: displayNote.user.isCat,
-                                emojis: displayNote.emojis,
-                                suffixSpan: [
-                                  WidgetSpan(
-                                    child: InNoteButton(
-                                      onPressed: () {
-                                        ref
-                                            .read(
-                                              notesProvider(
-                                                AccountScope.of(context),
-                                              ),
+                            MfmText(
+                              mfmNode: displayTextNodes,
+                              host: displayNote.user.host,
+                              emoji: displayNote.emojis,
+                              isNyaize: displayNote.user.isCat,
+                              isEnableAnimatedMFM: ref
+                                  .read(generalSettingsRepositoryProvider)
+                                  .settings
+                                  .enableAnimatedMFM,
+                              onEmojiTap: (emojiData) => reactionControl(
+                                ref,
+                                context,
+                                displayNote,
+                                requestEmoji: emojiData,
+                              ),
+                              overflow: TextOverflow.clip,
+                              suffixSpan: [
+                                if (!isEmptyRenote &&
+                                    displayNote.renoteId != null &&
+                                    (widget.recursive == 2 ||
+                                        widget.isForceUnvisibleRenote))
+                                  TextSpan(
+                                    text: "  RN:...",
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                              ],
+                              maxLines: isReactionedRenote
+                                  ? 1
+                                  : isLongVisible
+                                      ? null
+                                      : 10,
+                            ),
+                            if (isReactionedRenote || !isLongVisible)
+                              Center(
+                                child: InNoteButton(
+                                  onPressed: () {
+                                    final repository = ref.read(
+                                      notesProvider(
+                                        AccountScope.of(context),
+                                      ),
+                                    );
+                                    repository.updateNoteStatus(
+                                      widget.note.id,
+                                      (status) => isReactionedRenote
+                                          ? status.copyWith(
+                                              isReactionedRenote:
+                                                  !status.isReactionedRenote,
                                             )
-                                            .updateNoteStatus(
-                                              widget.note.id,
-                                              (status) => status.copyWith(
-                                                isReactionedRenote:
-                                                    !status.isReactionedRenote,
-                                              ),
-                                            );
-                                      },
-                                      child: const Text("続きを表示"),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            else ...[
-                              if (isLongVisible)
-                                MfmText(
-                                  mfmNode: displayTextNodes,
-                                  host: displayNote.user.host,
-                                  emoji: displayNote.emojis,
-                                  isNyaize: displayNote.user.isCat,
-                                  isEnableAnimatedMFM: ref
-                                      .read(generalSettingsRepositoryProvider)
-                                      .settings
-                                      .enableAnimatedMFM,
-                                  onEmojiTap: (emojiData) => reactionControl(
-                                    ref,
-                                    context,
-                                    displayNote,
-                                    requestEmoji: emojiData,
-                                  ),
-                                  suffixSpan: [
-                                    if (!isEmptyRenote &&
-                                        displayNote.renoteId != null &&
-                                        (widget.recursive == 2 ||
-                                            widget.isForceUnvisibleRenote))
-                                      TextSpan(
-                                        text: "  RN:...",
-                                        style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                      ),
-                                  ],
-                                )
-                              else
-                                SimpleMfmText(
-                                  "${(displayNote.text ?? "").substring(0, min((displayNote.text ?? "").length, 150))}..."
-                                      .replaceAll("\n\n", "\n"),
-                                  emojis: displayNote.emojis,
-                                  isNyaize: displayNote.user.isCat,
-                                  suffixSpan: [
-                                    WidgetSpan(
-                                      child: InNoteButton(
-                                        onPressed: () {
-                                          ref
-                                              .read(
-                                                notesProvider(
-                                                  AccountScope.of(context),
-                                                ),
-                                              )
-                                              .updateNoteStatus(
-                                                widget.note.id,
-                                                (status) => status.copyWith(
-                                                  isLongVisible:
-                                                      !status.isLongVisible,
-                                                ),
-                                              );
-                                        },
-                                        child: const Text("続きを表示"),
-                                      ),
-                                    ),
-                                  ],
+                                          : status.copyWith(
+                                              isLongVisible:
+                                                  !status.isLongVisible,
+                                            ),
+                                    );
+                                  },
+                                  child: const Text("続きを表示"),
                                 ),
+                              ),
+                            if (!isReactionedRenote) ...[
                               MisskeyFileView(
                                 files: displayNote.files,
                                 height: 200 *
