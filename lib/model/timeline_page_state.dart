@@ -11,5 +11,4 @@ class TimelinePageState with _$TimelinePageState {
     required int index,
     required TabSetting tabSetting,
   }) = _TimelinePageState;
-  const TimelinePageState._();
 }

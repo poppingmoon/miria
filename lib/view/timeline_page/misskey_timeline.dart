@@ -36,7 +36,7 @@ class MisskeyTimeline extends ConsumerWidget {
           ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.only(right: 10),
             child: CustomScrollView(
               center: centerKey,
               controller: controller.scrollController,

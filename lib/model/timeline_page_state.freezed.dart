@@ -126,12 +126,11 @@ class __$$TimelinePageStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$TimelinePageStateImpl extends _TimelinePageState {
+class _$TimelinePageStateImpl implements _TimelinePageState {
   const _$TimelinePageStateImpl(
       {required this.pageController,
       required this.index,
-      required this.tabSetting})
-      : super._();
+      required this.tabSetting});
 
   @override
   final PageController pageController;
@@ -169,12 +168,11 @@ class _$TimelinePageStateImpl extends _TimelinePageState {
           this, _$identity);
 }
 
-abstract class _TimelinePageState extends TimelinePageState {
+abstract class _TimelinePageState implements TimelinePageState {
   const factory _TimelinePageState(
       {required final PageController pageController,
       required final int index,
       required final TabSetting tabSetting}) = _$TimelinePageStateImpl;
-  const _TimelinePageState._() : super._();
 
   @override
   PageController get pageController;
