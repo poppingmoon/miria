@@ -33,8 +33,9 @@ icon: assets/images/icon.png
 adopt-info: miria
 base: core22
 grade: stable
-confinement: strict 
-architectures: amd64
+confinement: strict
+architectures:
+  - amd64
 
 apps:
   miria:
