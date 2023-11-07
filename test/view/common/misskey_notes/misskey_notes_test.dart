@@ -168,7 +168,7 @@ System.out.println("@ai uneune");
           buildTestWidget(note: TestData.note1.copyWith(cw: "えっちなやつ")),
         );
         await tester.pumpAndSettle();
-        await tester.tap(find.text("続きを見る"));
+        await tester.tap(find.text("隠してあるのんの続きを見して"));
         await tester.pumpAndSettle();
         expect(
           find.textContaining("えっちなやつ", findRichText: true),

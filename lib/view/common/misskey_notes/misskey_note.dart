@@ -367,6 +367,9 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
         child: Align(
           child: Container(
             constraints: const BoxConstraints(maxWidth: 800),
+            margin: EdgeInsets.only(
+              left: displayNote.channel?.color != null ? 5.0 : 0.0,
+            ),
             padding: EdgeInsets.only(
               top: 5 * MediaQuery.of(context).textScaleFactor,
               bottom: 5 * MediaQuery.of(context).textScaleFactor,
@@ -488,7 +491,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                     );
                               },
                               child: Text(
-                                isCwOpened ? "隠す" : "続きを見る",
+                                isCwOpened ? "隠す" : "隠してあるのんの続きを見して",
                               ),
                             ),
                           ],
@@ -990,6 +993,7 @@ class RenoteHeader extends StatelessWidget {
 
     return Row(
       children: [
+        const Padding(padding: EdgeInsets.only(left: 10)),
         Expanded(
           child: GestureDetector(
             onTap: () => _navigateUserDetailPage(
