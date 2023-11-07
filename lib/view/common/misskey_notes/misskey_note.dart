@@ -319,7 +319,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (!hideAvatar!) ...[
+                    if (!hideAvatar!)
                       AvatarIcon(
                         user: displayNote.user,
                         onTap: () => ref
@@ -331,8 +331,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                             )
                             .expectFailure(context),
                       ),
-                      const Padding(padding: EdgeInsets.only(left: 10)),
-                    ],
+                    const Padding(padding: EdgeInsets.only(left: 10)),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -344,11 +343,25 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                           Row(
                             children: [
                               Expanded(
-                                child: Text(
-                                  displayNote.user.acct,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.clip,
+                                child: GestureDetector(
+                                  onTap: () => ref
+                                      .read(
+                                        misskeyNoteNotifierProvider(account)
+                                            .notifier,
+                                      )
+                                      .navigateToUserPage(
+                                        context,
+                                        displayNote.user,
+                                        widget.loginAs,
+                                      )
+                                      .expectFailure(context),
+                                  child: Text(
+                                    displayNote.user.acct,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.clip,
+                                  ),
                                 ),
                               ),
                               if (displayNote.user.instance != null)
