@@ -81,7 +81,7 @@ class NoteVoteState extends ConsumerState<NoteVote> {
               choice: choice,
             ),
           );
-      await ref.read(notesProvider(account)).refresh(widget.displayNote.id);
+      ref.read(notesProvider(account)).addMyVote(widget.displayNote.id, choice);
       if (!widget.poll.multiple) {
         if (!mounted) return;
         setState(() {
