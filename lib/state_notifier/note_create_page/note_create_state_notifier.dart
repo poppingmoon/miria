@@ -177,7 +177,9 @@ class NoteCreateNotifier extends StateNotifier<NoteCreate> {
         replyTo: replyTo.toList(),
         isVote: note.poll != null,
         isVoteMultiple: note.poll?.multiple ?? false,
-        voteExpireType: VoteExpireType.date,
+        voteExpireType: note.poll?.expiresAt == null
+            ? VoteExpireType.unlimited
+            : VoteExpireType.date,
         voteContentCount: note.poll?.choices.map((e) => e.text).length ?? 2,
         voteContent: note.poll?.choices.map((e) => e.text).toList() ?? [],
         voteDate: note.poll?.expiresAt,
