@@ -267,7 +267,6 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
             padding: EdgeInsets.only(
               top: 5 * MediaQuery.of(context).textScaleFactor,
               bottom: 5 * MediaQuery.of(context).textScaleFactor,
-              left: displayNote.channel?.color != null ? 4.0 : 0.0,
             ),
             decoration: widget.isDisplayBorder
                 ? BoxDecoration(
@@ -984,18 +983,21 @@ class ChannelColorBarBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final channelColor = note.channel?.color;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        border: Border(
-          left: !hideColorBar && channelColor != null
-              ? BorderSide(
-                  color: Color(0xFF000000 | channelColor),
-                  width: 4,
-                )
-              : BorderSide.none,
+    return Padding(
+      padding: const EdgeInsets.only(left: 4),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border(
+            left: !hideColorBar && channelColor != null
+                ? BorderSide(
+                    color: Color(0xFF000000 | channelColor),
+                    width: 4,
+                  )
+                : BorderSide.none,
+          ),
         ),
+        child: child,
       ),
-      child: child,
     );
   }
 }
