@@ -30,6 +30,10 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
   @override
   Widget build(BuildContext context) {
     final targetFiles = widget.files;
+    final fileViewType = ref.watch(
+      generalSettingsRepositoryProvider
+          .select((repository) => repository.settings.fileViewType),
+    );
 
     if (targetFiles.isEmpty) {
       return Container();
@@ -51,7 +55,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
           ),
         ),
       );
-    } else {
+    } else if (fileViewType == FileViewType.grid) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -89,7 +93,97 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
             ),
         ],
       );
+    } else {
+      return MisskeyFileCarousel(
+        files: targetFiles,
+        height: widget.height,
+      );
     }
+  }
+}
+
+class MisskeyFileCarousel extends StatefulWidget {
+  const MisskeyFileCarousel({
+    super.key,
+    required this.files,
+    this.height = 200,
+  });
+
+  final List<DriveFile> files;
+  final double height;
+
+  @override
+  State<MisskeyFileCarousel> createState() => _MisskeyFileCarouselState();
+}
+
+class _MisskeyFileCarouselState extends State<MisskeyFileCarousel> {
+  final _controller = PageController();
+  int _currentPage = 0;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    const markerSize = 8.0;
+
+    return SizedBox(
+      height: widget.height,
+      child: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: [
+          PageView.builder(
+            controller: _controller,
+            onPageChanged: (value) => setState(() {
+              _currentPage = value;
+            }),
+            itemCount: widget.files.length,
+            itemBuilder: (context, index) {
+              final file = widget.files[index];
+              return MisskeyImage(
+                isSensitive: file.isSensitive,
+                thumbnailUrl: file.thumbnailUrl?.toString(),
+                targetFiles: widget.files.map((e) => e.url).toList(),
+                fileType: file.type,
+                name: file.name,
+                position: index,
+                height: widget.height,
+              );
+            },
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(
+              widget.files.length,
+              (index) => GestureDetector(
+                onTap: () => _controller.animateToPage(
+                  index,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                ),
+                child: Container(
+                  width: markerSize,
+                  height: markerSize,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: markerSize,
+                    horizontal: markerSize / 2,
+                  ),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: index == _currentPage
+                        ? Theme.of(context).primaryColor
+                        : Colors.white70,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

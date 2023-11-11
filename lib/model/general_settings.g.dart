@@ -31,6 +31,9 @@ _$GeneralSettingsImpl _$$GeneralSettingsImplFromJson(
       textScaleFactor: (json['textScaleFactor'] as num?)?.toDouble() ?? 1.0,
       emojiType: $enumDecodeNullable(_$EmojiTypeEnumMap, json['emojiType']) ??
           EmojiType.twemoji,
+      fileViewType:
+          $enumDecodeNullable(_$FileViewTypeEnumMap, json['fileViewType']) ??
+              FileViewType.grid,
     );
 
 Map<String, dynamic> _$$GeneralSettingsImplToJson(
@@ -48,6 +51,7 @@ Map<String, dynamic> _$$GeneralSettingsImplToJson(
       'tabPosition': _$TabPositionEnumMap[instance.tabPosition]!,
       'textScaleFactor': instance.textScaleFactor,
       'emojiType': _$EmojiTypeEnumMap[instance.emojiType]!,
+      'fileViewType': _$FileViewTypeEnumMap[instance.fileViewType]!,
     };
 
 const _$ThemeColorSystemEnumMap = {
@@ -76,4 +80,9 @@ const _$TabPositionEnumMap = {
 const _$EmojiTypeEnumMap = {
   EmojiType.twemoji: 'twemoji',
   EmojiType.system: 'system',
+};
+
+const _$FileViewTypeEnumMap = {
+  FileViewType.grid: 'grid',
+  FileViewType.carousel: 'carousel',
 };

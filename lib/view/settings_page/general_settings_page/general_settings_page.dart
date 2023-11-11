@@ -27,6 +27,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   TabPosition tabPosition = TabPosition.top;
   double textScaleFactor = 1.0;
   EmojiType emojiType = EmojiType.twemoji;
+  FileViewType fileViewType = FileViewType.grid;
 
   @override
   void initState() {
@@ -63,6 +64,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       tabPosition = settings.tabPosition;
       textScaleFactor = settings.textScaleFactor;
       emojiType = settings.emojiType;
+      fileViewType = settings.fileViewType;
     });
   }
 
@@ -81,6 +83,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
             tabPosition: tabPosition,
             emojiType: emojiType,
             textScaleFactor: textScaleFactor,
+            fileViewType: fileViewType,
           ),
         );
   }
@@ -325,6 +328,43 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                             save();
                           });
                         },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "ファイル",
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      const SizedBox(height: 10),
+                      const Text("ファイル一覧のスタイル"),
+                      DropdownButton(
+                        isExpanded: true,
+                        value: fileViewType,
+                        items: FileViewType.values
+                            .map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(
+                                  switch (e) {
+                                    FileViewType.grid => "グリッド",
+                                    FileViewType.carousel => "カルーセル",
+                                  },
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) => setState(() {
+                          fileViewType = value ?? FileViewType.grid;
+                          save();
+                        }),
                       ),
                     ],
                   ),

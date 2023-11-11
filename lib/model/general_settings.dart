@@ -51,6 +51,8 @@ enum EmojiType {
   const EmojiType(this.displayName);
 }
 
+enum FileViewType { grid, carousel }
+
 @freezed
 class GeneralSettings with _$GeneralSettings {
   const factory GeneralSettings({
@@ -84,6 +86,9 @@ class GeneralSettings with _$GeneralSettings {
 
     /// 使用するUnicodeの絵文字種別
     @Default(EmojiType.twemoji) EmojiType emojiType,
+
+    /// ノートのファイルの表示方法
+    @Default(FileViewType.grid) FileViewType fileViewType,
   }) = _GeneralSettings;
 
   factory GeneralSettings.fromJson(Map<String, dynamic> json) =>
