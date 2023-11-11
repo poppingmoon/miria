@@ -31,6 +31,8 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   String? fontName;
   bool hideAvatar = false;
   bool isChicken = false;
+  FileViewType fileViewType = FileViewType.grid;
+  double fileViewHeight = 200;
 
   @override
   void initState() {
@@ -72,6 +74,8 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       fontName = settings.fontName;
       hideAvatar = settings.hideAvatar;
       isChicken = settings.isChicken;
+      fileViewType = settings.fileViewType;
+      fileViewHeight = settings.fileViewHeight;
     });
   }
 
@@ -93,6 +97,8 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
             fontName: fontName,
             hideAvatar: hideAvatar,
             isChicken: isChicken,
+            fileViewType: fileViewType,
+            fileViewHeight: fileViewHeight,
           ),
         );
   }
@@ -415,6 +421,71 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                                   : save,
                           child: const Text("変更"),
                         ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "ファイル",
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      const SizedBox(height: 10),
+                      const Text("ファイル一覧のスタイル"),
+                      DropdownButton(
+                        isExpanded: true,
+                        value: fileViewType,
+                        items: FileViewType.values
+                            .map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(
+                                  switch (e) {
+                                    FileViewType.grid => "グリッド",
+                                    FileViewType.carousel => "カルーセル",
+                                  },
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) => setState(() {
+                          fileViewType = value ?? FileViewType.grid;
+                          save();
+                        }),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text("ファイルの高さ"),
+                      DropdownButton(
+                        isExpanded: true,
+                        value: fileViewHeight,
+                        items: const [
+                          DropdownMenuItem(
+                            value: 200.0,
+                            child: Text("200"),
+                          ),
+                          DropdownMenuItem(
+                            value: 400.0,
+                            child: Text("400"),
+                          ),
+                          DropdownMenuItem(
+                            value: 600.0,
+                            child: Text("600"),
+                          ),
+                          DropdownMenuItem(
+                            value: 800.0,
+                            child: Text("800"),
+                          ),
+                        ],
+                        onChanged: (value) => setState(() {
+                          fileViewHeight = value ?? 200;
+                          save();
+                        }),
                       ),
                     ],
                   ),

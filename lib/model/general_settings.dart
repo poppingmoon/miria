@@ -51,6 +51,8 @@ enum EmojiType {
   const EmojiType(this.displayName);
 }
 
+enum FileViewType { grid, carousel }
+
 @freezed
 class GeneralSettings with _$GeneralSettings {
   const factory GeneralSettings({
@@ -93,6 +95,12 @@ class GeneralSettings with _$GeneralSettings {
 
     /// チキンモード
     @Default(false) bool isChicken,
+
+    /// ノートのファイルの表示方法
+    @Default(FileViewType.grid) FileViewType fileViewType,
+
+    /// ファイルの高さ
+    @Default(200.0) double fileViewHeight,
   }) = _GeneralSettings;
 
   factory GeneralSettings.fromJson(Map<String, dynamic> json) =>

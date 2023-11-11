@@ -34,6 +34,10 @@ _$GeneralSettingsImpl _$$GeneralSettingsImplFromJson(
       fontName: json['fontName'] as String?,
       hideAvatar: json['hideAvatar'] as bool? ?? false,
       isChicken: json['isChicken'] as bool? ?? false,
+      fileViewType:
+          $enumDecodeNullable(_$FileViewTypeEnumMap, json['fileViewType']) ??
+              FileViewType.grid,
+      fileViewHeight: (json['fileViewHeight'] as num?)?.toDouble() ?? 200.0,
     );
 
 Map<String, dynamic> _$$GeneralSettingsImplToJson(
@@ -54,6 +58,8 @@ Map<String, dynamic> _$$GeneralSettingsImplToJson(
       'fontName': instance.fontName,
       'hideAvatar': instance.hideAvatar,
       'isChicken': instance.isChicken,
+      'fileViewType': _$FileViewTypeEnumMap[instance.fileViewType]!,
+      'fileViewHeight': instance.fileViewHeight,
     };
 
 const _$ThemeColorSystemEnumMap = {
@@ -82,4 +88,9 @@ const _$TabPositionEnumMap = {
 const _$EmojiTypeEnumMap = {
   EmojiType.twemoji: 'twemoji',
   EmojiType.system: 'system',
+};
+
+const _$FileViewTypeEnumMap = {
+  FileViewType.grid: 'grid',
+  FileViewType.carousel: 'carousel',
 };

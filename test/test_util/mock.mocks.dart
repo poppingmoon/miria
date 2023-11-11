@@ -1499,6 +1499,22 @@ class MockNoteRepository extends _i1.Mock implements _i26.NoteRepository {
       );
 
   @override
+  void addMyVote(
+    String? noteId,
+    int? choice,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #addMyVote,
+          [
+            noteId,
+            choice,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   void updateNote(
     String? noteId,
     _i5.NoteEdited? note,

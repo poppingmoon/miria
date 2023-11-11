@@ -245,6 +245,10 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
       notesProvider(account)
           .select((value) => value.noteStatuses[widget.note.id]!.isLongVisible),
     );
+    final fileViewHeight = ref.watch(
+      generalSettingsRepositoryProvider
+          .select((repository) => repository.settings.fileViewHeight),
+    );
 
     final links = extractLinks(displayTextNodes!);
 
@@ -468,7 +472,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                               if (!isReactionedRenote) ...[
                                 MisskeyFileView(
                                   files: displayNote.files,
-                                  height: 200 *
+                                  height: fileViewHeight *
                                       pow(0.5, widget.recursive - 1).toDouble(),
                                 ),
                                 if (displayNote.poll != null)

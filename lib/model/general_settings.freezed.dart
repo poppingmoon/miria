@@ -60,6 +60,12 @@ mixin _$GeneralSettings {
   /// チキンモード
   bool get isChicken => throw _privateConstructorUsedError;
 
+  /// ノートのファイルの表示方法
+  FileViewType get fileViewType => throw _privateConstructorUsedError;
+
+  /// ファイルの高さ
+  double get fileViewHeight => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $GeneralSettingsCopyWith<GeneralSettings> get copyWith =>
@@ -87,7 +93,9 @@ abstract class $GeneralSettingsCopyWith<$Res> {
       EmojiType emojiType,
       String? fontName,
       bool hideAvatar,
-      bool isChicken});
+      bool isChicken,
+      FileViewType fileViewType,
+      double fileViewHeight});
 }
 
 /// @nodoc
@@ -118,6 +126,8 @@ class _$GeneralSettingsCopyWithImpl<$Res, $Val extends GeneralSettings>
     Object? fontName = freezed,
     Object? hideAvatar = null,
     Object? isChicken = null,
+    Object? fileViewType = null,
+    Object? fileViewHeight = null,
   }) {
     return _then(_value.copyWith(
       lightColorThemeId: null == lightColorThemeId
@@ -180,6 +190,14 @@ class _$GeneralSettingsCopyWithImpl<$Res, $Val extends GeneralSettings>
           ? _value.isChicken
           : isChicken // ignore: cast_nullable_to_non_nullable
               as bool,
+      fileViewType: null == fileViewType
+          ? _value.fileViewType
+          : fileViewType // ignore: cast_nullable_to_non_nullable
+              as FileViewType,
+      fileViewHeight: null == fileViewHeight
+          ? _value.fileViewHeight
+          : fileViewHeight // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 }
@@ -207,7 +225,9 @@ abstract class _$$GeneralSettingsImplCopyWith<$Res>
       EmojiType emojiType,
       String? fontName,
       bool hideAvatar,
-      bool isChicken});
+      bool isChicken,
+      FileViewType fileViewType,
+      double fileViewHeight});
 }
 
 /// @nodoc
@@ -236,6 +256,8 @@ class __$$GeneralSettingsImplCopyWithImpl<$Res>
     Object? fontName = freezed,
     Object? hideAvatar = null,
     Object? isChicken = null,
+    Object? fileViewType = null,
+    Object? fileViewHeight = null,
   }) {
     return _then(_$GeneralSettingsImpl(
       lightColorThemeId: null == lightColorThemeId
@@ -298,6 +320,14 @@ class __$$GeneralSettingsImplCopyWithImpl<$Res>
           ? _value.isChicken
           : isChicken // ignore: cast_nullable_to_non_nullable
               as bool,
+      fileViewType: null == fileViewType
+          ? _value.fileViewType
+          : fileViewType // ignore: cast_nullable_to_non_nullable
+              as FileViewType,
+      fileViewHeight: null == fileViewHeight
+          ? _value.fileViewHeight
+          : fileViewHeight // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -320,7 +350,9 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
       this.emojiType = EmojiType.twemoji,
       this.fontName,
       this.hideAvatar = false,
-      this.isChicken = false});
+      this.isChicken = false,
+      this.fileViewType = FileViewType.grid,
+      this.fileViewHeight = 200.0});
 
   factory _$GeneralSettingsImpl.fromJson(Map<String, dynamic> json) =>
       _$$GeneralSettingsImplFromJson(json);
@@ -394,9 +426,19 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
   @JsonKey()
   final bool isChicken;
 
+  /// ノートのファイルの表示方法
+  @override
+  @JsonKey()
+  final FileViewType fileViewType;
+
+  /// ファイルの高さ
+  @override
+  @JsonKey()
+  final double fileViewHeight;
+
   @override
   String toString() {
-    return 'GeneralSettings(lightColorThemeId: $lightColorThemeId, darkColorThemeId: $darkColorThemeId, themeColorSystem: $themeColorSystem, nsfwInherit: $nsfwInherit, enableDirectReaction: $enableDirectReaction, automaticPush: $automaticPush, enableAnimatedMFM: $enableAnimatedMFM, enableLongTextElipsed: $enableLongTextElipsed, enableFavoritedRenoteElipsed: $enableFavoritedRenoteElipsed, tabPosition: $tabPosition, textScaleFactor: $textScaleFactor, emojiType: $emojiType, fontName: $fontName, hideAvatar: $hideAvatar, isChicken: $isChicken)';
+    return 'GeneralSettings(lightColorThemeId: $lightColorThemeId, darkColorThemeId: $darkColorThemeId, themeColorSystem: $themeColorSystem, nsfwInherit: $nsfwInherit, enableDirectReaction: $enableDirectReaction, automaticPush: $automaticPush, enableAnimatedMFM: $enableAnimatedMFM, enableLongTextElipsed: $enableLongTextElipsed, enableFavoritedRenoteElipsed: $enableFavoritedRenoteElipsed, tabPosition: $tabPosition, textScaleFactor: $textScaleFactor, emojiType: $emojiType, fontName: $fontName, hideAvatar: $hideAvatar, isChicken: $isChicken, fileViewType: $fileViewType, fileViewHeight: $fileViewHeight)';
   }
 
   @override
@@ -435,7 +477,11 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
             (identical(other.hideAvatar, hideAvatar) ||
                 other.hideAvatar == hideAvatar) &&
             (identical(other.isChicken, isChicken) ||
-                other.isChicken == isChicken));
+                other.isChicken == isChicken) &&
+            (identical(other.fileViewType, fileViewType) ||
+                other.fileViewType == fileViewType) &&
+            (identical(other.fileViewHeight, fileViewHeight) ||
+                other.fileViewHeight == fileViewHeight));
   }
 
   @JsonKey(ignore: true)
@@ -456,7 +502,9 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
       emojiType,
       fontName,
       hideAvatar,
-      isChicken);
+      isChicken,
+      fileViewType,
+      fileViewHeight);
 
   @JsonKey(ignore: true)
   @override
@@ -489,7 +537,9 @@ abstract class _GeneralSettings implements GeneralSettings {
       final EmojiType emojiType,
       final String? fontName,
       final bool hideAvatar,
-      final bool isChicken}) = _$GeneralSettingsImpl;
+      final bool isChicken,
+      final FileViewType fileViewType,
+      final double fileViewHeight}) = _$GeneralSettingsImpl;
 
   factory _GeneralSettings.fromJson(Map<String, dynamic> json) =
       _$GeneralSettingsImpl.fromJson;
@@ -548,6 +598,14 @@ abstract class _GeneralSettings implements GeneralSettings {
 
   /// チキンモード
   bool get isChicken;
+  @override
+
+  /// ノートのファイルの表示方法
+  FileViewType get fileViewType;
+  @override
+
+  /// ファイルの高さ
+  double get fileViewHeight;
   @override
   @JsonKey(ignore: true)
   _$$GeneralSettingsImplCopyWith<_$GeneralSettingsImpl> get copyWith =>
