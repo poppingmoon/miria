@@ -11,7 +11,7 @@ _$AccountImpl _$$AccountImplFromJson(Map<String, dynamic> json) =>
       host: json['host'] as String,
       userId: json['userId'] as String,
       token: json['token'] as String?,
-      i: IResponse.fromJson(json['i'] as Map<String, dynamic>),
+      i: MeDetailed.fromJson(json['i'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$AccountImplToJson(_$AccountImpl instance) =>

@@ -24,14 +24,14 @@ class CommonDrawer extends ConsumerWidget {
               AccountScope(
                 account: account,
                 child: ExpansionTile(
-                  leading: AvatarIcon.fromIResponse(account.i),
+                  leading: AvatarIcon(user: account.i),
                   initiallyExpanded: account.acct == initialOpenAcct,
                   title: SimpleMfmText(
                     account.i.name ?? account.i.username,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   subtitle: Text(
-                    "@${account.userId}@${account.host}",
+                    account.acct.toString(),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   children: [
