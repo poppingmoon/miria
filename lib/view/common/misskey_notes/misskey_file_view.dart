@@ -47,6 +47,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
             fileType: targetFile.type,
             name: targetFile.name,
             position: 0,
+            height: widget.height,
           ),
         ),
       );
@@ -74,6 +75,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
                     fileType: targetFile.element.type,
                     name: targetFile.element.name,
                     position: targetFile.index,
+                    height: widget.height,
                   ),
                 ),
             ],
@@ -98,6 +100,7 @@ class MisskeyImage extends ConsumerStatefulWidget {
   final int position;
   final String fileType;
   final String name;
+  final double height;
 
   const MisskeyImage({
     super.key,
@@ -107,6 +110,7 @@ class MisskeyImage extends ConsumerStatefulWidget {
     required this.position,
     required this.fileType,
     required this.name,
+    this.height = 200,
   });
 
   @override
@@ -197,6 +201,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                     child: Container(
                       decoration: const BoxDecoration(color: Colors.black54),
                       width: double.infinity,
+                      height: widget.height,
                       child: Center(
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -243,17 +248,18 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (widget.fileType.startsWith("image")) {
                         cachedWidget = SizedBox(
-                          height: 200,
+                          height: widget.height,
                           child: NetworkImageView(
                             url: widget.thumbnailUrl ??
                                 widget.targetFiles[widget.position],
                             type: ImageType.imageThumbnail,
-                            loadingBuilder: (context, widget, chunkEvent) =>
+                            loadingBuilder: (context, child, chunkEvent) =>
                                 SizedBox(
                               width: double.infinity,
-                              height: 200,
-                              child: widget,
+                              height: widget.height,
+                              child: child,
                             ),
+                            height: widget.height,
                           ),
                         );
                       } else if (widget.thumbnailUrl != null) {
@@ -261,16 +267,17 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                           children: [
                             Positioned.fill(
                               child: SizedBox(
-                                height: 200,
+                                height: widget.height,
                                 child: NetworkImageView(
                                   url: widget.thumbnailUrl!,
                                   type: ImageType.imageThumbnail,
                                   loadingBuilder:
-                                      (context, widget, chunkEvent) => SizedBox(
+                                      (context, child, chunkEvent) => SizedBox(
                                     width: double.infinity,
-                                    height: 200,
-                                    child: widget,
+                                    height: widget.height,
+                                    child: child,
                                   ),
+                                  height: widget.height,
                                 ),
                               ),
                             ),
