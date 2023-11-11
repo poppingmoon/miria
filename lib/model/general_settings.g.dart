@@ -34,6 +34,7 @@ _$GeneralSettingsImpl _$$GeneralSettingsImplFromJson(
       fileViewType:
           $enumDecodeNullable(_$FileViewTypeEnumMap, json['fileViewType']) ??
               FileViewType.grid,
+      fileViewHeight: (json['fileViewHeight'] as num?)?.toDouble() ?? 200.0,
     );
 
 Map<String, dynamic> _$$GeneralSettingsImplToJson(
@@ -52,6 +53,7 @@ Map<String, dynamic> _$$GeneralSettingsImplToJson(
       'textScaleFactor': instance.textScaleFactor,
       'emojiType': _$EmojiTypeEnumMap[instance.emojiType]!,
       'fileViewType': _$FileViewTypeEnumMap[instance.fileViewType]!,
+      'fileViewHeight': instance.fileViewHeight,
     };
 
 const _$ThemeColorSystemEnumMap = {

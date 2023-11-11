@@ -28,6 +28,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   double textScaleFactor = 1.0;
   EmojiType emojiType = EmojiType.twemoji;
   FileViewType fileViewType = FileViewType.grid;
+  double fileViewHeight = 200;
 
   @override
   void initState() {
@@ -65,6 +66,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       textScaleFactor = settings.textScaleFactor;
       emojiType = settings.emojiType;
       fileViewType = settings.fileViewType;
+      fileViewHeight = settings.fileViewHeight;
     });
   }
 
@@ -84,6 +86,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
             emojiType: emojiType,
             textScaleFactor: textScaleFactor,
             fileViewType: fileViewType,
+            fileViewHeight: fileViewHeight,
           ),
         );
   }
@@ -363,6 +366,34 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                             .toList(),
                         onChanged: (value) => setState(() {
                           fileViewType = value ?? FileViewType.grid;
+                          save();
+                        }),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text("ファイルの高さ"),
+                      DropdownButton(
+                        isExpanded: true,
+                        value: fileViewHeight,
+                        items: const [
+                          DropdownMenuItem(
+                            value: 200.0,
+                            child: Text("200"),
+                          ),
+                          DropdownMenuItem(
+                            value: 400.0,
+                            child: Text("400"),
+                          ),
+                          DropdownMenuItem(
+                            value: 600.0,
+                            child: Text("600"),
+                          ),
+                          DropdownMenuItem(
+                            value: 800.0,
+                            child: Text("800"),
+                          ),
+                        ],
+                        onChanged: (value) => setState(() {
+                          fileViewHeight = value ?? 200;
                           save();
                         }),
                       ),

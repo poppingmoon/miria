@@ -54,6 +54,9 @@ mixin _$GeneralSettings {
   /// ノートのファイルの表示方法
   FileViewType get fileViewType => throw _privateConstructorUsedError;
 
+  /// ファイルの高さ
+  double get fileViewHeight => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $GeneralSettingsCopyWith<GeneralSettings> get copyWith =>
@@ -79,7 +82,8 @@ abstract class $GeneralSettingsCopyWith<$Res> {
       TabPosition tabPosition,
       double textScaleFactor,
       EmojiType emojiType,
-      FileViewType fileViewType});
+      FileViewType fileViewType,
+      double fileViewHeight});
 }
 
 /// @nodoc
@@ -108,6 +112,7 @@ class _$GeneralSettingsCopyWithImpl<$Res, $Val extends GeneralSettings>
     Object? textScaleFactor = null,
     Object? emojiType = null,
     Object? fileViewType = null,
+    Object? fileViewHeight = null,
   }) {
     return _then(_value.copyWith(
       lightColorThemeId: null == lightColorThemeId
@@ -162,6 +167,10 @@ class _$GeneralSettingsCopyWithImpl<$Res, $Val extends GeneralSettings>
           ? _value.fileViewType
           : fileViewType // ignore: cast_nullable_to_non_nullable
               as FileViewType,
+      fileViewHeight: null == fileViewHeight
+          ? _value.fileViewHeight
+          : fileViewHeight // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 }
@@ -187,7 +196,8 @@ abstract class _$$GeneralSettingsImplCopyWith<$Res>
       TabPosition tabPosition,
       double textScaleFactor,
       EmojiType emojiType,
-      FileViewType fileViewType});
+      FileViewType fileViewType,
+      double fileViewHeight});
 }
 
 /// @nodoc
@@ -214,6 +224,7 @@ class __$$GeneralSettingsImplCopyWithImpl<$Res>
     Object? textScaleFactor = null,
     Object? emojiType = null,
     Object? fileViewType = null,
+    Object? fileViewHeight = null,
   }) {
     return _then(_$GeneralSettingsImpl(
       lightColorThemeId: null == lightColorThemeId
@@ -268,6 +279,10 @@ class __$$GeneralSettingsImplCopyWithImpl<$Res>
           ? _value.fileViewType
           : fileViewType // ignore: cast_nullable_to_non_nullable
               as FileViewType,
+      fileViewHeight: null == fileViewHeight
+          ? _value.fileViewHeight
+          : fileViewHeight // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -288,7 +303,8 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
       this.tabPosition = TabPosition.top,
       this.textScaleFactor = 1.0,
       this.emojiType = EmojiType.twemoji,
-      this.fileViewType = FileViewType.grid});
+      this.fileViewType = FileViewType.grid,
+      this.fileViewHeight = 200.0});
 
   factory _$GeneralSettingsImpl.fromJson(Map<String, dynamic> json) =>
       _$$GeneralSettingsImplFromJson(json);
@@ -353,9 +369,14 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
   @JsonKey()
   final FileViewType fileViewType;
 
+  /// ファイルの高さ
+  @override
+  @JsonKey()
+  final double fileViewHeight;
+
   @override
   String toString() {
-    return 'GeneralSettings(lightColorThemeId: $lightColorThemeId, darkColorThemeId: $darkColorThemeId, themeColorSystem: $themeColorSystem, nsfwInherit: $nsfwInherit, enableDirectReaction: $enableDirectReaction, automaticPush: $automaticPush, enableAnimatedMFM: $enableAnimatedMFM, enableLongTextElipsed: $enableLongTextElipsed, enableFavoritedRenoteElipsed: $enableFavoritedRenoteElipsed, tabPosition: $tabPosition, textScaleFactor: $textScaleFactor, emojiType: $emojiType, fileViewType: $fileViewType)';
+    return 'GeneralSettings(lightColorThemeId: $lightColorThemeId, darkColorThemeId: $darkColorThemeId, themeColorSystem: $themeColorSystem, nsfwInherit: $nsfwInherit, enableDirectReaction: $enableDirectReaction, automaticPush: $automaticPush, enableAnimatedMFM: $enableAnimatedMFM, enableLongTextElipsed: $enableLongTextElipsed, enableFavoritedRenoteElipsed: $enableFavoritedRenoteElipsed, tabPosition: $tabPosition, textScaleFactor: $textScaleFactor, emojiType: $emojiType, fileViewType: $fileViewType, fileViewHeight: $fileViewHeight)';
   }
 
   @override
@@ -390,7 +411,9 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
             (identical(other.emojiType, emojiType) ||
                 other.emojiType == emojiType) &&
             (identical(other.fileViewType, fileViewType) ||
-                other.fileViewType == fileViewType));
+                other.fileViewType == fileViewType) &&
+            (identical(other.fileViewHeight, fileViewHeight) ||
+                other.fileViewHeight == fileViewHeight));
   }
 
   @JsonKey(ignore: true)
@@ -409,7 +432,8 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
       tabPosition,
       textScaleFactor,
       emojiType,
-      fileViewType);
+      fileViewType,
+      fileViewHeight);
 
   @JsonKey(ignore: true)
   @override
@@ -440,7 +464,8 @@ abstract class _GeneralSettings implements GeneralSettings {
       final TabPosition tabPosition,
       final double textScaleFactor,
       final EmojiType emojiType,
-      final FileViewType fileViewType}) = _$GeneralSettingsImpl;
+      final FileViewType fileViewType,
+      final double fileViewHeight}) = _$GeneralSettingsImpl;
 
   factory _GeneralSettings.fromJson(Map<String, dynamic> json) =
       _$GeneralSettingsImpl.fromJson;
@@ -491,6 +516,10 @@ abstract class _GeneralSettings implements GeneralSettings {
 
   /// ノートのファイルの表示方法
   FileViewType get fileViewType;
+  @override
+
+  /// ファイルの高さ
+  double get fileViewHeight;
   @override
   @JsonKey(ignore: true)
   _$$GeneralSettingsImplCopyWith<_$GeneralSettingsImpl> get copyWith =>
