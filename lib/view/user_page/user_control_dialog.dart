@@ -228,7 +228,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
               onTap: muteCreate.expectFailure(context),
               title: const Text("ミュートする"),
             ),
-          if (widget.response.isBlocked ?? false)
+          if (widget.response.isBlocking ?? false)
             ListTile(
               onTap: blockingDelete.expectFailure(context),
               title: const Text("ブロックを解除する"),
