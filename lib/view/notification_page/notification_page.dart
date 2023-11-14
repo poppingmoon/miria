@@ -183,41 +183,43 @@ class NotificationItem extends ConsumerWidget {
         final hasRenote = notification.renoteUsers.isNotEmpty;
         final hasReaction = notification.reactionUsers.isNotEmpty;
         return Padding(
-          padding:
-              const EdgeInsets.only(left: 10, top: 10, bottom: 30, right: 10),
+          padding: const EdgeInsets.only(top: 10, bottom: 30, right: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  if (hasReaction && hasRenote)
-                    Expanded(
-                      child: SimpleMfmText(
-                        "${notification.reactionUsers.first.$2?.name ?? notification.reactionUsers.first.$2?.username}さんたちがリアクションしはって、${notification.renoteUsers.first?.name ?? notification.renoteUsers.first?.username}さんたちがリノートしはったで",
-                        emojis: Map.of(
-                          notification.reactionUsers.first.$2?.emojis ?? {},
-                        )..addAll(
-                            notification.renoteUsers.first?.emojis ?? {},
-                          ),
-                      ),
-                    ),
-                  if (hasReaction && !hasRenote)
-                    Expanded(
-                      child: SimpleMfmText(
-                        "${notification.reactionUsers.first.$2?.name ?? notification.reactionUsers.first.$2?.username}さんたちがリアクションしはったで",
-                        emojis:
+              Padding(
+                padding: const EdgeInsets.only(left: 5.0),
+                child: Row(
+                  children: [
+                    if (hasReaction && hasRenote)
+                      Expanded(
+                        child: SimpleMfmText(
+                          "${notification.reactionUsers.first.$2?.name ?? notification.reactionUsers.first.$2?.username}さんたちがリアクションしはって、${notification.renoteUsers.first?.name ?? notification.renoteUsers.first?.username}さんたちがリノートしはったで",
+                          emojis: Map.of(
                             notification.reactionUsers.first.$2?.emojis ?? {},
+                          )..addAll(
+                              notification.renoteUsers.first?.emojis ?? {},
+                            ),
+                        ),
                       ),
-                    ),
-                  if (hasRenote && !hasReaction)
-                    Expanded(
-                      child: SimpleMfmText(
-                        "${notification.renoteUsers.first?.name ?? notification.renoteUsers.first?.username}さんたちがリノートしはったで",
-                        emojis: notification.renoteUsers.first?.emojis ?? {},
+                    if (hasReaction && !hasRenote)
+                      Expanded(
+                        child: SimpleMfmText(
+                          "${notification.reactionUsers.first.$2?.name ?? notification.reactionUsers.first.$2?.username}さんたちがリアクションしはったで",
+                          emojis:
+                              notification.reactionUsers.first.$2?.emojis ?? {},
+                        ),
                       ),
-                    ),
-                  Text(notification.createdAt.differenceNow),
-                ],
+                    if (hasRenote && !hasReaction)
+                      Expanded(
+                        child: SimpleMfmText(
+                          "${notification.renoteUsers.first?.name ?? notification.renoteUsers.first?.username}さんたちがリノートしはったで",
+                          emojis: notification.renoteUsers.first?.emojis ?? {},
+                        ),
+                      ),
+                    Text(notification.createdAt.differenceNow),
+                  ],
+                ),
               ),
               if (notification.note != null)
                 misskey_note.MisskeyNote(
@@ -308,8 +310,7 @@ class NotificationItem extends ConsumerWidget {
 
       case MentionQuoteNotificationData():
         return Padding(
-          padding:
-              const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 10),
+          padding: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
           child: Column(
             children: [
               if (notification.note != null)
@@ -401,15 +402,17 @@ class NotificationItem extends ConsumerWidget {
         );
       case PollNotification():
         return Padding(
-          padding:
-              const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 10),
+          padding: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
           child: Column(
             children: [
-              Row(
-                children: [
-                  const Expanded(child: Text("投票が終わったみたいや")),
-                  Text(notification.createdAt.differenceNow),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Row(
+                  children: [
+                    const Expanded(child: Text("投票が終わったみたいや")),
+                    Text(notification.createdAt.differenceNow),
+                  ],
+                ),
               ),
               misskey_note.MisskeyNote(
                 note: notification.note!,
@@ -420,15 +423,17 @@ class NotificationItem extends ConsumerWidget {
         );
       case NoteNotification():
         return Padding(
-          padding:
-              const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 10),
+          padding: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (notification.note?.user != null)
-                SimpleMfmText(
-                  "${notification.note?.user.name ?? notification.note?.user.username}さんがノートしはったで",
-                  emojis: notification.note?.user.emojis ?? {},
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: SimpleMfmText(
+                    "${notification.note?.user.name ?? notification.note?.user.username}さんがノートしはったで",
+                    emojis: notification.note?.user.emojis ?? {},
+                  ),
                 ),
               if (notification.note != null)
                 misskey_note.MisskeyNote(note: notification.note!),

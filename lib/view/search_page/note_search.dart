@@ -210,7 +210,7 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
           ),
         const Expanded(
           child: Padding(
-            padding: EdgeInsets.only(left: 10, right: 10),
+            padding: EdgeInsets.only(right: 10),
             child: NoteSearchList(),
           ),
         ),
