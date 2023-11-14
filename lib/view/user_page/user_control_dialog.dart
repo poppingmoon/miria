@@ -145,7 +145,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
           onTap: () {
             Clipboard.setData(
               ClipboardData(
-                text: widget.response.name ?? widget.response.username,
+                text: user.name ?? user.username,
               ),
             );
             ScaffoldMessenger.of(context).showSnackBar(
@@ -158,7 +158,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
           leading: const Icon(Icons.alternate_email),
           title: const Text("ユーザー名をコピー"),
           onTap: () {
-            Clipboard.setData(ClipboardData(text: widget.response.acct));
+            Clipboard.setData(ClipboardData(text: user.acct));
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("コピーしました")),
             );
