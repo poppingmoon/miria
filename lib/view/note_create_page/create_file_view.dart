@@ -1,7 +1,6 @@
-import 'dart:typed_data';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/misskey_post_file.dart';
@@ -30,25 +29,29 @@ class CreateFileView extends ConsumerWidget {
       return response.data;
     }
 
-    final account = AccountScope.of(context);
-    final initialImage = switch (file) {
-      PostFile(:final file) => await file.readAsBytes(),
-      AlreadyPostedFile(:final file) => await getDriveImage(file.url),
-    };
-    if (initialImage == null) return;
-    if (!context.mounted) return;
+    if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS ||
+        defaultTargetPlatform == TargetPlatform.android) {
+      final account = AccountScope.of(context);
+      final initialImage = switch (file) {
+        PostFile(:final file) => await file.readAsBytes(),
+        AlreadyPostedFile(:final file) => await getDriveImage(file.url),
+      };
+      if (initialImage == null) return;
+      if (!context.mounted) return;
 
-    context.pushRoute<Uint8List?>(
-      PhotoEditRoute(
-        account: account,
-        initialImage: initialImage,
-        onSubmit: (result) {
-          ref
-              .read(noteCreateProvider(account).notifier)
-              .setFileContent(file, result);
-        },
-      ),
-    );
+      context.pushRoute<Uint8List?>(
+        PhotoEditRoute(
+          account: account,
+          initialImage: initialImage,
+          onSubmit: (result) {
+            ref
+                .read(noteCreateProvider(account).notifier)
+                .setFileContent(file, result);
+          },
+        ),
+      );
+    }
   }
 
   Future<void> detailTap(BuildContext context, WidgetRef ref) async {
