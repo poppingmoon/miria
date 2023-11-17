@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_font_picker/flutter_font_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/themes/built_in_color_themes.dart';
@@ -320,40 +320,42 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                       const SizedBox(height: 10),
                       const Text("フォント"),
                       ListTile(
+                        leading: fontName != null
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    fontName = null;
+                                    save();
+                                  });
+                                },
+                                icon: const Icon(Icons.close),
+                              )
+                            : null,
                         title: Text(fontName ?? "デフォルト"),
                         trailing: const Icon(Icons.keyboard_arrow_right),
-                        onTap: () async {
-                          final keys = GoogleFonts.asMap().keys;
-                          final result = await showModalBottomSheet<(String?,)>(
-                            context: context,
-                            builder: (context) => ListView.builder(
-                              itemCount: keys.length,
-                              itemBuilder: (context, index) => index == 0
-                                  ? ListTile(
-                                      title: const Text("デフォルト"),
-                                      onTap: () =>
-                                          Navigator.of(context).pop((null,)),
-                                    )
-                                  : ListTile(
-                                      title: Text(
-                                        keys.elementAt(index - 1),
-                                        style: GoogleFonts.getFont(
-                                          keys.elementAt(index - 1),
-                                        ),
-                                      ),
-                                      onTap: () => Navigator.of(context)
-                                          .pop((keys.elementAt(index - 1),)),
-                                    ),
+                        onTap: () => showDialog<void>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            content: SingleChildScrollView(
+                              child: SizedBox(
+                                width: double.maxFinite,
+                                child: FontPicker(
+                                  showInDialog: true,
+                                  showFontInfo: false,
+                                  showFontVariants: false,
+                                  initialFontFamily: fontName,
+                                  onFontChanged: (PickerFont font) {
+                                    setState(() {
+                                      fontName = font.fontFamily;
+                                      save();
+                                    });
+                                  },
+                                  lang: "ja",
+                                ),
+                              ),
                             ),
-                          );
-                          if (result == null) {
-                            return;
-                          }
-                          setState(() {
-                            fontName = result.$1;
-                            save();
-                          });
-                        },
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 10),
                       const Text("フォントサイズ"),
