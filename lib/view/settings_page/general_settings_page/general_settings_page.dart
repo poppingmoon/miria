@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_font_picker/flutter_font_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/providers.dart';
@@ -27,6 +28,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   TabPosition tabPosition = TabPosition.top;
   double textScaleFactor = 1.0;
   EmojiType emojiType = EmojiType.twemoji;
+  String? fontName;
 
   @override
   void initState() {
@@ -63,6 +65,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       tabPosition = settings.tabPosition;
       textScaleFactor = settings.textScaleFactor;
       emojiType = settings.emojiType;
+      fontName = settings.fontName;
     });
   }
 
@@ -81,6 +84,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
             tabPosition: tabPosition,
             emojiType: emojiType,
             textScaleFactor: textScaleFactor,
+            fontName: fontName,
           ),
         );
   }
@@ -310,9 +314,51 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "フォントサイズ",
+                        "フォント",
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
+                      const SizedBox(height: 10),
+                      const Text("フォント"),
+                      ListTile(
+                        leading: fontName != null
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    fontName = null;
+                                    save();
+                                  });
+                                },
+                                icon: const Icon(Icons.close),
+                              )
+                            : null,
+                        title: Text(fontName ?? "デフォルト"),
+                        trailing: const Icon(Icons.keyboard_arrow_right),
+                        onTap: () => showDialog<void>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            content: SingleChildScrollView(
+                              child: SizedBox(
+                                width: double.maxFinite,
+                                child: FontPicker(
+                                  showInDialog: true,
+                                  showFontInfo: false,
+                                  showFontVariants: false,
+                                  initialFontFamily: fontName,
+                                  onFontChanged: (PickerFont font) {
+                                    setState(() {
+                                      fontName = font.fontFamily;
+                                      save();
+                                    });
+                                  },
+                                  lang: "ja",
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text("フォントサイズ"),
                       Slider(
                         value: textScaleFactor,
                         min: 0.5,
