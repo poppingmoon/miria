@@ -57,17 +57,14 @@ class DrivePage extends ConsumerWidget {
     );
     final isSelecting = tapToSelect || state.selectedFiles.isNotEmpty;
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: currentFolder == null && state.selectedFiles.isEmpty,
+      onPopInvoked: (_) {
         if (state.selectedFiles.isNotEmpty) {
           ref.read(drivePageNotifierProvider.notifier).deselectAll();
-          return false;
-        }
-        if (currentFolder != null) {
+        } else if (currentFolder != null) {
           ref.read(drivePageNotifierProvider.notifier).pop();
-          return false;
         }
-        return true;
       },
       child: Scaffold(
         appBar: AppBar(
