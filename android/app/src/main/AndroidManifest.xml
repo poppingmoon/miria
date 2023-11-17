@@ -11,11 +11,12 @@
             <data android:scheme="https" />
         </intent>
     </queries>
-   <application
+    <application
         android:label="miria"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
-        android:requestLegacyExternalStorage="true">
+        android:requestLegacyExternalStorage="true"
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
