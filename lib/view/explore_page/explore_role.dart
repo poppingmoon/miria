@@ -41,8 +41,8 @@ class RoleListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconHeight = Theme.of(context).textTheme.bodyMedium!.fontSize! *
-        MediaQuery.of(context).textScaleFactor;
+    final iconHeight = MediaQuery.textScalerOf(context)
+        .scale(Theme.of(context).textTheme.bodyMedium!.fontSize!);
 
     return ListTile(
       onTap: () {
@@ -79,7 +79,6 @@ class RoleListItem extends StatelessWidget {
             TextSpan(text: item.name),
           ],
         ),
-        textScaleFactor: MediaQuery.of(context).textScaleFactor,
       ),
       subtitle: Text(item.description ?? ""),
       trailing: Text.rich(
@@ -89,7 +88,6 @@ class RoleListItem extends StatelessWidget {
             TextSpan(text: "人", style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
-        textScaleFactor: MediaQuery.of(context).textScaleFactor,
       ),
     );
   }
