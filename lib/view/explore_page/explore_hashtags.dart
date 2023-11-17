@@ -129,7 +129,6 @@ class Hashtag extends StatelessWidget {
             TextSpan(text: "人", style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
-        textScaleFactor: MediaQuery.of(context).textScaleFactor,
       ),
     );
   }

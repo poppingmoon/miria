@@ -160,12 +160,13 @@ class NoteVoteState extends ConsumerState<NoteVote> {
                               alignment: PlaceholderAlignment.middle,
                               child: Icon(
                                 Icons.check,
-                                size: (Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.fontSize ??
-                                        22) *
-                                    MediaQuery.of(context).textScaleFactor,
+                                size: MediaQuery.textScalerOf(context).scale(
+                                  Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.fontSize ??
+                                      22,
+                                ),
                                 color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium

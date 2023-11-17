@@ -85,7 +85,7 @@ class AvatarIconState extends State<AvatarIcon> {
 
   @override
   Widget build(BuildContext context) {
-    final baseHeight = widget.height * MediaQuery.of(context).textScaleFactor;
+    final baseHeight = MediaQuery.textScalerOf(context).scale(widget.height);
 
     return GestureDetector(
       onTap: widget.onTap ??
@@ -100,8 +100,8 @@ class AvatarIconState extends State<AvatarIcon> {
       child: Padding(
         padding: EdgeInsets.only(
           top: 3,
-          left: 15 * MediaQuery.of(context).textScaleFactor,
-          right: 5 * MediaQuery.of(context).textScaleFactor,
+          left: MediaQuery.textScalerOf(context).scale(15),
+          right: MediaQuery.textScalerOf(context).scale(5),
         ),
         child: Stack(
           children: [
@@ -148,9 +148,7 @@ class AvatarIconState extends State<AvatarIcon> {
                 ),
               ),
             ClipRRect(
-              borderRadius: BorderRadius.circular(
-                widget.height * MediaQuery.of(context).textScaleFactor,
-              ),
+              borderRadius: BorderRadius.circular(baseHeight),
               child: SizedBox(
                 width: baseHeight,
                 height: baseHeight,
