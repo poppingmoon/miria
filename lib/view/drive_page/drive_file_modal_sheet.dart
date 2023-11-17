@@ -154,7 +154,7 @@ class DriveFileModalSheet extends ConsumerWidget {
           onTap: () => editFile(ref).expectFailure(context),
         ),
         if (file.type.startsWith("image") &&
-            (Platform.isAndroid || Platform.isIOS))
+            (Platform.isAndroid || Platform.isIOS || Platform.isMacOS))
           ListTile(
             leading: const Icon(Icons.crop),
             title: const Text("画像を編集"),
