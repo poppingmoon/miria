@@ -183,12 +183,12 @@ class EmojiButtonState extends ConsumerState<EmojiButton> {
           },
           child: isVisibility
               ? SizedBox(
-                  height: 32 * MediaQuery.of(context).textScaleFactor,
+                  height: MediaQuery.textScalerOf(context).scale(32),
                   child: CustomEmoji(emojiData: widget.emoji),
                 )
               : SizedBox(
-                  width: 32 * MediaQuery.of(context).textScaleFactor,
-                  height: 32 * MediaQuery.of(context).textScaleFactor,
+                  width: MediaQuery.textScalerOf(context).scale(32),
+                  height: MediaQuery.textScalerOf(context).scale(32),
                 ),
         ),
       ),

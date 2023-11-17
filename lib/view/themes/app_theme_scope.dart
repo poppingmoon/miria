@@ -155,6 +155,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
       primaryColor: theme.primary,
       primaryColorDark: theme.primaryDarken,
       primaryColorLight: theme.primaryLighten,
+      dividerColor: theme.divider,
       appBarTheme: AppBarTheme(
         elevation: 0,
         titleSpacing: 0,
@@ -172,7 +173,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
         labelColor: Colors.white,
         labelStyle: textTheme.titleSmall,
         unselectedLabelStyle:
-            textTheme.titleSmall?.copyWith(color: textTheme.bodySmall?.color),
+            textTheme.titleSmall?.copyWith(color: Colors.white60),
         indicator: UnderlineTabIndicator(
           borderSide: BorderSide(color: theme.primary),
         ),
@@ -330,8 +331,11 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
         child: MediaQuery(
           data: MediaQuery.of(context).copyWith(
             alwaysUse24HourFormat: true,
-            textScaleFactor:
-                MediaQuery.textScaleFactorOf(context) * textScaleFactor,
+            textScaler: textScaleFactor != 1
+                ? TextScaler.linear(
+                    MediaQuery.textScalerOf(context).scale(textScaleFactor),
+                  )
+                : null,
           ),
           child: widget.child,
         ),

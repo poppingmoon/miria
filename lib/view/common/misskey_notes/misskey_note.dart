@@ -260,8 +260,9 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
 
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(
-        textScaleFactor: MediaQuery.of(context).textScaleFactor *
-            (widget.recursive > 1 ? 0.7 : 1),
+        textScaler: widget.recursive > 1
+            ? TextScaler.linear(MediaQuery.textScalerOf(context).scale(0.7))
+            : null,
       ),
       child: RepaintBoundary(
         key: globalKey,
@@ -269,8 +270,8 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
           child: Container(
             constraints: const BoxConstraints(maxWidth: 800),
             padding: EdgeInsets.only(
-              top: 5 * MediaQuery.of(context).textScaleFactor,
-              bottom: 5 * MediaQuery.of(context).textScaleFactor,
+              top: MediaQuery.textScalerOf(context).scale(5),
+              bottom: MediaQuery.textScalerOf(context).scale(5),
             ),
             decoration: widget.isDisplayBorder
                 ? BoxDecoration(
@@ -525,9 +526,9 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                             if (!isReactionedRenote)
                               Wrap(
                                 spacing:
-                                    5 * MediaQuery.of(context).textScaleFactor,
+                                    MediaQuery.textScalerOf(context).scale(5),
                                 runSpacing:
-                                    5 * MediaQuery.of(context).textScaleFactor,
+                                    MediaQuery.textScalerOf(context).scale(5),
                                 children: [
                                   for (final reaction
                                       in displayNote.reactions.entries
@@ -607,9 +608,8 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                           .expectFailure(context),
                                       icon: Icon(
                                         Icons.u_turn_left,
-                                        size: 16 *
-                                            MediaQuery.of(context)
-                                                .textScaleFactor,
+                                        size: MediaQuery.textScalerOf(context)
+                                            .scale(16),
                                         color: Theme.of(context)
                                             .textTheme
                                             .bodySmall
@@ -643,9 +643,8 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                       ),
                                       icon: Icon(
                                         Icons.reply,
-                                        size: 16 *
-                                            MediaQuery.of(context)
-                                                .textScaleFactor,
+                                        size: MediaQuery.textScalerOf(context)
+                                            .scale(16),
                                         color: Theme.of(context)
                                             .textTheme
                                             .bodySmall
@@ -690,9 +689,8 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                       ),
                                       icon: Icon(
                                         Icons.more_horiz,
-                                        size: 16 *
-                                            MediaQuery.of(context)
-                                                .textScaleFactor,
+                                        size: MediaQuery.textScalerOf(context)
+                                            .scale(16),
                                         color: Theme.of(context)
                                             .textTheme
                                             .bodySmall
@@ -1064,7 +1062,7 @@ class RenoteButton extends StatelessWidget {
             account.userId == displayNote.user.username)) {
       return Icon(
         Icons.block,
-        size: 16 * MediaQuery.of(context).textScaleFactor,
+        size: MediaQuery.textScalerOf(context).scale(16),
         color: Theme.of(context).textTheme.bodySmall?.color,
       );
     }
@@ -1084,7 +1082,7 @@ class RenoteButton extends StatelessWidget {
       ),
       icon: Icon(
         Icons.repeat_rounded,
-        size: 16 * MediaQuery.of(context).textScaleFactor,
+        size: MediaQuery.textScalerOf(context).scale(16),
         color: Theme.of(context).textTheme.bodySmall?.color,
       ),
       label: Text(
@@ -1136,7 +1134,7 @@ class FooterReactionButton extends StatelessWidget {
       ),
       icon: Icon(
         icon,
-        size: 16 * MediaQuery.of(context).textScaleFactor,
+        size: MediaQuery.textScalerOf(context).scale(16),
         color: Theme.of(context).textTheme.bodySmall?.color,
       ),
     );

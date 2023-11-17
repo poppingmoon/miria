@@ -151,8 +151,8 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
           ConstrainedBox(
             constraints: BoxConstraints(
               maxWidth: min(MediaQuery.of(context).size.width, 800) * 0.75,
-              minHeight: 24 * MediaQuery.of(context).textScaleFactor,
-              maxHeight: 24 * MediaQuery.of(context).textScaleFactor,
+              minHeight: MediaQuery.textScalerOf(context).scale(24),
+              maxHeight: MediaQuery.textScalerOf(context).scale(24),
             ),
             child: CustomEmoji(
               emojiData: widget.emojiData,
