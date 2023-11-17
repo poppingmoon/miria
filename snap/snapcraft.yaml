@@ -1,7 +1,7 @@
 name: miria # you probably want to 'snapcraft register <name>'
 title: Miria
 type: app
-summary: Misskey Client for Mobile App # 79文字まで。
+summary: Misskey Client App # 79文字まで。
 description: |
   Miriaは分散型SNS「Misskey」のクライアントアプリです。
 
@@ -17,9 +17,10 @@ description: |
 
   制限事項
 
-  * このアプリケーションは新規登録およびアカウント削除の機能を提供していません。新規登録や削除が必要な場合、登録や削除に必要な要件をそれぞれのサーバーへご確認ください。
-  * このアプリケーションはサーバーを提供していません。このアプリと一緒に特定のサーバーを付随して提供していないので、このアプリ単独で利用することはできません。
+  * このアプリでは新規登録およびアカウント削除の機能を提供していません。新規登録や削除が必要な場合、登録や削除に必要な要件をそれぞれのサーバーへご確認ください。
+  * このアプリではサーバーを提供していません。このアプリと一緒に特定のサーバーを付随して提供していないので、このアプリ単独で利用することはできません。
   * このアプリはMisskey v12以前のバージョンや、Firefish, Calckeyなどのフォークされたアプリケーションに対応していません。
+  * モバイル向けに開発されたアプリであることから、一部機能はデスクトップで動作しません。
 
   注意：インストール後、パスワード管理サービスにアクセスできるように、下記のコマンドを実行してください。
 
@@ -28,26 +29,27 @@ license: AGPL-3.0
 website: https://shiosyakeyakini.info/miria_web/index.html
 source-code: https://github.com/shiosyakeyakini-info/miria
 issues: https://github.com/shiosyakeyakini-info/miria/issues
-donation: https://shiosyakeyakini.fanbox.cc
 icon: assets/images/icon.png
 adopt-info: miria
-base: core22
+base: core22 # the base snap is the execution environment for this snap
 grade: stable
 confinement: strict
+compression: lzo
 architectures:
   - amd64
+  - arm64
 
 apps:
   miria:
     command: miria
     extensions: [gnome]
     plugs:
-      - network
-      - password-manager-service
       - home
-      - removable-media
+      - unity7
+      - network
       - audio-playback
-      - camera
+      - removable-media
+      - password-manager-service
 
 parts:
   miria:
@@ -59,11 +61,12 @@ parts:
       craftctl set version=$(cat pubspec.yaml | grep "version[:]" | cut -d ' ' -f 2)
     flutter-target: lib/main.dart
     build-packages:
-      - libsecret-1-dev
+      - curl
       - libmpv-dev
+      - libsecret-1-dev
     stage-packages:
-      - libsecret-1-0
       - libmpv1
+      - libsecret-1-0
   # Integrate custom dialogs in your snap - doc - snapcraft.io
   # https://forum.snapcraft.io/t/integrate-custom-dialogs-in-your-snap/10825
   zenity:
