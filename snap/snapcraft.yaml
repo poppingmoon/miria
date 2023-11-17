@@ -1,0 +1,83 @@
+name: miria # you probably want to 'snapcraft register <name>'
+title: Miria
+type: app
+summary: Misskey Client App # 79文字まで。
+description: |
+  Miriaは分散型SNS「Misskey」のクライアントアプリです。
+
+  機能
+
+  * タイムラインの閲覧やノートの投稿、「アンテナ」「チャンネル」「みつける」などの基本的な機能を利用することができます。
+  * 複数アカウント、複数サーバーに対応しています。(※2個目以降のアカウントを追加したあとは、アカウントに紐づくタブを追加する必要があります。)
+  * 一部のMFMに対応しています。
+  * タブにカスタム絵文字を設定することができます。
+  * リアクションピッカーの精度が高く、ひらがなでも検索しやすくなっています。
+  * 投稿欄でMFMの入力補完をすることができ、MFMの構文やカスタム絵文字をスムーズに入力することができます。
+  * 配色を複数のパターンから切り替えることができます。
+
+  制限事項
+
+  * このアプリでは新規登録およびアカウント削除の機能を提供していません。新規登録や削除が必要な場合、登録や削除に必要な要件をそれぞれのサーバーへご確認ください。
+  * このアプリではサーバーを提供していません。このアプリと一緒に特定のサーバーを付随して提供していないので、このアプリ単独で利用することはできません。
+  * このアプリはMisskey v12以前のバージョンや、Firefish, Calckeyなどのフォークされたアプリケーションに対応していません。
+  * モバイル向けに開発されたアプリであることから、一部機能はデスクトップで動作しません。
+
+  注意：インストール後、パスワード管理サービスにアクセスできるように、下記のコマンドを実行してください。
+
+  `sudo snap connect miria:password-manager-service`
+license: AGPL-3.0
+website: https://shiosyakeyakini.info/miria_web/index.html
+source-code: https://github.com/shiosyakeyakini-info/miria
+issues: https://github.com/shiosyakeyakini-info/miria/issues
+icon: assets/images/icon.png
+adopt-info: miria
+base: core22 # the base snap is the execution environment for this snap
+grade: stable
+confinement: strict 
+compression: lzo
+architectures:
+  - amd64
+  - arm64
+
+apps:
+  miria:
+    command: miria
+    extensions: [gnome]
+    plugs:
+      - home
+      - unity7
+      - network
+      - audio-playback
+      - removable-media
+      - password-manager-service
+
+parts:
+  miria:
+    # See 'snapcraft plugins'
+    source: .
+    plugin: flutter
+    override-pull: |
+      craftctl default
+      craftctl set version=$(cat pubspec.yaml | grep "version[:]" | cut -d ' ' -f 2)
+    flutter-target: lib/main.dart
+    build-packages:
+      - curl
+      - libmpv-dev
+      - libsecret-1-dev
+    stage-packages:
+      - libmpv1
+      - libsecret-1-0
+  # Integrate custom dialogs in your snap - doc - snapcraft.io
+  # https://forum.snapcraft.io/t/integrate-custom-dialogs-in-your-snap/10825
+  zenity:
+    plugin: nil
+    stage-packages:
+      - zenity
+    prime:
+      - usr/bin/zenity
+      - usr/share/zenity/*
+
+layout:
+  # Fix resource relocation problem of zenity part
+  /usr/share/zenity:
+    symlink: $SNAP/usr/share/zenity
