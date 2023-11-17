@@ -3202,6 +3202,7 @@ void main() {
 
         await tester.enterText(find.byType(TextField).at(3), "投票2");
         await tester.enterText(find.byType(TextField).at(4), "投票3");
+        await tester.pumpAndSettle();
 
         // 投票2を削除
         await tester.tap(find.byIcon(Icons.close).at(2));
@@ -3406,7 +3407,7 @@ void main() {
         await tester.tap(find.byType(VoteUntilDate));
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byIcon(Icons.edit));
+        await tester.tap(find.byIcon(Icons.edit_outlined));
         await tester.pumpAndSettle();
 
         await tester.enterText(
@@ -3493,7 +3494,7 @@ void main() {
         await tester.tap(find.byType(VoteUntilDate));
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byIcon(Icons.edit));
+        await tester.tap(find.byIcon(Icons.edit_outlined));
         await tester.pumpAndSettle();
 
         await tester.enterText(
