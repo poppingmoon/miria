@@ -42,6 +42,7 @@ class TimelinePage extends ConsumerWidget {
 
     return Scaffold(
       key: scaffoldKey,
+      appBar: AppBar(toolbarHeight: 0),
       body: SafeArea(
         child: Column(
           children: [
