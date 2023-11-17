@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
@@ -209,11 +210,19 @@ class LinkPreviewTile extends ConsumerWidget {
                 if (thumbnail == null)
                   SizedBox(height: imageSize)
                 else
-                  CachedNetworkImage(
-                    imageUrl: thumbnail,
-                    height: imageSize,
-                    width: imageSize,
-                    fit: BoxFit.cover,
+                  ImageFiltered(
+                    enabled: summalyResult.sensitive ?? false,
+                    imageFilter: ImageFilter.blur(
+                      sigmaX: 5,
+                      sigmaY: 5,
+                      tileMode: TileMode.decal,
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: thumbnail,
+                      height: imageSize,
+                      width: imageSize,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 Expanded(
                   child: Padding(
