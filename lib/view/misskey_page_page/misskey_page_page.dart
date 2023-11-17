@@ -252,8 +252,8 @@ class PageLikeButtonState extends ConsumerState<PageLikeButton> {
         }.expectFailure(context),
         icon: Icon(
           Icons.favorite,
-          size: (Theme.of(context).textTheme.bodyMedium?.fontSize ?? 22) *
-              MediaQuery.of(context).textScaleFactor,
+          size: MediaQuery.textScalerOf(context)
+              .scale(Theme.of(context).textTheme.bodyMedium?.fontSize ?? 22),
         ),
         label: Text(likeCount.format()),
       );
@@ -275,8 +275,8 @@ class PageLikeButtonState extends ConsumerState<PageLikeButton> {
         }.expectFailure(context),
         icon: Icon(
           Icons.favorite,
-          size: (Theme.of(context).textTheme.bodyMedium?.fontSize ?? 22) *
-              MediaQuery.of(context).textScaleFactor,
+          size: MediaQuery.textScalerOf(context)
+              .scale(Theme.of(context).textTheme.bodyMedium?.fontSize ?? 22),
         ),
         label: Text(likeCount.format()),
       );

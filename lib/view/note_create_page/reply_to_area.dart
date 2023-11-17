@@ -35,9 +35,9 @@ class ReplyToArea extends ConsumerWidget {
               children: [
                 AvatarIcon(
                   user: replyTo,
-                  height:
-                      (Theme.of(context).textTheme.bodySmall?.fontSize ?? 22) *
-                          MediaQuery.of(context).textScaleFactor,
+                  height: MediaQuery.textScalerOf(context).scale(
+                    Theme.of(context).textTheme.bodySmall?.fontSize ?? 22,
+                  ),
                 ),
                 const Padding(padding: EdgeInsets.only(left: 5)),
                 Text(
@@ -54,9 +54,9 @@ class ReplyToArea extends ConsumerWidget {
                       .deleteReplyUser(replyTo),
                   icon: Icon(
                     Icons.remove,
-                    size: (Theme.of(context).textTheme.bodySmall?.fontSize ??
-                            22) *
-                        MediaQuery.of(context).textScaleFactor,
+                    size: MediaQuery.textScalerOf(context).scale(
+                      Theme.of(context).textTheme.bodySmall?.fontSize ?? 22,
+                    ),
                   ),
                   constraints: const BoxConstraints(),
                   padding: EdgeInsets.zero,
@@ -84,8 +84,8 @@ class ReplyToArea extends ConsumerWidget {
             ),
             icon: Icon(
               Icons.add,
-              size: (Theme.of(context).textTheme.bodySmall?.fontSize ?? 22) *
-                  MediaQuery.of(context).textScaleFactor,
+              size: MediaQuery.textScalerOf(context)
+                  .scale(Theme.of(context).textTheme.bodySmall?.fontSize ?? 22),
             ),
           ),
         ],

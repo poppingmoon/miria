@@ -100,7 +100,7 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
           ref.read(federationPageFederationDataProvider.notifier).state =
               FederationData(
             bannerUrl: (misskeyMeta?.bannerUrl)?.toString(),
-            faviconUrl: (federation.faviconUrl)?.toString(),
+            faviconUrl: federation.faviconUrl?.toString(),
             tosUrl: (misskeyMeta?.tosUrl)?.toString(),
             name: misskeyMeta?.name ?? federation.name,
             description: misskeyMeta?.description ?? federation.description,

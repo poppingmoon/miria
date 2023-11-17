@@ -21,8 +21,8 @@ class NetworkImageView extends ConsumerWidget {
   final ImageType type;
   final ImageLoadingBuilder? loadingBuilder;
   final ImageErrorWidgetBuilder? errorBuilder;
-  final double? height;
   final double? width;
+  final double? height;
   final BoxFit? fit;
 
   const NetworkImageView({
@@ -41,6 +41,7 @@ class NetworkImageView extends ConsumerWidget {
     if (url.endsWith(".svg")) {
       return SvgPicture.network(
         url,
+        width: width,
         height: height,
         fit: fit ?? BoxFit.contain,
         placeholderBuilder: (context) =>
