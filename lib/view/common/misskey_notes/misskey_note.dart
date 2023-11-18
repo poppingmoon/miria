@@ -183,9 +183,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
       return SizedBox(
         width: double.infinity,
         child: GestureDetector(
-          onTap: () => ref
-              .read(notesProvider(AccountScope.of(context)))
-              .updateNoteStatus(
+          onTap: () => ref.read(notesProvider(account)).updateNoteStatus(
                 displayNote.id,
                 (status) => status.copyWith(isMuteOpened: true),
               ),
