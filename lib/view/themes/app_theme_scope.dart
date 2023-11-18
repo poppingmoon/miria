@@ -21,6 +21,7 @@ class AppThemeScope extends ConsumerStatefulWidget {
 class AppThemeScopeState extends ConsumerState<AppThemeScope> {
   AppThemeData buildDarkAppThemeData(BuildContext context, ColorTheme theme) {
     return AppThemeData(
+      colorTheme: theme,
       isDarkMode: theme.isDarkTheme,
       noteTextStyle: const InputDecoration(),
       reactionButtonStyle: ElevatedButton.styleFrom(
@@ -37,7 +38,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
       serifStyle:
           TextStyle(fontFamilyFallback: resolveFontFamilySerifCallback()),
       reactionButtonBackgroundColor: theme.buttonBackground,
-      reactionButtonMeReactedColor: theme.primary,
+      reactionButtonMeReactedColor: theme.accentedBackground,
       renoteBorderColor: theme.renote,
       renoteBorderRadius: const Radius.circular(20),
       renoteStrokeWidth: 1.5,
