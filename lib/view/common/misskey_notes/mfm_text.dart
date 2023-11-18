@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:highlighting/languages/all.dart';
 import 'package:mfm_parser/mfm_parser.dart';
 import 'package:mfm_renderer/mfm_renderer.dart';
+import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/model/misskey_emoji_data.dart';
 import 'package:miria/providers.dart';
@@ -130,6 +131,27 @@ class MfmTextState extends ConsumerState<MfmText> {
         code: code,
         language: lang,
       ),
+      unixTimeBuilder: (context, unixtime, style) {
+        return WidgetSpan(
+          alignment: PlaceholderAlignment.middle,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Theme.of(context).dividerColor),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.only(left: 5, right: 5),
+            margin: const EdgeInsets.only(left: 5, right: 5),
+            child: Text.rich(
+              textScaler: TextScaler.noScaling,
+              TextSpan(
+                style: style,
+                text:
+                    "${unixtime?.formatUntilSeconds ?? "？？？"} (${unixtime?.differenceNowDetail ?? "？？？"})",
+              ),
+            ),
+          ),
+        );
+      },
       serifStyle: AppTheme.of(context).serifStyle,
       linkTap: (src) => const LinkNavigator()
           .onTapLink(context, ref, src, widget.host)
