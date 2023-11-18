@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mfm_parser/mfm_parser.dart' as parser;
 import 'package:miria/const.dart';
 import 'package:miria/extensions/date_time_extension.dart';
+import 'package:miria/extensions/note_extension.dart';
 import 'package:miria/extensions/note_visibility_extension.dart';
 import 'package:miria/extensions/user_extension.dart';
 import 'package:miria/model/account.dart';
@@ -248,11 +249,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
     final renoteId = widget.note.renote?.id;
     final Note? renoteNote;
 
-    final bool isEmptyRenote = renoteId != null &&
-        latestActualNote?.text == null &&
-        latestActualNote?.cw == null &&
-        (latestActualNote?.files.isEmpty ?? true) &&
-        latestActualNote?.poll == null;
+    final isEmptyRenote = latestActualNote?.isEmptyRenote == true;
 
     if (isEmptyRenote) {
       renoteNote = ref.watch(
@@ -292,11 +289,11 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
           onTap: () => ref
               .read(notesProvider(AccountScope.of(context)))
               .updateNoteStatus(
-                displayNote.id,
+                widget.note.id,
                 (status) => status.copyWith(isMuteOpened: true),
               ),
           child: Padding(
-            padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+            padding: const EdgeInsets.only(top: 5.0, bottom: 5.0, left: 10.0),
             child: Text(
               "${displayNote.user.name ?? displayNote.user.username}が何か言うとるわ",
               style: Theme.of(context).textTheme.bodySmall,
