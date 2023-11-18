@@ -7,7 +7,6 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mfm_parser/mfm_parser.dart' as parser;
-import 'package:miria/const.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/extensions/note_visibility_extension.dart';
 import 'package:miria/extensions/user_extension.dart';
@@ -870,12 +869,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
           .notes
           .reactions
           .delete(NotesReactionsDeleteRequest(noteId: displayNote.id));
-      if (account.host == "misskey.io") {
-        await Future<void>.delayed(
-          const Duration(milliseconds: misskeyIOReactionDelay),
-        );
-      }
-      await ref.read(notesProvider(account)).refresh(displayNote.id);
+      ref.read(notesProvider(account)).removeMyReaction(displayNote.id);
       return;
     }
     final misskey = ref.read(misskeyProvider(account));
@@ -899,18 +893,18 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
     }
 
     if (selectedEmoji == null) return;
+    final reactionString = switch (selectedEmoji) {
+      UnicodeEmojiData(:final char) => char,
+      CustomEmojiData(:final baseName) => ":$baseName@.:",
+      NotEmojiData(:final name) => name,
+    };
     await misskey.notes.reactions.create(
       NotesReactionsCreateRequest(
         noteId: displayNote.id,
-        reaction: ":${selectedEmoji.baseName}:",
+        reaction: reactionString,
       ),
     );
-    if (account.host == "misskey.io") {
-      await Future<void>.delayed(
-        const Duration(milliseconds: misskeyIOReactionDelay),
-      );
-    }
-    await note.refresh(displayNote.id);
+    note.addMyReaction(displayNote.id, reactionString);
   }
 }
 
