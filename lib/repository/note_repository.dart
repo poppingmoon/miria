@@ -174,7 +174,6 @@ class NoteRepository extends ChangeNotifier {
     registerNote(
       registeredNote.copyWith(
         reactions: reactions,
-        // https://github.com/rrousselGit/freezed/issues/906
         myReaction: isMyReaction ? "" : registeredNote.myReaction,
       ),
     );
