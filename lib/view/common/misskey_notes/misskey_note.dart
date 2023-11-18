@@ -184,11 +184,11 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
         width: double.infinity,
         child: GestureDetector(
           onTap: () => ref.read(notesProvider(account)).updateNoteStatus(
-                displayNote.id,
+                widget.note.id,
                 (status) => status.copyWith(isMuteOpened: true),
               ),
           child: Padding(
-            padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+            padding: const EdgeInsets.only(top: 5.0, bottom: 5.0, left: 10.0),
             child: Text(
               "${displayNote.user.name ?? displayNote.user.username}が何か言うとるわ",
               style: Theme.of(context).textTheme.bodySmall,

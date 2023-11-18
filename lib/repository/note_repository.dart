@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:miria/extensions/note_extension.dart';
 import 'package:miria/model/account.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
@@ -75,16 +76,25 @@ class NoteRepository extends ChangeNotifier {
       isReactionedRenote: false,
       isLongVisibleInitialized: false,
       isIncludeMuteWord: muteWordContents.any(
-            (e) => e.every(
-              (e2) =>
-                  note.text?.contains(e2) == true ||
-                  note.cw?.contains(e2) == true,
-            ),
+            (e) => e.every((e2) {
+              if (note.isEmptyRenote) {
+                return note.renote?.text?.contains(e2) == true ||
+                    note.cw?.contains(e2) == true;
+              } else {
+                return note.text?.contains(e2) == true ||
+                    note.cw?.contains(e2) == true;
+              }
+            }),
           ) ||
-          muteWordRegExps.any(
-            (e) =>
-                note.text?.contains(e) == true || note.cw?.contains(e) == true,
-          ),
+          muteWordRegExps.any((e) {
+            if (note.isEmptyRenote) {
+              return note.renote?.text?.contains(e) == true ||
+                  note.cw?.contains(e) == true;
+            } else {
+              return note.text?.contains(e) == true ||
+                  note.cw?.contains(e) == true;
+            }
+          }),
       isMuteOpened: false,
     );
     final renote = note.renote;
