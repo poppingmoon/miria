@@ -20,13 +20,14 @@ class NoteStatus with _$NoteStatus {
 
 class NoteRepository extends ChangeNotifier {
   final Misskey misskey;
+  final Account account;
   final Map<String, Note> _notes = {};
   final Map<String, NoteStatus> _noteStatuses = {};
 
   final List<List<String>> muteWordContents = [];
   final List<RegExp> muteWordRegExps = [];
 
-  NoteRepository(this.misskey, Account account) {
+  NoteRepository(this.misskey, this.account) {
     updateMute(account.i.mutedWords);
   }
 
@@ -120,6 +121,86 @@ class NoteRepository extends ChangeNotifier {
     Future(() {
       notifyListeners();
     });
+  }
+
+  void addReaction(String noteId, TimelineReacted reaction) {
+    final registeredNote = _notes[noteId];
+    if (registeredNote == null) return;
+
+    final reactions = Map.of(registeredNote.reactions);
+    reactions[reaction.reaction] = (reactions[reaction.reaction] ?? 0) + 1;
+    final emoji = reaction.emoji;
+    final reactionEmojis = Map.of(registeredNote.reactionEmojis);
+    if (emoji != null && !reaction.reaction.endsWith("@.:")) {
+      reactionEmojis[emoji.name] = emoji.url;
+    }
+
+    registerNote(
+      registeredNote.copyWith(
+        reactions: reactions,
+        reactionEmojis: reactionEmojis,
+        myReaction: reaction.userId == account.i.id
+            ? (emoji?.name != null ? ":${emoji?.name}:" : null)
+            : registeredNote.myReaction,
+      ),
+    );
+  }
+
+  void removeReaction(String noteId, TimelineReacted reaction) {
+    final registeredNote = _notes[noteId];
+    if (registeredNote == null) return;
+
+    final reactions = Map.of(registeredNote.reactions);
+    final reactionCount = reactions[reaction.reaction];
+    if (reactionCount == null) {
+      return;
+    }
+    if (reactionCount <= 1) {
+      reactions.remove(reaction.reaction);
+    } else {
+      reactions[reaction.reaction] = reactionCount - 1;
+    }
+
+    registerNote(
+      registeredNote.copyWith(
+        reactions: reactions,
+        // https://github.com/rrousselGit/freezed/issues/906
+        myReaction:
+            reaction.userId == account.i.id ? "" : registeredNote.myReaction,
+      ),
+    );
+  }
+
+  void addVote(String noteId, TimelineVoted vote) {
+    final registeredNote = _notes[noteId];
+    if (registeredNote == null) return;
+
+    final poll = registeredNote.poll;
+    if (poll == null) return;
+
+    final choices = poll.choices.toList();
+    choices[vote.choice] = choices[vote.choice].copyWith(
+      votes: choices[vote.choice].votes + 1,
+    );
+
+    registerNote(
+      registeredNote.copyWith(
+        poll: poll.copyWith(choices: choices),
+      ),
+    );
+  }
+
+  void updateNote(String noteId, NoteEdited note) {
+    final registeredNote = _notes[noteId];
+    if (registeredNote == null) return;
+
+    registerNote(
+      registeredNote.copyWith(
+        text: note.text,
+        cw: note.cw,
+        updatedAt: DateTime.now(),
+      ),
+    );
   }
 
   Future<void> refresh(String noteId) async {

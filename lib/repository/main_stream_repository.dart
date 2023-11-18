@@ -105,7 +105,6 @@ class MainStreamRepository extends ChangeNotifier {
       );
       socketController?.disconnect();
       socketController = null;
-      await misskey.streamingService.restart();
       await connect();
     } finally {
       isReconnecting = false;
