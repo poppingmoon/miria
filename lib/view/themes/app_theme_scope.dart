@@ -152,7 +152,6 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
         primary: theme.primary,
       ),
       brightness: theme.isDarkTheme ? Brightness.dark : Brightness.light,
-      useMaterial3: false,
       primaryColor: theme.primary,
       primaryColorDark: theme.primaryDarken,
       primaryColorLight: theme.primaryLighten,
