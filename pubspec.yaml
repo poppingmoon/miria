@@ -46,7 +46,7 @@ dependencies:
   mfm_renderer:
     git:
       url: https://github.com/poppingmoon/mfm_renderer.git
-      ref: bd08147905c7063427e49d27aaea4c1c8f17cb59
+      ref: b0075ff4d99be3c3cf66c6e1323646b1f1e8613c
   mime: ^1.0.4
   misskey_dart:
     git:
