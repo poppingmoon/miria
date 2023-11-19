@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:miria/const.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/misskey_emoji_data.dart';
 import 'package:miria/providers.dart';
@@ -82,13 +81,7 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
               .notes
               .reactions
               .delete(NotesReactionsDeleteRequest(noteId: widget.noteId));
-          if (account.host == "misskey.io") {
-            await Future<void>.delayed(
-              const Duration(milliseconds: misskeyIOReactionDelay),
-            );
-          }
-
-          await ref.read(notesProvider(account)).refresh(widget.noteId);
+          ref.read(notesProvider(account)).removeMyReaction(widget.noteId);
 
           return;
         }
@@ -103,7 +96,7 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
             reactionString = emojiData.char;
           case CustomEmojiData():
             if (!emojiData.isCurrentServer) return;
-            reactionString = ":${emojiData.baseName}:";
+            reactionString = ":${emojiData.baseName}@.:";
           case NotEmojiData():
             return;
         }
@@ -114,15 +107,9 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
                 reaction: reactionString,
               ),
             );
-
-        // misskey.ioはただちにリアクションを反映してくれない
-        if (account.host == "misskey.io") {
-          await Future<void>.delayed(
-            const Duration(milliseconds: misskeyIOReactionDelay),
-          );
-        }
-
-        await ref.read(notesProvider(account)).refresh(widget.noteId);
+        ref
+            .read(notesProvider(account))
+            .addMyReaction(widget.noteId, reactionString);
       },
       onLongPress: () {
         showDialog<void>(
