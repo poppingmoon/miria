@@ -79,7 +79,7 @@ class NoteRepository extends ChangeNotifier {
             (e) => e.every((e2) {
               if (note.isEmptyRenote) {
                 return note.renote?.text?.contains(e2) == true ||
-                    note.cw?.contains(e2) == true;
+                    note.renote?.cw?.contains(e2) == true;
               } else {
                 return note.text?.contains(e2) == true ||
                     note.cw?.contains(e2) == true;
@@ -89,7 +89,7 @@ class NoteRepository extends ChangeNotifier {
           muteWordRegExps.any((e) {
             if (note.isEmptyRenote) {
               return note.renote?.text?.contains(e) == true ||
-                  note.cw?.contains(e) == true;
+                  note.renote?.cw?.contains(e) == true;
             } else {
               return note.text?.contains(e) == true ||
                   note.cw?.contains(e) == true;

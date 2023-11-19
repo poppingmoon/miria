@@ -1,7 +1,8 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_font_picker/flutter_font_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/const.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
@@ -28,7 +29,11 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   TabPosition tabPosition = TabPosition.top;
   double textScaleFactor = 1.0;
   EmojiType emojiType = EmojiType.twemoji;
-  String? fontName;
+  String defaultFontName = "";
+  String serifFontName = "";
+  String monospaceFontName = "";
+  String cursiveFontName = "";
+  String fantasyFontName = "";
   bool hideAvatar = false;
   bool isChicken = false;
   FileViewType fileViewType = FileViewType.grid;
@@ -71,7 +76,11 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       tabPosition = settings.tabPosition;
       textScaleFactor = settings.textScaleFactor;
       emojiType = settings.emojiType;
-      fontName = settings.fontName;
+      defaultFontName = settings.defaultFontName;
+      serifFontName = settings.serifFontName;
+      monospaceFontName = settings.monospaceFontName;
+      cursiveFontName = settings.cursiveFontName;
+      fantasyFontName = settings.fantasyFontName;
       hideAvatar = settings.hideAvatar;
       isChicken = settings.isChicken;
       fileViewType = settings.fileViewType;
@@ -94,7 +103,11 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
             tabPosition: tabPosition,
             emojiType: emojiType,
             textScaleFactor: textScaleFactor,
-            fontName: fontName,
+            defaultFontName: defaultFontName,
+            serifFontName: serifFontName,
+            monospaceFontName: monospaceFontName,
+            cursiveFontName: cursiveFontName,
+            fantasyFontName: fantasyFontName,
             hideAvatar: hideAvatar,
             isChicken: isChicken,
             fileViewType: fileViewType,
@@ -358,51 +371,10 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "フォント",
-                        style: Theme.of(context).textTheme.titleLarge,
+                        "フォントサイズ",
+                        style: Theme.of(context).textTheme.titleSmall,
                       ),
                       const SizedBox(height: 10),
-                      const Text("フォント"),
-                      ListTile(
-                        leading: fontName != null
-                            ? IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    fontName = null;
-                                    save();
-                                  });
-                                },
-                                icon: const Icon(Icons.close),
-                              )
-                            : null,
-                        title: Text(fontName ?? "デフォルト"),
-                        trailing: const Icon(Icons.keyboard_arrow_right),
-                        onTap: () => showDialog<void>(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            content: SingleChildScrollView(
-                              child: SizedBox(
-                                width: double.maxFinite,
-                                child: FontPicker(
-                                  showInDialog: true,
-                                  showFontInfo: false,
-                                  showFontVariants: false,
-                                  initialFontFamily: fontName,
-                                  onFontChanged: (PickerFont font) {
-                                    setState(() {
-                                      fontName = font.fontFamily;
-                                      save();
-                                    });
-                                  },
-                                  lang: "ja",
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      const Text("フォントサイズ"),
                       Slider(
                         value: textScaleFactor,
                         min: 0.5,
@@ -424,68 +396,117 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                           child: const Text("変更"),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                      const Padding(padding: EdgeInsets.only(top: 10)),
                       Text(
-                        "ファイル",
-                        style: Theme.of(context).textTheme.titleLarge,
+                        "フォント（標準）",
+                        style: Theme.of(context).textTheme.titleSmall,
                       ),
-                      const SizedBox(height: 10),
-                      const Text("ファイル一覧のスタイル"),
-                      DropdownButton(
+                      DropdownButton<Font>(
+                        items: [
+                          for (final font in choosableFonts)
+                            DropdownMenuItem(
+                              value: font,
+                              child: Text(font.displayName),
+                            ),
+                        ],
+                        value: choosableFonts.firstWhereOrNull(
+                              (e) => e.actualName == defaultFontName,
+                            ) ??
+                            choosableFonts.first,
                         isExpanded: true,
-                        value: fileViewType,
-                        items: FileViewType.values
-                            .map(
-                              (e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(
-                                  switch (e) {
-                                    FileViewType.grid => "グリッド",
-                                    FileViewType.carousel => "カルーセル",
-                                  },
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) => setState(() {
-                          fileViewType = value ?? FileViewType.grid;
+                        onChanged: (item) => setState(() {
+                          defaultFontName = item?.actualName ?? "";
                           save();
                         }),
                       ),
-                      const SizedBox(height: 10),
-                      const Text("ファイルの高さ"),
-                      DropdownButton(
-                        isExpanded: true,
-                        value: fileViewHeight,
-                        items: const [
-                          DropdownMenuItem(
-                            value: 200.0,
-                            child: Text("200"),
-                          ),
-                          DropdownMenuItem(
-                            value: 400.0,
-                            child: Text("400"),
-                          ),
-                          DropdownMenuItem(
-                            value: 600.0,
-                            child: Text("600"),
-                          ),
-                          DropdownMenuItem(
-                            value: 800.0,
-                            child: Text("800"),
-                          ),
+                      const Padding(padding: EdgeInsets.only(top: 10)),
+                      Text(
+                        "フォント（\$[font.serif 用）",
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      DropdownButton<Font>(
+                        items: [
+                          for (final font in choosableFonts)
+                            DropdownMenuItem(
+                              value: font,
+                              child: Text(font.displayName),
+                            ),
                         ],
-                        onChanged: (value) => setState(() {
-                          fileViewHeight = value ?? 200;
+                        value: choosableFonts.firstWhereOrNull(
+                              (e) => e.actualName == serifFontName,
+                            ) ??
+                            choosableFonts.first,
+                        isExpanded: true,
+                        onChanged: (item) => setState(() {
+                          serifFontName = item?.actualName ?? "";
+                          save();
+                        }),
+                      ),
+                      const Padding(padding: EdgeInsets.only(top: 10)),
+                      Text(
+                        "フォント （\$[font.monospace やコードブロック 用）",
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      DropdownButton<Font>(
+                        items: [
+                          for (final font in choosableFonts)
+                            DropdownMenuItem(
+                              value: font,
+                              child: Text(font.displayName),
+                            ),
+                        ],
+                        value: choosableFonts.firstWhereOrNull(
+                              (e) => e.actualName == monospaceFontName,
+                            ) ??
+                            choosableFonts.first,
+                        isExpanded: true,
+                        onChanged: (item) => setState(
+                          () => monospaceFontName = item?.actualName ?? "",
+                        ),
+                      ),
+                      const Padding(padding: EdgeInsets.only(top: 10)),
+                      Text(
+                        "フォント （\$[font.cursive 用）",
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      DropdownButton<Font>(
+                        items: [
+                          for (final font in choosableFonts)
+                            DropdownMenuItem(
+                              value: font,
+                              child: Text(font.displayName),
+                            ),
+                        ],
+                        value: choosableFonts.firstWhereOrNull(
+                              (e) => e.actualName == cursiveFontName,
+                            ) ??
+                            choosableFonts.first,
+                        isExpanded: true,
+                        onChanged: (item) => setState(() {
+                          cursiveFontName = item?.actualName ?? "";
+                          save();
+                        }),
+                      ),
+                      const Padding(padding: EdgeInsets.only(top: 10)),
+                      Text(
+                        "フォント （\$[font.fantasy 用）",
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      DropdownButton<Font>(
+                        items: [
+                          for (final font in choosableFonts)
+                            DropdownMenuItem(
+                              value: font,
+                              child: Text(font.displayName),
+                            ),
+                        ],
+                        value: choosableFonts.firstWhereOrNull(
+                              (e) => e.actualName == fantasyFontName,
+                            ) ??
+                            choosableFonts.first,
+                        isExpanded: true,
+                        onChanged: (item) => setState(() {
+                          fantasyFontName = item?.actualName ?? "";
                           save();
                         }),
                       ),

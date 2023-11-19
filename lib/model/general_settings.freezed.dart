@@ -51,8 +51,20 @@ mixin _$GeneralSettings {
   /// 使用するUnicodeの絵文字種別
   EmojiType get emojiType => throw _privateConstructorUsedError;
 
-  /// Google Fontsのフォント名
-  String? get fontName => throw _privateConstructorUsedError;
+  /// デフォルトのフォント名
+  String get defaultFontName => throw _privateConstructorUsedError;
+
+  /// `$[font.serif のフォント名
+  String get serifFontName => throw _privateConstructorUsedError;
+
+  /// `$[font.monospace およびコードブロックのフォント名
+  String get monospaceFontName => throw _privateConstructorUsedError;
+
+  /// `$[font.cursive のフォント名
+  String get cursiveFontName => throw _privateConstructorUsedError;
+
+  /// `$[font.fantasy のフォント名
+  String get fantasyFontName => throw _privateConstructorUsedError;
 
   /// ユーザーのアバターを隠す
   bool get hideAvatar => throw _privateConstructorUsedError;
@@ -91,7 +103,11 @@ abstract class $GeneralSettingsCopyWith<$Res> {
       TabPosition tabPosition,
       double textScaleFactor,
       EmojiType emojiType,
-      String? fontName,
+      String defaultFontName,
+      String serifFontName,
+      String monospaceFontName,
+      String cursiveFontName,
+      String fantasyFontName,
       bool hideAvatar,
       bool isChicken,
       FileViewType fileViewType,
@@ -123,7 +139,11 @@ class _$GeneralSettingsCopyWithImpl<$Res, $Val extends GeneralSettings>
     Object? tabPosition = null,
     Object? textScaleFactor = null,
     Object? emojiType = null,
-    Object? fontName = freezed,
+    Object? defaultFontName = null,
+    Object? serifFontName = null,
+    Object? monospaceFontName = null,
+    Object? cursiveFontName = null,
+    Object? fantasyFontName = null,
     Object? hideAvatar = null,
     Object? isChicken = null,
     Object? fileViewType = null,
@@ -178,10 +198,26 @@ class _$GeneralSettingsCopyWithImpl<$Res, $Val extends GeneralSettings>
           ? _value.emojiType
           : emojiType // ignore: cast_nullable_to_non_nullable
               as EmojiType,
-      fontName: freezed == fontName
-          ? _value.fontName
-          : fontName // ignore: cast_nullable_to_non_nullable
-              as String?,
+      defaultFontName: null == defaultFontName
+          ? _value.defaultFontName
+          : defaultFontName // ignore: cast_nullable_to_non_nullable
+              as String,
+      serifFontName: null == serifFontName
+          ? _value.serifFontName
+          : serifFontName // ignore: cast_nullable_to_non_nullable
+              as String,
+      monospaceFontName: null == monospaceFontName
+          ? _value.monospaceFontName
+          : monospaceFontName // ignore: cast_nullable_to_non_nullable
+              as String,
+      cursiveFontName: null == cursiveFontName
+          ? _value.cursiveFontName
+          : cursiveFontName // ignore: cast_nullable_to_non_nullable
+              as String,
+      fantasyFontName: null == fantasyFontName
+          ? _value.fantasyFontName
+          : fantasyFontName // ignore: cast_nullable_to_non_nullable
+              as String,
       hideAvatar: null == hideAvatar
           ? _value.hideAvatar
           : hideAvatar // ignore: cast_nullable_to_non_nullable
@@ -223,7 +259,11 @@ abstract class _$$GeneralSettingsImplCopyWith<$Res>
       TabPosition tabPosition,
       double textScaleFactor,
       EmojiType emojiType,
-      String? fontName,
+      String defaultFontName,
+      String serifFontName,
+      String monospaceFontName,
+      String cursiveFontName,
+      String fantasyFontName,
       bool hideAvatar,
       bool isChicken,
       FileViewType fileViewType,
@@ -253,7 +293,11 @@ class __$$GeneralSettingsImplCopyWithImpl<$Res>
     Object? tabPosition = null,
     Object? textScaleFactor = null,
     Object? emojiType = null,
-    Object? fontName = freezed,
+    Object? defaultFontName = null,
+    Object? serifFontName = null,
+    Object? monospaceFontName = null,
+    Object? cursiveFontName = null,
+    Object? fantasyFontName = null,
     Object? hideAvatar = null,
     Object? isChicken = null,
     Object? fileViewType = null,
@@ -308,10 +352,26 @@ class __$$GeneralSettingsImplCopyWithImpl<$Res>
           ? _value.emojiType
           : emojiType // ignore: cast_nullable_to_non_nullable
               as EmojiType,
-      fontName: freezed == fontName
-          ? _value.fontName
-          : fontName // ignore: cast_nullable_to_non_nullable
-              as String?,
+      defaultFontName: null == defaultFontName
+          ? _value.defaultFontName
+          : defaultFontName // ignore: cast_nullable_to_non_nullable
+              as String,
+      serifFontName: null == serifFontName
+          ? _value.serifFontName
+          : serifFontName // ignore: cast_nullable_to_non_nullable
+              as String,
+      monospaceFontName: null == monospaceFontName
+          ? _value.monospaceFontName
+          : monospaceFontName // ignore: cast_nullable_to_non_nullable
+              as String,
+      cursiveFontName: null == cursiveFontName
+          ? _value.cursiveFontName
+          : cursiveFontName // ignore: cast_nullable_to_non_nullable
+              as String,
+      fantasyFontName: null == fantasyFontName
+          ? _value.fantasyFontName
+          : fantasyFontName // ignore: cast_nullable_to_non_nullable
+              as String,
       hideAvatar: null == hideAvatar
           ? _value.hideAvatar
           : hideAvatar // ignore: cast_nullable_to_non_nullable
@@ -348,7 +408,11 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
       this.tabPosition = TabPosition.top,
       this.textScaleFactor = 1.0,
       this.emojiType = EmojiType.twemoji,
-      this.fontName,
+      this.defaultFontName = "",
+      this.serifFontName = "",
+      this.monospaceFontName = "",
+      this.cursiveFontName = "",
+      this.fantasyFontName = "",
       this.hideAvatar = false,
       this.isChicken = false,
       this.fileViewType = FileViewType.grid,
@@ -412,9 +476,30 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
   @JsonKey()
   final EmojiType emojiType;
 
-  /// Google Fontsのフォント名
+  /// デフォルトのフォント名
   @override
-  final String? fontName;
+  @JsonKey()
+  final String defaultFontName;
+
+  /// `$[font.serif のフォント名
+  @override
+  @JsonKey()
+  final String serifFontName;
+
+  /// `$[font.monospace およびコードブロックのフォント名
+  @override
+  @JsonKey()
+  final String monospaceFontName;
+
+  /// `$[font.cursive のフォント名
+  @override
+  @JsonKey()
+  final String cursiveFontName;
+
+  /// `$[font.fantasy のフォント名
+  @override
+  @JsonKey()
+  final String fantasyFontName;
 
   /// ユーザーのアバターを隠す
   @override
@@ -438,7 +523,7 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
 
   @override
   String toString() {
-    return 'GeneralSettings(lightColorThemeId: $lightColorThemeId, darkColorThemeId: $darkColorThemeId, themeColorSystem: $themeColorSystem, nsfwInherit: $nsfwInherit, enableDirectReaction: $enableDirectReaction, automaticPush: $automaticPush, enableAnimatedMFM: $enableAnimatedMFM, enableLongTextElipsed: $enableLongTextElipsed, enableFavoritedRenoteElipsed: $enableFavoritedRenoteElipsed, tabPosition: $tabPosition, textScaleFactor: $textScaleFactor, emojiType: $emojiType, fontName: $fontName, hideAvatar: $hideAvatar, isChicken: $isChicken, fileViewType: $fileViewType, fileViewHeight: $fileViewHeight)';
+    return 'GeneralSettings(lightColorThemeId: $lightColorThemeId, darkColorThemeId: $darkColorThemeId, themeColorSystem: $themeColorSystem, nsfwInherit: $nsfwInherit, enableDirectReaction: $enableDirectReaction, automaticPush: $automaticPush, enableAnimatedMFM: $enableAnimatedMFM, enableLongTextElipsed: $enableLongTextElipsed, enableFavoritedRenoteElipsed: $enableFavoritedRenoteElipsed, tabPosition: $tabPosition, textScaleFactor: $textScaleFactor, emojiType: $emojiType, defaultFontName: $defaultFontName, serifFontName: $serifFontName, monospaceFontName: $monospaceFontName, cursiveFontName: $cursiveFontName, fantasyFontName: $fantasyFontName, hideAvatar: $hideAvatar, isChicken: $isChicken, fileViewType: $fileViewType, fileViewHeight: $fileViewHeight)';
   }
 
   @override
@@ -472,8 +557,16 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
                 other.textScaleFactor == textScaleFactor) &&
             (identical(other.emojiType, emojiType) ||
                 other.emojiType == emojiType) &&
-            (identical(other.fontName, fontName) ||
-                other.fontName == fontName) &&
+            (identical(other.defaultFontName, defaultFontName) ||
+                other.defaultFontName == defaultFontName) &&
+            (identical(other.serifFontName, serifFontName) ||
+                other.serifFontName == serifFontName) &&
+            (identical(other.monospaceFontName, monospaceFontName) ||
+                other.monospaceFontName == monospaceFontName) &&
+            (identical(other.cursiveFontName, cursiveFontName) ||
+                other.cursiveFontName == cursiveFontName) &&
+            (identical(other.fantasyFontName, fantasyFontName) ||
+                other.fantasyFontName == fantasyFontName) &&
             (identical(other.hideAvatar, hideAvatar) ||
                 other.hideAvatar == hideAvatar) &&
             (identical(other.isChicken, isChicken) ||
@@ -486,25 +579,30 @@ class _$GeneralSettingsImpl implements _GeneralSettings {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      lightColorThemeId,
-      darkColorThemeId,
-      themeColorSystem,
-      nsfwInherit,
-      enableDirectReaction,
-      automaticPush,
-      enableAnimatedMFM,
-      enableLongTextElipsed,
-      enableFavoritedRenoteElipsed,
-      tabPosition,
-      textScaleFactor,
-      emojiType,
-      fontName,
-      hideAvatar,
-      isChicken,
-      fileViewType,
-      fileViewHeight);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        lightColorThemeId,
+        darkColorThemeId,
+        themeColorSystem,
+        nsfwInherit,
+        enableDirectReaction,
+        automaticPush,
+        enableAnimatedMFM,
+        enableLongTextElipsed,
+        enableFavoritedRenoteElipsed,
+        tabPosition,
+        textScaleFactor,
+        emojiType,
+        defaultFontName,
+        serifFontName,
+        monospaceFontName,
+        cursiveFontName,
+        fantasyFontName,
+        hideAvatar,
+        isChicken,
+        fileViewType,
+        fileViewHeight
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -535,7 +633,11 @@ abstract class _GeneralSettings implements GeneralSettings {
       final TabPosition tabPosition,
       final double textScaleFactor,
       final EmojiType emojiType,
-      final String? fontName,
+      final String defaultFontName,
+      final String serifFontName,
+      final String monospaceFontName,
+      final String cursiveFontName,
+      final String fantasyFontName,
       final bool hideAvatar,
       final bool isChicken,
       final FileViewType fileViewType,
@@ -588,8 +690,24 @@ abstract class _GeneralSettings implements GeneralSettings {
   EmojiType get emojiType;
   @override
 
-  /// Google Fontsのフォント名
-  String? get fontName;
+  /// デフォルトのフォント名
+  String get defaultFontName;
+  @override
+
+  /// `$[font.serif のフォント名
+  String get serifFontName;
+  @override
+
+  /// `$[font.monospace およびコードブロックのフォント名
+  String get monospaceFontName;
+  @override
+
+  /// `$[font.cursive のフォント名
+  String get cursiveFontName;
+  @override
+
+  /// `$[font.fantasy のフォント名
+  String get fantasyFontName;
   @override
 
   /// ユーザーのアバターを隠す

@@ -87,8 +87,20 @@ class GeneralSettings with _$GeneralSettings {
     /// 使用するUnicodeの絵文字種別
     @Default(EmojiType.twemoji) EmojiType emojiType,
 
-    /// Google Fontsのフォント名
-    String? fontName,
+    /// デフォルトのフォント名
+    @Default("") String defaultFontName,
+
+    /// `$[font.serif のフォント名
+    @Default("") String serifFontName,
+
+    /// `$[font.monospace およびコードブロックのフォント名
+    @Default("") String monospaceFontName,
+
+    /// `$[font.cursive のフォント名
+    @Default("") String cursiveFontName,
+
+    /// `$[font.fantasy のフォント名
+    @Default("") String fantasyFontName,
 
     /// ユーザーのアバターを隠す
     @Default(false) bool hideAvatar,

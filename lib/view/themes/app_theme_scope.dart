@@ -19,7 +19,14 @@ class AppThemeScope extends ConsumerStatefulWidget {
 }
 
 class AppThemeScopeState extends ConsumerState<AppThemeScope> {
-  AppThemeData buildDarkAppThemeData(BuildContext context, ColorTheme theme) {
+  AppThemeData buildDarkAppThemeData({
+    required BuildContext context,
+    required ColorTheme theme,
+    required String serifFontName,
+    required String monospaceFontName,
+    required String cursiveFontName,
+    required String fantasyFontName,
+  }) {
     return AppThemeData(
       colorTheme: theme,
       isDarkMode: theme.isDarkTheme,
@@ -35,8 +42,10 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
       linkStyle: TextStyle(color: theme.link),
       hashtagStyle: TextStyle(color: theme.hashtag),
       mentionStyle: TextStyle(color: theme.mention),
-      serifStyle:
-          TextStyle(fontFamilyFallback: resolveFontFamilySerifCallback()),
+      serifStyle: resolveFontFamilySerif(serifFontName),
+      monospaceStyle: resolveFontFamilyMonospace(monospaceFontName),
+      cursiveStyle: fromGoogleFont(cursiveFontName) ?? const TextStyle(),
+      fantasyStyle: fromGoogleFont(fantasyFontName) ?? const TextStyle(),
       reactionButtonBackgroundColor: theme.buttonBackground,
       reactionButtonMeReactedColor: theme.accentedBackground,
       renoteBorderColor: theme.renote,
@@ -51,7 +60,10 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
     );
   }
 
-  String resolveFontFamilyName() {
+  String resolveFontFamilyName(String defaultFontName) {
+    if (defaultFontName.isNotEmpty) {
+      return defaultFontName;
+    }
     if (defaultTargetPlatform == TargetPlatform.iOS ||
         defaultTargetPlatform == TargetPlatform.macOS) {
       return "SF Pro Text";
@@ -67,16 +79,20 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
     return "KosugiMaru";
   }
 
-  TextTheme applyGoogleFont(TextTheme textTheme, String? fontName) {
-    return fontName != null && GoogleFonts.asMap().containsKey(fontName)
-        ? GoogleFonts.getTextTheme(fontName, textTheme)
-        : textTheme;
-  }
-
-  List<String> resolveFontFamilyCallback() {
+  List<String> resolveFontFamilyFallback(String defaultFontName) {
+    if (defaultTargetPlatform == TargetPlatform.windows ||
+        defaultTargetPlatform == TargetPlatform.linux) {
+      return [
+        if (defaultFontName.isNotEmpty) resolveFontFamilyName(""),
+        "Noto Sans CJK JP",
+        "KosugiMaru",
+        "BIZ UDPGothic",
+      ];
+    }
     if (defaultTargetPlatform == TargetPlatform.iOS ||
         defaultTargetPlatform == TargetPlatform.macOS) {
       return [
+        if (defaultFontName.isNotEmpty) resolveFontFamilyName(""),
         "Hiragino Maru Gothic ProN",
         "Apple Color Emoji",
       ];
@@ -84,13 +100,39 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
     return ["Noto Sans", "DejaVu Sans"];
   }
 
-  List<String> resolveFontFamilySerifCallback() {
+  TextStyle resolveFontFamilySerif(String defaultFontName) {
+    final fallback = <String>[];
+
     if (defaultTargetPlatform == TargetPlatform.iOS ||
         defaultTargetPlatform == TargetPlatform.macOS) {
-      return ["Hiragino Mincho ProN", "Apple Color Emoji"];
+      fallback.addAll(["Hiragino Mincho ProN", "Apple Color Emoji"]);
+    } else {
+      fallback.addAll(["Noto Serif CJK JP", "Noto Serif", "Droid Serif"]);
     }
+    return (fromGoogleFont(defaultFontName) ?? const TextStyle())
+        .copyWith(fontFamilyFallback: fallback);
+  }
 
-    return ["Noto Serif CJK JP", "Noto Serif JP", "Noto Serif"];
+  TextStyle resolveFontFamilyMonospace(String monospaceFontName) {
+    final String? fontName;
+    final fallback = <String>[];
+
+    if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      fontName = "Monaco";
+      fallback.addAll(const ["Apple Color Emoji", "Hiragino Maru Gothic ProN"]);
+    } else if (defaultTargetPlatform == TargetPlatform.windows) {
+      fontName = "Consolas";
+      fallback.addAll(const ["Segoe UI Emoji", "Noto Color Emoji", "Meiryo"]);
+    } else if (defaultTargetPlatform == TargetPlatform.android) {
+      fontName = "Droid Sans Mono";
+      fallback.addAll(const ["Noto Color Emoji", "Noto Sans JP"]);
+    } else {
+      fontName = null;
+    }
+    return (fromGoogleFont(monospaceFontName) ??
+            TextStyle(fontFamily: fontName))
+        .copyWith(fontFamilyFallback: fallback);
   }
 
   TextStyle resolveUnicodeEmojiStyle() {
@@ -120,22 +162,37 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
     return const TextStyle();
   }
 
-  ThemeData buildTheme(
-    BuildContext context,
-    ColorTheme theme,
-    String? fontName,
-  ) {
+  TextTheme applyGoogleFont(TextTheme textTheme, String? fontName) {
+    return fontName != null && GoogleFonts.asMap().containsKey(fontName)
+        ? GoogleFonts.getTextTheme(fontName, textTheme)
+        : textTheme;
+  }
+
+  TextStyle? fromGoogleFont(String? fontName) {
+    return fontName != null &&
+            fontName.isNotEmpty == true &&
+            GoogleFonts.asMap().containsKey(fontName)
+        ? GoogleFonts.getFont(fontName)
+        : null;
+  }
+
+  ThemeData buildTheme({
+    required BuildContext context,
+    required ColorTheme theme,
+    required String defaultFontName,
+  }) {
     final textThemePre = applyGoogleFont(
       Theme.of(context).textTheme.merge(
             (theme.isDarkTheme ? ThemeData.dark() : ThemeData.light())
                 .textTheme
                 .apply(
-                  fontFamily: resolveFontFamilyName(),
-                  fontFamilyFallback: resolveFontFamilyCallback(),
+                  fontFamily: resolveFontFamilyName(defaultFontName),
+                  fontFamilyFallback:
+                      resolveFontFamilyFallback(defaultFontName),
                   bodyColor: theme.foreground,
                 ),
           ),
-      fontName,
+      defaultFontName,
     );
     final textTheme = textThemePre.copyWith(
       bodySmall: textThemePre.bodySmall?.copyWith(
@@ -302,9 +359,25 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
           .select((value) => value.settings.textScaleFactor),
     );
     final colorThemes = ref.watch(colorThemeRepositoryProvider);
-    final fontName = ref.watch(
+    final defaultFontName = ref.watch(
       generalSettingsRepositoryProvider
-          .select((value) => value.settings.fontName),
+          .select((value) => value.settings.defaultFontName),
+    );
+    final serifFontName = ref.watch(
+      generalSettingsRepositoryProvider
+          .select((value) => value.settings.serifFontName),
+    );
+    final monospaceFontName = ref.watch(
+      generalSettingsRepositoryProvider
+          .select((value) => value.settings.monospaceFontName),
+    );
+    final cursiveFontName = ref.watch(
+      generalSettingsRepositoryProvider
+          .select((value) => value.settings.cursiveFontName),
+    );
+    final fantasyFontName = ref.watch(
+      generalSettingsRepositoryProvider
+          .select((value) => value.settings.fantasyFontName),
     );
 
     final bool isDark;
@@ -325,9 +398,20 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
         colorThemes.firstWhere((element) => element.isDarkTheme == isDark);
 
     return Theme(
-      data: buildTheme(context, foundColorTheme, fontName),
+      data: buildTheme(
+        context: context,
+        theme: foundColorTheme,
+        defaultFontName: defaultFontName,
+      ),
       child: AppTheme(
-        themeData: buildDarkAppThemeData(context, foundColorTheme),
+        themeData: buildDarkAppThemeData(
+          context: context,
+          theme: foundColorTheme,
+          serifFontName: serifFontName,
+          monospaceFontName: monospaceFontName,
+          cursiveFontName: cursiveFontName,
+          fantasyFontName: fantasyFontName,
+        ),
         child: MediaQuery(
           data: MediaQuery.of(context).copyWith(
             alwaysUse24HourFormat: true,
