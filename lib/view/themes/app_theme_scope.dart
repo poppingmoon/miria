@@ -358,7 +358,6 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
       generalSettingsRepositoryProvider
           .select((value) => value.settings.textScaleFactor),
     );
-    final colorThemes = ref.watch(colorThemeRepositoryProvider);
     final defaultFontName = ref.watch(
       generalSettingsRepositoryProvider
           .select((value) => value.settings.defaultFontName),
@@ -379,6 +378,7 @@ class AppThemeScopeState extends ConsumerState<AppThemeScope> {
       generalSettingsRepositoryProvider
           .select((value) => value.settings.fantasyFontName),
     );
+    final colorThemes = ref.watch(colorThemeRepositoryProvider);
 
     final bool isDark;
     if (colorSystem == ThemeColorSystem.system) {
