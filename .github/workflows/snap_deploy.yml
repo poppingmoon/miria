@@ -3,7 +3,7 @@ run-name: Building Miria's Snap package
 on:
   workflow_dispatch:
   release:
-    type: [published]
+    types: [published]
 
 permissions:
   contents: write
