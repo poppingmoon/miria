@@ -1,8 +1,12 @@
 name: デプロイ(snap)
 run-name: Building Miria's Snap package
 on:
+  workflow_dispatch:
   release:
     types: [published]
+
+permissions:
+  contents: write
 
 jobs:
   build:
