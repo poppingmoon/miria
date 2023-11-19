@@ -23,11 +23,11 @@ class ExploreHighlightState extends ConsumerState<ExploreHighlight> {
   Widget build(BuildContext context) {
     final account = AccountScope.of(context);
     return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
+      padding: const EdgeInsets.only(right: 10),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 3, bottom: 3),
+            padding: const EdgeInsets.only(top: 3, bottom: 3, left: 10),
             child: LayoutBuilder(
               builder: (context, constraints) => ToggleButtons(
                   constraints: BoxConstraints.expand(
@@ -64,13 +64,16 @@ class ExploreHighlightState extends ConsumerState<ExploreHighlight> {
                 ref.read(notesProvider(account)).registerAll(note);
                 return note.toList();
               },
-              nextFuture: (_, index) async {
+              nextFuture: (item, index) async {
                 final Iterable<Note> note;
                 if (isNote) {
                   note = await ref
                       .read(misskeyProvider(account))
                       .notes
-                      .featured(NotesFeaturedRequest(offset: index));
+                      .featured(NotesFeaturedRequest(
+                        offset: index,
+                        untilId: item.id,
+                      ));
                 } else {
                   note = await ref
                       .read(misskeyProvider(account))

@@ -6,8 +6,9 @@ part of 'general_settings.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_GeneralSettings _$$_GeneralSettingsFromJson(Map<String, dynamic> json) =>
-    _$_GeneralSettings(
+_$GeneralSettingsImpl _$$GeneralSettingsImplFromJson(
+        Map<String, dynamic> json) =>
+    _$GeneralSettingsImpl(
       lightColorThemeId: json['lightColorThemeId'] as String? ?? "",
       darkColorThemeId: json['darkColorThemeId'] as String? ?? "",
       themeColorSystem: $enumDecodeNullable(
@@ -30,9 +31,15 @@ _$_GeneralSettings _$$_GeneralSettingsFromJson(Map<String, dynamic> json) =>
       textScaleFactor: (json['textScaleFactor'] as num?)?.toDouble() ?? 1.0,
       emojiType: $enumDecodeNullable(_$EmojiTypeEnumMap, json['emojiType']) ??
           EmojiType.twemoji,
+      defaultFontName: json['defaultFontName'] as String? ?? "",
+      serifFontName: json['serifFontName'] as String? ?? "",
+      monospaceFontName: json['monospaceFontName'] as String? ?? "",
+      cursiveFontName: json['cursiveFontName'] as String? ?? "",
+      fantasyFontName: json['fantasyFontName'] as String? ?? "",
     );
 
-Map<String, dynamic> _$$_GeneralSettingsToJson(_$_GeneralSettings instance) =>
+Map<String, dynamic> _$$GeneralSettingsImplToJson(
+        _$GeneralSettingsImpl instance) =>
     <String, dynamic>{
       'lightColorThemeId': instance.lightColorThemeId,
       'darkColorThemeId': instance.darkColorThemeId,
@@ -46,6 +53,11 @@ Map<String, dynamic> _$$_GeneralSettingsToJson(_$_GeneralSettings instance) =>
       'tabPosition': _$TabPositionEnumMap[instance.tabPosition]!,
       'textScaleFactor': instance.textScaleFactor,
       'emojiType': _$EmojiTypeEnumMap[instance.emojiType]!,
+      'defaultFontName': instance.defaultFontName,
+      'serifFontName': instance.serifFontName,
+      'monospaceFontName': instance.monospaceFontName,
+      'cursiveFontName': instance.cursiveFontName,
+      'fantasyFontName': instance.fantasyFontName,
     };
 
 const _$ThemeColorSystemEnumMap = {

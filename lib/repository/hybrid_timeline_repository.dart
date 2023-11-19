@@ -24,18 +24,28 @@ class HybridTimelineRepository extends SocketTimelineRepository {
     required FutureOr<void> Function(String id, TimelineReacted reaction)
         onUnreacted,
     required FutureOr<void> Function(String id, TimelineVoted vote) onVoted,
+    required FutureOr<void> Function(String id, NoteEdited note) onUpdated,
   }) {
     return misskey.hybridTimelineStream(
-      onNoteReceived: onReceived,
-      onReacted: onReacted,
-      onUnreacted: onUnreacted,
-      onVoted: onVoted,
-    );
+        parameter: HybridTimelineParameter(
+          withRenotes: tabSetting.renoteDisplay,
+          withReplies: tabSetting.isIncludeReplies,
+          withFiles: tabSetting.isMediaOnly,
+        ),
+        onNoteReceived: onReceived,
+        onReacted: onReacted,
+        onUnreacted: onUnreacted,
+        onVoted: onVoted,
+        onUpdated: onUpdated);
   }
 
   @override
   Future<Iterable<Note>> requestNotes({String? untilId}) async {
-    return await misskey.notes
-        .hybridTimeline(NotesHybridTimelineRequest(untilId: untilId));
+    return await misskey.notes.hybridTimeline(NotesHybridTimelineRequest(
+      untilId: untilId,
+      withRenotes: tabSetting.renoteDisplay,
+      withReplies: tabSetting.isIncludeReplies,
+      withFiles: tabSetting.isMediaOnly,
+    ));
   }
 }

@@ -379,8 +379,6 @@ class TestData {
 }  
   
   '''));
-  static String note1ExpectText = "気づいたら、健康保険証っぽいプラズマ化したつまようじの賞味期限が切れてました…";
-  static String note1ExpectId = "9g3rcngj3e";
 
   static Note note2 = Note.fromJson(JSON5.parse(r'''
 {
@@ -419,10 +417,6 @@ class TestData {
   renoteId: null,
 }  
   '''));
-
-  /// 自身のノート（藍ちゃん）２
-  static String note2ExpectText =
-      "みにゃさん、数取りゲームしましょう！\n0~100の中で最も大きい数字を取った人が勝ちです。他の人と被ったらだめですよ～\n制限時間は10分です。数字はこの投稿にリプライで送ってくださいね！";
 
   /// 自身でないノート１
   static Note note3AsAnotherUser = Note.fromJson(JSON5.parse(r'''
@@ -650,7 +644,98 @@ class TestData {
 }  
   '''));
 
-  static String note3ExpectUserName = "@oishiibot";
+  /// Renote
+  static Note note6AsRenote = Note.fromJson(JSON5.parse('''
+{
+    id: '9lmbcrob34',
+    createdAt: '2023-11-03T15:07:13.307Z',
+    userId: '9byjlos32z',
+    user: {
+      id: '9byjlos32z',
+      name: 'そらいろ:role_reaction_shooter:',
+      username: 'shiosyakeyakini',
+      host: null,
+      avatarUrl: 'https://proxy.misskeyusercontent.com/avatar.webp?url=https%3A%2F%2Fs3.arkjp.net%2Fmisskey%2Fwebpublic-5e0b7842-adf7-4d29-b04a-a6e1faa4c3c4.png&avatar=1',
+      avatarBlurhash: 'eaN^k|,Rj%3x]_NM{t7t7jE^+tRjYR%s;MxMxIoogozxvRkRkRijE',
+      isBot: false,
+      isCat: true,
+      emojis: {},
+      onlineStatus: 'online',
+      badgeRoles: [
+        {
+          name: 'Patreon Miskist',
+          iconUrl: 'https://s3.arkjp.net/misskey/b03aec5c-4ef6-475d-b9ae-040531e77ff2.png',
+          displayOrder: 10,
+        },
+        {
+          name: 'Misskey Supporter',
+          iconUrl: 'https://s3.arkjp.net/misskey/dab4e89c-4ed1-4c06-918d-441db61dabaf.png',
+          displayOrder: 10,
+        },
+        {
+          name: 'FANBOX サポーター',
+          iconUrl: 'https://s3.arkjp.net/misskey/6e3b469e-16ed-4cc2-9098-215b441da254.png',
+          displayOrder: 0,
+        },
+      ],
+    },
+    text: null,
+    cw: null,
+    visibility: 'public',
+    localOnly: false,
+    reactionAcceptance: null,
+    renoteCount: 0,
+    repliesCount: 0,
+    reactions: {},
+    reactionEmojis: {},
+    fileIds: [],
+    files: [],
+    replyId: null,
+    renoteId: '9lmb9yahs7',
+    renote: {
+      id: '9lmb9yahs7',
+      createdAt: '2023-11-03T15:05:01.913Z',
+      userId: '9g0ku8jkft',
+      user: {
+        id: '9g0ku8jkft',
+        name: 'しゅうまい君（バカンス）',
+        username: 'shuumai',
+        host: null,
+        avatarUrl: 'https://proxy.misskeyusercontent.com/avatar.webp?url=https%3A%2F%2Fs3.arkjp.net%2Fmisskey%2Fe44afb80-e469-4ca2-bfd0-ddb8555e6a26.png&avatar=1',
+        avatarBlurhash: 'eoJThjozuNozo|kpj[ofaye.y=ayVFj[Vts;ayV@j[W;WDj[jEayoz',
+        isBot: true,
+        isCat: false,
+        emojis: {},
+        onlineStatus: 'unknown',
+        badgeRoles: [
+          {
+            name: 'Verified',
+            iconUrl: 'https://s3.arkjp.net/misskey/8df80984-86f9-4cc5-a289-1f6ab59c74b8.png',
+            displayOrder: 1000,
+          },
+        ],
+      },
+      text: 'どう考えてもおいしい冷める前のケースに使われてしまいそう」 （白いの自分が綺麗になると自分が36な',
+      cw: null,
+      visibility: 'public',
+      localOnly: false,
+      reactionAcceptance: null,
+      renoteCount: 2,
+      repliesCount: 0,
+      reactions: {
+        '❤': 1,
+        ':miria@.:': 44,
+        ':36kyoutei@.:': 5,
+      },
+      reactionEmojis: {},
+      fileIds: [],
+      files: [],
+      replyId: null,
+      renoteId: null,
+      myReaction: ':miria@.:',
+    },
+  }
+'''));
 
   // ドライブ（フォルダ）
   static DriveFolder folder1 = DriveFolder.fromJson(JSON5.parse(r'''
@@ -1307,6 +1392,174 @@ class TestData {
   
   '''));
 
+  static UsersShowResponse usersShowResponse3AsRemoteUser =
+      UsersShowResponse.fromJson(JSON5.parse(r'''
+{
+  id: '9i08deo0vj',
+  name: 'あけおめらんか～',
+  username: 'akeome',
+  host: 'misskey.backspace.fm',
+  avatarUrl: 'https://misskey.io/identicon/akeome@misskey.backspace.fm',
+  avatarBlurhash: null,
+  isBot: true,
+  isCat: false,
+  instance: {
+    name: 'BackspaceKey',
+    softwareName: 'misskey',
+    softwareVersion: '2023.9.3-bsk-2.1.2',
+    iconUrl: 'https://s3.bskstorage.com/sakura/backspacekey/dc65f1fb-bc2b-4013-8f47-c6abd6df30ee.png',
+    faviconUrl: 'https://s3.bskstorage.com/sakura/backspacekey/125bc5c2-7e4b-409f-b50f-331dfb3e6bde.png',
+    themeColor: '#e4d440',
+  },
+  emojis: {},
+  onlineStatus: 'unknown',
+  url: 'https://misskey.backspace.fm/@akeome',
+  uri: 'https://misskey.backspace.fm/users/9i07ia9bf0',
+  movedTo: null,
+  alsoKnownAs: null,
+  createdAt: '2023-08-04T14:13:41.376Z',
+  updatedAt: '2023-11-01T15:02:05.677Z',
+  lastFetchedAt: '2023-11-01T14:04:12.561Z',
+  bannerUrl: null,
+  bannerBlurhash: null,
+  isLocked: false,
+  isSilenced: false,
+  isLimited: false,
+  isSuspended: false,
+  description: '毎日0:00に開かれる時間競技を観測するためのbotです。\n**/follow**でこちらからフォローします。',
+  location: null,
+  birthday: null,
+  lang: null,
+  fields: [
+    {
+      name: '集計ワード',
+      value: '"あけおめ","あけましておめでとうございます",":akeome:",":sakibashiri_oniichan_ni_akeome_shite_agerunoha_atashi_kurai_desho_heart:","はるさめずるずるひょるひょるほほほー",":harusame_zuruzuru:"',
+    },
+    {
+      name: '集計に使わせていただいております',
+      value: 'https://github.com/taichanNE30/yamag',
+    },
+    {
+      name: '集計部分の制作者',
+      value: '@taichan',
+    },
+    {
+      name: '中の人',
+      value: '@mirashiya37',
+    },
+  ],
+  followersCount: 0,
+  followingCount: 0,
+  notesCount: 197,
+  pinnedNoteIds: [],
+  pinnedNotes: [],
+  pinnedPageId: null,
+  pinnedPage: null,
+  publicReactions: true,
+  ffVisibility: 'public',
+  twoFactorEnabled: false,
+  usePasswordLessLogin: false,
+  securityKeys: false,
+  roles: [],
+  memo: null,
+  isFollowing: false,
+  isFollowed: false,
+  hasPendingFollowRequestFromYou: false,
+  hasPendingFollowRequestToYou: false,
+  isBlocking: false,
+  isBlocked: false,
+  isMuted: false,
+  isRenoteMuted: false,
+}
+'''));
+
+  static UsersShowResponse usersShowResponse3AsLocalUser =
+      UsersShowResponse.fromJson(JSON5.parse('''
+{
+  id: '9i07ia9bf0',
+  name: 'あけおめらんか～',
+  username: 'akeome',
+  host: null,
+  avatarUrl: 'https://misskey.backspace.fm/identicon/akeome@misskey.backspace.fm',
+  avatarBlurhash: null,
+  isBot: true,
+  isCat: false,
+  emojis: {},
+  onlineStatus: 'online',
+  badgeRoles: [],
+  url: null,
+  uri: null,
+  movedTo: null,
+  alsoKnownAs: null,
+  createdAt: '2023-08-04T13:49:29.327Z',
+  updatedAt: '2023-11-02T21:01:34.367Z',
+  lastFetchedAt: null,
+  bannerUrl: null,
+  bannerBlurhash: null,
+  isLocked: false,
+  isSilenced: false,
+  isSuspended: false,
+  description: '毎日0:00に開かれる時間競技を観測するためのbotです。\\n**/follow**でこちらからフォローします。',
+  location: null,
+  birthday: null,
+  lang: 'ja',
+  fields: [
+    {
+      name: '集計ワード',
+      value: '"あけおめ","あけましておめでとうございます",":akeome:",":sakibashiri_oniichan_ni_akeome_shite_agerunoha_atashi_kurai_desho_heart:","はるさめずるずるひょるひょるほほほー",":harusame_zuruzuru:"',
+    },
+    {
+      name: '集計に使わせていただいております',
+      value: 'https://github.com/taichanNE30/yamag',
+    },
+    {
+      name: '集計部分の制作者',
+      value: '@taichan',
+    },
+    {
+      name: '中の人',
+      value: '@mirashiya37',
+    },
+  ],
+  verifiedLinks: [],
+  followersCount: 70,
+  followingCount: 61,
+  notesCount: 593,
+  pinnedNoteIds: [],
+  pinnedNotes: [],
+  pinnedPageId: null,
+  pinnedPage: null,
+  publicReactions: true,
+  ffVisibility: 'public',
+  twoFactorEnabled: false,
+  usePasswordLessLogin: false,
+  securityKeys: false,
+  roles: [
+    {
+      id: '9gvf639rj8',
+      name: '一期生',
+      color: null,
+      iconUrl: null,
+      description: '',
+      isModerator: false,
+      isAdministrator: false,
+      displayOrder: 0,
+    },
+  ],
+  memo: null,
+  isFollowing: false,
+  isFollowed: false,
+  hasPendingFollowRequestFromYou: false,
+  hasPendingFollowRequestToYou: false,
+  isBlocking: false,
+  isBlocked: false,
+  isMuted: false,
+  isRenoteMuted: false,
+  notify: 'none',
+}
+
+'''));
+
   // カスタム絵文字
   static UnicodeEmojiData unicodeEmoji1 = const UnicodeEmojiData(char: "♥");
   static CustomEmojiData customEmoji1 = CustomEmojiData(
@@ -1398,8 +1651,8 @@ class TestData {
     hasUnreadNote: false,
   }
   '''));
-  static String channel1ExpectId = "9axtmmcxuy";
-  static String channel1ExpectName = "ブルーアーカイ部 総合";
+
+  static String expectChannel1DescriptionContaining = "ありがとうブルーアーカイブ";
 
   static CommunityChannel channel2 = CommunityChannel.fromJson(JSON5.parse(r'''
 {
@@ -1422,8 +1675,270 @@ class TestData {
   hasUnreadNote: false,
 }  
   '''));
-  static String channel2ExpectId = "9b3chwrm7f";
-  static String channel2ExpectName = "Misskeyアークナイツ部";
+
+  // アンテナ
+  static Antenna antenna = Antenna.fromJson(JSON5.parse(r'''
+{
+    id: '9f7kcbzcoe',
+    createdAt: '2023-05-26T03:24:02.856Z',
+    name: 'ポテイモン',
+    keywords: [
+      [
+        'ポテイモン',
+      ],
+      [
+        '芋神',
+      ],
+      [
+        'misscat',
+      ],
+    ],
+    excludeKeywords: [
+      [
+        '応天門',
+      ],
+    ],
+    src: 'all',
+    userListId: null,
+    users: [
+      '',
+    ],
+    caseSensitive: false,
+    notify: false,
+    withReplies: false,
+    withFile: false,
+    isActive: true,
+    hasUnreadNote: false,
+  }
+'''));
+
+  static Clip clip = Clip.fromJson(JSON5.parse(r'''
+{
+    id: '9crm7l2n4k',
+    createdAt: '2023-03-25T14:12:37.103Z',
+    lastClippedAt: '2023-06-27T10:08:56.762Z',
+    userId: '9byjlos32z',
+    user: {
+      id: '7rkr3b1c1c',
+      name: '藍',
+      username: 'ai',
+      host: null,
+      avatarUrl: 'https://proxy.misskeyusercontent.com/avatar.webp?url=https%3A%2F%2Fs3.arkjp.net%2Fmisskey%2Fwebpublic-ecc1008f-3e2e-4206-ae7e-5093221f08be.png&avatar=1',
+      avatarBlurhash: null,
+      isBot: true,
+      isCat: true,
+      emojis: {},
+      onlineStatus: 'online',
+      badgeRoles: [],
+    },
+    name: 'ぴょんぷっぷー',
+    description: null,
+    isPublic: true,
+    favoritedCount: 0,
+    isFavorited: false,
+  }
+
+'''));
+
+  static RolesListResponse role = RolesListResponse.fromJson(JSON5.parse('''
+{
+    id: '9diazxez3m',
+    createdAt: '2023-04-13T06:28:30.827Z',
+    updatedAt: '2023-06-25T09:28:16.529Z',
+    name: 'Super New User',
+    description: 'アカウント作成してから1日以内のユーザー',
+    color: '#a4850a',
+    iconUrl: 'https://s3.arkjp.net/misskey/358069f4-e033-4366-891b-fcc4fc4d0c70.png',
+    target: 'conditional',
+    condFormula: {
+      id: '83328ff6-8bdc-4516-9dee-751222897481',
+      type: 'and',
+      values: [
+        {
+          id: 'deac20b7-2688-4d7e-a264-5d0f0345f003',
+          type: 'isLocal',
+        },
+        {
+          id: '9959c843-b273-4edf-8632-41b103af8b88',
+          sec: 86400,
+          type: 'createdLessThan',
+        },
+      ],
+    },
+    isPublic: true,
+    isAdministrator: false,
+    isModerator: false,
+    isExplorable: true,
+    asBadge: true,
+    canEditMembersByModerator: false,
+    displayOrder: 0,
+    policies: {
+      pinLimit: {
+        value: 3,
+        priority: 0,
+        useDefault: true,
+      },
+      canInvite: {
+        value: false,
+        priority: 0,
+        useDefault: true,
+      },
+      clipLimit: {
+        value: 10,
+        priority: 0,
+        useDefault: true,
+      },
+      canHideAds: {
+        value: false,
+        priority: 0,
+        useDefault: true,
+      },
+      antennaLimit: {
+        value: 5,
+        priority: 0,
+        useDefault: true,
+      },
+      gtlAvailable: {
+        value: true,
+        priority: 0,
+        useDefault: true,
+      },
+      ltlAvailable: {
+        value: true,
+        priority: 0,
+        useDefault: true,
+      },
+      webhookLimit: {
+        value: 3,
+        priority: 0,
+        useDefault: true,
+      },
+      canPublicNote: {
+        value: true,
+        priority: 0,
+        useDefault: true,
+      },
+      userListLimit: {
+        value: 5,
+        priority: 0,
+        useDefault: true,
+      },
+      wordMuteLimit: {
+        value: 200,
+        priority: 0,
+        useDefault: true,
+      },
+      alwaysMarkNsfw: {
+        value: false,
+        priority: 0,
+        useDefault: true,
+      },
+      canSearchNotes: {
+        value: false,
+        priority: 0,
+        useDefault: true,
+      },
+      driveCapacityMb: {
+        value: 10240,
+        priority: 0,
+        useDefault: true,
+      },
+      rateLimitFactor: {
+        value: 2,
+        priority: 0,
+        useDefault: true,
+      },
+      noteEachClipsLimit: {
+        value: 50,
+        priority: 0,
+        useDefault: true,
+      },
+      canManageCustomEmojis: {
+        value: false,
+        priority: 0,
+        useDefault: true,
+      },
+      userEachUserListsLimit: {
+        value: 20,
+        priority: 0,
+        useDefault: true,
+      },
+      canCreateContent: {
+        useDefault: true,
+        priority: 0,
+        value: true,
+      },
+      canUpdateContent: {
+        useDefault: true,
+        priority: 0,
+        value: true,
+      },
+      canDeleteContent: {
+        useDefault: true,
+        priority: 0,
+        value: true,
+      },
+      inviteLimit: {
+        useDefault: true,
+        priority: 0,
+        value: 0,
+      },
+      inviteLimitCycle: {
+        useDefault: true,
+        priority: 0,
+        value: 10080,
+      },
+      inviteExpirationTime: {
+        useDefault: true,
+        priority: 0,
+        value: 0,
+      },
+    },
+    usersCount: 0,
+  }
+'''));
+
+  static HashtagsTrendResponse hashtagTrends =
+      HashtagsTrendResponse.fromJson(JSON5.parse(r'''
+{
+    tag: 'ろぐぼチャレンジ',
+    chart: [
+      3,
+      2,
+      2,
+      1,
+      3,
+      4,
+      2,
+      4,
+      2,
+      4,
+      0,
+      0,
+      3,
+      2,
+      3,
+      6,
+      5,
+      4,
+      12,
+      8,
+    ],
+    usersCount: 15,
+  }
+'''));
+
+  static Hashtag hashtag = Hashtag.fromJson(JSON5.parse(r'''
+{
+    tag: 'アークナイツ',
+    mentionedUsersCount: 531,
+    mentionedLocalUsersCount: 3,
+    mentionedRemoteUsersCount: 528,
+    attachedUsersCount: 67,
+    attachedLocalUsersCount: 2,
+    attachedRemoteUsersCount: 65,
+  }
+'''));
 
   // Dio
   static DioError response404 = DioError(

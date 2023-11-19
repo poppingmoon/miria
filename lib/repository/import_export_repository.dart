@@ -7,9 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
-import 'package:miria/model/account_settings.dart';
 import 'package:miria/model/exported_setting.dart';
-import 'package:miria/model/general_settings.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
@@ -24,27 +22,40 @@ class ImportExportRepository extends ChangeNotifier {
   ImportExportRepository(this.reader);
 
   Future<void> import(BuildContext context, Account account) async {
-    final folder = await showDialog<DriveFolder>(
-      barrierDismissible: false,
+    final result = await showDialog<FolderResult>(
       context: context,
-      builder: (context2) => WillPopScope(
-        onWillPop: () async => false,
-        child: FolderSelectDialog(
-          account: account,
-          fileShowTarget: "miria.json.unknown",
-        ),
+      builder: (context2) => FolderSelectDialog(
+        account: account,
+        fileShowTarget: const ["miria.json", "miria.json.unknown"],
+        confirmationText: "このフォルダーからインポートする",
       ),
     );
+    if (result == null) return;
 
-    final alreadyExists = await reader(misskeyProvider(account))
-        .drive
-        .files
-        .find(DriveFilesFindRequest(
-            name: "miria.json.unknown", folderId: folder?.id));
+    final folder = result.folder;
 
+    Iterable<DriveFile> alreadyExists =
+        await reader(misskeyProvider(account)).drive.files.find(
+              DriveFilesFindRequest(
+                name: "miria.json",
+                folderId: folder?.id,
+              ),
+            );
+
+    if (!context.mounted) return;
     if (alreadyExists.isEmpty) {
-      await SimpleMessageDialog.show(context, "ここにMiriaの設定ファイルあれへんかったわ");
-      return;
+      alreadyExists = await reader(misskeyProvider(account)).drive.files.find(
+            DriveFilesFindRequest(
+              name: "miria.json.unknown",
+              folderId: folder?.id,
+            ),
+          );
+
+      if (!context.mounted) return;
+      if (alreadyExists.isEmpty) {
+        await SimpleMessageDialog.show(context, "ここにMiriaの設定ファイルあれへんかったわ");
+        return;
+      }
     }
 
     final importFile = alreadyExists.first;
@@ -54,79 +65,74 @@ class ImportExportRepository extends ChangeNotifier {
 
     final json = jsonDecode(response.data);
 
-    final importedGeneralSettings =
-        GeneralSettings.fromJson(json["generalSettings"]);
-    final importedAccountSettings = (json["accountSettings"] as List)
-        .map((e) => AccountSettings.fromJson(e));
+    final importedSettings = ExportedSetting.fromJson(json);
 
     // アカウント設定よみこみ
     final accounts = reader(accountRepository).account;
-    for (final accountSetting in importedAccountSettings) {
+    for (final accountSetting in importedSettings.accountSettings) {
       // この端末でログイン済みのアカウントであれば
-      if (accounts.any((element) =>
-          element.host == accountSetting.host &&
-          element.userId == accountSetting.userId)) {
+      if (accounts.any((account) => account.acct == accountSetting.acct)) {
         reader(accountSettingsRepositoryProvider).save(accountSetting);
       }
     }
 
     // 全般設定
-    reader(generalSettingsRepositoryProvider).update(importedGeneralSettings);
+    reader(generalSettingsRepositoryProvider)
+        .update(importedSettings.generalSettings);
 
     // タブ設定
     final tabSettings = <TabSetting>[];
 
-    for (final tabSetting in json["tabSettings"]) {
-      final account = accounts.firstWhereOrNull((element) =>
-          tabSetting["account"]["host"] == element.host &&
-          tabSetting["account"]["userId"] == element.userId);
+    for (final tabSetting in importedSettings.tabSettings) {
+      final account = accounts
+          .firstWhereOrNull((account) => tabSetting.acct == account.acct);
 
       if (account == null) {
         continue;
       }
 
-      // Unhandled Exception: type 'EqualUnmodifiableMapView<dynamic, dynamic>' is not a subtype of type 'Map<String, dynamic>?' in type cast
-      // freezedがわるさしてそう
-      (tabSetting as Map<String, dynamic>)
-        ..remove("account")
-        ..addEntries(
-            [MapEntry("account", jsonDecode(jsonEncode(account.toJson())))]);
-
-      tabSettings.add(TabSetting.fromJson(tabSetting));
+      tabSettings.add(tabSetting);
     }
     reader(tabSettingsRepositoryProvider).save(tabSettings);
 
+    if (!context.mounted) return;
     await SimpleMessageDialog.show(context, "インポート終わったで。");
+
+    if (!context.mounted) return;
     context.router
       ..removeWhere((route) => true)
       ..push(const SplashRoute());
   }
 
   Future<void> export(BuildContext context, Account account) async {
-    final folder = await showDialog<DriveFolder>(
-      barrierDismissible: false,
+    final result = await showDialog<FolderResult>(
       context: context,
-      builder: (context2) => WillPopScope(
-        onWillPop: () async => false,
-        child: FolderSelectDialog(
-          account: account,
-          fileShowTarget: "miria.json.unknown",
-        ),
+      builder: (context2) => FolderSelectDialog(
+        account: account,
+        fileShowTarget: const ["miria.json", "miria.json.unknown"],
+        confirmationText: "このフォルダーに保存する",
       ),
     );
+    if (result == null) return;
 
-    final alreadyExists = await reader(misskeyProvider(account))
-        .drive
-        .files
-        .find(DriveFilesFindRequest(
-            name: "miria.json.unknown", folderId: folder?.id));
+    final folder = result.folder;
 
+    final alreadyExists =
+        await reader(misskeyProvider(account)).drive.files.find(
+              DriveFilesFindRequest(
+                name: "miria.json.unknown",
+                folderId: folder?.id,
+              ),
+            );
+
+    if (!context.mounted) return;
     if (alreadyExists.isNotEmpty) {
       final alreadyConfirm = await SimpleConfirmDialog.show(
-          context: context,
-          message: "ここにもうあるけど上書きするか？",
-          primary: "上書きする",
-          secondary: "やっぱやめた");
+        context: context,
+        message: "ここにもうあるけど上書きするか？",
+        primary: "上書きする",
+        secondary: "やっぱやめた",
+      );
       if (alreadyConfirm != true) return;
 
       for (final element in alreadyExists) {
@@ -138,29 +144,23 @@ class ImportExportRepository extends ChangeNotifier {
     }
 
     final data = ExportedSetting(
-            generalSettings: reader(generalSettingsRepositoryProvider).settings,
-            tabSettings:
-                reader(tabSettingsRepositoryProvider).tabSettings.toList(),
-            accountSettings: reader(accountSettingsRepositoryProvider)
-                .accountSettings
-                .toList())
-        .toJson();
-
-    // 外に漏れると困るので
-    for (final element in data["tabSettings"] as List) {
-      element["account"]
-        ..remove("token")
-        ..remove("i");
-    }
+      generalSettings: reader(generalSettingsRepositoryProvider).settings,
+      tabSettings: reader(tabSettingsRepositoryProvider).tabSettings.toList(),
+      accountSettings:
+          reader(accountSettingsRepositoryProvider).accountSettings.toList(),
+    ).toJson();
 
     await reader(misskeyProvider(account)).drive.files.createAsBinary(
-        DriveFilesCreateRequest(
+          DriveFilesCreateRequest(
             folderId: folder?.id,
             name: "miria.json",
             comment: "Miria設定ファイル",
-            force: true),
-        Uint8List.fromList(utf8.encode(jsonEncode(data))));
+            force: true,
+          ),
+          Uint8List.fromList(utf8.encode(jsonEncode(data))),
+        );
 
+    if (!context.mounted) return;
     await SimpleMessageDialog.show(context, "エクスポート終わったで");
   }
 }

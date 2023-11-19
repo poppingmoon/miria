@@ -79,6 +79,7 @@ class UserReaction extends ConsumerWidget {
                   child: CustomEmoji(
                     emojiData: MisskeyEmojiData.fromEmojiName(
                         emojiName: response.type,
+                        emojiInfo: response.note.reactionEmojis,
                         repository: ref.read(
                             emojiRepositoryProvider(AccountScope.of(context)))),
                     fontSizeRatio: 2,
@@ -87,7 +88,7 @@ class UserReaction extends ConsumerWidget {
               ),
             ),
             Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.only(right: 10, top: 10, bottom: 10),
                 child: MisskeyNote(note: response.note)),
             const Padding(padding: EdgeInsets.all(5)),
           ],

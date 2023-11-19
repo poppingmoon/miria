@@ -5,6 +5,8 @@ import 'package:miria/model/account.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/explore_page/explore_hashtags.dart';
 import 'package:miria/view/explore_page/explore_highlight.dart';
+import 'package:miria/view/explore_page/explore_pages.dart';
+import 'package:miria/view/explore_page/explore_plays.dart';
 import 'package:miria/view/explore_page/explore_role.dart';
 import 'package:miria/view/explore_page/explore_server.dart';
 import 'package:miria/view/explore_page/explore_users.dart';
@@ -28,7 +30,7 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
     return AccountScope(
         account: widget.account,
         child: DefaultTabController(
-          length: 5,
+          length: 7,
           child: Scaffold(
             appBar: AppBar(
               title: const Text("みつける"),
@@ -38,9 +40,12 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
                   Tab(text: "ハイライト"),
                   Tab(text: "ユーザー"),
                   Tab(text: "ロール"),
+                  Tab(text: "ページ"),
+                  Tab(text: "Play"),
                   Tab(text: "ハッシュタグ"),
                   Tab(text: "よそのサーバー"),
                 ],
+                tabAlignment: TabAlignment.center,
               ),
             ),
             body: const TabBarView(
@@ -48,6 +53,8 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
                 ExploreHighlight(),
                 ExploreUsers(),
                 ExploreRole(),
+                ExplorePages(),
+                ExplorePlay(),
                 ExploreHashtags(),
                 ExploreServer(),
               ],
