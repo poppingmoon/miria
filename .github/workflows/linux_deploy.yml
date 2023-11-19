@@ -3,8 +3,10 @@ on:
   workflow_dispatch:
   release:
     types: [published]
+
 permissions:
   contents: write
+
 jobs:
   build_for_linux:
     name: Linux用ビルド
