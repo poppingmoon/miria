@@ -25,6 +25,7 @@ import 'package:miria/repository/role_timeline_repository.dart';
 import 'package:miria/repository/tab_settings_repository.dart';
 import 'package:miria/repository/time_line_repository.dart';
 import 'package:miria/repository/user_list_time_line_repository.dart';
+import 'package:miria/state_notifier/common/download_file_notifier.dart';
 import 'package:miria/state_notifier/common/misskey_server_list_notifier.dart';
 import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
 import 'package:miria/state_notifier/photo_edit_page/photo_edit_state_notifier.dart';
@@ -276,3 +277,6 @@ final misskeyServerListNotifierProvider = AsyncNotifierProvider.autoDispose<
 );
 
 final cacheManagerProvider = Provider<BaseCacheManager?>((ref) => null);
+
+final downloadFileNotifierProvider =
+    NotifierProvider<DownloadFileNotifier, void>(DownloadFileNotifier.new);

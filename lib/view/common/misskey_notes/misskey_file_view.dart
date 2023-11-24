@@ -44,7 +44,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
           child: MisskeyImage(
             isSensitive: targetFile.isSensitive,
             thumbnailUrl: targetFile.thumbnailUrl ?? targetFile.url,
-            targetFiles: [targetFile.url],
+            targetFiles: [targetFile],
             fileType: targetFile.type,
             name: targetFile.name,
             position: 0,
@@ -71,7 +71,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
                   child: MisskeyImage(
                     isSensitive: targetFile.element.isSensitive,
                     thumbnailUrl: targetFile.element.thumbnailUrl?.toString(),
-                    targetFiles: targetFiles.map((e) => e.url).toList(),
+                    targetFiles: targetFiles,
                     fileType: targetFile.element.type,
                     name: targetFile.element.name,
                     position: targetFile.index,
@@ -95,7 +95,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
 class MisskeyImage extends ConsumerStatefulWidget {
   final bool isSensitive;
   final String? thumbnailUrl;
-  final List<String> targetFiles;
+  final List<DriveFile> targetFiles;
   final int position;
   final String fileType;
   final String name;
@@ -121,7 +121,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
   @override
   void didUpdateWidget(covariant MisskeyImage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (!const ListEquality<String>()
+    if (!const ListEquality<DriveFile>()
         .equals(oldWidget.targetFiles, widget.targetFiles)) {
       cachedWidget = null;
     }
@@ -178,7 +178,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                   showDialog<void>(
                     context: context,
                     builder: (context) => ImageDialog(
-                      imageUrlList: widget.targetFiles,
+                      driveFiles: widget.targetFiles,
                       initialPage: widget.position,
                     ),
                   );
@@ -186,12 +186,12 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                   showDialog<void>(
                     context: context,
                     builder: (context) => VideoDialog(
-                      url: widget.targetFiles[widget.position],
+                      url: widget.targetFiles[widget.position].url,
                     ),
                   );
                 } else {
                   launchUrl(
-                    Uri.parse(widget.targetFiles[widget.position]),
+                    Uri.parse(widget.targetFiles[widget.position].url),
                     mode: LaunchMode.externalApplication,
                   );
                 }
@@ -254,7 +254,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                           height: 200,
                           child: NetworkImageView(
                             url: widget.thumbnailUrl ??
-                                widget.targetFiles[widget.position],
+                                widget.targetFiles[widget.position].url,
                             type: ImageType.imageThumbnail,
                             loadingBuilder: (context, widget, chunkEvent) =>
                                 SizedBox(
@@ -293,7 +293,9 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                         cachedWidget = TextButton.icon(
                           onPressed: () {
                             launchUrl(
-                              Uri.parse(widget.targetFiles[widget.position]),
+                              Uri.parse(
+                                widget.targetFiles[widget.position].url,
+                              ),
                               mode: LaunchMode.externalApplication,
                             );
                           },
