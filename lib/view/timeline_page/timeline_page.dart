@@ -232,7 +232,7 @@ class TabHeader extends ConsumerWidget {
                 showDialog<void>(
                   context: context,
                   builder: (context) => ChannelDialog(
-                    channelId: tabSetting.channelId ?? "",
+                    channelId: tabSetting.channelId!,
                     account: account,
                   ),
                 );
