@@ -47,8 +47,6 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrlList = widget.driveFiles.map((file) => file.url);
-
     return AlertDialog(
       backgroundColor: Colors.transparent,
       titlePadding: EdgeInsets.zero,
@@ -136,16 +134,17 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                         physics: scale == 1.0
                             ? const ScrollPhysics()
                             : const NeverScrollableScrollPhysics(),
-                        children: [
-                          for (final url in imageUrlList)
-                            ScaleNotifierInteractiveViewer(
-                              imageUrl: url,
-                              controller: _transformationController,
-                              onScaleChanged: (scaleUpdated) => setState(() {
-                                scale = scaleUpdated;
-                              }),
-                            ),
-                        ],
+                        children: widget.driveFiles
+                            .map(
+                              (file) => ScaleNotifierInteractiveViewer(
+                                imageUrl: file.url,
+                                controller: _transformationController,
+                                onScaleChanged: (scaleUpdated) => setState(() {
+                                  scale = scaleUpdated;
+                                }),
+                              ),
+                            )
+                            .toList(),
                       ),
                     ),
                   ),
@@ -187,7 +186,7 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                     final page = pageController.page?.toInt();
                     if (page == null) return;
                     final driveFile = widget.driveFiles[page];
-                    ref
+                    await ref
                         .read(downloadFileNotifierProvider.notifier)
                         .downloadFile(driveFile);
                     if (!mounted) return;
