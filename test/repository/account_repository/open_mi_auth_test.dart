@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:miria/providers.dart';
-import 'package:miria/repository/account_repository.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:mockito/mockito.dart';
 
@@ -15,11 +14,7 @@ void main() {
     final provider = ProviderContainer(
       overrides: [dioProvider.overrideWithValue(MockDio())],
     );
-    final accountRepository = AccountRepository(
-      MockTabSettingsRepository(),
-      MockAccountSettingsRepository(),
-      provider.read,
-    );
+    final accountRepository = provider.read(accountRepositoryProvider.notifier);
 
     expect(
       () => accountRepository.openMiAuth("https://misskey.io/"),
@@ -33,11 +28,7 @@ void main() {
         .thenAnswer((_) async => throw TestData.response404);
     final provider =
         ProviderContainer(overrides: [dioProvider.overrideWithValue(dio)]);
-    final accountRepository = AccountRepository(
-      MockTabSettingsRepository(),
-      MockAccountSettingsRepository(),
-      provider.read,
-    );
+    final accountRepository = provider.read(accountRepositoryProvider.notifier);
 
     expect(
       () => accountRepository.openMiAuth("sawakai.space"),
@@ -80,11 +71,7 @@ void main() {
         misskeyProvider.overrideWith((ref, arg) => mockMisskey),
       ],
     );
-    final accountRepository = AccountRepository(
-      MockTabSettingsRepository(),
-      MockAccountSettingsRepository(),
-      provider.read,
-    );
+    final accountRepository = provider.read(accountRepositoryProvider.notifier);
 
     await expectLater(
       () => accountRepository.openMiAuth("calckey.jp"),
@@ -131,11 +118,7 @@ void main() {
         misskeyProvider.overrideWith((ref, arg) => mockMisskey),
       ],
     );
-    final accountRepository = AccountRepository(
-      MockTabSettingsRepository(),
-      MockAccountSettingsRepository(),
-      provider.read,
-    );
+    final accountRepository = provider.read(accountRepositoryProvider.notifier);
 
     await expectLater(
       () => accountRepository.openMiAuth("misskey.dev"),

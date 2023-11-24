@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/text_editing_controller_extension.dart';
 import 'package:miria/model/input_completion_type.dart';
+import 'package:miria/view/common/color_picker_dialog.dart';
+import 'package:miria/view/common/date_time_picker.dart';
 import 'package:miria/view/common/note_create/basic_keyboard.dart';
 import 'package:miria/view/common/note_create/custom_keyboard_button.dart';
 import 'package:miria/view/common/note_create/input_completation.dart';
@@ -52,41 +54,37 @@ class MfmFnKeyboard extends ConsumerWidget {
   final FocusNode focusNode;
   final BuildContext parentContext;
 
-  Future<void> insertMfmFn(BuildContext context, String mfmFn) async {
+  Future<void> insertMfmFn(String mfmFn) async {
+    final textBeforeSelection = controller.textBeforeSelection;
+    final lastOpenTagIndex = textBeforeSelection!.lastIndexOf(r"$[");
+    final queryLength = textBeforeSelection.length - lastOpenTagIndex - 2;
+    controller.insert(mfmFn.substring(queryLength));
     if (mfmFn == "unixtime") {
-      final resultDate = await showDatePicker(
+      final resultDate = await showDateTimePicker(
         context: parentContext,
         firstDate: DateTime.utc(-271820, 12, 31),
         initialDate: DateTime.now(),
         lastDate: DateTime.utc(275760, 9, 13),
       );
-      if (resultDate == null) return;
-      if (!parentContext.mounted) return;
-      final resultTime = await showTimePicker(
+      if (resultDate != null) {
+        final unixtime = resultDate.millisecondsSinceEpoch ~/ 1000;
+
+        controller.insert(" $unixtime");
+      }
+    } else if (mfmFn == "fg" || mfmFn == "bg") {
+      final result = await showDialog<Color?>(
         context: parentContext,
-        initialTime:
-            TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute),
+        builder: (context) => const ColorPickerDialog(),
       );
-      if (resultTime == null) return;
-      final date = DateTime(
-        resultDate.year,
-        resultDate.month,
-        resultDate.day,
-        resultTime.hour,
-        resultTime.minute,
-      );
-      final unixtime = date.millisecondsSinceEpoch ~/ 1000;
-
-      controller.insert("unixtime $unixtime");
-      focusNode.requestFocus();
-
-      return;
+      if (result != null) {
+        controller.insert(
+          ".color=${result.red.toRadixString(16).padLeft(2, "0")}${result.green.toRadixString(16).padLeft(2, "0")}${result.blue.toRadixString(16).padLeft(2, "0")} ",
+        );
+      }
+    } else {
+      controller.insert(" ");
     }
 
-    final textBeforeSelection = controller.textBeforeSelection;
-    final lastOpenTagIndex = textBeforeSelection!.lastIndexOf(r"$[");
-    final queryLength = textBeforeSelection.length - lastOpenTagIndex - 2;
-    controller.insert("${mfmFn.substring(queryLength)} ");
     focusNode.requestFocus();
   }
 
@@ -108,7 +106,7 @@ class MfmFnKeyboard extends ConsumerWidget {
             keyboard: mfmFn,
             controller: controller,
             focusNode: focusNode,
-            onTap: () async => await insertMfmFn(context, mfmFn),
+            onTap: () => insertMfmFn(mfmFn),
           ),
       ],
     );

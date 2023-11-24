@@ -32,6 +32,7 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
       final response = await ref
           .read(misskeyProvider(AccountScope.of(context)))
           .pinnedUsers();
+      if (!mounted) return;
       setState(() {
         pinnedUser
           ..clear()

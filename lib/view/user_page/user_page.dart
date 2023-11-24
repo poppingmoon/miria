@@ -235,6 +235,7 @@ class UserDetailTabState extends ConsumerState<UserDetailTab> {
           );
         }
       } catch (e, s) {
+        if (!mounted) return;
         setState(() {
           error = (e, s);
         });
