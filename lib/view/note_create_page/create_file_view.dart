@@ -29,29 +29,25 @@ class CreateFileView extends ConsumerWidget {
       return response.data;
     }
 
-    if (defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.macOS ||
-        defaultTargetPlatform == TargetPlatform.android) {
-      final account = AccountScope.of(context);
-      final initialImage = switch (file) {
-        PostFile(:final file) => await file.readAsBytes(),
-        AlreadyPostedFile(:final file) => await getDriveImage(file.url),
-      };
-      if (initialImage == null) return;
-      if (!context.mounted) return;
+    final account = AccountScope.of(context);
+    final initialImage = switch (file) {
+      PostFile(:final file) => await file.readAsBytes(),
+      AlreadyPostedFile(:final file) => await getDriveImage(file.url),
+    };
+    if (initialImage == null) return;
+    if (!context.mounted) return;
 
-      context.pushRoute<Uint8List?>(
-        PhotoEditRoute(
-          account: account,
-          initialImage: initialImage,
-          onSubmit: (result) {
-            ref
-                .read(noteCreateProvider(account).notifier)
-                .setFileContent(file, result);
-          },
-        ),
-      );
-    }
+    context.pushRoute<Uint8List?>(
+      PhotoEditRoute(
+        account: account,
+        initialImage: initialImage,
+        onSubmit: (result) {
+          ref
+              .read(noteCreateProvider(account).notifier)
+              .setFileContent(file, result);
+        },
+      ),
+    );
   }
 
   Future<void> detailTap(BuildContext context, WidgetRef ref) async {
@@ -82,7 +78,12 @@ class CreateFileView extends ConsumerWidget {
         SizedBox(
           height: 200,
           child: GestureDetector(
-            onTap: isImage ? () => onTap(context, ref) : null,
+            onTap: isImage &&
+                    (defaultTargetPlatform == TargetPlatform.iOS ||
+                        defaultTargetPlatform == TargetPlatform.macOS ||
+                        defaultTargetPlatform == TargetPlatform.android)
+                ? () => onTap(context, ref)
+                : null,
             child: switch (file) {
               PostFile(:final file) =>
                 isImage ? Image.file(file) : Thumbnail(type: type),
