@@ -108,7 +108,6 @@ class ClipModalSheet extends ConsumerWidget {
             .addToClip(clip);
       } catch (e) {
         // TODO: あとでなおす
-        // #356
         if (e is DioException && e.response?.data != null) {
           final error =
               (e.response?.data as Map?)?["error"] as Map<String, dynamic>?;
