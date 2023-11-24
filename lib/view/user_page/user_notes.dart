@@ -161,8 +161,11 @@ class UserNotesState extends ConsumerState<UserNotes> {
                     // 後方互換性のため
                     // ignore: deprecated_member_use
                     includeReplies: withReply,
-                    withReplies: withReply,
+                    // ignore: deprecated_member_use
                     includeMyRenotes: renote,
+                    withReplies: withReply,
+                    withRenotes: renote,
+                    withChannelNotes: true,
                     untilDate: untilDate?.millisecondsSinceEpoch,
                   ),
                 );
@@ -190,8 +193,11 @@ class UserNotesState extends ConsumerState<UserNotes> {
                     withFiles: isFileOnly,
                     // ignore: deprecated_member_use
                     includeReplies: withReply,
-                    withReplies: withReply,
+                    // ignore: deprecated_member_use
                     includeMyRenotes: renote,
+                    withReplies: withReply,
+                    withRenotes: renote,
+                    withChannelNotes: true,
                     untilDate: untilDate?.millisecondsSinceEpoch,
                   ),
                 );

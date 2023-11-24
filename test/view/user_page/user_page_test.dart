@@ -386,6 +386,7 @@ void main() {
                 (request) =>
                     request.withReplies == false &&
                     request.withFiles == false &&
+                    // ignore: deprecated_member_use
                     request.includeMyRenotes == true,
               ),
             ),
@@ -401,6 +402,7 @@ void main() {
                 (request) =>
                     request.withReplies == false &&
                     request.withFiles == false &&
+                    // ignore: deprecated_member_use
                     request.includeMyRenotes == true &&
                     request.untilId == TestData.note1.id,
               ),
@@ -519,6 +521,7 @@ void main() {
           mockUser.notes(
             argThat(
               predicate<UsersNotesRequest>(
+                // ignore: deprecated_member_use
                 (request) => request.includeMyRenotes == false,
               ),
             ),

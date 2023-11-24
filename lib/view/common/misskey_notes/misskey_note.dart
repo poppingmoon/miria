@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
@@ -8,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mfm_parser/mfm_parser.dart' as parser;
 import 'package:miria/extensions/date_time_extension.dart';
+import 'package:miria/extensions/list_mfm_node_extension.dart';
 import 'package:miria/extensions/note_extension.dart';
 import 'package:miria/extensions/note_visibility_extension.dart';
 import 'package:miria/extensions/user_extension.dart';
@@ -103,38 +103,6 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
       }
     }
     return (thisNodeCount, newLinesCount);
-  }
-
-  // https://github.com/misskey-dev/misskey/blob/2023.9.2/packages/frontend/src/scripts/extract-url-from-mfm.ts
-  List<String> extractLinks(List<parser.MfmNode> nodes) {
-    String removeHash(String link) {
-      final hashIndex = link.lastIndexOf("#");
-      if (hashIndex < 0) {
-        return link;
-      } else {
-        return link.substring(0, hashIndex);
-      }
-    }
-
-    // # より前の部分が重複しているものを取り除く
-    final links = LinkedHashSet<String>(
-      equals: (link, other) => removeHash(link) == removeHash(other),
-      hashCode: (link) => removeHash(link).hashCode,
-    );
-    for (final node in nodes) {
-      final children = node.children;
-      if (children != null) {
-        links.addAll(extractLinks(children));
-      }
-      if (node is parser.MfmURL) {
-        links.add(node.value);
-      } else if (node is parser.MfmLink) {
-        if (!node.silent) {
-          links.add(node.url);
-        }
-      }
-    }
-    return links.toList();
   }
 
   @override
@@ -248,7 +216,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
           .select((repository) => repository.settings.fileViewHeight),
     );
 
-    final links = extractLinks(displayTextNodes!);
+    final links = displayTextNodes!.extractLinks();
 
     final hideAvatar = widget.hideAvatar ??
         ref.watch(
