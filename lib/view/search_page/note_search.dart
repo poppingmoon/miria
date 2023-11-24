@@ -226,7 +226,7 @@ class NoteSearchList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final condition = ref.watch(noteSearchProvider);
     final account = AccountScope.of(context);
-    final parsedSearchValue = const MfmParser().parse(condition.query);
+    final parsedSearchValue = const MfmParser().parse(condition.query ?? "");
     final isHashtagOnly =
         parsedSearchValue.length == 1 && parsedSearchValue[0] is MfmHashTag;
 
@@ -247,7 +247,7 @@ class NoteSearchList extends ConsumerWidget {
         } else {
           notes = await ref.read(misskeyProvider(account)).notes.search(
                 NotesSearchRequest(
-                  query: condition.query,
+                  query: condition.query ?? "",
                   userId: condition.user?.id,
                   channelId: condition.channel?.id,
                   host: condition.localOnly ? "." : null,
@@ -270,7 +270,7 @@ class NoteSearchList extends ConsumerWidget {
         } else {
           notes = await ref.read(misskeyProvider(account)).notes.search(
                 NotesSearchRequest(
-                  query: condition.query,
+                  query: condition.query ?? "",
                   userId: condition.user?.id,
                   channelId: condition.channel?.id,
                   host: condition.localOnly ? "." : null,

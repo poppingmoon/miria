@@ -6,7 +6,7 @@ part 'note_search_condition.freezed.dart';
 @freezed
 class NoteSearchCondition with _$NoteSearchCondition {
   const factory NoteSearchCondition({
-    @Default("") String query,
+    String? query,
     User? user,
     CommunityChannel? channel,
     @Default(false) bool localOnly,
@@ -14,6 +14,6 @@ class NoteSearchCondition with _$NoteSearchCondition {
   const NoteSearchCondition._();
 
   bool get isEmpty {
-    return query.isEmpty && channel == null && user == null;
+    return (query?.isEmpty ?? true) && channel == null && user == null;
   }
 }

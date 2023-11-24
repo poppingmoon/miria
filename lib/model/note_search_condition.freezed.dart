@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$NoteSearchCondition {
-  String get query => throw _privateConstructorUsedError;
+  String? get query => throw _privateConstructorUsedError;
   User? get user => throw _privateConstructorUsedError;
   CommunityChannel? get channel => throw _privateConstructorUsedError;
   bool get localOnly => throw _privateConstructorUsedError;
@@ -33,7 +33,7 @@ abstract class $NoteSearchConditionCopyWith<$Res> {
       _$NoteSearchConditionCopyWithImpl<$Res, NoteSearchCondition>;
   @useResult
   $Res call(
-      {String query, User? user, CommunityChannel? channel, bool localOnly});
+      {String? query, User? user, CommunityChannel? channel, bool localOnly});
 
   $CommunityChannelCopyWith<$Res>? get channel;
 }
@@ -51,16 +51,16 @@ class _$NoteSearchConditionCopyWithImpl<$Res, $Val extends NoteSearchCondition>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? query = null,
+    Object? query = freezed,
     Object? user = freezed,
     Object? channel = freezed,
     Object? localOnly = null,
   }) {
     return _then(_value.copyWith(
-      query: null == query
+      query: freezed == query
           ? _value.query
           : query // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
@@ -98,7 +98,7 @@ abstract class _$$NoteSearchConditionImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String query, User? user, CommunityChannel? channel, bool localOnly});
+      {String? query, User? user, CommunityChannel? channel, bool localOnly});
 
   @override
   $CommunityChannelCopyWith<$Res>? get channel;
@@ -115,16 +115,16 @@ class __$$NoteSearchConditionImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? query = null,
+    Object? query = freezed,
     Object? user = freezed,
     Object? channel = freezed,
     Object? localOnly = null,
   }) {
     return _then(_$NoteSearchConditionImpl(
-      query: null == query
+      query: freezed == query
           ? _value.query
           : query // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
@@ -145,12 +145,11 @@ class __$$NoteSearchConditionImplCopyWithImpl<$Res>
 
 class _$NoteSearchConditionImpl extends _NoteSearchCondition {
   const _$NoteSearchConditionImpl(
-      {this.query = "", this.user, this.channel, this.localOnly = false})
+      {this.query, this.user, this.channel, this.localOnly = false})
       : super._();
 
   @override
-  @JsonKey()
-  final String query;
+  final String? query;
   @override
   final User? user;
   @override
@@ -189,14 +188,14 @@ class _$NoteSearchConditionImpl extends _NoteSearchCondition {
 
 abstract class _NoteSearchCondition extends NoteSearchCondition {
   const factory _NoteSearchCondition(
-      {final String query,
+      {final String? query,
       final User? user,
       final CommunityChannel? channel,
       final bool localOnly}) = _$NoteSearchConditionImpl;
   const _NoteSearchCondition._() : super._();
 
   @override
-  String get query;
+  String? get query;
   @override
   User? get user;
   @override
