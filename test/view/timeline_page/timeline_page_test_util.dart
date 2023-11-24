@@ -48,6 +48,19 @@ class TimelinePageTest {
     ).copyWith();
     when(mockMisskey.notes).thenReturn(mockMisskeyNotes);
     when(mockMisskey.streamingService).thenReturn(mockStreamingService);
+    final mockSocketController = MockSocketController();
+    when(
+      mockMisskey.mainStream(
+        onReadAllNotifications: anyNamed("onReadAllNotifications"),
+        onUnreadNotification: anyNamed("onUnreadNotification"),
+        onReadAllAnnouncements: anyNamed("onReadAllAnnouncements"),
+        onEmojiAdded: anyNamed("onEmojiAdded"),
+        onEmojiUpdated: anyNamed("onEmojiUpdated"),
+        onAnnouncementCreated: anyNamed("onAnnouncementCreated"),
+      ),
+    ).thenReturn(mockSocketController);
+
+    when(mockSocketController.disconnect()).thenReturn(null);
     when(mockMisskey.i).thenReturn(mockMisskeyI);
 
     when(mockMisskeyI.i()).thenAnswer((_) async => TestData.account.i);
@@ -67,9 +80,7 @@ class TimelinePageTest {
         emojiRepositoryProvider
             .overrideWith((ref, arg) => MockEmojiRepository()),
       ],
-      child: DefaultRootWidget(
-        initialRoute: TimeLineRoute(initialTabSetting: tabSetting),
-      ),
+      child: DefaultRootWidget(initialRoute: TimelineRoute()),
     );
   }
 }
