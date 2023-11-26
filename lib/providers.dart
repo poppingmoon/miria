@@ -298,3 +298,5 @@ final antennasNotifierProvider = AsyncNotifierProvider.autoDispose
 
 final clipsNotifierProvider = AsyncNotifierProvider.autoDispose
     .family<ClipsNotifier, List<Clip>, Misskey>(ClipsNotifier.new);
+
+final miAuthCallbackProvider = StateProvider.autoDispose<Uri?>((ref) => null);
