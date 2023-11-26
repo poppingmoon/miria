@@ -86,8 +86,6 @@ class NoteModalSheet extends ConsumerWidget {
               builder: (context) => UserControlDialog(
                 account: account,
                 response: response,
-                isMe: targetNote.user.host == null &&
-                    targetNote.user.username == account.userId,
               ),
             );
           },
@@ -238,7 +236,7 @@ class NoteModalSheet extends ConsumerWidget {
                 baseNote.renote != null &&
                 baseNote.poll == null &&
                 baseNote.files.isEmpty)) ...[
-          if (account.i.policies.canEditNote as bool)
+          if (account.i.policies.canEditNote)
             ListTile(
               leading: const Icon(Icons.edit),
               title: const Text("編集する"),
