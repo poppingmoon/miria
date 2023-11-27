@@ -18,7 +18,7 @@ dependencies:
   dotted_border: ^2.0.0+3
   file: ^7.0.0
   file_picker: ^6.0.0
-  fl_chart: ^0.64.0
+  fl_chart: ^0.65.0
   flutter:
     sdk: flutter
   flutter_cache_manager: ^3.3.1
@@ -49,7 +49,7 @@ dependencies:
     git:
       url: https://github.com/poppingmoon/misskey_dart.git
       ref: 4a0c7966b6c721f2803d3710a77bfc302251c2cc
-  package_info_plus: ^4.0.0
+  package_info_plus: ^5.0.1
   path: ^1.8.2
   path_provider: ^2.0.14
   permission_handler: ^11.0.1
