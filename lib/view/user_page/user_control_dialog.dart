@@ -229,6 +229,18 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
               .expectFailure(context),
         ),
         ListTile(
+          leading: const Icon(Icons.search),
+          title: const Text("ノートを検索"),
+          onTap: () => context.pushRoute(
+            SearchRoute(
+              account: widget.account,
+              initialNoteSearchCondition: NoteSearchCondition(
+                user: widget.response,
+              ),
+            ),
+          ),
+        ),
+        ListTile(
           leading: const Icon(Icons.list),
           title: const Text("リストに追加"),
           onTap: addToList,
