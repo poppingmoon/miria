@@ -31,7 +31,13 @@ class UserPlays extends ConsumerWidget {
       },
       itemBuilder: (context, play) {
         return ListTile(
-          title: MfmText(mfmText: play.title, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
+          title: MfmText(
+            mfmText: play.title,
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
+          ),
           subtitle: MfmText(mfmText: play.summary),
           onTap: () {
             launchUrl(

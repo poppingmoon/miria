@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/clip_settings.dart';
@@ -115,9 +116,9 @@ class ClipModalSheet extends ConsumerWidget {
             if (!context.mounted) return;
             final result = await SimpleConfirmDialog.show(
               context: context,
-              message: "すでにクリップに追加されたノートのようです。",
-              primary: "クリップから削除する",
-              secondary: "なにもしない",
+              message: S.of(context).alreadyAddedClip,
+              primary: S.of(context).deleteClip,
+              secondary: S.of(context).noneAction,
             );
             if (result == true) {
               await ref

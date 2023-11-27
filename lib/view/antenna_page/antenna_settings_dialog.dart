@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/user_extension.dart';
 import 'package:miria/model/account.dart';
@@ -171,13 +172,13 @@ class AntennaSettingsForm extends ConsumerWidget {
           TextFormField(
             initialValue: initialSettings.name,
             maxLength: 100,
-            decoration: const InputDecoration(
-              labelText: "アンテナ名",
-              contentPadding: EdgeInsets.fromLTRB(12, 24, 12, 16),
+            decoration: InputDecoration(
+              labelText: S.of(context).antennaName,
+              contentPadding: const EdgeInsets.fromLTRB(12, 24, 12, 16),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return "入力してください";
+                return S.of(context).pleaseInput;
               }
               return null;
             },
@@ -185,7 +186,7 @@ class AntennaSettingsForm extends ConsumerWidget {
                 ref.read(_antennaSettingsNotifierProvider.notifier).updateName,
           ),
           const SizedBox(height: 10),
-          const Text("アンテナのソース"),
+          Text(S.of(context).antennaSource),
           const SizedBox(height: 5),
           DropdownButtonFormField<AntennaSource>(
             items: AntennaSource.values
@@ -194,17 +195,17 @@ class AntennaSettingsForm extends ConsumerWidget {
                     value: e,
                     child: Text(
                       switch (e) {
-                        AntennaSource.home => "ホーム",
-                        AntennaSource.all => "全て",
-                        AntennaSource.users => "ユーザー",
-                        AntennaSource.list => "リスト",
+                        AntennaSource.home => S.of(context).antennaSourceHome,
+                        AntennaSource.all => S.of(context).antennaSourceAll,
+                        AntennaSource.users => S.of(context).antennaSourceUser,
+                        AntennaSource.list => S.of(context).antennaSourceList,
                       },
                     ),
                   ),
                 )
                 .toList(),
             value: settings.src,
-            hint: const Text("ソースを選択"),
+            hint: Text(S.of(context).selectAntennas),
             onChanged:
                 ref.read(_antennaSettingsNotifierProvider.notifier).updateSrc,
           ),
@@ -221,13 +222,13 @@ class AntennaSettingsForm extends ConsumerWidget {
                   .toList(),
               validator: (value) {
                 if (value == null) {
-                  return "選択してください";
+                  return S.of(context).pleaseInput;
                 }
                 return null;
               },
               value: list.valueOrNull
                   ?.firstWhereOrNull((e) => e.id == settings.userListId),
-              hint: const Text("リストを選択"),
+              hint: Text(S.of(context).selectList),
               onChanged: ref
                   .read(_antennaSettingsNotifierProvider.notifier)
                   .updateUserList,
@@ -237,10 +238,10 @@ class AntennaSettingsForm extends ConsumerWidget {
               controller: controller,
               minLines: 2,
               maxLines: 20,
-              decoration: const InputDecoration(
-                labelText: "ユーザー",
-                hintText: "ユーザーネームを改行で区切って指定します",
-                contentPadding: EdgeInsets.fromLTRB(12, 24, 12, 16),
+              decoration: InputDecoration(
+                labelText: S.of(context).user,
+                hintText: S.of(context).antennaSourceUserHintText,
+                contentPadding: const EdgeInsets.fromLTRB(12, 24, 12, 16),
               ),
               onSaved: ref
                   .read(_antennaSettingsNotifierProvider.notifier)
@@ -262,7 +263,7 @@ class AntennaSettingsForm extends ConsumerWidget {
                 }
                 controller.text += "${user.acct}\n";
               },
-              child: const Text("ユーザーを追加"),
+              child: Text(S.of(context).addUser),
             ),
           ],
           const SizedBox(height: 10),
@@ -271,11 +272,11 @@ class AntennaSettingsForm extends ConsumerWidget {
                 initialSettings.keywords.map((e) => e.join(" ")).join("\n"),
             minLines: 2,
             maxLines: 20,
-            decoration: const InputDecoration(
-              labelText: "キーワード",
-              helperText: "スペースで区切った単語はAND条件で、改行で区切った行はOR条件で扱います",
+            decoration: InputDecoration(
+              labelText: S.of(context).keywords,
+              helperText: S.of(context).antennaSourceKeywordsHintText,
               helperMaxLines: 5,
-              contentPadding: EdgeInsets.fromLTRB(12, 24, 12, 16),
+              contentPadding: const EdgeInsets.fromLTRB(12, 24, 12, 16),
             ),
             // Misskey 2023.9.0 で条件が変更されるためバリデーションを行わない
             // https://github.com/misskey-dev/misskey/pull/11469
@@ -290,11 +291,11 @@ class AntennaSettingsForm extends ConsumerWidget {
                 .join("\n"),
             minLines: 2,
             maxLines: 20,
-            decoration: const InputDecoration(
-              labelText: "除外キーワード",
-              helperText: "スペースで区切った単語はAND条件で、改行で区切った行はOR条件で扱います",
+            decoration: InputDecoration(
+              labelText: S.of(context).excludeKeywords,
+              helperText: S.of(context).antennaSOurceExcludeKeywordsHintText,
               helperMaxLines: 5,
-              contentPadding: EdgeInsets.fromLTRB(12, 24, 12, 16),
+              contentPadding: const EdgeInsets.fromLTRB(12, 24, 12, 16),
             ),
             onSaved: ref
                 .read(_antennaSettingsNotifierProvider.notifier)
@@ -302,28 +303,28 @@ class AntennaSettingsForm extends ConsumerWidget {
           ),
           const SizedBox(height: 10),
           CheckboxListTile(
-            title: const Text("大文字と小文字を区別する"),
+            title: Text(S.of(context).discriminateUpperLower),
             value: settings.caseSensitive,
             onChanged: ref
                 .read(_antennaSettingsNotifierProvider.notifier)
                 .updateCaseSensitive,
           ),
           CheckboxListTile(
-            title: const Text("リプライを受信する"),
+            title: Text(S.of(context).receiveReplies),
             value: settings.withReplies,
             onChanged: ref
                 .read(_antennaSettingsNotifierProvider.notifier)
                 .updateWithReplies,
           ),
           CheckboxListTile(
-            title: const Text("ファイル付きのノートのみ受信する"),
+            title: Text(S.of(context).receiveOnlyFiles),
             value: settings.withFile,
             onChanged: ref
                 .read(_antennaSettingsNotifierProvider.notifier)
                 .updateWithFile,
           ),
           CheckboxListTile(
-            title: const Text("ローカルのみ"),
+            title: Text(S.of(context).receiveLocal),
             subtitle: const Text("ローカルのみの指定はMisskey 2023.10.2以降で有効です。"),
             value: settings.localOnly,
             onChanged: ref
@@ -334,7 +335,7 @@ class AntennaSettingsForm extends ConsumerWidget {
           // notifyは機能していない?
           Center(
             child: ElevatedButton(
-              child: const Text("決定"),
+              child: Text(S.of(context).done),
               onPressed: () {
                 if (formKey.currentState!.validate()) {
                   formKey.currentState!.save();

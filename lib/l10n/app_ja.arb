@@ -1,0 +1,196 @@
+{
+    "announcement": "お知らせ",
+    "antenna": "アンテナ",
+    "user": "ユーザー",
+    "channel": "チャンネル",
+    "timeline": "タイムライン",
+    "sensitive": "センシティブ",
+    "favorite": "お気に入り",
+    "trend": "トレンド",
+    "clip": "クリップ",
+    "edit": "編集",
+    "create": "作成",
+    "delete": "削除",
+    "search": "検索",
+    "detail": "詳細",
+    "follow": "フォロー",
+    "following": "フォロー中",
+    "managing": "管理中",
+    "done": "ほい",
+    "public": "パブリック",
+    "@done": {
+        "description": "わかった"
+    },
+    "willDelete": "削除するで",
+    "cancel": "やっぱやめる",
+    "noneAction": "なにもしない",
+    "pleaseInput": "入れてや",
+    "pleaseSelect": "選んでや",
+
+    "antennaName": "アンテナの名前",
+    "antennaSource": "アンテナのソース",
+    "antennaSourceHome": "ホーム",
+    "antennaSourceAll": "ぜんぶ",
+    "antennaSourceUser": "ユーザー",
+    "antennaSourceList": "リスト",
+    "selectAntennas": "ソースを選択",
+    "selectList": "リストを選択",
+    "antennaSourceUserHintText": "ユーザーネームを改行で区切って指定します",
+    "addUser": "ユーザーを追加",
+    "keywords": "キーワード",
+    "antennaSourceKeywordsHintText": "スペースで区切った単語はAND条件で、改行で区切った行はOR条件で扱います",
+    "excludeKeywords": "除外キーワード",
+    "antennaSOurceExcludeKeywordsHintText": "スペースで区切った単語はAND条件で、改行で区切った行はOR条件で扱います",
+    "discriminateUpperLower": "大文字と小文字を区別する",
+    "receiveReplies": "リプライを受信する",
+    "receiveOnlyFiles": "ファイル付きのノートのみ受信する",
+    "receiveLocal": "ローカルのみ受信する",
+    "confirmDeletingAntenna": "アンテナ削除するか？",
+    
+    "channelJoinningCounts": "{usersCount}人が参加中",
+    "@channelJoinningCounts": {
+        "description": "チャンネルの参加人数",
+        "placeholders": {
+            "usersCount": {
+                "type": "string"
+            }
+        }
+    },
+    "channelNotes": "{notesCount}投稿",
+    "@channelNotes": {
+        "description": "チャンネルのノート数",
+        "placeholders": {
+            "notesCount": {
+                "type": "string"
+            }
+        }
+    },
+    "channelLastNotedAt": "{lastNotedAt} に更新",
+    "@channelLastNotedAt": {
+        "description": "チャンネルのノート数",
+        "placeholders": {
+            "lastNotedAt": {
+                "type": "string"
+            }
+        }
+    },
+    "favorited": "お気に入り中",
+    "willFavorite": "お気に入りに入れるで",
+    "willFollow": "フォローするで",
+    "channelInformation": "チャンネル情報",
+    "channelStatics": "{notesCount} 投稿 / {usersCount} 人が参加中 / {lastNotedAt} に更新",
+    "@channelStatics": {
+        "description": "チャンネルの統計情報",
+        "placeholders": {
+            "notesCount": {
+                "type": "string"
+            },
+            "usersCount": {
+                "type": "string"
+            },
+            "lastNotedAt": {
+                "type": "string"
+            }
+        }
+    },
+
+    "confirmDeleteClip": "このクリップ削除してええか？",
+    "clipName": "クリップ名",
+    "clipDescription": "説明（省略してもええよ）",
+    "alreadyAddedClip": "すでにクリップに追加されてるノートみたいやねん",
+    "deleteClip": "クリップから削除する",
+
+    "thanksForAbuse": "内容が送信されました。ご報告ありがとうございました。",
+    "abuseTo": "{userName} を通報する",
+    "@abuseTo": {
+        "placeholders": {
+            "userName": {
+                "type": "string"
+            }
+        }
+    },
+    "plaseInputReasonWhyAbuse": "通報理由の詳細を記入してください。対象のノートがある場合はそのURLも記入してください。",
+    "doAbusing": "通報する",
+
+    "closeTweet": "ツイートを閉じる",
+    "closePlayer": "プレイヤーを閉じる",
+    "doneCopy": "コピーしたで",
+    "mutedNotePlaceholder": "{userName}が何か言うとるわ",
+    "@mutedNotePlaceholder": {
+        "placeholders": {
+            "userName": {
+                "type": "string"
+            }
+        }
+    },
+    "hide": "隠す",
+    "showCw": "隠してあるのんの続きを見して",
+    "showReactionedNote": "続きを表示",
+    "showLongText": "続きを表示",
+    "showLongFiles": "続きを表示",
+    "otherReactions": "ほか{reactionCounts}個",
+    "@otherReactions": {
+        "placeholders": {
+            "reactionCounts": {
+                "type": "string"
+            }
+        }
+    },
+    "confirmDeleteReaction": "リアクション取り消してもええか？",
+    "cancelReaction": "取り消す",
+    "renoted": "がRenote",
+    "selfRenoted": "がセルフRenote",
+
+    "detail": "詳細",
+    "copyContents": "内容をコピー",
+    "copyLinks": "リンクをコピー",
+    "copyName": "ユーザー名をコピー",
+    "copyUserScreenName": "ユーザースクリーン名をコピー",
+    "openBrowsers": "ブラウザで開く",
+    "openBrowsersAsRemote": "ブラウザでリモート先を開く",
+    "shareNotes": "ノートを共有",
+    "deleteFavorite": "お気に入り解除",
+    "renotedNotes": "リノート直後のノート",
+    "deletedRecreate": "削除してなおす",
+    "confirmDeletedRecreate": "このノート消してなおす？ついたリアクション、Renote、返信は消えて戻らへんで？",
+    "deleteRenote": "リノートを解除する",
+    "confirmDelete": "ほんまに消してええな？",
+    "doDeleting": "消す！",
+
+    "confirmPoll": "{choiced}に投票しますか？",
+    "@confirmPoll": {
+        "placeholders": {
+            "choiced": {
+                "type": "string"
+            }
+        }
+    },
+    "votesCount": "({votes}票)",
+    "@votesCount": {
+        "placeholders": {
+            "votes": {
+                "type": "string"
+            }
+        }
+    },
+    "totalVotesCount": "計{votes}票・",
+    "@totalVotesCount": {
+        "votes": {
+            "type": "string"
+        }
+    },
+    "finished": "終了済み",
+    "openResult": "結果を見る",
+    "doVoting": "投票する",
+    "alreadyVoted": "投票済み",
+    "remainDiffer": "あと{differ}",
+    "@remainDiffer": {
+        "placeholders": {
+            "differ": {
+                "type": "string"
+            }
+        }
+    }
+
+    
+}

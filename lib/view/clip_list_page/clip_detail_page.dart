@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/clip_settings.dart';
@@ -39,7 +40,7 @@ class ClipDetailPage extends ConsumerWidget {
                   final settings = await showDialog<ClipSettings>(
                     context: context,
                     builder: (context) => ClipSettingsDialog(
-                      title: const Text("編集"),
+                      title: Text(S.of(context).edit),
                       initialSettings: ClipSettings.fromClip(clip),
                     ),
                   );

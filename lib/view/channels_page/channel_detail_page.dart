@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -28,11 +29,11 @@ class ChannelDetailPage extends ConsumerWidget {
         account: account,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("チャンネル"),
-            bottom: const TabBar(
+            title: Text(S.of(context).channel),
+            bottom: TabBar(
               tabs: [
-                Tab(child: Text("チャンネル情報")),
-                Tab(child: Text("タイムライン")),
+                Tab(child: Text(S.of(context).channelInformation)),
+                Tab(child: Text(S.of(context).timeline)),
               ],
             ),
           ),
