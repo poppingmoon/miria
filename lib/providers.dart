@@ -170,18 +170,6 @@ final misskeyServerListNotifierProvider = AsyncNotifierProvider.autoDispose<
 
 final cacheManagerProvider = Provider<BaseCacheManager?>((ref) => null);
 
-final miAuthCallbackProvider = StateProvider.autoDispose<Uri?>((ref) => null);
-
-final colorThemeRepositoryProvider =
-    NotifierProvider<ColorThemeRepository, List<ColorTheme>>(
-  ColorThemeRepository.new,
-);
-
-final installedThemeCodeRepositoryProvider =
-    NotifierProvider<InstalledThemeCodeRepository, List<String>>(
-  InstalledThemeCodeRepository.new,
-);
-
 final misskeyNoteNotifierProvider =
     NotifierProvider.family<MisskeyNoteNotifier, void, Account>(
   MisskeyNoteNotifier.new,
@@ -199,6 +187,18 @@ final antennasNotifierProvider = AsyncNotifierProvider.autoDispose
 
 final clipsNotifierProvider = AsyncNotifierProvider.autoDispose
     .family<ClipsNotifier, List<Clip>, Misskey>(ClipsNotifier.new);
+
+final miAuthCallbackProvider = StateProvider.autoDispose<Uri?>((ref) => null);
+
+final colorThemeRepositoryProvider =
+    NotifierProvider<ColorThemeRepository, List<ColorTheme>>(
+  ColorThemeRepository.new,
+);
+
+final installedThemeCodeRepositoryProvider =
+    NotifierProvider<InstalledThemeCodeRepository, List<String>>(
+  InstalledThemeCodeRepository.new,
+);
 
 final downloadFileNotifierProvider =
     NotifierProvider<DownloadFileNotifier, void>(DownloadFileNotifier.new);
