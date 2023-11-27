@@ -273,7 +273,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                   ),
                 if (displayNote.reply != null && !widget.isForceUnvisibleReply)
                   ChannelColorBarBox(
-                    note: displayNote,
+                    note: displayNote.reply!,
                     child: MisskeyNote(
                       note: displayNote.reply!,
                       isDisplayBorder: false,
@@ -555,9 +555,8 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                         padding: MaterialStatePropertyAll(
                                           EdgeInsets.zero,
                                         ),
-                                        minimumSize: MaterialStatePropertyAll(
-                                          Size.zero,
-                                        ),
+                                        minimumSize:
+                                            MaterialStatePropertyAll(Size.zero),
                                         tapTargetSize:
                                             MaterialTapTargetSize.shrinkWrap,
                                       ),
