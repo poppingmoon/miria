@@ -59,8 +59,8 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
     );
   }
 
-  Future<Expire?> getExpire() {
-    return showDialog<Expire?>(
+  Future<Expire?> getExpire() async {
+    return await showDialog<Expire?>(
       context: context,
       builder: (context) => const ExpireSelectDialog(),
     );
