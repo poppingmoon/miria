@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -22,7 +23,7 @@ class RenoteUserDialog extends ConsumerWidget {
     return AccountScope(
       account: account,
       child: AlertDialog(
-        title: const Text("Renoteしたユーザー"),
+        title: Text(S.of(context).renotedUsers),
         content: SizedBox(
           width: MediaQuery.of(context).size.width * 0.8,
           height: MediaQuery.of(context).size.width * 0.8,

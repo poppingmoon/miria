@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -51,6 +52,7 @@ class RenoteModalSheetState extends ConsumerState<RenoteModalSheet> {
             onTap: () async {
               final scaffoldMessenger = ScaffoldMessenger.of(context);
               final navigator = Navigator.of(context);
+              final localize = S.of(context);
               await ref.read(misskeyProvider(widget.account)).notes.create(
                     NotesCreateRequest(
                       renoteId: widget.note.id,
@@ -59,12 +61,12 @@ class RenoteModalSheetState extends ConsumerState<RenoteModalSheet> {
                     ),
                   );
               scaffoldMessenger
-                  .showSnackBar(const SnackBar(content: Text("Renoteしました。")));
+                  .showSnackBar(SnackBar(content: Text(localize.renoted)));
               navigator.pop();
             }.expectFailure(context),
             title: Padding(
               padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-              child: Text("${channel.name}内にRenote"),
+              child: Text(S.of(context).renoteInSpecificChannel(channel.name)),
             ),
           ),
           ListTile(
@@ -86,7 +88,9 @@ class RenoteModalSheetState extends ConsumerState<RenoteModalSheet> {
             }.expectFailure(context),
             title: Padding(
               padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-              child: Text("${channel.name}内に引用Renote"),
+              child: Text(
+                S.of(context).quotedRenoteInSpecificChannel(channel.name),
+              ),
             ),
           ),
         ],
@@ -95,6 +99,7 @@ class RenoteModalSheetState extends ConsumerState<RenoteModalSheet> {
             onTap: () async {
               final scaffoldMessenger = ScaffoldMessenger.of(context);
               final navigator = Navigator.of(context);
+              final localize = S.of(context);
               await ref.read(misskeyProvider(widget.account)).notes.create(
                     NotesCreateRequest(
                       renoteId: widget.note.id,
@@ -103,7 +108,7 @@ class RenoteModalSheetState extends ConsumerState<RenoteModalSheet> {
                     ),
                   );
               scaffoldMessenger
-                  .showSnackBar(const SnackBar(content: Text("Renoteしました。")));
+                  .showSnackBar(SnackBar(content: Text(localize.renoted)));
               navigator.pop();
             }.expectFailure(context),
             title: const Padding(
@@ -152,12 +157,13 @@ class RenoteModalSheetState extends ConsumerState<RenoteModalSheet> {
               );
               navigator.pop();
             },
-            title: const Text("引用Renote"),
+            title: Text(S.of(context).quotedRenote),
           ),
           ListTile(
             onTap: () async {
               final scaffoldMessenger = ScaffoldMessenger.of(context);
               final navigator = Navigator.of(context);
+              final localize = S.of(context);
               final selected = await showDialog<CommunityChannel?>(
                 context: context,
                 builder: (context) =>
@@ -173,13 +179,15 @@ class RenoteModalSheetState extends ConsumerState<RenoteModalSheet> {
                     );
 
                 scaffoldMessenger.showSnackBar(
-                  const SnackBar(content: Text("Renoteしました。")),
+                  SnackBar(content: Text(localize.renoted)),
                 );
                 navigator.pop();
               }
             }.expectFailure(context),
             title: Text(
-              "${widget.note.channel != null ? "ほかの" : ""}チャンネルへRenote",
+              widget.note.channel != null
+                  ? S.of(context).renoteInOtherChannel
+                  : S.of(context).renoteInChannel,
             ),
           ),
           ListTile(
@@ -203,7 +211,9 @@ class RenoteModalSheetState extends ConsumerState<RenoteModalSheet> {
               }
             },
             title: Text(
-              "${widget.note.channel != null ? "ほかの" : ""}チャンネルへ引用Renote",
+              widget.note.channel != null
+                  ? S.of(context).quotedRenoteInOtherChannel
+                  : S.of(context).quotedRenoteInOtherChannel,
             ),
           ),
         ],
