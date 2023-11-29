@@ -81,8 +81,3 @@ parts:
     prime:
       - usr/bin/zenity
       - usr/share/zenity/*
-
-layout:
-  # zenity partのリソース再配置問題修正のため
-  /usr/share/zenity:
-    symlink: $SNAP/usr/share/zenity
