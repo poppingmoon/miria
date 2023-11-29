@@ -540,8 +540,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                     }),
                                     child: Text(
                                       S.of(context).otherReactions(
-                                            (displayNote.reactions.length - 16)
-                                                .format(),
+                                            displayNote.reactions.length - 16,
                                           ),
                                     ),
                                   ),

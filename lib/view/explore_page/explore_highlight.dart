@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
@@ -42,7 +43,10 @@ class ExploreHighlightState extends ConsumerState<ExploreHighlight> {
                   isNote = index == 0;
                 }),
                 isSelected: [isNote, !isNote],
-                children: const [Text("ノート"), Text("アンケート")],
+                children: [
+                  Text(S.of(context).note),
+                  Text(S.of(context).searchVoteTab),
+                ],
               ),
             ),
           ),

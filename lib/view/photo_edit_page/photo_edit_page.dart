@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/image_file.dart';
@@ -49,7 +50,7 @@ class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
         canPop: false,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("写真編集"),
+            title: Text(S.of(context).editPhoto),
             leading: IconButton(
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(Icons.arrow_back_ios_new),
@@ -60,15 +61,14 @@ class PhotoEditPageState extends ConsumerState<PhotoEditPage> {
                   photoEdit.clearSelectMode();
                   final confirm = await SimpleConfirmDialog.show(
                     context: context,
-                    message: "保存しよる？",
-                    primary: "保存する",
-                    secondary: "もうちょっと続ける",
+                    message: S.of(context).confirmSavingPhoto,
+                    primary: S.of(context).confirmSavingPhoto,
+                    secondary: S.of(context).doneEditingPhoto,
                   );
 
                   final result =
                       await photoEdit.createSaveData(renderingAreaKey);
                   if (result == null) return;
-                  if (!mounted) return;
                   if (!mounted) return;
                   if (confirm == true) {
                     widget.onSubmit(result);

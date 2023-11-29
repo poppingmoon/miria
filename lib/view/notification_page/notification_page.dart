@@ -38,12 +38,12 @@ class NotificationPageState extends ConsumerState<NotificationPage> {
         account: widget.account,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("通知"),
-            bottom: const TabBar(
+            title: Text(S.of(context).notification),
+            bottom: TabBar(
               tabs: [
-                Tab(text: "みんな"),
-                Tab(text: "自分宛て"),
-                Tab(text: "ダイレクト"),
+                Tab(text: S.of(context).notificationAll),
+                Tab(text: S.of(context).notificationForMe),
+                Tab(text: S.of(context).notificationDirect),
               ],
             ),
           ),

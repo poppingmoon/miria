@@ -1,11 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
 import 'package:miria/view/common/account_scope.dart';
-import 'package:miria/view/common/constants.dart';
 import 'package:miria/view/common/futable_list_builder.dart';
+import 'package:miria/view/common/misskey_notes/mfm_text.dart';
 import 'package:miria/view/themes/app_theme.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
@@ -45,10 +46,10 @@ class ExploreHashtagsState extends ConsumerState<ExploreHashtags> {
                 for (final element in HashtagListType.values)
                   element == hashtagListType,
               ],
-              children: const [
-                Text("トレンド"),
-                Text("ローカル"),
-                Text("リモート"),
+              children: [
+                Text(S.of(context).trend),
+                Text(S.of(context).local),
+                Text(S.of(context).remote),
               ],
             ),
           ),
@@ -120,16 +121,7 @@ class Hashtag extends StatelessWidget {
         HashtagRoute(hashtag: hashtag, account: AccountScope.of(context)),
       ),
       title: Text("#$hashtag", style: AppTheme.of(context).hashtagStyle),
-      trailing: Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-              text: usersCount.format(),
-            ),
-            TextSpan(text: "人", style: Theme.of(context).textTheme.bodySmall),
-          ],
-        ),
-      ),
+      trailing: MfmText(mfmText: S.of(context).joiningHashtagUsers(usersCount)),
     );
   }
 }
