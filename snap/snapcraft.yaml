@@ -1,0 +1,244 @@
+name: miria # 'snapcraft register miria'で名前を予約する必要があります。
+title: Miria
+type: app
+summary: Misskey Client App # 79文字まで
+description: |
+  Miriaは分散型SNS「Misskey」のクライアントアプリです。
+
+  機能
+
+  * タイムラインの閲覧やノートの投稿、「アンテナ」「チャンネル」「みつける」などの基本的な機能を利用することができます。
+  * 複数アカウント、複数サーバーに対応しています。(※2個目以降のアカウントを追加したあとは、アカウントに紐づくタブを追加する必要があります。)
+  * MFMに対応しています。
+  * タブにカスタム絵文字を設定することができます。
+  * リアクションピッカーの精度が高く、ひらがなでも検索しやすくなっています。
+  * 投稿欄でMFMの入力補完をすることができ、MFMの構文やカスタム絵文字をスムーズに入力することができます。
+  * 配色を複数のパターンから切り替えることができます。
+
+  制限事項
+
+  * このアプリでは新規登録およびアカウント削除の機能を提供していません。新規登録や削除が必要な場合、登録や削除に必要な要件をそれぞれのサーバーへご確認ください。
+  * このアプリではサーバーを提供していません。このアプリと一緒に特定のサーバーを付随して提供していないので、このアプリ単独で利用することはできません。
+  * このアプリはMisskey v12以前のバージョンやFirefishなどの派生したアプリケーションに対応していません。
+  * モバイル向けに開発されたアプリであるため、一部機能はデスクトップで動作しません。
+
+  注意：インストール後、パスワード管理サービスにアクセスできるように、下記のコマンドを実行してください。
+
+  `sudo snap connect miria:password-manager-service`
+license: AGPL-3.0
+website: https://shiosyakeyakini.info/miria_web
+source-code: https://github.com/shiosyakeyakini-info/miria
+issues: https://github.com/shiosyakeyakini-info/miria/issues
+donation: https://shiosyakeyakini.fanbox.cc
+icon: assets/images/icon.png
+adopt-info: miria
+base: core22
+grade: stable
+confinement: strict 
+compression: lzo
+architectures:
+  - amd64
+  - arm64
+
+apps:
+  miria:
+    command: usr/share/miria/miria
+    extensions: [gnome]
+    plugs:
+      - home
+      - unity7
+      - network
+      - audio-playback
+      # 以下はユーザーが接続を許可するまで使用不可（password-manager-serviceは必須）
+      - removable-media
+      - password-manager-service
+
+parts:
+  flutter-git:
+    plugin: nil
+    source: https://github.com/flutter/flutter.git
+    source-branch: stable
+    source-depth: 1
+    override-build: |
+      mkdir -p $CRAFT_PART_INSTALL/usr/bin
+      mkdir -p $CRAFT_PART_INSTALL/usr/libexec
+      cp -r $CRAFT_PART_SRC $CRAFT_PART_INSTALL/usr/libexec/flutter
+      ln -s $CRAFT_PART_INSTALL/usr/libexec/flutter/bin/flutter $CRAFT_PART_INSTALL/usr/bin/flutter
+      ln -s $SNAPCRAFT_PART_INSTALL/usr/libexec/flutter/bin/dart $SNAPCRAFT_PART_INSTALL/usr/bin/dart
+      $CRAFT_PART_INSTALL/usr/bin/flutter doctor 
+    build-packages:
+      - clang
+      - cmake
+      - curl
+      - libgtk-3-dev
+      - ninja-build
+      - unzip
+      - xz-utils
+      - zip
+    override-prime: ''
+
+  miria:
+    source: .
+    after: [flutter-git]
+    plugin: nil
+    override-pull: |
+      craftctl default
+      craftctl set version=$(cat pubspec.yaml | grep "version[:]" | cut -d ' ' -f 2)
+    build-packages:
+      - libmpv-dev
+      - libsecret-1-dev
+      - imagemagick
+    build-environment:
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET:/snap/gnome-42-2204-sdk/current/lib/$CRAFT_ARCH_TRIPLET:/snap/gnome-42-2204-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET:/snap/gnome-42-2204-sdk/current/usr/lib:/snap/gnome-42-2204-sdk/current/usr/lib/vala-current:/snap/gnome-42-2204-sdk/current/usr/lib/$CRAFT_ARCH_TRIPLET/pulseaudio${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+    override-build: |
+      mkdir -p $CRAFT_PART_INSTALL/usr/share/miria
+      mkdir -p $CRAFT_PART_INSTALL/meta/gui
+      set +e
+      flutter pub get
+      set -eux
+      flutter build linux --release 
+      cp -r build/linux/*/release/bundle/* $CRAFT_PART_INSTALL/usr/share/miria/
+      convert assets/images/icon.png -resize 256x256 $CRAFT_PART_INSTALL/meta/gui/miria.png
+
+  # Snapとファイル選択ダイアログの統合のため
+  # 詳細: https://forum.snapcraft.io/t/integrate-custom-dialogs-in-your-snap/10825
+  zenity:
+    after: [miria]
+    plugin: nil
+    stage-packages:
+      - zenity
+    prime:
+      - usr/bin/zenity
+      - usr/share/zenity/*
+
+  deps:
+    # https://github.com/ubuntu-flutter-community/musicpod/blob/ace85f0a85f9d3f191c98c54276a29b2f32f51b0/snap/snapcraft.yaml#L100C1-L209C36
+    plugin: nil
+    stage-packages:
+      - libaom3
+      - libass9
+      - libblas3
+      - libbluray2
+      - libbs2b0
+      - libchromaprint1
+      - libcodec2-1.0
+      - libflite1
+      - libgme0
+      - libgsm1
+      - liblapack3
+      - liblilv-0-0
+      - libmysofa1
+      - libnorm1
+      - libnuma1
+      - libopenmpt0
+      - libpgm-5.3-0
+      - libpocketsphinx3
+      - librabbitmq4
+      - librubberband2
+      - libserd-0-0
+      - libshine3
+      - libsnappy1v5
+      - libsodium23
+      - libsord-0-0
+      - libsoxr0
+      - libsphinxbase3
+      - libsratom-0-0
+      - libssh-gcrypt-4
+      - libudfread0
+      - libva-drm2
+      - libva-x11-2
+      - libvdpau1
+      - libvidstab1.1
+      - libx265-199
+      - libxvidcore4
+      - libzimg2
+      - libzmq5
+      - libzvbi0
+      - libavfilter7
+      - libavformat58
+      - libpostproc55
+      - libswscale5
+      - libsrt1.4-gnutls
+      - ocl-icd-libopencl1
+      - on amd64:
+        - libmfx1
+      - libsecret-1-0 # flutter_secure_storage
+    prime:
+      - usr/lib/*/blas/libblas.so*
+      - usr/lib/*/lapack/liblapack.so*
+      - usr/lib/*/libaom.so*
+      - usr/lib/*/libass.so*
+      - usr/lib/*/libbluray.so*
+      - usr/lib/*/libbs2b.so*
+      - usr/lib/*/libchromaprint.so*
+      - usr/lib/*/libcodec2.so*
+      - usr/lib/*/libflite_cmulex.so*
+      - usr/lib/*/libflite_cmu_us_awb.so*
+      - usr/lib/*/libflite_cmu_us_kal16.so*
+      - usr/lib/*/libflite_cmu_us_kal.so*
+      - usr/lib/*/libflite_cmu_us_rms.so*
+      - usr/lib/*/libflite_cmu_us_slt.so*
+      - usr/lib/*/libflite.so*
+      - usr/lib/*/libflite_usenglish.so*
+      - usr/lib/*/libgme.so*
+      - usr/lib/*/libgsm.so*
+      - usr/lib/*/liblilv-0.so*
+      - usr/lib/*/libmfx.so*
+      - usr/lib/*/libmysofa.so*
+      - usr/lib/*/libnorm.so*
+      - usr/lib/*/libnuma.so*
+      - usr/lib/*/libOpenCL.so*
+      - usr/lib/*/libopenmpt.so*
+      - usr/lib/*/libpgm-5.3.so*
+      - usr/lib/*/libpocketsphinx.so*
+      - usr/lib/*/librabbitmq.so*
+      - usr/lib/*/librubberband.so*
+      - usr/lib/*/libserd-0.so*
+      - usr/lib/*/libshine.so*
+      - usr/lib/*/libsnappy.so*
+      - usr/lib/*/libsodium.so*
+      - usr/lib/*/libsord-0.so*
+      - usr/lib/*/libsoxr.so*
+      - usr/lib/*/libsphinxbase.so*
+      - usr/lib/*/libsratom-0.so*
+      - usr/lib/*/libssh-gcrypt.so*
+      - usr/lib/*/libudfread.so*
+      - usr/lib/*/libva-drm.so*
+      - usr/lib/*/libva-x11.so*
+      - usr/lib/*/libvdpau.so*
+      - usr/lib/*/libvidstab.so*
+      - usr/lib/*/libx265.so*
+      - usr/lib/*/libxvidcore.so*
+      - usr/lib/*/libzimg.so*
+      - usr/lib/*/libzmq.so*
+      - usr/lib/*/libzvbi.so*
+      - usr/lib/*/libx264.so*
+      - usr/lib/*/libswscale.so*
+      - usr/lib/*/libavfilter.so*
+      - usr/lib/*/libavformat.so*
+      - usr/lib/*/libpostproc.so*
+      - usr/lib/*/libsrt*.so*
+      - usr/lib/*/libda*.so*
+      - usr/lib/*/libgfortran.so*
+      - usr/lib/*/libavcodec.so*
+      - usr/lib/*/libavutil.so*
+      - usr/lib/*/libswresample.so*
+      - usr/lib/*/libsecret-1.so* # flutter_secure_storage
+
+  cleanup:
+    after: [miria, zenity, deps]  # Make this part run last; list all your other parts here
+    plugin: nil
+    build-snaps: [gnome-42-2204, gtk-common-theme, core22]  # List all content-snaps you're using here
+    override-prime: |
+      set -eux
+      for snap in "gnome-42-2204" "gtk-common-theme" "core22"; do  # List all content-snaps you're using here
+        cd "/snap/$snap/current" && find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" "$SNAPCRAFT_PRIME/usr/{}" \;
+      done
+      for CRUFT in bug lintian man; do
+        rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT
+      done
+      find $SNAPCRAFT_PRIME/usr/share -type d -empty -delete
+
+layout:
+  /usr/share/zenity:
+    symlink: $SNAP/usr/share/zenity # Fix resource relocation problem of zenity part
