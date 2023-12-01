@@ -145,8 +145,8 @@ parts:
       - libsratom-0-0
       - libssh-gcrypt-4
       - libudfread0
-      - libva-drm2
-      - libva-x11-2
+      # - libva-drm2
+      # - libva-x11-2
       - libvdpau1
       - libvidstab1.1
       - libx265-199
@@ -162,6 +162,29 @@ parts:
       - ocl-icd-libopencl1
       - on amd64:
         - libmfx1
+      # manual
+      - liblua5.2-0
+      - libmpv1
+      - libmujs1
+      - libopenal1
+      - libplacebo192
+      - libsixel1
+      - libsndio7.0
+      - libuchardet0
+      - libusb-1.0-0
+      - libvulkan1
+      - libxcb-shape0
+      - libcdio19
+      - libcdio-cdda2
+      - libcdio-paranoia2
+      - libdc1394-25
+      - libdecor-0-0
+      - libdvdnav4
+      - libdvdread8
+      - libsdl2-2.0-0
+      - libxss1
+      - libxv1
+      - libavdevice58
       - libsecret-1-0 # flutter_secure_storage
     prime:
       - usr/lib/*/blas/libblas.so*
@@ -203,8 +226,8 @@ parts:
       - usr/lib/*/libsratom-0.so*
       - usr/lib/*/libssh-gcrypt.so*
       - usr/lib/*/libudfread.so*
-      - usr/lib/*/libva-drm.so*
-      - usr/lib/*/libva-x11.so*
+      # - usr/lib/*/libva-drm.so*
+      # - usr/lib/*/libva-x11.so*
       - usr/lib/*/libvdpau.so*
       - usr/lib/*/libvidstab.so*
       - usr/lib/*/libx265.so*
@@ -223,15 +246,39 @@ parts:
       - usr/lib/*/libavcodec.so*
       - usr/lib/*/libavutil.so*
       - usr/lib/*/libswresample.so*
+      # manual
+      - usr/lib/*/liblua5.2.so*
+      - usr/lib/*/libmpv.so*
+      - usr/lib/*/libmujs.so*
+      - usr/lib/*/libopenal.so*
+      - usr/lib/*/libplacebo.so*
+      - usr/lib/*/libsixel.so*
+      - usr/lib/*/libsndio.so*
+      - usr/lib/*/libuchardet.so*
+      - usr/lib/*/libusb-1.0.so*
+      - usr/lib/*/libvulkan.so*
+      - usr/lib/*/libxcb-shape.so*
+      - usr/lib/*/libcdio.so*
+      - usr/lib/*/libcdio_cdda.so*
+      - usr/lib/*/libcdio_paranoia.so*
+      - usr/lib/*/libdc1394.so*
+      - usr/lib/*/libdecor-0.so*
+      - usr/lib/*/libdvdnav.so*
+      - usr/lib/*/libdvdread.so*
+      - usr/lib/*/libSDL2-2.0.so*
+      - usr/lib/*/libXss.so*
+      - usr/lib/*/libXv.so*
+      - usr/lib/*/libavdevice.so*
       - usr/lib/*/libsecret-1.so* # flutter_secure_storage
 
   cleanup:
     after: [miria, zenity, deps]  # Make this part run last; list all your other parts here
     plugin: nil
-    build-snaps: [gnome-42-2204, gtk-common-theme, core22]  # List all content-snaps you're using here
+    build-snaps: [gnome-42-2204, gtk-common-themes, core22]  # List all content-snaps you're using here
     override-prime: |
       set -eux
-      for snap in "gnome-42-2204" "gtk-common-theme" "core22"; do  # List all content-snaps you're using here
+      mv $SNAPCRAFT_PRIME/usr/lib/*/*/* $SNAPCRAFT_PRIME/usr/lib/*/
+      for snap in "gnome-42-2204" "gtk-common-themes" "core22"; do  # List all content-snaps you're using here
         cd "/snap/$snap/current" && find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" "$SNAPCRAFT_PRIME/usr/{}" \;
       done
       for CRUFT in bug lintian man; do
