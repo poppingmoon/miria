@@ -29,6 +29,7 @@ class SeveralAccountGeneralSettingsPageState
   NoteVisibility defaultNoteVisibility = NoteVisibility.public;
   ReactionAcceptance? defaultReactionAppearance;
   AccountSettings? accountSettings;
+  bool forceShowAd = false;
 
   @override
   void didChangeDependencies() {
@@ -49,6 +50,7 @@ class SeveralAccountGeneralSettingsPageState
           defaultIsLocalOnly = loadedSettings.defaultIsLocalOnly;
           defaultNoteVisibility = loadedSettings.defaultNoteVisibility;
           defaultReactionAppearance = loadedSettings.defaultReactionAcceptance;
+          forceShowAd = loadedSettings.forceShowAd;
         });
       }
     });
@@ -63,6 +65,7 @@ class SeveralAccountGeneralSettingsPageState
             defaultNoteVisibility: defaultNoteVisibility,
             defaultIsLocalOnly: defaultIsLocalOnly,
             defaultReactionAcceptance: defaultReactionAppearance,
+            forceShowAd: forceShowAd,
           ),
         );
   }
@@ -131,9 +134,7 @@ class SeveralAccountGeneralSettingsPageState
                         const Text("リアクションの受け入れ"),
                         DropdownButton<ReactionAcceptance?>(
                           items: [
-                            const DropdownMenuItem(
-                              child: Text("全部"),
-                            ),
+                            const DropdownMenuItem(child: Text("全部")),
                             for (final acceptance in ReactionAcceptance.values)
                               DropdownMenuItem(
                                 value: acceptance,
@@ -147,6 +148,19 @@ class SeveralAccountGeneralSettingsPageState
                               save();
                             });
                           },
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        const Text("広告"),
+                        CheckboxListTile(
+                          value: forceShowAd,
+                          title: const Text("広告を常に表示する"),
+                          enabled: widget.account.i.policies.canHideAds,
+                          onChanged: (value) => setState(
+                            () {
+                              forceShowAd = value ?? false;
+                              save();
+                            },
+                          ),
                         ),
                       ],
                     ),

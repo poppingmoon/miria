@@ -12,6 +12,7 @@ class Account with _$Account {
     required String userId,
     String? token,
     required MeDetailed i,
+    required MetaResponse meta,
   }) = _Account;
   const Account._();
 
@@ -36,9 +37,10 @@ class Account with _$Account {
     );
   }
 
-  factory Account.demoAccount(String host) => Account(
+  factory Account.demoAccount(String host, MetaResponse meta) => Account(
         host: host,
         userId: "",
+        meta: meta,
         i: MeDetailed(
           id: "",
           username: "",

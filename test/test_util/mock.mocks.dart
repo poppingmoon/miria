@@ -1348,15 +1348,29 @@ class MockNoteRepository extends _i1.Mock implements _i26.NoteRepository {
       ) as _i6.Account);
 
   @override
-  List<List<String>> get muteWordContents => (super.noSuchMethod(
-        Invocation.getter(#muteWordContents),
+  List<List<String>> get softMuteWordContents => (super.noSuchMethod(
+        Invocation.getter(#softMuteWordContents),
         returnValue: <List<String>>[],
         returnValueForMissingStub: <List<String>>[],
       ) as List<List<String>>);
 
   @override
-  List<RegExp> get muteWordRegExps => (super.noSuchMethod(
-        Invocation.getter(#muteWordRegExps),
+  List<RegExp> get softMuteWordRegExps => (super.noSuchMethod(
+        Invocation.getter(#softMuteWordRegExps),
+        returnValue: <RegExp>[],
+        returnValueForMissingStub: <RegExp>[],
+      ) as List<RegExp>);
+
+  @override
+  List<List<String>> get hardMuteWordContents => (super.noSuchMethod(
+        Invocation.getter(#hardMuteWordContents),
+        returnValue: <List<String>>[],
+        returnValueForMissingStub: <List<String>>[],
+      ) as List<List<String>>);
+
+  @override
+  List<RegExp> get hardMuteWordRegExps => (super.noSuchMethod(
+        Invocation.getter(#hardMuteWordRegExps),
         returnValue: <RegExp>[],
         returnValueForMissingStub: <RegExp>[],
       ) as List<RegExp>);
@@ -1383,10 +1397,17 @@ class MockNoteRepository extends _i1.Mock implements _i26.NoteRepository {
       ) as bool);
 
   @override
-  void updateMute(List<_i5.MuteWord>? mutedWords) => super.noSuchMethod(
+  void updateMute(
+    List<_i5.MuteWord>? softMuteWords,
+    List<_i5.MuteWord>? hardMuteWords,
+  ) =>
+      super.noSuchMethod(
         Invocation.method(
           #updateMute,
-          [mutedWords],
+          [
+            softMuteWords,
+            hardMuteWords,
+          ],
         ),
         returnValueForMissingStub: null,
       );

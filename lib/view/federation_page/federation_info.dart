@@ -44,15 +44,22 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
             bannerUrl: metaResponse.bannerUrl?.toString(),
             faviconUrl: metaResponse.iconUrl?.toString(),
             tosUrl: metaResponse.tosUrl?.toString(),
+            privacyPolicyUrl: metaResponse.privacyPolicyUrl?.toString(),
+            impressumUrl: metaResponse.impressumUrl?.toString(),
+            repositoryUrl: metaResponse.repositoryUrl.toString(),
             name: metaResponse.name ?? "",
             description: metaResponse.description ?? "",
             usersCount: statsResponse.originalUsersCount,
             notesCount: statsResponse.originalNotesCount,
+            maintainerName: metaResponse.maintainerName,
+            maintainerEmail: metaResponse.maintainerEmail,
+            serverRules: metaResponse.serverRules,
             reactionCount: statsResponse.reactionsCount,
             softwareName: "misskey",
             softwareVersion: metaResponse.version,
             languages: metaResponse.langs,
             ads: metaResponse.ads,
+            meta: metaResponse,
 
             // 自分のサーバーが非対応ということはない
             isSupportedAnnouncement: true,
@@ -77,7 +84,8 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
             try {
               // Misskeyサーバーかもしれなかったら追加の情報を取得
 
-              final misskeyServer = Misskey(host: widget.host, token: null);
+              final misskeyServer =
+                  ref.read(misskeyWithoutAccountProvider(widget.host));
               final endpoints = await misskeyServer.endpoints();
 
               if (endpoints.contains("announcement")) {
@@ -102,17 +110,25 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
             bannerUrl: (misskeyMeta?.bannerUrl)?.toString(),
             faviconUrl: federation.faviconUrl?.toString(),
             tosUrl: (misskeyMeta?.tosUrl)?.toString(),
+            privacyPolicyUrl: (misskeyMeta?.privacyPolicyUrl)?.toString(),
+            impressumUrl: (misskeyMeta?.impressumUrl)?.toString(),
+            repositoryUrl: (misskeyMeta?.repositoryUrl)?.toString(),
             name: misskeyMeta?.name ?? federation.name,
             description: misskeyMeta?.description ?? federation.description,
+            maintainerName: misskeyMeta?.maintainerName,
+            maintainerEmail: misskeyMeta?.maintainerEmail,
             usersCount: federation.usersCount,
             notesCount: federation.notesCount,
             softwareName: federation.softwareName ?? "",
-            softwareVersion: federation.softwareVersion ?? "",
+            softwareVersion:
+                misskeyMeta?.version ?? federation.softwareVersion ?? "",
             languages: misskeyMeta?.langs ?? [],
             ads: misskeyMeta?.ads ?? [],
+            serverRules: misskeyMeta?.serverRules ?? [],
             isSupportedEmoji: isSupportedEmoji,
             isSupportedLocalTimeline: isSupportedLocalTimeline,
             isSupportedAnnouncement: isSupportedAnnouncement,
+            meta: misskeyMeta,
           );
         }
 
@@ -223,6 +239,46 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                         ),
                       ],
                     ),
+                  if (data.maintainerName != null)
+                    TableRow(
+                      children: [
+                        const Text(
+                          "管理者",
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          "${data.maintainerName}",
+                        ),
+                      ],
+                    ),
+                  if (data.maintainerEmail != null)
+                    TableRow(
+                      children: [
+                        const Text(
+                          "連絡先",
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          "${data.maintainerEmail}",
+                        ),
+                      ],
+                    ),
+                  if (data.serverRules.isNotEmpty)
+                    TableRow(
+                      children: [
+                        const Text(
+                          "サーバーのきめごと",
+                          textAlign: TextAlign.center,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (final rule in data.serverRules.indexed)
+                              Text("${rule.$1 + 1}. ${rule.$2}\n"),
+                          ],
+                        ),
+                      ],
+                    ),
                   if (data.tosUrl != null)
                     TableRow(
                       children: [
@@ -232,6 +288,39 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                         ),
                         GestureDetector(
                           onTap: () => launchUrl(Uri.parse(data.tosUrl!)),
+                          child: Text(
+                            data.tosUrl!.tight,
+                            style: AppTheme.of(context).linkStyle,
+                          ),
+                        ),
+                      ],
+                    ),
+                  if (data.privacyPolicyUrl != null)
+                    TableRow(
+                      children: [
+                        const Text(
+                          "プライバシーポリシー",
+                          textAlign: TextAlign.center,
+                        ),
+                        GestureDetector(
+                          onTap: () =>
+                              launchUrl(Uri.parse(data.privacyPolicyUrl!)),
+                          child: Text(
+                            data.tosUrl!.tight,
+                            style: AppTheme.of(context).linkStyle,
+                          ),
+                        ),
+                      ],
+                    ),
+                  if (data.impressumUrl != null)
+                    TableRow(
+                      children: [
+                        const Text(
+                          "運営者情報",
+                          textAlign: TextAlign.center,
+                        ),
+                        GestureDetector(
+                          onTap: () => launchUrl(Uri.parse(data.impressumUrl!)),
                           child: Text(
                             data.tosUrl!.tight,
                             style: AppTheme.of(context).linkStyle,

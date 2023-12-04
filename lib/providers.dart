@@ -50,6 +50,13 @@ final misskeyProvider = Provider.family<Misskey, Account>(
     socketConnectionTimeout: const Duration(seconds: 20),
   ),
 );
+final misskeyWithoutAccountProvider = Provider.family<Misskey, String>(
+  (ref, host) => Misskey(
+    host: host,
+    token: null,
+    socketConnectionTimeout: const Duration(seconds: 20),
+  ),
+);
 
 final timelineRepositoryProvider =
     NotifierProvider.family<TimelineRepository, TimelineState, TabSetting>(

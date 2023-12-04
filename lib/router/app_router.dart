@@ -35,11 +35,12 @@ import 'package:miria/view/settings_page/import_export_page/import_export_page.d
 import 'package:miria/view/settings_page/settings_page.dart';
 import 'package:miria/view/settings_page/tab_settings_page/tab_settings_list_page.dart';
 import 'package:miria/view/settings_page/tab_settings_page/tab_settings_page.dart';
-import 'package:miria/view/several_account_settings_page/hard_mute_page/hard_mute_page.dart';
+import 'package:miria/view/several_account_settings_page/cache_management_page/cache_management_page.dart';
 import 'package:miria/view/several_account_settings_page/instance_mute_page/instance_mute_page.dart';
 import 'package:miria/view/several_account_settings_page/reaction_deck_page/reaction_deck_page.dart';
 import 'package:miria/view/several_account_settings_page/several_account_general_settings_page/several_account_general_settings_page.dart';
 import 'package:miria/view/several_account_settings_page/several_account_settings_page.dart';
+import 'package:miria/view/several_account_settings_page/word_mute_page/word_mute_page.dart';
 import 'package:miria/view/sharing_account_select_page/account_select_page.dart';
 import 'package:miria/view/splash_page/splash_page.dart';
 import 'package:miria/view/timeline_page/timeline_page.dart';
@@ -93,8 +94,9 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: AppInfoRoute.page),
     AutoRoute(page: SeveralAccountSettingsRoute.page),
     AutoRoute(page: ReactionDeckRoute.page),
-    AutoRoute(page: HardMuteRoute.page),
+    AutoRoute(page: WordMuteRoute.page),
     AutoRoute(page: InstanceMuteRoute.page),
+    AutoRoute(page: CacheManagementRoute.page),
     AutoRoute(page: SeveralAccountGeneralSettingsRoute.page),
     AutoRoute(page: SharingAccountSelectRoute.page),
     // きしょ……
