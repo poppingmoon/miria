@@ -149,7 +149,6 @@ class SeveralAccountGeneralSettingsPageState
                         CheckboxListTile(
                           value: forceShowAd,
                           title: const Text("広告を常に表示する"),
-                          enabled: widget.account.i.policies.canHideAds,
                           onChanged: (value) => setState(
                             () {
                               forceShowAd = value ?? false;
