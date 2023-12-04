@@ -23,11 +23,10 @@ class MisskeyAdState extends ConsumerState<MisskeyAd> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (AccountScope.of(context).i.policies.canHideAds &&
-        !ref
-            .read(accountSettingsRepositoryProvider)
-            .fromAccount(AccountScope.of(context))
-            .forceShowAd) {
+    if (!ref
+        .read(accountSettingsRepositoryProvider)
+        .fromAccount(AccountScope.of(context))
+        .forceShowAd) {
       return;
     }
 
