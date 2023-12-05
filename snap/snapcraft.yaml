@@ -34,7 +34,7 @@ icon: assets/images/icon.png
 adopt-info: miria
 base: core22
 grade: stable
-confinement: strict 
+confinement: strict
 compression: lzo
 architectures:
   - amd64
@@ -65,7 +65,7 @@ parts:
       cp -r $CRAFT_PART_SRC $CRAFT_PART_INSTALL/usr/libexec/flutter
       ln -s $CRAFT_PART_INSTALL/usr/libexec/flutter/bin/flutter $CRAFT_PART_INSTALL/usr/bin/flutter
       ln -s $SNAPCRAFT_PART_INSTALL/usr/libexec/flutter/bin/dart $SNAPCRAFT_PART_INSTALL/usr/bin/dart
-      $CRAFT_PART_INSTALL/usr/bin/flutter doctor 
+      $CRAFT_PART_INSTALL/usr/bin/flutter doctor
     build-packages:
       - clang
       - cmake
@@ -96,9 +96,9 @@ parts:
       set +e
       flutter pub get
       set -eux
-      flutter build linux --release 
+      flutter build linux --release
       cp -r build/linux/*/release/bundle/* $CRAFT_PART_INSTALL/usr/share/miria/
-      convert assets/images/icon.png -resize 256x256 $CRAFT_PART_INSTALL/meta/gui/miria.png
+      cp macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_256.png $CRAFT_PART_INSTALL/meta/gui/miria.png
 
   # Snapとファイル選択ダイアログの統合のため
   # 詳細: https://forum.snapcraft.io/t/integrate-custom-dialogs-in-your-snap/10825
