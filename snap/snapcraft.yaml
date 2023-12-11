@@ -52,7 +52,8 @@ apps:
       # 以下はユーザーが接続を許可するまで使用不可（password-manager-serviceは必須）
       - removable-media
       - password-manager-service
-
+    environment:
+      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/lapack
 parts:
   flutter-git:
     plugin: nil
@@ -277,7 +278,6 @@ parts:
     build-snaps: [gnome-42-2204, gtk-common-themes, core22]  # List all content-snaps you're using here
     override-prime: |
       set -eux
-      mv $SNAPCRAFT_PRIME/usr/lib/*/*/* $SNAPCRAFT_PRIME/usr/lib/*/
       for snap in "gnome-42-2204" "gtk-common-themes" "core22"; do  # List all content-snaps you're using here
         cd "/snap/$snap/current" && find . -type f,l -exec rm -f "$SNAPCRAFT_PRIME/{}" "$SNAPCRAFT_PRIME/usr/{}" \;
       done
