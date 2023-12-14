@@ -46,7 +46,7 @@ class AbuseDialogState extends ConsumerState<AbuseDialog> {
     showDialog<void>(
       context: context,
       builder: (context) =>
-          SimpleMessageDialog(message: S.of(context).thanksForAbuse),
+          SimpleMessageDialog(message: S.of(context).thanksForReport),
     );
   }
 
@@ -56,9 +56,9 @@ class AbuseDialogState extends ConsumerState<AbuseDialog> {
       account: widget.account,
       child: AlertDialog(
         title: SimpleMfmText(
-          S
-              .of(context)
-              .abuseTo(widget.targetUser.name ?? widget.targetUser.username),
+          S.of(context).reportAbuseOf(
+                widget.targetUser.name ?? widget.targetUser.username,
+              ),
         ),
         content: SingleChildScrollView(
           child: Column(
@@ -72,7 +72,7 @@ class AbuseDialogState extends ConsumerState<AbuseDialog> {
                 autofocus: true,
               ),
               Text(
-                S.of(context).plaseInputReasonWhyAbuse,
+                S.of(context).pleaseInputReasonWhyAbuse,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],
@@ -81,7 +81,7 @@ class AbuseDialogState extends ConsumerState<AbuseDialog> {
         actions: [
           ElevatedButton(
             onPressed: abuse.expectFailure(context),
-            child: Text(S.of(context).doAbusing),
+            child: Text(S.of(context).reportAbuse),
           ),
         ],
       ),
