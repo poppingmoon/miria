@@ -36,42 +36,42 @@ class _NotesAfterRenotePageState extends ConsumerState<NotesAfterRenotePage> {
       appBar: AppBar(title: const Text("リノートの直後のノート")),
       body: Padding(
         padding: const EdgeInsets.only(right: 10),
-        child: PushableListView<Note>(
-          initializeFuture: () async {
-            final (
-              notesAfterRenote,
-              lastRenoteId,
-            ) = await getNotesAfterRenote(misskey);
-            ref
-                .read(notesProvider(widget.account))
-                .registerAll(notesAfterRenote);
-            setState(() {
-              untilId = lastRenoteId;
-            });
-            return notesAfterRenote;
-          },
-          nextFuture: (_, __) async {
-            final (
-              notesAfterRenote,
-              lastRenoteId,
-            ) = await getNotesAfterRenote(
-              misskey,
-              untilId: untilId,
-            );
-            ref
-                .read(notesProvider(widget.account))
-                .registerAll(notesAfterRenote);
-            setState(() {
-              untilId = lastRenoteId;
-            });
-            return notesAfterRenote;
-          },
-          itemBuilder: (context, item) {
-            return AccountScope(
-              account: widget.account,
-              child: MisskeyNote(note: item),
-            );
-          },
+        child: AccountScope(
+          account: widget.account,
+          child: PushableListView<Note>(
+            initializeFuture: () async {
+              final (
+                notesAfterRenote,
+                lastRenoteId,
+              ) = await getNotesAfterRenote(misskey);
+              ref
+                  .read(notesProvider(widget.account))
+                  .registerAll(notesAfterRenote);
+              setState(() {
+                untilId = lastRenoteId;
+              });
+              return notesAfterRenote;
+            },
+            nextFuture: (_, __) async {
+              final (
+                notesAfterRenote,
+                lastRenoteId,
+              ) = await getNotesAfterRenote(
+                misskey,
+                untilId: untilId,
+              );
+              ref
+                  .read(notesProvider(widget.account))
+                  .registerAll(notesAfterRenote);
+              setState(() {
+                untilId = lastRenoteId;
+              });
+              return notesAfterRenote;
+            },
+            itemBuilder: (context, item) {
+              return MisskeyNote(note: item);
+            },
+          ),
         ),
       ),
     );
