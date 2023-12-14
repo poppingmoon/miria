@@ -63,6 +63,7 @@ class FolderSelectDialogState extends ConsumerState<FolderSelectDialog> {
               PushableListView(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
+                showAd: false,
                 hideIsEmpty: true,
                 initializeFuture: () async {
                   final misskey = ref.read(misskeyProvider(widget.account));

@@ -14,6 +14,7 @@ class PushableListView<T> extends ConsumerStatefulWidget {
   final Object listKey;
   final bool shrinkWrap;
   final ScrollPhysics? physics;
+  final bool showAd;
   final bool hideIsEmpty;
 
   const PushableListView({
@@ -25,6 +26,7 @@ class PushableListView<T> extends ConsumerStatefulWidget {
     this.shrinkWrap = false,
     this.physics,
     this.additionalErrorInfo,
+    this.showAd = true,
     this.hideIsEmpty = false,
   });
 
@@ -180,7 +182,7 @@ class PushableListViewState<T> extends ConsumerState<PushableListView<T>> {
           );
         }
 
-        if (index != 0 && (index == 3 || index % 30 == 0)) {
+        if (index != 0 && (index == 3 || index % 30 == 0) && widget.showAd) {
           return Column(
             children: [
               widget.itemBuilder(context, items[index]),
