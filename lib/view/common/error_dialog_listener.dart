@@ -3,6 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/providers.dart';
+import 'package:miria/repository/account_repository.dart';
+import 'package:miria/state_notifier/common/misskey_notes/misskey_note_notifier.dart';
+import 'package:miria/state_notifier/note_create_page/note_create_state_notifier.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/dialogs/simple_message_dialog.dart';
 
@@ -24,6 +27,37 @@ class ErrorDialogListener extends ConsumerWidget {
           );
         } else if (error is SpecifiedException) {
           SimpleMessageDialog.show(next.$2!, error.message);
+        } else if (error is ValidateMisskeyException) {
+          final message = switch (error) {
+            InvalidServerException(:final server) =>
+              S.of(context).invalidServer(server),
+            ServerIsNotMisskeyException(:final server) =>
+              S.of(context).serverIsNotMisskey(server),
+            SoftwareNotSupportedException(:final software) =>
+              S.of(context).softwareNotSupported(software),
+            SoftwareNotCompatibleException(:final software, :final version) =>
+              S.of(context).softwareNotCompatible(software, version),
+            AlreadyLoggedInException(:final acct) =>
+              S.of(context).alreadyLoggedIn(acct),
+          };
+          SimpleMessageDialog.show(next.$2!, message);
+        } else if (error is OpenLocalOnlyNoteFromRemoteException) {
+          SimpleMessageDialog.show(
+            next.$2!,
+            S.of(context).cannotOpenLocalOnlyNoteFromRemote,
+          );
+        } else if (error is NoteCreateException) {
+          final message = switch (error) {
+            EmptyNoteException() => S.of(context).pleaseInputSomething,
+            TooFewVoteChoiceException() => S.of(context).pleaseAddVoteChoice,
+            EmptyVoteExpireDateException() =>
+              S.of(context).pleaseSpecifyExpirationDate,
+            EmptyVoteExpireDurationException() =>
+              S.of(context).pleaseSpecifyExpirationDuration,
+            MentionToRemoteInLocalOnlyNoteException() =>
+              S.of(context).cannotMentionToRemoteInLocalOnlyNote,
+          };
+          SimpleMessageDialog.show(next.$2!, message);
         } else {
           SimpleMessageDialog.show(
             next.$2!,
