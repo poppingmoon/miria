@@ -3,12 +3,18 @@ title: Miria
 type: app
 summary: Misskey Client App # 79文字まで
 description: |
-  Miriaは分散型SNS「Misskey」のクライアントアプリです。
+  **注意: インストール後に`password-manager-service`のアクセスを許可してください。**
+  
+  ```
+  $ snap connect miria:password-manager-service
+  ```
+
+  Miriaは分散型SNS「[Misskey](https://misskey-hub.net)」のクライアントアプリです。
 
   機能
 
   * タイムラインの閲覧やノートの投稿、「アンテナ」「チャンネル」「みつける」などの基本的な機能を利用することができます。
-  * 複数アカウント、複数サーバーに対応しています。(※2個目以降のアカウントを追加したあとは、アカウントに紐づくタブを追加する必要があります。)
+  * 複数アカウント、複数サーバーに対応しています。
   * MFMに対応しています。
   * タブにカスタム絵文字を設定することができます。
   * リアクションピッカーの精度が高く、ひらがなでも検索しやすくなっています。
@@ -21,10 +27,6 @@ description: |
   * このアプリではサーバーを提供していません。このアプリと一緒に特定のサーバーを付随して提供していないので、このアプリ単独で利用することはできません。
   * このアプリはMisskey v12以前のバージョンやFirefishなどの派生したアプリケーションに対応していません。
   * モバイル向けに開発されたアプリであるため、一部機能はデスクトップで動作しません。
-
-  注意：インストール後、パスワード管理サービスにアクセスできるように、下記のコマンドを実行してください。
-
-  `sudo snap connect miria:password-manager-service`
 license: AGPL-3.0
 website: https://shiosyakeyakini.info/miria_web
 source-code: https://github.com/shiosyakeyakini-info/miria
@@ -36,9 +38,6 @@ base: core22
 grade: stable
 confinement: strict
 compression: lzo
-architectures:
-  - amd64
-  - arm64
 
 apps:
   miria:
@@ -100,17 +99,6 @@ parts:
       flutter build linux --release
       cp -r build/linux/*/release/bundle/* $CRAFT_PART_INSTALL/usr/share/miria/
       cp macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_256.png $CRAFT_PART_INSTALL/meta/gui/miria.png
-
-  # Snapとファイル選択ダイアログの統合のため
-  # 詳細: https://forum.snapcraft.io/t/integrate-custom-dialogs-in-your-snap/10825
-  zenity:
-    after: [miria]
-    plugin: nil
-    stage-packages:
-      - zenity
-    prime:
-      - usr/bin/zenity
-      - usr/share/zenity/*
 
   deps:
     # https://github.com/ubuntu-flutter-community/musicpod/blob/ace85f0a85f9d3f191c98c54276a29b2f32f51b0/snap/snapcraft.yaml#L100C1-L209C36
@@ -187,6 +175,7 @@ parts:
       - libxv1
       - libavdevice58
       - libsecret-1-0 # flutter_secure_storage
+      - zenity # Snapとファイル選択ダイアログの統合のため https://forum.snapcraft.io/t/integrate-custom-dialogs-in-your-snap/10825
     prime:
       - usr/lib/*/blas/libblas.so*
       - usr/lib/*/lapack/liblapack.so*
@@ -271,9 +260,11 @@ parts:
       - usr/lib/*/libXv.so*
       - usr/lib/*/libavdevice.so*
       - usr/lib/*/libsecret-1.so* # flutter_secure_storage
+      - usr/bin/zenity # Snapとファイル選択ダイアログの統合のため
+      - usr/share/zenity/*
 
   cleanup:
-    after: [miria, zenity, deps]  # Make this part run last; list all your other parts here
+    after: [miria, deps]  # Make this part run last; list all your other parts here
     plugin: nil
     build-snaps: [gnome-42-2204, gtk-common-themes, core22]  # List all content-snaps you're using here
     override-prime: |
@@ -285,7 +276,3 @@ parts:
         rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT
       done
       find $SNAPCRAFT_PRIME/usr/share -type d -empty -delete
-
-layout:
-  /usr/share/zenity:
-    symlink: $SNAP/usr/share/zenity # Fix resource relocation problem of zenity part

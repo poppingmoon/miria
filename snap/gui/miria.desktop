@@ -1,7 +1,8 @@
 [Desktop Entry]
 Version=1.0
 Name=Miria
-GenericName=Miria
+GenericName=Misskey Client App
+GenericName[ja]=Misskeyクライアントアプリ
 Type=Application
 Exec=miria
 Icon=${SNAP}/meta/gui/miria.png
