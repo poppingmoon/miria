@@ -439,7 +439,9 @@ class UserDetailState extends ConsumerState<UserDetail> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      TableCell(child: Text(response.createdAt.format)), //FIXME
+                      TableCell(
+                        child: Text(response.createdAt.format(context)),
+                      ), //FIXME
                     ],
                   ),
                   TableRow(
@@ -450,7 +452,9 @@ class UserDetailState extends ConsumerState<UserDetail> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      TableCell(child: Text(response.birthday?.format ?? "")),
+                      TableCell(
+                        child: Text(response.birthday?.format(context) ?? ""),
+                      ),
                     ],
                   ),
                 ],

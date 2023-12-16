@@ -814,7 +814,7 @@ class NoteHeader1 extends ConsumerWidget {
               .navigateToNoteDetailPage(context, displayNote, loginAs)
               .expectFailure(context),
           child: Text(
-            displayNote.createdAt.differenceNow,
+            displayNote.createdAt.differenceNow(context),
             textAlign: TextAlign.right,
             style: Theme.of(context).textTheme.bodySmall,
           ),
@@ -894,7 +894,7 @@ class RenoteHeader extends ConsumerWidget {
             ),
           ),
         Text(
-          note.createdAt.differenceNow,
+          note.createdAt.differenceNow(context),
           textAlign: TextAlign.right,
           style: renoteTextStyle,
         ),
