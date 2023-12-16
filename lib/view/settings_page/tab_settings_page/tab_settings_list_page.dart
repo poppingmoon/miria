@@ -111,7 +111,7 @@ class TabSettingsListItem extends ConsumerWidget {
         account: account,
         child: TabIconView(icon: tabSetting.icon),
       ),
-      title: Text(tabSetting.name),
+      title: Text(tabSetting.name ?? tabSetting.tabType.displayName(context)),
       subtitle: Text(
         "${tabSetting.tabType.displayName(context)} / ${tabSetting.acct}",
       ),
