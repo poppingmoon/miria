@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:json5/json5.dart';
 import 'package:miria/model/account.dart';
@@ -53,7 +54,7 @@ class ReactionDeckPageState extends ConsumerState<ReactionDeckPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("リアクションデッキ"),
+        title: Text(S.of(context).reactionDeck),
         actions: [
           PopupMenuButton(
             onSelected: (type) => switch (type) {
@@ -63,18 +64,18 @@ class ReactionDeckPageState extends ConsumerState<ReactionDeckPage> {
               ReactionDeckPageMenuType.clear =>
                 clearReactions(context: context),
             },
-            itemBuilder: (context) => const [
+            itemBuilder: (context) => [
               PopupMenuItem(
                 value: ReactionDeckPageMenuType.addMany,
-                child: Text("一括追加"),
+                child: Text(S.of(context).bulkAddReactions),
               ),
               PopupMenuItem(
                 value: ReactionDeckPageMenuType.clear,
-                child: Text("クリア"),
+                child: Text(S.of(context).clear),
               ),
               PopupMenuItem(
                 value: ReactionDeckPageMenuType.copy,
-                child: Text("コピー"),
+                child: Text(S.of(context).copy),
               ),
             ],
           ),
@@ -144,7 +145,9 @@ class ReactionDeckPageState extends ConsumerState<ReactionDeckPage> {
                     },
                     icon: const Icon(Icons.add),
                   ),
-                  const Expanded(child: Text("長押しして並び変え、押して削除、＋を押して追加します。")),
+                  Expanded(
+                    child: Text(S.of(context).editReactionDeckDescription),
+                  ),
                 ],
               ),
             ],
@@ -207,16 +210,16 @@ class ReactionDeckPageState extends ConsumerState<ReactionDeckPage> {
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("コピーしました")),
+      SnackBar(content: Text(S.of(context).doneCopy)),
     );
   }
 
   Future<void> clearReactions({required BuildContext context}) async {
     if (await SimpleConfirmDialog.show(
           context: context,
-          message: "すでに設定済みのリアクションデッキをいったんすべてクリアしますか？",
-          primary: "クリアする",
-          secondary: "やっぱりやめる",
+          message: S.of(context).clearReactionDeckConfirm,
+          primary: S.of(context).clearReactionDeck,
+          secondary: S.of(context).cancel,
         ) ==
         true) {
       setState(() {

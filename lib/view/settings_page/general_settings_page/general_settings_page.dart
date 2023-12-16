@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/const.dart';
 import 'package:miria/model/general_settings.dart';
@@ -105,7 +106,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("全般設定")),
+      appBar: AppBar(title: Text(S.of(context).generalSettings)),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -118,16 +119,19 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("全般", style: Theme.of(context).textTheme.titleLarge),
+                      Text(
+                        S.of(context).general,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
-                      const Text("閲覧注意のついたノートの表示"),
+                      Text(S.of(context).displayOfSensitiveNotes),
                       DropdownButton<NSFWInherit>(
                         isExpanded: true,
                         items: [
                           for (final element in NSFWInherit.values)
                             DropdownMenuItem(
                               value: element,
-                              child: Text(element.displayName),
+                              child: Text(element.displayName(context)),
                             ),
                         ],
                         value: nsfwInherit,
@@ -139,14 +143,14 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                         ),
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
-                      const Text("一覧の自動更新"),
+                      Text(S.of(context).infiniteScroll),
                       DropdownButton<AutomaticPush>(
                         isExpanded: true,
                         items: [
                           for (final element in AutomaticPush.values)
                             DropdownMenuItem(
                               value: element,
-                              child: Text(element.displayName),
+                              child: Text(element.displayName(context)),
                             ),
                         ],
                         value: automaticPush,
@@ -158,24 +162,24 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                         ),
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
-                      const Text("動きのあるMFM"),
+                      Text(S.of(context).enableAnimatedMfm),
                       CheckboxListTile(
                         value: enableAnimatedMFM,
                         onChanged: (value) => setState(() {
                           enableAnimatedMFM = value ?? true;
                           save();
                         }),
-                        title: const Text("動きのあるMFMを有効にします。"),
+                        title: Text(S.of(context).enableAnimatedMfmDescription),
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
-                      const Text("ノートの省略"),
+                      Text(S.of(context).collapseNotes),
                       CheckboxListTile(
                         value: enableFavoritedRenoteElipsed,
                         onChanged: (value) => setState(() {
                           enableFavoritedRenoteElipsed = value ?? true;
                           save();
                         }),
-                        title: const Text("リアクション済みノートのRenoteを省略します。"),
+                        title: Text(S.of(context).collapseReactionedRenotes),
                       ),
                       CheckboxListTile(
                         value: enableLongTextElipsed,
@@ -183,17 +187,21 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                           enableLongTextElipsed = value ?? true;
                           save();
                         }),
-                        title: const Text("長いノートを省略します。"),
+                        title: Text(S.of(context).collapseLongNotes),
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
-                      const Text("タブの位置"),
+                      Text(S.of(context).tabPosition),
                       DropdownButton<TabPosition>(
                         isExpanded: true,
                         items: [
                           for (final element in TabPosition.values)
                             DropdownMenuItem(
                               value: element,
-                              child: Text("${element.displayName}に表示する"),
+                              child: Text(
+                                S.of(context).tabPositionDescription(
+                                      element.displayName(context),
+                                    ),
+                              ),
                             ),
                         ],
                         value: tabPosition,
@@ -215,18 +223,18 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "テーマ",
+                        S.of(context).theme,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
-                      const Text("ライトモードで使うテーマ"),
+                      Text(S.of(context).themeForLightMode),
                       DropdownButton<String>(
                         items: [
                           for (final element in builtInColorThemes
                               .where((element) => !element.isDarkTheme))
                             DropdownMenuItem(
                               value: element.id,
-                              child: Text("${element.name}っぽいの"),
+                              child: Text(S.of(context).themeIsh(element.name)),
                             ),
                         ],
                         value: lightModeTheme,
@@ -238,14 +246,14 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                         ),
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
-                      const Text("ダークモードで使うテーマ"),
+                      Text(S.of(context).themeForDarkMode),
                       DropdownButton<String>(
                         items: [
                           for (final element in builtInColorThemes
                               .where((element) => element.isDarkTheme))
                             DropdownMenuItem(
                               value: element.id,
-                              child: Text("${element.name}っぽいの"),
+                              child: Text(S.of(context).themeIsh(element.name)),
                             ),
                         ],
                         value: darkModeTheme,
@@ -255,13 +263,13 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                         }),
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
-                      const Text("ライトモード・ダークモードのつかいわけ"),
+                      Text(S.of(context).selectLightOrDarkMode),
                       DropdownButton<ThemeColorSystem>(
                         items: [
                           for (final colorSystem in ThemeColorSystem.values)
                             DropdownMenuItem(
                               value: colorSystem,
-                              child: Text(colorSystem.displayName),
+                              child: Text(colorSystem.displayName(context)),
                             ),
                         ],
                         value: colorSystem,
@@ -281,15 +289,14 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "リアクション",
+                        S.of(context).reaction,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       CheckboxListTile(
                         value: enableDirectReaction,
-                        title: const Text("ノート内の絵文字タップでリアクションする"),
-                        subtitle: const Text(
-                          "ノート内の絵文字をタップしてリアクションします。MFMや外部サーバーの絵文字の場合うまく機能しないことがあります。",
-                        ),
+                        title: Text(S.of(context).emojiTapReaction),
+                        subtitle:
+                            Text(S.of(context).emojiTapReactionDescription),
                         onChanged: (value) {
                           setState(() {
                             enableDirectReaction = !enableDirectReaction;
@@ -298,13 +305,13 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                         },
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
-                      const Text("絵文字のスタイル"),
+                      Text(S.of(context).emojiStyle),
                       DropdownButton(
                         items: [
                           for (final type in EmojiType.values)
                             DropdownMenuItem(
                               value: type,
-                              child: Text(type.displayName),
+                              child: Text(type.displayName(context)),
                             ),
                         ],
                         value: emojiType,
@@ -327,7 +334,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "フォントサイズ",
+                        S.of(context).fontSize,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       Slider(
@@ -345,7 +352,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       Text(
-                        "フォント（標準）",
+                        S.of(context).fontStandard,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       DropdownButton<Font>(
@@ -353,7 +360,11 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                           for (final font in choosableFonts)
                             DropdownMenuItem(
                               value: font,
-                              child: Text(font.displayName),
+                              child: Text(
+                                font.actualName.isEmpty
+                                    ? S.of(context).systemFont
+                                    : font.displayName,
+                              ),
                             ),
                         ],
                         value: choosableFonts.firstWhereOrNull(
@@ -368,7 +379,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       Text(
-                        "フォント（\$[font.serif 用）",
+                        S.of(context).fontSerif,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       DropdownButton<Font>(
@@ -376,7 +387,11 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                           for (final font in choosableFonts)
                             DropdownMenuItem(
                               value: font,
-                              child: Text(font.displayName),
+                              child: Text(
+                                font.actualName.isEmpty
+                                    ? S.of(context).systemFont
+                                    : font.displayName,
+                              ),
                             ),
                         ],
                         value: choosableFonts.firstWhereOrNull(
@@ -391,7 +406,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       Text(
-                        "フォント （\$[font.monospace やコードブロック 用）",
+                        S.of(context).fontMonospace,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       DropdownButton<Font>(
@@ -399,7 +414,11 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                           for (final font in choosableFonts)
                             DropdownMenuItem(
                               value: font,
-                              child: Text(font.displayName),
+                              child: Text(
+                                font.actualName.isEmpty
+                                    ? S.of(context).systemFont
+                                    : font.displayName,
+                              ),
                             ),
                         ],
                         value: choosableFonts.firstWhereOrNull(
@@ -413,7 +432,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       Text(
-                        "フォント （\$[font.cursive 用）",
+                        S.of(context).fontCursive,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       DropdownButton<Font>(
@@ -421,7 +440,11 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                           for (final font in choosableFonts)
                             DropdownMenuItem(
                               value: font,
-                              child: Text(font.displayName),
+                              child: Text(
+                                font.actualName.isEmpty
+                                    ? S.of(context).systemFont
+                                    : font.displayName,
+                              ),
                             ),
                         ],
                         value: choosableFonts.firstWhereOrNull(
@@ -436,7 +459,7 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       Text(
-                        "フォント （\$[font.fantasy 用）",
+                        S.of(context).fontFantasy,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       DropdownButton<Font>(
@@ -444,7 +467,11 @@ class GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                           for (final font in choosableFonts)
                             DropdownMenuItem(
                               value: font,
-                              child: Text(font.displayName),
+                              child: Text(
+                                font.actualName.isEmpty
+                                    ? S.of(context).systemFont
+                                    : font.displayName,
+                              ),
                             ),
                         ],
                         value: choosableFonts.firstWhereOrNull(

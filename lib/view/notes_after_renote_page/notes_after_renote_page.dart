@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -32,7 +33,7 @@ class _NotesAfterRenotePageState extends ConsumerState<NotesAfterRenotePage> {
     final misskey = ref.watch(misskeyProvider(widget.account));
 
     return Scaffold(
-      appBar: AppBar(title: const Text("リノートの直後のノート")),
+      appBar: AppBar(title: Text(S.of(context).notesAfterRenote)),
       body: Padding(
         padding: const EdgeInsets.only(right: 10),
         child: PushableListView<Note>(

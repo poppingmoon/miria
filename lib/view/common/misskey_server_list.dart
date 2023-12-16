@@ -50,6 +50,7 @@ class MisskeyServerList extends ConsumerWidget {
                                 server.nodeInfo?.software?.version ?? "",
                               )
                               .isNotEmpty;
+                  final totalUsers = server.nodeInfo?.usage?.users?.total;
                   return Padding(
                     key: ValueKey(server.url),
                     padding: const EdgeInsets.only(bottom: 10),
@@ -92,10 +93,11 @@ class MisskeyServerList extends ConsumerWidget {
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                             const Padding(padding: EdgeInsets.only(top: 10)),
-                            Text(
-                              "${server.nodeInfo?.usage?.users?.total.format()}人が参加中",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
+                            if (totalUsers != null)
+                              Text(
+                                S.of(context).usersCount(totalUsers),
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
                             const Padding(padding: EdgeInsets.only(top: 10)),
                             Align(
                               alignment: Alignment.centerRight,

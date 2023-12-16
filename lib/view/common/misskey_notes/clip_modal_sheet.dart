@@ -160,12 +160,12 @@ class ClipModalSheet extends ConsumerWidget {
             } else {
               return ListTile(
                 leading: const Icon(Icons.add),
-                title: const Text("クリップを作成"),
+                title: Text(S.of(context).createClip),
                 onTap: () async {
                   final settings = await showDialog<ClipSettings>(
                     context: context,
-                    builder: (context) => const ClipSettingsDialog(
-                      title: Text("作成"),
+                    builder: (context) => ClipSettingsDialog(
+                      title: Text(S.of(context).create),
                     ),
                   );
                   if (!context.mounted) return;

@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -146,7 +147,7 @@ class ServerDetailDialogState extends ConsumerState<ServerDetailDialog> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("サーバーオンライン人数"),
+              Text(S.of(context).onlineUsers),
               if (onlineUsers != null)
                 Text.rich(
                   TextSpan(
@@ -156,7 +157,7 @@ class ServerDetailDialogState extends ConsumerState<ServerDetailDialog> {
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       TextSpan(
-                        text: " 人",
+                        text: " ${S.of(context).persons}",
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
@@ -169,7 +170,7 @@ class ServerDetailDialogState extends ConsumerState<ServerDetailDialog> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("CPU使用率"),
+                        Text(S.of(context).cpuUsage),
                         if (currentStat != null)
                           Text.rich(
                             TextSpan(
@@ -206,7 +207,7 @@ class ServerDetailDialogState extends ConsumerState<ServerDetailDialog> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("メモリ使用率"),
+                        Text(S.of(context).memoryUsage),
                         if (currentStat != null && totalMemories != null)
                           Text.rich(
                             TextSpan(
@@ -249,7 +250,7 @@ class ServerDetailDialogState extends ConsumerState<ServerDetailDialog> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("応答時間"),
+                        Text(S.of(context).latency),
                         if (ping != null)
                           Text.rich(
                             TextSpan(
@@ -260,7 +261,7 @@ class ServerDetailDialogState extends ConsumerState<ServerDetailDialog> {
                                       Theme.of(context).textTheme.headlineSmall,
                                 ),
                                 TextSpan(
-                                  text: " ミリ秒",
+                                  text: " ${S.of(context).milliSeconds}",
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                                 WidgetSpan(
@@ -280,7 +281,7 @@ class ServerDetailDialogState extends ConsumerState<ServerDetailDialog> {
                 ],
               ),
               const Padding(padding: EdgeInsets.only(top: 10)),
-              const Text("ジョブキュー (Inbox queue)"),
+              Text(S.of(context).inboxQueue),
               if (currentQueueStats != null) ...[
                 const Row(
                   children: [
@@ -330,7 +331,7 @@ class ServerDetailDialogState extends ConsumerState<ServerDetailDialog> {
                 ),
               ],
               const Padding(padding: EdgeInsets.only(top: 10)),
-              const Text("ジョブキュー(Deliver queue)"),
+              Text(S.of(context).deliverQueue),
               if (currentQueueStats != null) ...[
                 const Row(
                   children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
@@ -72,10 +73,10 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
                             for (final element in ExploreUserType.values)
                               element == exploreUserType,
                           ],
-                          children: const [
-                            Text("ピンどめ"),
-                            Text("ローカル"),
-                            Text("リモート"),
+                          children: [
+                            Text(S.of(context).pinnedUsers),
+                            Text(S.of(context).local),
+                            Text(S.of(context).remote),
                           ],
                         ),
                       ),
@@ -100,8 +101,11 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
               if (isDetailOpen) ...[
                 Row(
                   children: [
-                    const Expanded(
-                      child: Text("並び順", textAlign: TextAlign.center),
+                    Expanded(
+                      child: Text(
+                        S.of(context).sortOrder,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                     Expanded(
                       child: DropdownButton<UsersSortType>(

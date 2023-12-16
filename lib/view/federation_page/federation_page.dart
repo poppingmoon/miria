@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/federation_data.dart';
@@ -52,11 +53,11 @@ class FederationPageState extends ConsumerState<FederationPage> {
             bottom: TabBar(
               isScrollable: true,
               tabs: [
-                const Tab(text: "サーバー情報"),
-                if (isAnotherHost) const Tab(text: "ユーザー"),
-                if (adsAvailable) const Tab(text: "広告"),
-                if (isMisskey) const Tab(text: "お知らせ"),
-                if (isSupportedTimeline) const Tab(text: "カスタム絵文字"),
+                Tab(text: S.of(context).serverInformation),
+                if (isAnotherHost) Tab(text: S.of(context).users),
+                if (adsAvailable) Tab(text: S.of(context).ads),
+                if (isMisskey) Tab(text: S.of(context).announcement),
+                if (isSupportedTimeline) Tab(text: S.of(context).customEmojis),
                 if (isSupportedTimeline) const Tab(text: "LTL"),
               ],
               tabAlignment: TabAlignment.center,

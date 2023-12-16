@@ -34,7 +34,7 @@ class ExplorePageState extends ConsumerState<ExplorePage> {
         length: 7,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("みつける"),
+            title: Text(S.of(context).explore),
             bottom: TabBar(
               isScrollable: true,
               tabs: [

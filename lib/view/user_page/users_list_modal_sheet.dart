@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/users_list_settings.dart';
@@ -53,12 +54,12 @@ class UsersListModalSheet extends ConsumerWidget {
             } else {
               return ListTile(
                 leading: const Icon(Icons.add),
-                title: const Text("リストを作成"),
+                title: Text(S.of(context).createList),
                 onTap: () async {
                   final settings = await showDialog<UsersListSettings>(
                     context: context,
-                    builder: (context) => const UsersListSettingsDialog(
-                      title: Text("作成"),
+                    builder: (context) => UsersListSettingsDialog(
+                      title: Text(S.of(context).create),
                     ),
                   );
                   if (!context.mounted) return;

@@ -51,6 +51,7 @@ class TabSettingsRepository extends ChangeNotifier {
   }
 
   Future<void> initializeTabSettings(Acct acct) async {
+    // TODO: l10n
     await save([
       TabSetting(
         icon: TabIcon(codePoint: Icons.home.codePoint),

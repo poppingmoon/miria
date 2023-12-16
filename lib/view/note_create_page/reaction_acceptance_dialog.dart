@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
@@ -20,31 +21,31 @@ class ReactionAcceptanceDialog extends StatelessWidget {
             width: 28,
             height: 28,
           ),
-          title: const Text("すべて"),
+          title: Text(S.of(context).all),
         ),
         ListTile(
           onTap: () => Navigator.of(context).pop(ReactionAcceptance.likeOnly),
           leading: const Icon(Icons.favorite_border),
-          title: const Text("いいねのみ"),
+          title: Text(S.of(context).likeOnly),
         ),
         ListTile(
           onTap: () =>
               Navigator.of(context).pop(ReactionAcceptance.likeOnlyForRemote),
           leading: const Icon(Icons.add_reaction_outlined),
-          title: const Text("リモートからはいいねのみ"),
+          title: Text(S.of(context).likeOnlyForRemote),
         ),
         ListTile(
           onTap: () =>
               Navigator.of(context).pop(ReactionAcceptance.nonSensitiveOnly),
           leading: const Icon(Icons.shield_outlined),
-          title: const Text("非センシティブのみ"),
+          title: Text(S.of(context).nonSensitiveOnly),
         ),
         ListTile(
           onTap: () => Navigator.of(context).pop(
             ReactionAcceptance.nonSensitiveOnlyForLocalLikeOnlyForRemote,
           ),
           leading: const Icon(Icons.add_moderator_outlined),
-          title: const Text("非センシティブのみ（リモートからはいいねのみ）"),
+          title: Text(S.of(context).nonSensitiveOnlyForLocalLikeOnlyForRemote),
         ),
       ],
     );

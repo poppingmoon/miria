@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/string_extensions.dart';
 import 'package:miria/model/federation_data.dart';
@@ -178,8 +179,8 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      const Text(
-                        "ユーザー",
+                      Text(
+                        S.of(context).users,
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -191,8 +192,8 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      const Text(
-                        "投稿",
+                      Text(
+                        S.of(context).posts,
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -205,8 +206,8 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                 children: [
                   TableRow(
                     children: [
-                      const Text(
-                        "ソフトウェア",
+                      Text(
+                        S.of(context).software,
                         textAlign: TextAlign.center,
                       ),
                       Text(
@@ -217,7 +218,10 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                   if (data.languages.isNotEmpty)
                     TableRow(
                       children: [
-                        const Text("言語", textAlign: TextAlign.center),
+                        Text(
+                          S.of(context).language,
+                          textAlign: TextAlign.center,
+                        ),
                         Text(
                           data.languages.join(", "),
                         ),
@@ -226,8 +230,8 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                   if (data.tosUrl != null)
                     TableRow(
                       children: [
-                        const Text(
-                          "利用規約",
+                        Text(
+                          S.of(context).termsOfService,
                           textAlign: TextAlign.center,
                         ),
                         GestureDetector(

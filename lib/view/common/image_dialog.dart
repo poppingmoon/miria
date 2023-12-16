@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:miria/providers.dart';
@@ -185,7 +186,7 @@ class ImageDialogState extends ConsumerState<ImageDialog> {
                     await ImageGallerySaver.saveImage(response.data!);
                     if (!mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("画像保存したで")),
+                      SnackBar(content: Text(S.of(context).imageSaved)),
                     );
                   },
                   constraints: const BoxConstraints(),

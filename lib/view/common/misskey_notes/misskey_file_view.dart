@@ -218,12 +218,12 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                             Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Text(
-                                  "閲覧注意",
-                                  style: TextStyle(color: Colors.white),
+                                Text(
+                                  S.of(context).sensitive,
+                                  style: const TextStyle(color: Colors.white),
                                 ),
                                 Text(
-                                  "タップして表示",
+                                  S.of(context).tapToShow,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: Theme.of(context)
