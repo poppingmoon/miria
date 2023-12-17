@@ -20,7 +20,7 @@ class NoteSearch extends ConsumerStatefulWidget {
 
   const NoteSearch({
     super.key,
-    required this.initialCondition,
+    this.initialCondition,
     this.focusNode,
   });
 
