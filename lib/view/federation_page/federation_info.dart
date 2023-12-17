@@ -186,7 +186,7 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                           onTap: () =>
                               launchUrl(Uri.parse(data.privacyPolicyUrl!)),
                           child: Text(
-                            data.tosUrl!.tight,
+                            data.privacyPolicyUrl!.tight,
                             style: AppTheme.of(context).linkStyle,
                           ),
                         ),
@@ -202,7 +202,7 @@ class FederationInfoState extends ConsumerState<FederationInfo> {
                         GestureDetector(
                           onTap: () => launchUrl(Uri.parse(data.impressumUrl!)),
                           child: Text(
-                            data.tosUrl!.tight,
+                            data.impressumUrl!.tight,
                             style: AppTheme.of(context).linkStyle,
                           ),
                         ),
