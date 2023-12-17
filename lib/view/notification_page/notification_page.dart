@@ -55,16 +55,12 @@ class NotificationPageState extends ConsumerState<NotificationPage> {
                     final result = await misskey.i.notifications(
                       const INotificationsRequest(
                         limit: 50,
+                        markAsRead: true,
                       ),
                     );
                     ref
                         .read(notesProvider(widget.account))
                         .registerAll(result.map((e) => e.note).whereNotNull());
-                    if (result.isNotEmpty) {
-                      ref
-                          .read(mainStreamRepositoryProvider(widget.account))
-                          .latestMarkAs(result.first.id);
-                    }
                     return result.toNotificationData();
                   },
                   nextFuture: (lastElement, _) async {

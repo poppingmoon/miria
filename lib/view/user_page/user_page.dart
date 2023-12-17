@@ -99,14 +99,14 @@ class UserPageState extends ConsumerState<UserPage> {
                       AccountScope(
                         account: Account.demoAccount(
                           userInfo!.response!.host!,
-                          userInfo.metaResponse!,
+                          userInfo.metaResponse,
                         ),
                         child: SingleChildScrollView(
                           child: UserDetail(
                             response: userInfo.remoteResponse!,
                             account: Account.demoAccount(
                               userInfo.response!.host!,
-                              userInfo.metaResponse!,
+                              userInfo.metaResponse,
                             ),
                             controlAccount: widget.account,
                           ),
@@ -122,7 +122,7 @@ class UserPageState extends ConsumerState<UserPage> {
                       AccountScope(
                         account: Account.demoAccount(
                           userInfo!.response!.host!,
-                          userInfo.metaResponse!,
+                          userInfo.metaResponse,
                         ),
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
@@ -150,7 +150,7 @@ class UserPageState extends ConsumerState<UserPage> {
                       AccountScope(
                         account: Account.demoAccount(
                           userInfo!.response!.host!,
-                          userInfo.metaResponse!,
+                          userInfo.metaResponse,
                         ),
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),
@@ -170,7 +170,7 @@ class UserPageState extends ConsumerState<UserPage> {
                       AccountScope(
                         account: Account.demoAccount(
                           userInfo!.response!.host!,
-                          userInfo.metaResponse!,
+                          userInfo.metaResponse,
                         ),
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10, right: 10),

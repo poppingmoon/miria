@@ -12,8 +12,8 @@ class NotificationIcon extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasUnread = ref.watch(
-      mainStreamRepositoryProvider(AccountScope.of(context))
-          .select((repository) => repository.hasUnreadNotification),
+      iProvider(AccountScope.of(context).acct)
+          .select((value) => value.hasUnreadNotification),
     );
 
     if (hasUnread) {

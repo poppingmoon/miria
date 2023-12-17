@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
 import 'package:miria/view/common/account_scope.dart';
@@ -20,21 +21,42 @@ class LinkNavigator {
     if (uri == null) {
       return; //TODO: なおす
     }
-    final account = AccountScope.of(context);
+    var account = AccountScope.of(context);
 
     // 他サーバーや外部サイトは別アプリで起動する
-    //TODO: nodeinfoから相手先サーバーがMisskeyの場合はそこで解決する
     if (uri.host != AccountScope.of(context).host) {
-      if (await canLaunchUrl(uri)) {
-        if (!await launchUrl(
-          uri,
-          mode: LaunchMode.externalNonBrowserApplication,
-        )) {
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
+      try {
+        await ref.read(dioProvider).getUri<void>(
+              Uri(
+                scheme: "https",
+                host: uri.host,
+                pathSegments: [".well-known", "nodeinfo"],
+              ),
+            );
+        final meta =
+            await ref.read(misskeyWithoutAccountProvider(uri.host)).meta();
+        final endpoints =
+            await ref.read(misskeyWithoutAccountProvider(uri.host)).endpoints();
+        if (!endpoints.contains("emojis")) {
+          throw Exception("Is not misskey");
+        }
+
+        account = Account.demoAccount(uri.host, meta);
+        await ref.read(emojiRepositoryProvider(account)).loadFromSourceIfNeed();
+      } catch (e) {
+        if (await canLaunchUrl(uri)) {
+          if (!await launchUrl(
+            uri,
+            mode: LaunchMode.externalNonBrowserApplication,
+          )) {
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          }
         }
       }
-    } else if (uri.pathSegments.length == 2 &&
-        uri.pathSegments.first == "clips") {
+    }
+
+    if (!context.mounted) return;
+    if (uri.pathSegments.length == 2 && uri.pathSegments.first == "clips") {
       // クリップはクリップの画面で開く
       context.pushRoute(
         ClipDetailRoute(account: account, id: uri.pathSegments[1]),
@@ -63,7 +85,7 @@ class LinkNavigator {
       context.pushRoute(MisskeyRouteRoute(account: account, page: page));
     } else if (uri.pathSegments.length == 1 &&
         uri.pathSegments.first.startsWith("@")) {
-      await onMentionTap(context, ref, uri.pathSegments.first, host);
+      await onMentionTap(context, ref, account, uri.pathSegments.first, host);
     } else {
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -74,6 +96,7 @@ class LinkNavigator {
   Future<void> onMentionTap(
     BuildContext context,
     WidgetRef ref,
+    Account account,
     String userName,
     String? host,
   ) async {
@@ -81,8 +104,8 @@ class LinkNavigator {
     // 本当は向こうで呼べばいいのでいらないのだけど
     final regResult = RegExp(r'^@?(.+?)(@(.+?))?$').firstMatch(userName);
 
-    final contextHost = AccountScope.of(context).host;
-    final noteHost = host ?? AccountScope.of(context).host;
+    final contextHost = account.host;
+    final noteHost = host ?? account.host;
     final regResultHost = regResult?.group(3);
     final String? finalHost;
 
@@ -98,10 +121,7 @@ class LinkNavigator {
       finalHost = noteHost;
     }
 
-    final response = await ref
-        .read(misskeyProvider(AccountScope.of(context)))
-        .users
-        .showByName(
+    final response = await ref.read(misskeyProvider(account)).users.showByName(
           UsersShowByUserNameRequest(
             userName: regResult?.group(1) ?? "",
             host: finalHost,
@@ -109,8 +129,6 @@ class LinkNavigator {
         );
 
     if (!context.mounted) return;
-    context.pushRoute(
-      UserRoute(userId: response.id, account: AccountScope.of(context)),
-    );
+    context.pushRoute(UserRoute(userId: response.id, account: account));
   }
 }

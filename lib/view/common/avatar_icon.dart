@@ -163,26 +163,32 @@ class AvatarIconState extends State<AvatarIcon> {
               Transform.scale(
                 scaleX: 2,
                 scaleY: 2,
-                child: Transform.rotate(
-                  angle: (decoration.angle ?? 0) * 2 * pi,
-                  child: decoration.flipH
-                      ? Transform.flip(
-                          flipX: true,
-                          child: SizedBox(
+                child: Transform.translate(
+                  offset: Offset(
+                    baseHeight * decoration.offsetX,
+                    baseHeight * decoration.offsetY,
+                  ),
+                  child: Transform.rotate(
+                    angle: (decoration.angle ?? 0) * 2 * pi,
+                    child: decoration.flipH
+                        ? Transform.flip(
+                            flipX: true,
+                            child: SizedBox(
+                              width: baseHeight,
+                              child: NetworkImageView(
+                                url: decoration.url,
+                                type: ImageType.other,
+                              ),
+                            ),
+                          )
+                        : SizedBox(
                             width: baseHeight,
                             child: NetworkImageView(
                               url: decoration.url,
-                              type: ImageType.other,
+                              type: ImageType.avatarDecoration,
                             ),
                           ),
-                        )
-                      : SizedBox(
-                          width: baseHeight,
-                          child: NetworkImageView(
-                            url: decoration.url,
-                            type: ImageType.avatarDecoration,
-                          ),
-                        ),
+                  ),
                 ),
               ),
           ],
