@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -100,7 +101,10 @@ class AccountRepository extends Notifier<List<Account>> {
   Future<void> loadFromSourceIfNeed(Acct acct) async {
     final setting = ref.read(accountSettingsRepositoryProvider).fromAcct(acct);
 
-    final account = state.firstWhere((element) => element.acct == acct);
+    final account = state.firstWhereOrNull((element) => element.acct == acct);
+    if (account == null) {
+      return;
+    }
 
     switch (setting.iCacheStrategy) {
       case CacheStrategy.whenLaunch:

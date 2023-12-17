@@ -348,9 +348,10 @@ class AnnoucementInfo extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasUnread = ref.watch(
-      accountProvider(tabSetting.acct)
-          .select((account) => account.i.unreadAnnouncements.isNotEmpty),
+      iProvider(tabSetting.acct)
+          .select((i) => i.unreadAnnouncements.isNotEmpty),
     );
+
     if (hasUnread) {
       return IconButton(
         onPressed: () => announcementsRoute(context, ref),
