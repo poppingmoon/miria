@@ -42,12 +42,10 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
       final targetFile = targetFiles.first;
       return Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: widget.height,
-          ),
+          constraints: BoxConstraints(maxHeight: widget.height),
           child: MisskeyImage(
             isSensitive: targetFile.isSensitive,
-            thumbnailUrl: targetFile.thumbnailUrl ?? targetFile.url,
+            thumbnailUrl: targetFile.thumbnailUrl,
             targetFiles: [targetFile],
             fileType: targetFile.type,
             name: targetFile.name,
@@ -75,7 +73,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
                   width: double.infinity,
                   child: MisskeyImage(
                     isSensitive: targetFile.element.isSensitive,
-                    thumbnailUrl: targetFile.element.thumbnailUrl?.toString(),
+                    thumbnailUrl: targetFile.element.thumbnailUrl,
                     targetFiles: targetFiles,
                     fileType: targetFile.element.type,
                     name: targetFile.element.name,

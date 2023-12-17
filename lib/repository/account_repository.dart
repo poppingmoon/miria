@@ -31,9 +31,27 @@ class AccountRepository extends Notifier<List<Account>> {
       return;
     }
     try {
-      state = (jsonDecode(storedData) as List)
+      final list = jsonDecode(storedData) as List;
+      final resultList = List.of(list);
+      for (final element in list) {
+        if (element is Map<String, dynamic>) {
+          if (element["meta"] == null) {
+            try {
+              final meta = await ref
+                  .read(
+                    misskeyWithoutAccountProvider(element["host"] as String),
+                  )
+                  .meta();
+              element["meta"] = jsonDecode(jsonEncode(meta.toJson()));
+            } catch (_) {}
+          }
+        }
+      }
+
+      state = resultList
           .map((e) => Account.fromJson(e as Map<String, dynamic>))
           .toList();
+
       _validatedAccts.clear();
     } catch (e) {
       if (kDebugMode) {
@@ -42,64 +60,72 @@ class AccountRepository extends Notifier<List<Account>> {
     }
   }
 
-  Future<void> loadFromSourceIfNeed(Acct acct) async {
-    final index = state.indexWhere((e) => e.acct == acct);
-    if (index < 0) return;
-    final account = state[index];
+  Future<void> updateI(Account account) async {
     final setting =
         ref.read(accountSettingsRepositoryProvider).fromAccount(account);
+    _validatedAccts.add(account.acct);
 
-    Future<void> updateI() async {
-      _validatedAccts.add(acct);
+    final i = await ref.read(misskeyProvider(account)).i.i();
+    ref
+        .read(accountSettingsRepositoryProvider)
+        .save(setting.copyWith(latestICached: DateTime.now()));
 
-      final i = await ref.read(misskeyProvider(account)).i.i();
-      ref
-          .read(accountSettingsRepositoryProvider)
-          .save(setting.copyWith(latestICached: DateTime.now()));
+    final accounts = List.of(state);
+    final index = state.indexWhere((e) => e.acct == account.acct);
+    if (index < 0) return;
+    accounts[index] = account.copyWith(i: i);
+    state = accounts;
 
-      final accounts = List.of(state);
-      accounts[index] = account.copyWith(i: i);
-      state = accounts;
-    }
+    ref.read(notesProvider(account)).updateMute(i.mutedWords, i.hardMutedWords);
+  }
+
+  Future<void> updateMeta(Account account) async {
+    final setting =
+        ref.read(accountSettingsRepositoryProvider).fromAccount(account);
+    _validateMetaAccts.add(account.acct);
+
+    final meta = await ref.read(misskeyProvider(account)).meta();
+    ref
+        .read(accountSettingsRepositoryProvider)
+        .save(setting.copyWith(latestMetaCached: DateTime.now()));
+
+    final accounts = List.of(state);
+    final index = state.indexWhere((e) => e.acct == account.acct);
+    if (index < 0) return;
+
+    accounts[index] = account.copyWith(meta: meta);
+    state = accounts;
+  }
+
+  Future<void> loadFromSourceIfNeed(Acct acct) async {
+    final setting = ref.read(accountSettingsRepositoryProvider).fromAcct(acct);
+
+    final account = state.firstWhere((element) => element.acct == acct);
 
     switch (setting.iCacheStrategy) {
       case CacheStrategy.whenLaunch:
-        if (!_validatedAccts.contains(acct)) updateI();
+        if (!_validatedAccts.contains(acct)) updateI(account);
       case CacheStrategy.whenOneDay:
         final latestUpdated = setting.latestICached;
         if (latestUpdated == null || latestUpdated.day != DateTime.now().day) {
-          updateI();
+          updateI(account);
         }
       case CacheStrategy.whenTabChange:
-        updateI();
-    }
-    ref
-        .read(notesProvider(account))
-        .updateMute(account.i.mutedWords, account.i.hardMutedWords);
-
-    Future<void> updateMeta() async {
-      _validateMetaAccts.add(acct);
-
-      final meta = await ref.read(misskeyProvider(account)).meta();
-      ref
-          .read(accountSettingsRepositoryProvider)
-          .save(setting.copyWith(latestMetaCached: DateTime.now()));
-
-      final accounts = List.of(state);
-      accounts[index] = account.copyWith(meta: meta);
-      state = accounts;
+        updateI(account);
     }
 
     switch (setting.metaChacheStrategy) {
       case CacheStrategy.whenLaunch:
-        if (!_validatedAccts.contains(acct)) updateMeta();
+        if (!_validatedAccts.contains(acct)) {
+          await updateMeta(account);
+        }
       case CacheStrategy.whenOneDay:
         final latestUpdated = setting.latestMetaCached;
         if (latestUpdated == null || latestUpdated.day != DateTime.now().day) {
-          updateMeta();
+          await updateMeta(account);
         }
       case CacheStrategy.whenTabChange:
-        updateMeta();
+        await updateMeta(account);
     }
 
     await _save();
@@ -127,6 +153,24 @@ class AccountRepository extends Notifier<List<Account>> {
     final i = state[index].i.copyWith(
       unreadAnnouncements: [],
     );
+
+    final accounts = List.of(state);
+    accounts[index] = account.copyWith(i: i);
+    state = accounts;
+  }
+
+  Future<void> addUnreadNotification(Account account) async {
+    final index = state.indexOf(account);
+    final i = state[index].i.copyWith(hasUnreadNotification: true);
+
+    final accounts = List.of(state);
+    accounts[index] = account.copyWith(i: i);
+    state = accounts;
+  }
+
+  Future<void> readAllNotification(Account account) async {
+    final index = state.indexOf(account);
+    final i = state[index].i.copyWith(hasUnreadNotification: false);
 
     final accounts = List.of(state);
     accounts[index] = account.copyWith(i: i);
@@ -263,7 +307,9 @@ class AccountRepository extends Notifier<List<Account>> {
     await ref.read(emojiRepositoryProvider(account)).loadFromSourceIfNeed();
 
     await _save();
-    await _addIfTabSettingNothing();
+    await ref
+        .read(tabSettingsRepositoryProvider)
+        .initializeTabSettings(account);
   }
 
   Future<void> reorder(int oldIndex, int newIndex) async {
@@ -285,14 +331,5 @@ class AccountRepository extends Notifier<List<Account>> {
       key: "accounts",
       value: jsonEncode(state.map((e) => e.toJson()).toList()),
     );
-  }
-
-  Future<void> _addIfTabSettingNothing() async {
-    if (state.length == 1) {
-      final account = state.first;
-      ref
-          .read(tabSettingsRepositoryProvider)
-          .initializeTabSettings(account.acct);
-    }
   }
 }

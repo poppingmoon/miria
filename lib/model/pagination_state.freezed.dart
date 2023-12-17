@@ -138,7 +138,7 @@ class _$PaginationStateImpl<T> extends _PaginationState<T> {
   final bool isLastLoaded;
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PaginationStateImpl<T> &&
