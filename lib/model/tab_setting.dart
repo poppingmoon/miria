@@ -50,7 +50,7 @@ class TabSetting with _$TabSetting {
     @Default(false) bool isMediaOnly,
 
     /// タブ名
-    required String name,
+    String? name,
 
     /// アカウント情報
     // https://github.com/rrousselGit/freezed/issues/488

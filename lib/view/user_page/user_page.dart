@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -70,20 +71,19 @@ class UserPageState extends ConsumerState<UserPage> {
             actions: const [],
             bottom: TabBar(
               tabs: [
-                Tab(
-                  text:
-                      "アカウント情報${userInfo?.remoteResponse != null ? "（ローカル）" : ""}",
-                ),
-                if (isRemoteUser) const Tab(text: "アカウント情報（リモート）"),
-                Tab(
-                  text:
-                      "ノート${userInfo?.remoteResponse != null ? "（ローカル）" : ""}",
-                ),
-                if (isRemoteUser) const Tab(text: "ノート（リモート）"),
-                const Tab(text: "クリップ"),
-                if (isReactionAvailable) const Tab(text: "リアクション"),
-                const Tab(text: "ページ"),
-                const Tab(text: "Play"),
+                if (!isRemoteUser) ...[
+                  Tab(text: S.of(context).userInfomation),
+                  Tab(text: S.of(context).userNotes),
+                ] else ...[
+                  Tab(text: S.of(context).userInfomationLocal),
+                  Tab(text: S.of(context).userInfomationRemote),
+                  Tab(text: S.of(context).userNotesLocal),
+                  Tab(text: S.of(context).userNotesRemote),
+                ],
+                Tab(text: S.of(context).clip),
+                if (isReactionAvailable) Tab(text: S.of(context).userReactions),
+                Tab(text: S.of(context).userPages),
+                Tab(text: S.of(context).userPlays),
               ],
               isScrollable: true,
               tabAlignment: TabAlignment.center,

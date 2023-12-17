@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/model/account.dart';
@@ -71,9 +72,9 @@ class UserDetailState extends ConsumerState<UserDetail> {
     final account = AccountScope.of(context);
     if (await SimpleConfirmDialog.show(
           context: context,
-          message: "フォロー解除してもええか？",
-          primary: "解除する",
-          secondary: "やっぱりやめる",
+          message: S.of(context).confirmUnfollow,
+          primary: S.of(context).deleteFollow,
+          secondary: S.of(context).cancel,
         ) !=
         true) {
       return;
@@ -197,33 +198,33 @@ class UserDetailState extends ConsumerState<UserDetail> {
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             if (response.isRenoteMuted ?? false)
-                              const Card(
+                              Card(
                                 child: Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Text("Renoteのミュート中"),
+                                  padding: const EdgeInsets.all(10),
+                                  child: Text(S.of(context).renoteMuting),
                                 ),
                               ),
                             if (response.isMuted ?? false)
-                              const Card(
+                              Card(
                                 child: Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Text("ミュート中"),
+                                  padding: const EdgeInsets.all(10),
+                                  child: Text(S.of(context).muting),
                                 ),
                               ),
                             if (response.isBlocking ?? false)
-                              const Card(
+                              Card(
                                 child: Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Text("ブロック中"),
+                                  padding: const EdgeInsets.all(10),
+                                  child: Text(S.of(context).blocking),
                                 ),
                               ),
                             if (response.isFollowed ?? false)
-                              const Padding(
-                                padding: EdgeInsets.only(right: 8.0),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
                                 child: Card(
                                   child: Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Text("フォローされています"),
+                                    padding: const EdgeInsets.all(10),
+                                    child: Text(S.of(context).followed),
                                   ),
                                 ),
                               ),
@@ -232,22 +233,24 @@ class UserDetailState extends ConsumerState<UserDetail> {
                                   ? ElevatedButton(
                                       onPressed:
                                           followDelete.expectFailure(context),
-                                      child: const Text("フォロー解除"),
+                                      child: Text(S.of(context).unfollow),
                                     )
                                   : (response.hasPendingFollowRequestFromYou ??
                                           false)
                                       ? ElevatedButton(
                                           onPressed: followRequestCancel
                                               .expectFailure(context),
-                                          child: const Text("フォロー許可待ち"),
+                                          child: Text(
+                                            S.of(context).followRequestPending,
+                                          ),
                                         )
                                       : OutlinedButton(
                                           onPressed: followCreate
                                               .expectFailure(context),
                                           child: Text(
                                             (response.requiresFollowRequest)
-                                                ? "フォロー申請"
-                                                : "フォローする",
+                                                ? S.of(context).followRequest
+                                                : S.of(context).createFollow,
                                           ),
                                         )
                             else
@@ -268,7 +271,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                                         22,
                                     child: const CircularProgressIndicator(),
                                   ),
-                                  label: const Text("更新中"),
+                                  label: Text(S.of(context).refreshing),
                                 ),
                               ),
                           ],
@@ -326,7 +329,9 @@ class UserDetailState extends ConsumerState<UserDetail> {
                       children: [
                         Expanded(
                           child: Text(
-                            memo.isNotEmpty ? memo : "なんかメモることあったら書いとき",
+                            memo.isNotEmpty
+                                ? memo
+                                : S.of(context).memoDescription,
                             style: memo.isNotEmpty
                                 ? null
                                 : Theme.of(context)
@@ -380,10 +385,10 @@ class UserDetailState extends ConsumerState<UserDetail> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Row(
+                        Row(
                           children: [
-                            Icon(Icons.warning_amber_rounded),
-                            Text("リモートユーザーのため、情報が不完全です。"),
+                            const Icon(Icons.warning_amber_rounded),
+                            Text(S.of(context).remoteUserCaution),
                           ],
                         ),
                         GestureDetector(
@@ -394,7 +399,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                             ),
                           ),
                           child: Text(
-                            "サーバー情報を表示",
+                            S.of(context).showServerInformation,
                             style: AppTheme.of(context).linkStyle,
                           ),
                         ),
@@ -417,9 +422,9 @@ class UserDetailState extends ConsumerState<UserDetail> {
                 children: [
                   TableRow(
                     children: [
-                      const TableCell(
+                      TableCell(
                         child: Text(
-                          "場所",
+                          S.of(context).location,
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -428,24 +433,28 @@ class UserDetailState extends ConsumerState<UserDetail> {
                   ),
                   TableRow(
                     children: [
-                      const TableCell(
+                      TableCell(
                         child: Text(
-                          "登録日",
+                          S.of(context).registeredDate,
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      TableCell(child: Text(response.createdAt.format)), //FIXME
+                      TableCell(
+                        child: Text(response.createdAt.format(context)),
+                      ), //FIXME
                     ],
                   ),
                   TableRow(
                     children: [
-                      const TableCell(
+                      TableCell(
                         child: Text(
-                          "誕生日",
+                          S.of(context).birthday,
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      TableCell(child: Text(response.birthday?.format ?? "")),
+                      TableCell(
+                        child: Text(response.birthday?.format(context) ?? ""),
+                      ),
                     ],
                   ),
                 ],
@@ -489,7 +498,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       Text(
-                        "ノート",
+                        S.of(context).note,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
@@ -508,7 +517,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         Text(
-                          "フォロー",
+                          S.of(context).follow,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -528,7 +537,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         Text(
-                          "フォロワー",
+                          S.of(context).follower,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],

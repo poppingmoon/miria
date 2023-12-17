@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/view/login_page/api_key_login.dart';
 import 'package:miria/view/login_page/mi_auth_login.dart';
@@ -19,12 +20,12 @@ class LoginPageState extends ConsumerState<LoginPage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("ログイン"),
-          bottom: const TabBar(
+          title: Text(S.of(context).login),
+          bottom: TabBar(
             isScrollable: true,
             tabs: [
-              Tab(text: "MiAuthでログイン"),
-              Tab(text: "APIキーでログイン"),
+              Tab(text: S.of(context).loginAsMiAuth),
+              Tab(text: S.of(context).loginAsAPIKey),
             ],
           ),
         ),

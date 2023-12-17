@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
@@ -60,7 +61,7 @@ class MiAuthLoginState extends ConsumerState<MiAuthLogin> {
             children: [
               TableRow(
                 children: [
-                  const Text("サーバー"),
+                  Text(S.of(context).server),
                   TextField(
                     controller: serverController,
                     decoration: InputDecoration(
@@ -101,7 +102,11 @@ class MiAuthLoginState extends ConsumerState<MiAuthLogin> {
                         isAuthed = true;
                       });
                     },
-                    child: Text(isAuthed ? "再度認証をする" : "認証をする"),
+                    child: Text(
+                      isAuthed
+                          ? S.of(context).reauthorizate
+                          : S.of(context).authorizate,
+                    ),
                   ),
                 ],
               ),
@@ -117,7 +122,7 @@ class MiAuthLoginState extends ConsumerState<MiAuthLogin> {
                     Container(),
                     ElevatedButton(
                       onPressed: () => login().expectFailure(context),
-                      child: const Text("認証してきた"),
+                      child: Text(S.of(context).didAuthorize),
                     ),
                   ],
                 ),

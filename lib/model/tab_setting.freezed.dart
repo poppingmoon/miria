@@ -48,7 +48,7 @@ mixin _$TabSetting {
   bool get isMediaOnly => throw _privateConstructorUsedError;
 
   /// タブ名
-  String get name => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
 
   /// アカウント情報
 // https://github.com/rrousselGit/freezed/issues/488
@@ -81,7 +81,7 @@ abstract class $TabSettingCopyWith<$Res> {
       bool isSubscribe,
       bool isIncludeReplies,
       bool isMediaOnly,
-      String name,
+      String? name,
       @JsonKey(readValue: _readAcct) Acct acct,
       bool renoteDisplay});
 
@@ -111,7 +111,7 @@ class _$TabSettingCopyWithImpl<$Res, $Val extends TabSetting>
     Object? isSubscribe = null,
     Object? isIncludeReplies = null,
     Object? isMediaOnly = null,
-    Object? name = null,
+    Object? name = freezed,
     Object? acct = null,
     Object? renoteDisplay = null,
   }) {
@@ -152,10 +152,10 @@ class _$TabSettingCopyWithImpl<$Res, $Val extends TabSetting>
           ? _value.isMediaOnly
           : isMediaOnly // ignore: cast_nullable_to_non_nullable
               as bool,
-      name: null == name
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       acct: null == acct
           ? _value.acct
           : acct // ignore: cast_nullable_to_non_nullable
@@ -185,11 +185,11 @@ class _$TabSettingCopyWithImpl<$Res, $Val extends TabSetting>
 }
 
 /// @nodoc
-abstract class _$$TabSettingImplCopyWith<$Res>
+abstract class _$$_TabSettingCopyWith<$Res>
     implements $TabSettingCopyWith<$Res> {
-  factory _$$TabSettingImplCopyWith(
-          _$TabSettingImpl value, $Res Function(_$TabSettingImpl) then) =
-      __$$TabSettingImplCopyWithImpl<$Res>;
+  factory _$$_TabSettingCopyWith(
+          _$_TabSetting value, $Res Function(_$_TabSetting) then) =
+      __$$_TabSettingCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -202,7 +202,7 @@ abstract class _$$TabSettingImplCopyWith<$Res>
       bool isSubscribe,
       bool isIncludeReplies,
       bool isMediaOnly,
-      String name,
+      String? name,
       @JsonKey(readValue: _readAcct) Acct acct,
       bool renoteDisplay});
 
@@ -213,11 +213,11 @@ abstract class _$$TabSettingImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$TabSettingImplCopyWithImpl<$Res>
-    extends _$TabSettingCopyWithImpl<$Res, _$TabSettingImpl>
-    implements _$$TabSettingImplCopyWith<$Res> {
-  __$$TabSettingImplCopyWithImpl(
-      _$TabSettingImpl _value, $Res Function(_$TabSettingImpl) _then)
+class __$$_TabSettingCopyWithImpl<$Res>
+    extends _$TabSettingCopyWithImpl<$Res, _$_TabSetting>
+    implements _$$_TabSettingCopyWith<$Res> {
+  __$$_TabSettingCopyWithImpl(
+      _$_TabSetting _value, $Res Function(_$_TabSetting) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -232,11 +232,11 @@ class __$$TabSettingImplCopyWithImpl<$Res>
     Object? isSubscribe = null,
     Object? isIncludeReplies = null,
     Object? isMediaOnly = null,
-    Object? name = null,
+    Object? name = freezed,
     Object? acct = null,
     Object? renoteDisplay = null,
   }) {
-    return _then(_$TabSettingImpl(
+    return _then(_$_TabSetting(
       icon: null == icon
           ? _value.icon
           : icon // ignore: cast_nullable_to_non_nullable
@@ -273,10 +273,10 @@ class __$$TabSettingImplCopyWithImpl<$Res>
           ? _value.isMediaOnly
           : isMediaOnly // ignore: cast_nullable_to_non_nullable
               as bool,
-      name: null == name
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       acct: null == acct
           ? _value.acct
           : acct // ignore: cast_nullable_to_non_nullable
@@ -291,8 +291,8 @@ class __$$TabSettingImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$TabSettingImpl extends _TabSetting {
-  const _$TabSettingImpl(
+class _$_TabSetting extends _TabSetting {
+  const _$_TabSetting(
       {@IconDataConverter() required this.icon,
       required this.tabType,
       this.roleId,
@@ -302,13 +302,13 @@ class _$TabSettingImpl extends _TabSetting {
       this.isSubscribe = true,
       this.isIncludeReplies = true,
       this.isMediaOnly = false,
-      required this.name,
+      this.name,
       @JsonKey(readValue: _readAcct) required this.acct,
       this.renoteDisplay = true})
       : super._();
 
-  factory _$TabSettingImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TabSettingImplFromJson(json);
+  factory _$_TabSetting.fromJson(Map<String, dynamic> json) =>
+      _$$_TabSettingFromJson(json);
 
   @override
   @IconDataConverter()
@@ -351,7 +351,7 @@ class _$TabSettingImpl extends _TabSetting {
 
   /// タブ名
   @override
-  final String name;
+  final String? name;
 
   /// アカウント情報
 // https://github.com/rrousselGit/freezed/issues/488
@@ -374,7 +374,7 @@ class _$TabSettingImpl extends _TabSetting {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TabSettingImpl &&
+            other is _$_TabSetting &&
             (identical(other.icon, icon) || other.icon == icon) &&
             (identical(other.tabType, tabType) || other.tabType == tabType) &&
             (identical(other.roleId, roleId) || other.roleId == roleId) &&
@@ -415,12 +415,12 @@ class _$TabSettingImpl extends _TabSetting {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$TabSettingImplCopyWith<_$TabSettingImpl> get copyWith =>
-      __$$TabSettingImplCopyWithImpl<_$TabSettingImpl>(this, _$identity);
+  _$$_TabSettingCopyWith<_$_TabSetting> get copyWith =>
+      __$$_TabSettingCopyWithImpl<_$_TabSetting>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TabSettingImplToJson(
+    return _$$_TabSettingToJson(
       this,
     );
   }
@@ -437,13 +437,13 @@ abstract class _TabSetting extends TabSetting {
       final bool isSubscribe,
       final bool isIncludeReplies,
       final bool isMediaOnly,
-      required final String name,
+      final String? name,
       @JsonKey(readValue: _readAcct) required final Acct acct,
-      final bool renoteDisplay}) = _$TabSettingImpl;
+      final bool renoteDisplay}) = _$_TabSetting;
   const _TabSetting._() : super._();
 
   factory _TabSetting.fromJson(Map<String, dynamic> json) =
-      _$TabSettingImpl.fromJson;
+      _$_TabSetting.fromJson;
 
   @override
   @IconDataConverter()
@@ -483,7 +483,7 @@ abstract class _TabSetting extends TabSetting {
   @override
 
   /// タブ名
-  String get name;
+  String? get name;
   @override
 
   /// アカウント情報
@@ -497,6 +497,6 @@ abstract class _TabSetting extends TabSetting {
   bool get renoteDisplay;
   @override
   @JsonKey(ignore: true)
-  _$$TabSettingImplCopyWith<_$TabSettingImpl> get copyWith =>
+  _$$_TabSettingCopyWith<_$_TabSetting> get copyWith =>
       throw _privateConstructorUsedError;
 }

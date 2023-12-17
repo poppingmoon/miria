@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -17,7 +18,7 @@ class AccountListPage extends ConsumerWidget {
     final accounts = ref.watch(accountsProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("アカウント設定"),
+        title: Text(S.of(context).accountSettings),
         leading: Container(),
         actions: [
           IconButton(
@@ -62,7 +63,7 @@ class AccountListPage extends ConsumerWidget {
                     ..removeWhere((route) => true)
                     ..push(const SplashRoute());
                 },
-                child: const Text("アカウント設定をおわる"),
+                child: Text(S.of(context).quitAccountSettings),
               ),
             ),
           ),
@@ -98,13 +99,13 @@ class AccountListItem extends ConsumerWidget {
               showDialog<void>(
                 context: context,
                 builder: (context) => AlertDialog(
-                  content: const Text("ほんまに削除してええな？"),
+                  content: Text(S.of(context).confirmDelete),
                   actions: [
                     OutlinedButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text("やっぱりせえへん"),
+                      child: Text(S.of(context).cancel),
                     ),
                     ElevatedButton(
                       onPressed: () async {
@@ -116,7 +117,7 @@ class AccountListItem extends ConsumerWidget {
                         if (!context.mounted) return;
                         Navigator.of(context).pop();
                       },
-                      child: const Text("ええで"),
+                      child: Text(S.of(context).doDeleting),
                     ),
                   ],
                 ),

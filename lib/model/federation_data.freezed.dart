@@ -219,11 +219,11 @@ class _$FederationDataCopyWithImpl<$Res, $Val extends FederationData>
 }
 
 /// @nodoc
-abstract class _$$FederationDataImplCopyWith<$Res>
+abstract class _$$_FederationDataCopyWith<$Res>
     implements $FederationDataCopyWith<$Res> {
-  factory _$$FederationDataImplCopyWith(_$FederationDataImpl value,
-          $Res Function(_$FederationDataImpl) then) =
-      __$$FederationDataImplCopyWithImpl<$Res>;
+  factory _$$_FederationDataCopyWith(
+          _$_FederationData value, $Res Function(_$_FederationData) then) =
+      __$$_FederationDataCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -255,11 +255,11 @@ abstract class _$$FederationDataImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$FederationDataImplCopyWithImpl<$Res>
-    extends _$FederationDataCopyWithImpl<$Res, _$FederationDataImpl>
-    implements _$$FederationDataImplCopyWith<$Res> {
-  __$$FederationDataImplCopyWithImpl(
-      _$FederationDataImpl _value, $Res Function(_$FederationDataImpl) _then)
+class __$$_FederationDataCopyWithImpl<$Res>
+    extends _$FederationDataCopyWithImpl<$Res, _$_FederationData>
+    implements _$$_FederationDataCopyWith<$Res> {
+  __$$_FederationDataCopyWithImpl(
+      _$_FederationData _value, $Res Function(_$_FederationData) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -288,7 +288,7 @@ class __$$FederationDataImplCopyWithImpl<$Res>
     Object? isSupportedLocalTimeline = null,
     Object? meta = freezed,
   }) {
-    return _then(_$FederationDataImpl(
+    return _then(_$_FederationData(
       bannerUrl: freezed == bannerUrl
           ? _value.bannerUrl
           : bannerUrl // ignore: cast_nullable_to_non_nullable
@@ -383,8 +383,8 @@ class __$$FederationDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FederationDataImpl implements _FederationData {
-  const _$FederationDataImpl(
+class _$_FederationData implements _FederationData {
+  const _$_FederationData(
       {this.bannerUrl,
       this.faviconUrl,
       this.tosUrl,
@@ -490,7 +490,7 @@ class _$FederationDataImpl implements _FederationData {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FederationDataImpl &&
+            other is _$_FederationData &&
             (identical(other.bannerUrl, bannerUrl) ||
                 other.bannerUrl == bannerUrl) &&
             (identical(other.faviconUrl, faviconUrl) ||
@@ -565,9 +565,8 @@ class _$FederationDataImpl implements _FederationData {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$FederationDataImplCopyWith<_$FederationDataImpl> get copyWith =>
-      __$$FederationDataImplCopyWithImpl<_$FederationDataImpl>(
-          this, _$identity);
+  _$$_FederationDataCopyWith<_$_FederationData> get copyWith =>
+      __$$_FederationDataCopyWithImpl<_$_FederationData>(this, _$identity);
 }
 
 abstract class _FederationData implements FederationData {
@@ -593,7 +592,7 @@ abstract class _FederationData implements FederationData {
       required final bool isSupportedEmoji,
       required final bool isSupportedAnnouncement,
       required final bool isSupportedLocalTimeline,
-      final MetaResponse? meta}) = _$FederationDataImpl;
+      final MetaResponse? meta}) = _$_FederationData;
 
   @override
   String? get bannerUrl;
@@ -641,6 +640,6 @@ abstract class _FederationData implements FederationData {
   MetaResponse? get meta;
   @override
   @JsonKey(ignore: true)
-  _$$FederationDataImplCopyWith<_$FederationDataImpl> get copyWith =>
+  _$$_FederationDataCopyWith<_$_FederationData> get copyWith =>
       throw _privateConstructorUsedError;
 }

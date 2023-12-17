@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/extensions/users_sort_type_extension.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/pushable_listview.dart';
@@ -72,10 +74,10 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
                             for (final element in ExploreUserType.values)
                               element == exploreUserType,
                           ],
-                          children: const [
-                            Text("ピンどめ"),
-                            Text("ローカル"),
-                            Text("リモート"),
+                          children: [
+                            Text(S.of(context).pinnedUser),
+                            Text(S.of(context).local),
+                            Text(S.of(context).remote),
                           ],
                         ),
                       ),
@@ -100,8 +102,11 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
               if (isDetailOpen) ...[
                 Row(
                   children: [
-                    const Expanded(
-                      child: Text("並び順", textAlign: TextAlign.center),
+                    Expanded(
+                      child: Text(
+                        S.of(context).sort,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                     Expanded(
                       child: DropdownButton<UsersSortType>(
@@ -109,7 +114,7 @@ class ExploreUsersState extends ConsumerState<ExploreUsers> {
                           for (final sortType in UsersSortType.values)
                             DropdownMenuItem(
                               value: sortType,
-                              child: Text(sortType.displayName),
+                              child: Text(sortType.displayName(context)),
                             ),
                         ],
                         value: sortType,

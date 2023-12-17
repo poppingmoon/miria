@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -41,7 +42,7 @@ class DriveFileSelectDialogState extends ConsumerState<DriveFileSelectDialog> {
           icon: const Icon(Icons.arrow_back),
         ),
         title: path.isEmpty
-            ? const Text("ファイルを選択")
+            ? Text(S.of(context).chooseFile)
             : Text(path.map((e) => e.name).join("/")),
         actions: [
           if (files.isNotEmpty)

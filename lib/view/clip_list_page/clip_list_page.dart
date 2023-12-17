@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart' hide Clip;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/clip_settings.dart';
@@ -24,15 +25,15 @@ class ClipListPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("クリップ一覧"),
+        title: Text(S.of(context).clip),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () async {
               final settings = await showDialog<ClipSettings>(
                 context: context,
-                builder: (context) => const ClipSettingsDialog(
-                  title: Text("作成"),
+                builder: (context) => ClipSettingsDialog(
+                  title: Text(S.of(context).create),
                 ),
               );
               if (!context.mounted) return;
@@ -60,9 +61,9 @@ class ClipListPage extends ConsumerWidget {
                   onPressed: () async {
                     final result = await SimpleConfirmDialog.show(
                       context: context,
-                      message: "このクリップを削除しますか？",
-                      primary: "削除する",
-                      secondary: "やめる",
+                      message: S.of(context).confirmDeleteClip,
+                      primary: S.of(context).willDelete,
+                      secondary: S.of(context).cancel,
                     );
                     if (!context.mounted) return;
                     if (result ?? false) {
