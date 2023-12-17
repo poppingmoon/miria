@@ -21,23 +21,23 @@ class MfmFnArg {
 const Map<String, List<MfmFnArg>> mfmFn = {
   "tada": [
     MfmFnArg(name: "speed", defaultValue: "1s"),
-    // MfmFnArg(name: "delay", defaultValue: "0s"),
+    MfmFnArg(name: "delay", defaultValue: "0s"),
   ],
   "jelly": [
     MfmFnArg(name: "speed", defaultValue: "1s"),
-    // MfmFnArg(name: "delay", defaultValue: "0s"),
+    MfmFnArg(name: "delay", defaultValue: "0s"),
   ],
   "twitch": [
     MfmFnArg(name: "speed", defaultValue: "0.5s"),
-    // MfmFnArg(name: "delay", defaultValue: "0s"),
+    MfmFnArg(name: "delay", defaultValue: "0s"),
   ],
   "shake": [
     MfmFnArg(name: "speed", defaultValue: "0.5s"),
-    // MfmFnArg(name: "delay", defaultValue: "0s"),
+    MfmFnArg(name: "delay", defaultValue: "0s"),
   ],
   "spin": [
     MfmFnArg(name: "speed", defaultValue: "1.5s"),
-    // MfmFnArg(name: "delay", defaultValue: "0s"),
+    MfmFnArg(name: "delay", defaultValue: "0s"),
     MfmFnArg(name: "x"),
     MfmFnArg(name: "y"),
     MfmFnArg(name: "left"),
@@ -45,11 +45,11 @@ const Map<String, List<MfmFnArg>> mfmFn = {
   ],
   "jump": [
     MfmFnArg(name: "speed", defaultValue: "0.75s"),
-    // MfmFnArg(name: "delay", defaultValue: "0s"),
+    MfmFnArg(name: "delay", defaultValue: "0s"),
   ],
   "bounce": [
     MfmFnArg(name: "speed", defaultValue: "0.75s"),
-    // MfmFnArg(name: "delay", defaultValue: "0s"),
+    MfmFnArg(name: "delay", defaultValue: "0s"),
   ],
   "flip": [
     MfmFnArg(name: "v"),

@@ -45,7 +45,7 @@ void main() {
       args,
       orderedEquals(const [
         MfmFnArg(name: "speed", defaultValue: "1.5s"),
-        // MfmFnArg(name: "delay", defaultValue: "0s"),
+        MfmFnArg(name: "delay", defaultValue: "0s"),
         MfmFnArg(name: "x"),
         MfmFnArg(name: "y"),
         MfmFnArg(name: "left"),
@@ -68,7 +68,7 @@ void main() {
       args,
       orderedEquals(const [
         MfmFnArg(name: "speed", defaultValue: "1.5s"),
-        // MfmFnArg(name: "delay", defaultValue: "0s"),
+        MfmFnArg(name: "delay", defaultValue: "0s"),
         MfmFnArg(name: "x"),
         MfmFnArg(name: "y"),
         MfmFnArg(name: "left"),
@@ -111,7 +111,7 @@ void main() {
       args,
       orderedEquals(const [
         MfmFnArg(name: "speed", defaultValue: "1.5s"),
-        // MfmFnArg(name: "delay", defaultValue: "0s"),
+        MfmFnArg(name: "delay", defaultValue: "0s"),
         MfmFnArg(name: "y"),
         MfmFnArg(name: "left"),
         MfmFnArg(name: "alternate"),
@@ -134,7 +134,7 @@ void main() {
       args,
       orderedEquals(const [
         MfmFnArg(name: "speed", defaultValue: "1.5s"),
-        // MfmFnArg(name: "delay", defaultValue: "0s"),
+        MfmFnArg(name: "delay", defaultValue: "0s"),
         MfmFnArg(name: "y"),
         MfmFnArg(name: "left"),
         MfmFnArg(name: "alternate"),
@@ -156,7 +156,7 @@ void main() {
     expect(
       args,
       orderedEquals(const [
-        // MfmFnArg(name: "delay", defaultValue: "0s"),
+        MfmFnArg(name: "delay", defaultValue: "0s"),
         MfmFnArg(name: "x"),
         MfmFnArg(name: "y"),
         MfmFnArg(name: "left"),
@@ -179,7 +179,7 @@ void main() {
     expect(
       args,
       orderedEquals(const [
-        // MfmFnArg(name: "delay", defaultValue: "0s"),
+        MfmFnArg(name: "delay", defaultValue: "0s"),
         MfmFnArg(name: "x"),
         MfmFnArg(name: "y"),
         MfmFnArg(name: "left"),
