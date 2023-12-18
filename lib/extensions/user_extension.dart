@@ -7,18 +7,33 @@ extension UserExtension on User {
 }
 
 extension UserDetailedExtension on UserDetailed {
-  bool get isFfVisibleForMe {
+  bool get isFollowersVisibleForMe {
     if (this is MeDetailed) {
       return true;
     }
 
     final user = this;
 
-    return switch (ffVisibility) {
+    return switch (followersVisibility ?? ffVisibility) {
       FFVisibility.public => true,
       FFVisibility.followers =>
         user is UserDetailedNotMeWithRelations && user.isFollowing,
-      FFVisibility.private => false,
+      FFVisibility.private || null => false,
+    };
+  }
+
+  bool get isFollowingVisibleForMe {
+    if (this is MeDetailed) {
+      return true;
+    }
+
+    final user = this;
+
+    return switch (followingVisibility ?? ffVisibility) {
+      FFVisibility.public => true,
+      FFVisibility.followers =>
+        user is UserDetailedNotMeWithRelations && user.isFollowing,
+      FFVisibility.private || null => false,
     };
   }
 }

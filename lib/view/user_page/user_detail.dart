@@ -536,7 +536,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                       ),
                     ],
                   ),
-                  if (widget.response.isFfVisibleForMe) ...[
+                  if (widget.response.isFollowingVisibleForMe)
                     InkWell(
                       onTap: () => context.pushRoute(
                         UserFolloweeRoute(
@@ -557,6 +557,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                         ],
                       ),
                     ),
+                  if (widget.response.isFollowersVisibleForMe)
                     InkWell(
                       onTap: () => context.pushRoute(
                         UserFollowerRoute(
@@ -577,7 +578,6 @@ class UserDetailState extends ConsumerState<UserDetail> {
                         ],
                       ),
                     ),
-                  ],
                 ],
               ),
             ],
