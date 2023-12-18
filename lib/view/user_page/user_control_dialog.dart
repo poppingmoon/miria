@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/user_extension.dart';
 import 'package:miria/model/account.dart';
@@ -109,9 +110,9 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
   Future<void> blockingCreate() async {
     if (await SimpleConfirmDialog.show(
           context: context,
-          message: "ブロックしてもええか？",
-          primary: "ブロックする",
-          secondary: "やっぱりやめる",
+          message: S.of(context).confirmCreateBlock,
+          primary: S.of(context).createBlock,
+          secondary: S.of(context).cancel,
         ) !=
         true) {
       return;
@@ -141,7 +142,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
       children: [
         ListTile(
           leading: const Icon(Icons.copy),
-          title: const Text("名前をコピー"),
+          title: Text(S.of(context).copyName),
           onTap: () {
             Clipboard.setData(
               ClipboardData(
@@ -149,25 +150,25 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
               ),
             );
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("コピーしました")),
+              SnackBar(content: Text(S.of(context).doneCopy)),
             );
             Navigator.of(context).pop();
           },
         ),
         ListTile(
           leading: const Icon(Icons.alternate_email),
-          title: const Text("ユーザー名をコピー"),
+          title: Text(S.of(context).copyUserScreenName),
           onTap: () {
             Clipboard.setData(ClipboardData(text: user.acct));
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("コピーしました")),
+              SnackBar(content: Text(S.of(context).doneCopy)),
             );
             Navigator.of(context).pop();
           },
         ),
         ListTile(
           leading: const Icon(Icons.link),
-          title: const Text("リンクをコピー"),
+          title: Text(S.of(context).copyLinks),
           onTap: () {
             Clipboard.setData(
               ClipboardData(
@@ -179,14 +180,14 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
               ),
             );
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("コピーしました")),
+              SnackBar(content: Text(S.of(context).doneCopy)),
             );
             Navigator.of(context).pop();
           },
         ),
         ListTile(
           leading: const Icon(Icons.open_in_browser),
-          title: const Text("ブラウザで開く"),
+          title: Text(S.of(context).openBrowsers),
           onTap: () {
             launchUrl(
               Uri(
@@ -202,7 +203,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
         if (widget.response.host != null)
           ListTile(
             leading: const Icon(Icons.rocket_launch),
-            title: const Text("ブラウザでリモート先を開く"),
+            title: Text(S.of(context).openBrowsersAsRemote),
             onTap: () {
               final uri = widget.response.uri ?? widget.response.url;
               if (uri == null) return;
@@ -211,18 +212,8 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
             },
           ),
         ListTile(
-          leading: const Icon(Icons.search),
-          title: const Text("ノートを検索"),
-          onTap: () => context.pushRoute(
-            SearchRoute(
-              account: widget.account,
-              initialNoteSearchCondition: NoteSearchCondition(user: user),
-            ),
-          ),
-        ),
-        ListTile(
           leading: const Icon(Icons.open_in_new),
-          title: const Text("別のアカウントで開く"),
+          title: Text(S.of(context).openInAnotherAccount),
           onTap: () => ref
               .read(misskeyNoteNotifierProvider(widget.account).notifier)
               .openUserInOtherAccount(context, user)
@@ -230,7 +221,7 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
         ),
         ListTile(
           leading: const Icon(Icons.search),
-          title: const Text("ノートを検索"),
+          title: Text(S.of(context).searchNotes),
           onTap: () => context.pushRoute(
             SearchRoute(
               account: widget.account,
@@ -242,49 +233,49 @@ class UserControlDialogState extends ConsumerState<UserControlDialog> {
         ),
         ListTile(
           leading: const Icon(Icons.list),
-          title: const Text("リストに追加"),
+          title: Text(S.of(context).addToList),
           onTap: addToList,
         ),
         ListTile(
           leading: const Icon(Icons.settings_input_antenna),
-          title: const Text("アンテナに追加"),
+          title: Text(S.of(context).addToAntenna),
           onTap: addToAntenna,
         ),
         if (user is UserDetailedNotMeWithRelations) ...[
           if (user.isRenoteMuted)
             ListTile(
               leading: const Icon(Icons.repeat_rounded),
-              title: const Text("Renoteのミュート解除する"),
+              title: Text(S.of(context).deleteRenoteMute),
               onTap: renoteMuteDelete.expectFailure(context),
             )
           else
             ListTile(
               leading: const Icon(Icons.repeat_rounded),
-              title: const Text("Renoteをミュートする"),
+              title: Text(S.of(context).createRenoteMute),
               onTap: renoteMuteCreate.expectFailure(context),
             ),
           if (user.isMuted)
             ListTile(
               leading: const Icon(Icons.visibility),
-              title: const Text("ミュート解除する"),
+              title: Text(S.of(context).deleteMute),
               onTap: muteDelete.expectFailure(context),
             )
           else
             ListTile(
               leading: const Icon(Icons.visibility_off),
-              title: const Text("ミュートする"),
+              title: Text(S.of(context).createMute),
               onTap: muteCreate.expectFailure(context),
             ),
           if (user.isBlocking)
             ListTile(
               leading: const Icon(Icons.block),
-              title: const Text("ブロックを解除する"),
+              title: Text(S.of(context).deleteBlock),
               onTap: blockingDelete.expectFailure(context),
             )
           else
             ListTile(
               leading: const Icon(Icons.block),
-              title: const Text("ブロックする"),
+              title: Text(S.of(context).createBlock),
               onTap: blockingCreate.expectFailure(context),
             ),
         ],
@@ -301,16 +292,25 @@ class ExpireSelectDialog extends StatefulWidget {
 }
 
 enum Expire {
-  indefinite(null, "無期限"),
-  minutes_10(Duration(minutes: 10), "10分間"),
-  hours_1(Duration(hours: 1), "1時間"),
-  day_1(Duration(days: 1), "1日"),
-  week_1(Duration(days: 7), "1週間");
+  indefinite(null),
+  minutes_10(Duration(minutes: 10)),
+  hours_1(Duration(hours: 1)),
+  day_1(Duration(days: 1)),
+  week_1(Duration(days: 7));
 
   final Duration? expires;
-  final String name;
 
-  const Expire(this.expires, this.name);
+  const Expire(this.expires);
+
+  String displayName(BuildContext context) {
+    return switch (this) {
+      Expire.indefinite => S.of(context).unlimited,
+      Expire.minutes_10 => S.of(context).minutes10,
+      Expire.hours_1 => S.of(context).hours1,
+      Expire.day_1 => S.of(context).day1,
+      Expire.week_1 => S.of(context).week1,
+    };
+  }
 }
 
 class ExpireSelectDialogState extends State<ExpireSelectDialog> {
@@ -319,7 +319,7 @@ class ExpireSelectDialogState extends State<ExpireSelectDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("期限を選択してください。"),
+      title: Text(S.of(context).selectDuration),
       content: DropdownButton<Expire>(
         items: [
           for (final value in Expire.values)
@@ -336,7 +336,7 @@ class ExpireSelectDialogState extends State<ExpireSelectDialog> {
           onPressed: () {
             Navigator.of(context).pop(selectedExpire);
           },
-          child: const Text("ほい"),
+          child: Text(S.of(context).done),
         ),
       ],
     );

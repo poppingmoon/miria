@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/misskey_emoji_data.dart';
@@ -71,9 +72,9 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
         if (isMyReaction) {
           if (await SimpleConfirmDialog.show(
                 context: context,
-                message: "リアクション取り消してもええか？",
-                primary: "取り消す",
-                secondary: "やっぱりやめる",
+                message: S.of(context).confirmDeleteReaction,
+                primary: S.of(context).cancelReaction,
+                secondary: S.of(context).cancel,
               ) !=
               true) {
             return;
@@ -95,9 +96,9 @@ class ReactionButtonState extends ConsumerState<ReactionButton> {
         if (ref.read(generalSettingsRepositoryProvider).settings.isChicken) {
           final result = await SimpleConfirmDialog.show(
             context: context,
-            message: "リアクションしてもええか？",
-            primary: "する",
-            secondary: "やっぱりやめる",
+            message: S.of(context).confirmCreateReaction,
+            primary: S.of(context).createReaction,
+            secondary: S.of(context).cancel,
           );
           if (!(result ?? false)) {
             return;

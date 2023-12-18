@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/summaly_result.dart';
@@ -156,7 +157,11 @@ class _LinkPreviewItemState extends State<LinkPreviewItem> {
                 isPlayerOpen = false;
               }),
               icon: const Icon(Icons.close),
-              label: Text(playerUrl != null ? "プレイヤーを閉じる" : "ツイートを閉じる"),
+              label: Text(
+                playerUrl != null
+                    ? S.of(context).closePlayer
+                    : S.of(context).closeTweet,
+              ),
             ),
           ],
       ],
@@ -193,7 +198,7 @@ class LinkPreviewTile extends ConsumerWidget {
         onLongPress: () {
           Clipboard.setData(ClipboardData(text: link));
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("コピーしました")),
+            SnackBar(content: Text(S.of(context).doneCopy)),
           );
         },
         child: DecoratedBox(

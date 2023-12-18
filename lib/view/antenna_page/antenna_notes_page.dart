@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/antenna_settings.dart';
@@ -45,7 +46,7 @@ class AntennaNotesPage extends ConsumerWidget {
                 final settings = await showDialog<AntennaSettings>(
                   context: context,
                   builder: (context) => AntennaSettingsDialog(
-                    title: const Text("編集"),
+                    title: Text(S.of(context).edit),
                     initialSettings: AntennaSettings.fromAntenna(antenna),
                     account: account,
                   ),

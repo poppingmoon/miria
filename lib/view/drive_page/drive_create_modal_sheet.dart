@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -45,9 +46,9 @@ class DriveCreateModalSheet extends ConsumerWidget {
     final misskey = ref.read(misskeyProvider(account));
     final name = await showDialog<String>(
       context: context,
-      builder: (context) => const TextFormFieldDialog(
-        title: Text("フォルダ作成"),
-        labelText: "フォルダ名",
+      builder: (context) => TextFormFieldDialog(
+        title: Text(S.of(context).createFolder),
+        labelText: S.of(context).folderName,
       ),
     );
     if (name != null) {
@@ -68,12 +69,12 @@ class DriveCreateModalSheet extends ConsumerWidget {
       children: [
         ListTile(
           leading: const Icon(Icons.upload),
-          title: const Text("アップロード"),
+          title: Text(S.of(context).uploadFile),
           onTap: () => upload(ref).expectFailure(context),
         ),
         ListTile(
           leading: const Icon(Icons.folder),
-          title: const Text("フォルダ作成"),
+          title: Text(S.of(context).createFolder),
           onTap: () => createFolder(ref).expectFailure(context),
         ),
       ],

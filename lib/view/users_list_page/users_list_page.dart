@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/users_list_settings.dart';
@@ -23,15 +24,15 @@ class UsersListPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("リスト"),
+        title: Text(S.of(context).list),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () async {
               final settings = await showDialog<UsersListSettings>(
                 context: context,
-                builder: (context) => const UsersListSettingsDialog(
-                  title: Text("作成"),
+                builder: (context) => UsersListSettingsDialog(
+                  title: Text(S.of(context).create),
                 ),
               );
               if (!context.mounted) return;
@@ -60,9 +61,9 @@ class UsersListPage extends ConsumerWidget {
                     onPressed: () async {
                       final result = await SimpleConfirmDialog.show(
                         context: context,
-                        message: "このリストを削除しますか？",
-                        primary: "削除する",
-                        secondary: "やめる",
+                        message: S.of(context).confirmDeleteList,
+                        primary: S.of(context).doDeleting,
+                        secondary: S.of(context).cancel,
                       );
                       if (!context.mounted) return;
                       if (result ?? false) {

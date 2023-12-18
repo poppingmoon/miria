@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/antenna_settings.dart';
@@ -23,7 +24,7 @@ class AntennaPage extends ConsumerWidget {
       account: account,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("アンテナ"),
+          title: Text(S.of(context).antenna),
           actions: [
             IconButton(
               icon: const Icon(Icons.add),
@@ -31,7 +32,7 @@ class AntennaPage extends ConsumerWidget {
                 final settings = await showDialog<AntennaSettings>(
                   context: context,
                   builder: (context) => AntennaSettingsDialog(
-                    title: const Text("作成"),
+                    title: Text(S.of(context).create),
                     account: account,
                   ),
                 );

@@ -222,7 +222,9 @@ class TabHeader extends ConsumerWidget {
                 top: 5,
                 bottom: 5,
               ),
-              child: Text(tabSetting.name),
+              child: Text(
+                tabSetting.name ?? tabSetting.tabType.displayName(context),
+              ),
             ),
           ),
           const Nyanpuppu(),

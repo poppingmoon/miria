@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -73,22 +74,22 @@ class UserNotesState extends ConsumerState<UserNotes> {
                           }
                         });
                       },
-                      children: const [
+                      children: [
                         Padding(
-                          padding: EdgeInsets.only(left: 5, right: 5),
-                          child: Text("返信つき"),
+                          padding: const EdgeInsets.only(left: 5, right: 5),
+                          child: Text(S.of(context).includeRepliesShort),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 5, right: 5),
-                          child: Text("ファイルつき"),
+                          padding: const EdgeInsets.only(left: 5, right: 5),
+                          child: Text(S.of(context).mediaOnlyShort),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 5, right: 5),
-                          child: Text("リノートも"),
+                          padding: const EdgeInsets.only(left: 5, right: 5),
+                          child: Text(S.of(context).displayRenotesShort),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 5, right: 5),
-                          child: Text("ハイライト"),
+                          padding: const EdgeInsets.only(left: 5, right: 5),
+                          child: Text(S.of(context).highlight),
                         ),
                       ],
                     ),
@@ -122,8 +123,8 @@ class UserNotesState extends ConsumerState<UserNotes> {
                       initialDate: untilDate ?? DateTime.now(),
                       firstDate: firstDate ?? DateTime.now(),
                       lastDate: DateTime.now(),
-                      datePickerHelpText: "この日までを表示",
-                      timePickerHelpText: "この時間までを表示",
+                      datePickerHelpText: S.of(context).showNotesBeforeThisDate,
+                      timePickerHelpText: S.of(context).showNotesBeforeThisTime,
                     );
                     if (result != null) {
                       setState(() {
@@ -143,7 +144,7 @@ class UserNotesState extends ConsumerState<UserNotes> {
               [isFileOnly, withReply, renote, untilDate, highlight],
             ),
             additionalErrorInfo: highlight
-                ? (context, e) => const Text("ハイライトはMisskey 2023.10.0以降の機能です。")
+                ? (context, e) => Text(S.of(context).userHighlightAvailability)
                 : null,
             initializeFuture: () async {
               final Iterable<Note> notes;

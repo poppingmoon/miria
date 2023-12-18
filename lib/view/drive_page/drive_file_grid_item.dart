@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/view/drive_page/drive_file_modal_sheet.dart';
@@ -40,11 +41,11 @@ class DriveFileGridItem extends ConsumerWidget {
               children: [
                 Visibility.maintain(
                   visible: file.isSensitive,
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Tooltip(
-                      message: "センシティブ",
-                      child: Icon(Icons.warning_amber),
+                      message: S.of(context).sensitive,
+                      child: const Icon(Icons.warning_amber),
                     ),
                   ),
                 ),

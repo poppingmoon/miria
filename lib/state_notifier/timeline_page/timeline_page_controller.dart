@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/timeline_page_state.dart';
 import 'package:miria/providers.dart';
@@ -49,9 +50,9 @@ class TimelinePageController extends AutoDisposeNotifier<TimelinePageState> {
     if (ref.read(generalSettingsRepositoryProvider).settings.isChicken) {
       final result = await SimpleConfirmDialog.show(
         context: context,
-        message: "ノートしてもええか？",
-        primary: "する",
-        secondary: "やっぱりやめる",
+        message: S.of(context).confirmCreateNote,
+        primary: S.of(context).createNote,
+        secondary: S.of(context).cancel,
       );
       if (!(result ?? false)) {
         return;

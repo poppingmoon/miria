@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mfm_parser/mfm_parser.dart' as parser;
 import 'package:miria/extensions/date_time_extension.dart';
@@ -158,7 +159,9 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
           child: Padding(
             padding: const EdgeInsets.only(top: 5.0, bottom: 5.0, left: 10.0),
             child: Text(
-              "${displayNote.user.name ?? displayNote.user.username}が何か言うとるわ",
+              S.of(context).mutedNotePlaceholder(
+                    displayNote.user.name ?? displayNote.user.username,
+                  ),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -375,7 +378,9 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                       );
                                 },
                                 child: Text(
-                                  isCwOpened ? "隠す" : "隠してあるのんの続きを見して",
+                                  isCwOpened
+                                      ? S.of(context).hide
+                                      : S.of(context).showCw,
                                 ),
                               ),
                             ],
@@ -433,7 +438,11 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                                       !status.isLongVisible,
                                                 ),
                                         ),
-                                    child: const Text("続きを表示"),
+                                    child: Text(
+                                      isReactionedRenote
+                                          ? S.of(context).showReactionedNote
+                                          : S.of(context).showLongText,
+                                    ),
                                   ),
                                 ),
                               if (!isReactionedRenote) ...[
@@ -534,7 +543,9 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                         isAllReactionVisible = true;
                                       }),
                                       child: Text(
-                                        "ほか${displayNote.reactions.length - 16}個",
+                                        S.of(context).otherReactions(
+                                              displayNote.reactions.length - 16,
+                                            ),
                                       ),
                                     ),
                                 ],
@@ -713,9 +724,9 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
     if (displayNote.myReaction != null && requestEmoji == null) {
       if (await SimpleConfirmDialog.show(
             context: context,
-            message: "リアクション取り消してもええか？",
-            primary: "取り消す",
-            secondary: "やっぱりやめる",
+            message: S.of(context).confirmDeleteReaction,
+            primary: S.of(context).cancelReaction,
+            secondary: S.of(context).cancel,
           ) !=
           true) {
         return;
@@ -759,9 +770,9 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
     if (ref.read(generalSettingsRepositoryProvider).settings.isChicken) {
       final result = await SimpleConfirmDialog.show(
         context: context,
-        message: "リアクションしてもええか？",
-        primary: "する",
-        secondary: "やっぱりやめる",
+        message: S.of(context).confirmCreateReaction,
+        primary: S.of(context).createReaction,
+        secondary: S.of(context).cancel,
       );
       if (!(result ?? false)) {
         return;
@@ -824,9 +835,9 @@ class NoteHeader1 extends ConsumerWidget {
               .navigateToNoteDetailPage(context, displayNote, loginAs)
               .expectFailure(context),
           child: Tooltip(
-            message: displayNote.createdAt.formatUntilMilliSeconds,
+            message: displayNote.createdAt.formatUntilMilliSeconds(context),
             child: Text(
-              displayNote.createdAt.differenceNow,
+              displayNote.createdAt.differenceNow(context),
               textAlign: TextAlign.right,
               style: Theme.of(context).textTheme.bodySmall,
             ),
@@ -888,8 +899,9 @@ class RenoteHeader extends ConsumerWidget {
               emojis: note.user.emojis,
               suffixSpan: [
                 TextSpan(
-                  text:
-                      " が ${note.user.acct == note.renote?.user.acct ? "セルフRenote" : "Renote"}",
+                  text: note.user.acct == note.renote?.user.acct
+                      ? S.of(context).selfRenotedBy
+                      : S.of(context).renotedBy,
                   style: renoteTextStyle,
                 ),
               ],
@@ -906,9 +918,9 @@ class RenoteHeader extends ConsumerWidget {
             ),
           ),
         Tooltip(
-          message: note.createdAt.formatUntilMilliSeconds,
+          message: note.createdAt.formatUntilMilliSeconds(context),
           child: Text(
-            note.createdAt.differenceNow,
+            note.createdAt.differenceNow(context),
             textAlign: TextAlign.right,
             style: renoteTextStyle,
           ),

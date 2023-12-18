@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mfm_parser/mfm_parser.dart';
 import 'package:miria/model/note_search_condition.dart';
@@ -103,7 +104,7 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "これらはハッシュタグでは機能しません。",
+                        S.of(context).disabledInHashtag,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       Table(
@@ -116,7 +117,7 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                         children: [
                           TableRow(
                             children: [
-                              const Text("ユーザー"),
+                              Text(S.of(context).user),
                               Row(
                                 children: [
                                   Expanded(
@@ -148,7 +149,7 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                           ),
                           TableRow(
                             children: [
-                              const Text("チャンネル"),
+                              Text(S.of(context).channel),
                               Row(
                                 children: [
                                   Expanded(
@@ -183,7 +184,7 @@ class NoteSearchState extends ConsumerState<NoteSearch> {
                           ),
                           TableRow(
                             children: [
-                              const Text("ローカルのみ"),
+                              Text(S.of(context).onlyLocal),
                               Row(
                                 children: [
                                   Checkbox(

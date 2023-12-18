@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/model/account.dart';
@@ -25,8 +26,8 @@ class DriveFolderModalSheet extends ConsumerWidget {
     final name = await showDialog<String>(
       context: context,
       builder: (context) => TextFormFieldDialog(
-        title: const Text("名前を変更"),
-        labelText: "フォルダ名",
+        title: Text(S.of(context).changeFolderName),
+        labelText: S.of(context).folderName,
         initialValue: folder.name,
       ),
     );
@@ -57,7 +58,7 @@ class DriveFolderModalSheet extends ConsumerWidget {
         );
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("移動しました")),
+      SnackBar(content: Text(S.of(context).moved)),
     );
     Navigator.of(context).pop();
   }
@@ -67,9 +68,9 @@ class DriveFolderModalSheet extends ConsumerWidget {
     final misskey = ref.read(misskeyProvider(account));
     final result = await SimpleConfirmDialog.show(
       context: context,
-      message: "このフォルダを削除しますか？",
-      primary: "削除する",
-      secondary: "やめる",
+      message: S.of(context).confirmDeleteFolder,
+      primary: S.of(context).willDelete,
+      secondary: S.of(context).cancel,
     );
     if (result ?? false) {
       await ref
@@ -80,7 +81,7 @@ class DriveFolderModalSheet extends ConsumerWidget {
       ref.read(drivePageNotifierProvider.notifier).deselectAll();
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("削除しました")),
+        SnackBar(content: Text(S.of(context).deleted)),
       );
       Navigator.of(context).pop();
     }
@@ -97,21 +98,21 @@ class DriveFolderModalSheet extends ConsumerWidget {
             size: 50,
           ),
           title: Text(folder.name),
-          subtitle: Text(folder.createdAt.formatUntilSeconds),
+          subtitle: Text(folder.createdAt.formatUntilSeconds(context)),
         ),
         ListTile(
           leading: const Icon(Icons.settings),
-          title: const Text("名前を変更"),
+          title: Text(S.of(context).changeFolderName),
           onTap: () => changeName(ref).expectFailure(context),
         ),
         ListTile(
           leading: const Icon(Icons.drive_file_move),
-          title: const Text("移動"),
+          title: Text(S.of(context).move),
           onTap: () => move(ref).expectFailure(context),
         ),
         ListTile(
           leading: const Icon(Icons.delete),
-          title: const Text("削除"),
+          title: Text(S.of(context).delete),
           onTap: () => delete(ref).expectFailure(context),
         ),
       ],

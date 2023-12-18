@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mfm_parser/mfm_parser.dart' hide MfmText;
-import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/extensions/list_mfm_node_extension.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -37,7 +37,7 @@ class MisskeyPagePage extends ConsumerWidget {
     return AccountScope(
       account: account,
       child: Scaffold(
-        appBar: AppBar(title: const Text("ページ")),
+        appBar: AppBar(title: Text(S.of(context).page)),
         body: Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
           child: Align(
@@ -65,7 +65,7 @@ class MisskeyPagePage extends ConsumerWidget {
                     for (final content in page.content)
                       PageContent(content: content, page: page),
                     const Divider(),
-                    const Text("このページ書きはった人"),
+                    Text(S.of(context).pageWrittenBy),
                     UserListItem(user: page.user),
                     Row(
                       children: [
@@ -89,7 +89,7 @@ class MisskeyPagePage extends ConsumerWidget {
                             ),
                           ),
                           child: Text(
-                            "ブラウザで表示する",
+                            S.of(context).openBrowsers,
                             style: AppTheme.of(context).linkStyle,
                           ),
                         ),
@@ -101,8 +101,8 @@ class MisskeyPagePage extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text("作成日: ${page.createdAt.format}"),
-                          Text("更新日: ${page.updatedAt.format}"),
+                          Text(S.of(context).pageCreatedAt(page.createdAt)),
+                          Text(S.of(context).pageUpdatedAt(page.updatedAt)),
                         ],
                       ),
                     ),
@@ -186,7 +186,7 @@ class PageContent extends ConsumerWidget {
               snapshot.data != null) {
             return MisskeyNote(note: snapshot.data!);
           } else if (snapshot.hasError) {
-            return const Text("エラーが起きたみたいや");
+            return Text(S.of(context).thrownError);
           } else {
             return const Center(
               child: SizedBox(
@@ -216,14 +216,14 @@ class PageContent extends ConsumerWidget {
       );
     }
 
-    return const SizedBox(
+    return SizedBox(
       width: double.infinity,
       child: Card(
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text("Miriaが対応していないページやわ　ブラウザで見てな"),
+              padding: const EdgeInsets.all(8.0),
+              child: Text(S.of(context).unsupportedPage),
             ),
           ],
         ),
@@ -279,7 +279,10 @@ class PageLikeButtonState extends ConsumerState<PageLikeButton> {
       return OutlinedButton.icon(
         onPressed: () async {
           if (AccountScope.of(context).i.id == widget.userId) {
-            SimpleMessageDialog.show(context, "自分のページにはふぁぼつけられへんねん");
+            SimpleMessageDialog.show(
+              context,
+              S.of(context).canNotFavoriteMyPage,
+            );
             return;
           }
           await ref

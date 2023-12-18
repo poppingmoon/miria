@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:json5/json5.dart';
 import 'package:miria/model/color_theme.dart';
@@ -17,14 +18,14 @@ class InstallThemeDialog extends ConsumerWidget {
 
     return AlertDialog(
       scrollable: true,
-      title: const Text("テーマのインストール"),
+      title: Text(S.of(context).installTheme),
       content: Form(
         key: formKey,
         child: Column(
           children: [
             TextFormField(
-              decoration: const InputDecoration(
-                labelText: "テーマコード",
+              decoration: InputDecoration(
+                labelText: S.of(context).themeCode,
               ),
               keyboardType: TextInputType.multiline,
               maxLines: null,
@@ -32,7 +33,7 @@ class InstallThemeDialog extends ConsumerWidget {
               textAlignVertical: TextAlignVertical.top,
               validator: (code) {
                 if (code == null || code.isEmpty) {
-                  return "値が入力されていません";
+                  return S.of(context).pleaseInputSomething;
                 }
                 try {
                   ColorTheme.misskey(
@@ -41,7 +42,7 @@ class InstallThemeDialog extends ConsumerWidget {
                     ),
                   );
                 } catch (e) {
-                  return "テーマの形式が間違っています";
+                  return S.of(context).invalidThemeFormat;
                 }
                 return null;
               },
@@ -57,7 +58,7 @@ class InstallThemeDialog extends ConsumerWidget {
             ),
             ElevatedButton(
               onPressed: () => formKey.currentState?.save(),
-              child: const Text("インストール"),
+              child: Text(S.of(context).install),
             ),
           ],
         ),

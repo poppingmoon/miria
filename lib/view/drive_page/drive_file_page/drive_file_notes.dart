@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/general_settings.dart';
@@ -66,7 +67,7 @@ class DriveFileNotes extends ConsumerWidget {
                   padding: const EdgeInsets.all(10),
                   child: PaginationBottomItem(
                     paginationState: notes,
-                    noItemLabel: const Text("添付されているノートがありません"),
+                    noItemLabel: Text(S.of(context).noAttachedNotes),
                     child: IconButton(
                       onPressed: () {},
                       icon: const Icon(Icons.keyboard_arrow_down),

@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/general_settings.dart';
@@ -72,8 +73,8 @@ class DrivePage extends ConsumerWidget {
               ? const BackButton()
               : const CloseButton(),
           title: state.selectedFiles.isEmpty
-              ? title ?? const Text("ドライブ")
-              : Text("選択中 (${state.selectedFiles.length})"),
+              ? title ?? Text(S.of(context).drive)
+              : Text(S.of(context).selectingFiles(state.selectedFiles.length)),
           actions: [
             if (floatingActionButtonBuilder != null)
               IconButton(
@@ -313,7 +314,7 @@ class DrivePage extends ConsumerWidget {
                       padding: const EdgeInsets.all(10),
                       child: PaginationBottomItem(
                         paginationState: files,
-                        noItemLabel: const Text("ファイルがありません"),
+                        noItemLabel: Text(S.of(context).noFiles),
                         child: !loadAutomatically
                             ? IconButton(
                                 onPressed: ref

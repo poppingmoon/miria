@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:miria/extensions/date_time_extension.dart';
@@ -25,7 +26,7 @@ class DriveFileDetails extends ConsumerWidget {
     final name = await showDialog<String>(
       context: ref.context,
       builder: (context) => TextFormFieldDialog(
-        title: const Text("名前を変更"),
+        title: Text(S.of(context).changeFileName),
         initialValue: file.name,
       ),
     );
@@ -43,7 +44,7 @@ class DriveFileDetails extends ConsumerWidget {
     final comment = await showDialog<String>(
       context: ref.context,
       builder: (context) => TextFormFieldDialog(
-        title: const Text("キャプションを変更"),
+        title: Text(S.of(context).changeCaption),
         initialValue: file.comment,
         maxLines: null,
       ),
@@ -86,7 +87,7 @@ class DriveFileDetails extends ConsumerWidget {
               rows: [
                 DataRow(
                   cells: [
-                    const DataCell(Text("ファイル名")),
+                    DataCell(Text(S.of(context).fileName)),
                     DataCell(
                       Text(file.name),
                       showEditIcon: true,
@@ -94,7 +95,7 @@ class DriveFileDetails extends ConsumerWidget {
                       onLongPress: () {
                         Clipboard.setData(ClipboardData(text: file.name));
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("コピーしました")),
+                          SnackBar(content: Text(S.of(context).doneCopy)),
                         );
                       },
                     ),
@@ -102,9 +103,9 @@ class DriveFileDetails extends ConsumerWidget {
                 ),
                 DataRow(
                   cells: [
-                    const DataCell(Text("キャプション")),
+                    DataCell(Text(S.of(context).caption)),
                     DataCell(
-                      Text(file.comment ?? "(なし)"),
+                      Text(file.comment ?? "(${S.of(context).none})"),
                       placeholder: file.comment == null,
                       showEditIcon: true,
                       onTap: () =>
@@ -115,7 +116,7 @@ class DriveFileDetails extends ConsumerWidget {
                                 ClipboardData(text: file.comment!),
                               );
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("コピーしました")),
+                                SnackBar(content: Text(S.of(context).doneCopy)),
                               );
                             }
                           : null,
@@ -124,7 +125,7 @@ class DriveFileDetails extends ConsumerWidget {
                 ),
                 DataRow(
                   cells: [
-                    const DataCell(Text("センシティブ")),
+                    DataCell(Text(S.of(context).sensitive)),
                     DataCell(
                       Checkbox(
                         value: file.isSensitive,
@@ -138,19 +139,21 @@ class DriveFileDetails extends ConsumerWidget {
                 ),
                 DataRow(
                   cells: [
-                    const DataCell(Text("作成日時")),
+                    DataCell(Text(S.of(context).fileCreatedAt)),
                     DataCell(
                       Text(
-                        "${file.createdAt.formatUntilSeconds} (${file.createdAt.differenceNow})",
+                        "${file.createdAt.formatUntilSeconds(context)} "
+                        "(${file.createdAt.differenceNow(context)})",
                       ),
                       onLongPress: () {
                         Clipboard.setData(
                           ClipboardData(
-                            text: file.createdAt.formatUntilMilliSeconds,
+                            text:
+                                file.createdAt.formatUntilMilliSeconds(context),
                           ),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("コピーしました")),
+                          SnackBar(content: Text(S.of(context).doneCopy)),
                         );
                       },
                     ),
@@ -158,13 +161,13 @@ class DriveFileDetails extends ConsumerWidget {
                 ),
                 DataRow(
                   cells: [
-                    const DataCell(Text("ファイルタイプ")),
+                    DataCell(Text(S.of(context).fileType)),
                     DataCell(
                       Text(file.type),
                       onLongPress: () {
                         Clipboard.setData(ClipboardData(text: file.type));
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("コピーしました")),
+                          SnackBar(content: Text(S.of(context).doneCopy)),
                         );
                       },
                     ),
@@ -172,7 +175,7 @@ class DriveFileDetails extends ConsumerWidget {
                 ),
                 DataRow(
                   cells: [
-                    const DataCell(Text("ファイルサイズ")),
+                    DataCell(Text(S.of(context).fileSize)),
                     DataCell(
                       Text("${NumberFormat.compact().format(file.size)}B"),
                       onLongPress: () {
@@ -183,7 +186,7 @@ class DriveFileDetails extends ConsumerWidget {
                           ),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("コピーしました")),
+                          SnackBar(content: Text(S.of(context).doneCopy)),
                         );
                       },
                     ),

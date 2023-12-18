@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -54,7 +55,9 @@ class LicenseConfirmDialogState extends ConsumerState<LicenseConfirmDialog> {
   @override
   Widget build(BuildContext context) {
     if (error != null) {
-      return SimpleMessageDialog(message: "エラーが起きたみたいや。\n$error");
+      return SimpleMessageDialog(
+        message: "${S.of(context).thrownError}\n$error",
+      );
     }
     final data = this.data;
     if (isLoading || data == null) {
@@ -68,11 +71,12 @@ class LicenseConfirmDialogState extends ConsumerState<LicenseConfirmDialog> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const Text(
-                  "このカスタム絵文字はこのようにライセンスされています。",
+                Text(
+                  S.of(context).customEmojiLicensedBy,
                 ),
                 MfmText(
-                  mfmText: data.license ?? "※このカスタム絵文字に対してライセンスは設定されていません。",
+                  mfmText:
+                      data.license ?? S.of(context).customEmojiLicensedByNone,
                 ),
               ],
             ),
@@ -81,11 +85,11 @@ class LicenseConfirmDialogState extends ConsumerState<LicenseConfirmDialog> {
         actions: [
           OutlinedButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text("わからへんからやめとく"),
+            child: Text(S.of(context).cancelEmojiChoosing),
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text("使ってもだいじょうぶ"),
+            child: Text(S.of(context).doneEmojiChoosing),
           ),
         ],
       ),

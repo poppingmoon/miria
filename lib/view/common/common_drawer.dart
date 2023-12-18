@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/acct.dart';
 import 'package:miria/providers.dart';
@@ -39,7 +40,7 @@ class CommonDrawer extends ConsumerWidget {
                   children: [
                     ListTile(
                       leading: const Icon(Icons.notifications),
-                      title: const Text("通知"),
+                      title: Text(S.of(context).notification),
                       onTap: () {
                         Navigator.of(context).pop();
                         context.pushRoute(NotificationRoute(account: account));
@@ -47,7 +48,7 @@ class CommonDrawer extends ConsumerWidget {
                     ),
                     ListTile(
                       leading: const Icon(Icons.star),
-                      title: const Text("お気に入り"),
+                      title: Text(S.of(context).favorite),
                       onTap: () {
                         Navigator.of(context).pop();
                         context.pushRoute(FavoritedNoteRoute(account: account));
@@ -55,7 +56,7 @@ class CommonDrawer extends ConsumerWidget {
                     ),
                     ListTile(
                       leading: const Icon(Icons.cloud),
-                      title: const Text("ドライブ"),
+                      title: Text(S.of(context).drive),
                       onTap: () {
                         Navigator.of(context).pop();
                         context.pushRoute(DriveRoute(account: account));
@@ -63,7 +64,7 @@ class CommonDrawer extends ConsumerWidget {
                     ),
                     ListTile(
                       leading: const Icon(Icons.list),
-                      title: const Text("リスト"),
+                      title: Text(S.of(context).list),
                       onTap: () {
                         Navigator.of(context).pop();
                         context.pushRoute(UsersListRoute(account: account));
@@ -71,7 +72,7 @@ class CommonDrawer extends ConsumerWidget {
                     ),
                     ListTile(
                       leading: const Icon(Icons.settings_input_antenna),
-                      title: const Text("アンテナ"),
+                      title: Text(S.of(context).antenna),
                       onTap: () {
                         Navigator.of(context).pop();
                         context.pushRoute(AntennaRoute(account: account));
@@ -79,7 +80,7 @@ class CommonDrawer extends ConsumerWidget {
                     ),
                     ListTile(
                       leading: const Icon(Icons.attach_file),
-                      title: const Text("クリップ"),
+                      title: Text(S.of(context).clip),
                       onTap: () {
                         Navigator.of(context).pop();
                         context.pushRoute(ClipListRoute(account: account));
@@ -87,7 +88,7 @@ class CommonDrawer extends ConsumerWidget {
                     ),
                     ListTile(
                       leading: const Icon(Icons.tv),
-                      title: const Text("チャンネル"),
+                      title: Text(S.of(context).channel),
                       onTap: () {
                         Navigator.of(context).pop();
                         context.pushRoute(ChannelsRoute(account: account));
@@ -95,7 +96,7 @@ class CommonDrawer extends ConsumerWidget {
                     ),
                     ListTile(
                       leading: const Icon(Icons.search),
-                      title: const Text("検索"),
+                      title: Text(S.of(context).search),
                       onTap: () {
                         Navigator.of(context).pop();
                         context.pushRoute(SearchRoute(account: account));
@@ -103,7 +104,7 @@ class CommonDrawer extends ConsumerWidget {
                     ),
                     ListTile(
                       leading: const Icon(Icons.tag),
-                      title: const Text("みつける"),
+                      title: Text(S.of(context).explore),
                       onTap: () {
                         Navigator.of(context).pop();
                         context.pushRoute(ExploreRoute(account: account));
@@ -111,8 +112,11 @@ class CommonDrawer extends ConsumerWidget {
                     ),
                     ListTile(
                       leading: const Icon(Icons.settings),
-                      title:
-                          Text("${account.i.name ?? account.i.username} の設定"),
+                      title: Text(
+                        S.of(context).accountSetting(
+                              account.i.name ?? account.i.username,
+                            ),
+                      ),
                       onTap: () {
                         Navigator.of(context).pop();
                         context.pushRoute(
@@ -126,7 +130,7 @@ class CommonDrawer extends ConsumerWidget {
             ],
             ListTile(
               leading: const Icon(Icons.help),
-              title: const Text("ヘルプ"),
+              title: Text(S.of(context).help),
               onTap: () {
                 Navigator.of(context).pop();
                 context.pushRoute(const HelpRoute());
@@ -134,7 +138,7 @@ class CommonDrawer extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.settings),
-              title: const Text("設定"),
+              title: Text(S.of(context).settings),
               onTap: () {
                 Navigator.of(context).pop();
                 context.pushRoute(const SettingsRoute());

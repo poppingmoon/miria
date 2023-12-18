@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/tab_icon.dart';
 import 'package:miria/view/common/account_scope.dart';
@@ -86,7 +87,7 @@ class IconSelectDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("アイコンを選択"),
+      title: Text(S.of(context).selectIcon),
       content: DefaultTabController(
         length: 2,
         child: SizedBox(
@@ -100,8 +101,11 @@ class IconSelectDialog extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
                   ),
-                  child: const TabBar(
-                    tabs: [Tab(text: "標準"), Tab(text: "カスタム絵文字")],
+                  child: TabBar(
+                    tabs: [
+                      Tab(text: S.of(context).standardIcon),
+                      Tab(text: S.of(context).emojiIcon),
+                    ],
                   ),
                 ),
               ),

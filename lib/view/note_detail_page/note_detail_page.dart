@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/model/account.dart';
@@ -64,7 +65,7 @@ class NoteDetailPageState extends ConsumerState<NoteDetailPage> {
     return AccountScope(
       account: widget.account,
       child: Scaffold(
-        appBar: AppBar(title: const Text("ノート")),
+        appBar: AppBar(title: Text(S.of(context).note)),
         body: Padding(
           padding: const EdgeInsets.only(right: 10, top: 10, bottom: 10),
           child: isLoading
@@ -95,7 +96,10 @@ class NoteDetailPageState extends ConsumerState<NoteDetailPage> {
                       ),
                       const Padding(padding: EdgeInsets.only(top: 5)),
                       Text(
-                        "投稿時間: ${actualShow!.createdAt.formatUntilMilliSeconds}",
+                        S.of(context).noteCreatedAt(
+                              actualShow!.createdAt
+                                  .formatUntilMilliSeconds(context),
+                            ),
                       ),
                       const Padding(padding: EdgeInsets.only(top: 5)),
                       const Divider(),

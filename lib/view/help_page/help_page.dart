@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/misskey_notes/mfm_text.dart';
-import 'package:misskey_dart/misskey_dart.dart';
 
 @RoutePage()
 class HelpPage extends ConsumerStatefulWidget {
@@ -18,43 +18,29 @@ class HelpPageState extends ConsumerState<HelpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("ヘルプ")),
+      appBar: AppBar(title: Text(S.of(context).help)),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: AccountScope(
-            account: Account.demoAccount(
-              "",
-              MetaResponse(
-                version: '',
-                uri: Uri(),
-                langs: [],
-                repositoryUrl: Uri(),
-                feedbackUrl: '',
-                disableRegistration: false,
-                emailRequiredForSignup: false,
-                enableHcaptcha: false,
-                maxNoteTextLength: 3000,
-                ads: [],
-              ),
-            ),
-            child: const MfmText(
+            account: Account.demoAccount("", null),
+            child: MfmText(
               mfmText: '''
-\$[x2 Miriaで複数アカウント利用するときの使い方]
+\$[x2 ${S.of(context).howToUseMultipleAccounts}]
 
-**○追加したアカウントのタイムラインを開く方法**
-画面左のメニューリストから**設定**⇨**タブ設定**を開き、画面右上の**「+」**ボタンを押して、追加したいタブを設定することができます。
+**○${S.of(context).howToOpenTimelinesWithAnotherAccount}**
+${S.of(context).howToOpenTimelinesWithAnotherAccountDescription}
 
-**○別のアカウントから投稿する方法**
-ノートを投稿したいアカウントのタブを開き、画面下の入力窓や右下の**「>」**ボタンを押して開いたノートの投稿画面から投稿することができます。
+**○${S.of(context).howToCreateNoteFromAnotherAccount}**
+${S.of(context).howToCreateNoteFromAnotherAccountDescription}
 
-\$[x2 その他]
+\$[x2 ${S.of(context).miscellaneous}]
 
-上記のこと以外の内容については、**[MiriaのつかいかたWikiの「よくある質問」](https://github.com/shiosyakeyakini-info/miria/wiki/%E3%82%88%E3%81%8F%E3%81%82%E3%82%8B%E8%B3%AA%E5%95%8F)**で紹介しています（github.comを開きます）。
+${S.of(context).faqLink("https://github.com/shiosyakeyakini-info/miria/wiki/%E3%82%88%E3%81%8F%E3%81%82%E3%82%8B%E8%B3%AA%E5%95%8F")}
 
-**バグの報告・機能要望**：[MiriaのGitHubリポジトリのIssue](https://github.com/shiosyakeyakini-info/miria/issues)
+**${S.of(context).bugReportAndFeatureRequest}**：[${S.of(context).issueLinkLabel}](https://github.com/shiosyakeyakini-info/miria/issues)
 
-**開発者への支援**：[pixivFANBOX](https://shiosyakeyakini.fanbox.cc)
+**${S.of(context).supportDeveloper}**：[pixivFANBOX](https://shiosyakeyakini.fanbox.cc)
 ''',
             ),
           ),

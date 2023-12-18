@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/text_editing_controller_extension.dart';
 import 'package:miria/model/account.dart';
@@ -132,8 +133,8 @@ class NoteCreatePageState extends ConsumerState<NoteCreatePage> {
 
     final noteDecoration = AppTheme.of(context).noteTextStyle.copyWith(
           hintText: (widget.renote != null || widget.reply != null)
-              ? "何て送る？"
-              : "何してはる？",
+              ? S.of(context).replyNotePlaceholder
+              : S.of(context).defaultNotePlaceholder,
           contentPadding: const EdgeInsets.all(5),
         );
 
@@ -141,7 +142,7 @@ class NoteCreatePageState extends ConsumerState<NoteCreatePage> {
       account: widget.initialAccount,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("ノート"),
+          title: Text(S.of(context).note),
           actions: [
             IconButton(
               onPressed: () => notifier.note().expectFailure(context),
@@ -239,12 +240,12 @@ class NoteCreatePageState extends ConsumerState<NoteCreatePage> {
                       if (widget.noteCreationMode != NoteCreationMode.update)
                         const FilePreview()
                       else if (widget.note?.files.isNotEmpty == true)
-                        const Text("メディアがあります（編集はできません）"),
+                        Text(S.of(context).hasMediaButCannotEdit),
                       const RenoteArea(),
                       if (widget.noteCreationMode != NoteCreationMode.update)
                         const VoteArea()
                       else if (widget.note?.poll != null)
-                        const Text("投票があります（編集はできません）"),
+                        Text(S.of(context).hasVoteButCannotEdit),
                     ],
                   ),
                 ),

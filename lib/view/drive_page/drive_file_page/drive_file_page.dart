@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -34,7 +35,7 @@ class DriveFilePage extends ConsumerWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("ファイルの詳細"),
+          title: Text(S.of(context).fileDetails),
           actions: [
             IconButton(
               onPressed: () async {
@@ -57,10 +58,16 @@ class DriveFilePage extends ConsumerWidget {
               icon: const Icon(Icons.more_vert),
             ),
           ],
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.info), text: "情報"),
-              Tab(icon: Icon(Icons.edit), text: "添付されているノート"),
+              Tab(
+                icon: const Icon(Icons.info),
+                text: S.of(context).info,
+              ),
+              Tab(
+                icon: const Icon(Icons.edit),
+                text: S.of(context).attachedNotes,
+              ),
             ],
           ),
         ),

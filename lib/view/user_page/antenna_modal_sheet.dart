@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/user_extension.dart';
 import 'package:miria/model/account.dart';
@@ -69,12 +70,12 @@ class AntennaModalSheet extends ConsumerWidget {
             } else {
               return ListTile(
                 leading: const Icon(Icons.add),
-                title: const Text("アンテナを作成"),
+                title: Text(S.of(context).createAntenna),
                 onTap: () async {
                   final settings = await showDialog<AntennaSettings>(
                     context: context,
                     builder: (context) => AntennaSettingsDialog(
-                      title: const Text("作成"),
+                      title: Text(S.of(context).create),
                       initialSettings: const AntennaSettings(
                         src: AntennaSource.users,
                       ),

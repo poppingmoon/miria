@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -48,12 +49,12 @@ class UpdateMemoDialogState extends ConsumerState<UpdateMemoDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("メモ"),
+      title: Text(S.of(context).memo),
       content: TextField(
         controller: controller,
         maxLines: null,
-        decoration: const InputDecoration(
-          hintText: "なんかメモることあったら書いとき",
+        decoration: InputDecoration(
+          hintText: S.of(context).memoDescription,
         ),
       ),
       actions: [
@@ -61,11 +62,11 @@ class UpdateMemoDialogState extends ConsumerState<UpdateMemoDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text("やめる"),
+          child: Text(S.of(context).cancel),
         ),
         ElevatedButton(
           onPressed: memoSave.expectFailure(context),
-          child: const Text("保存する"),
+          child: Text(S.of(context).save),
         ),
       ],
     );

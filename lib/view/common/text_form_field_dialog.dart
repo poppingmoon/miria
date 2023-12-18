@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TextFormFieldDialog extends StatefulWidget {
   const TextFormFieldDialog({
@@ -49,7 +50,7 @@ class _TextFormFieldDialogState extends State<TextFormFieldDialog> {
               formKey.currentState!.save();
             }
           },
-          child: Text(widget.buttonText ?? "決定"),
+          child: Text(widget.buttonText ?? S.of(context).confirm),
         ),
       ],
       actionsAlignment: MainAxisAlignment.center,

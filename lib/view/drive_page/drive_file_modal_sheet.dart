@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/model/account.dart';
@@ -85,7 +86,7 @@ class DriveFileModalSheet extends ConsumerWidget {
     await ref.read(downloadFileNotifierProvider.notifier).downloadFile(file);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("ファイルを保存しました")),
+      SnackBar(content: Text(S.of(context).fileDownloaded)),
     );
     Navigator.of(context).pop();
   }
@@ -106,7 +107,7 @@ class DriveFileModalSheet extends ConsumerWidget {
         );
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("移動しました")),
+      SnackBar(content: Text(S.of(context).moved)),
     );
     Navigator.of(context).pop();
   }
@@ -116,9 +117,9 @@ class DriveFileModalSheet extends ConsumerWidget {
     final misskey = ref.read(misskeyProvider(account));
     final result = await SimpleConfirmDialog.show(
       context: context,
-      message: "このファイルを削除しますか？",
-      primary: "削除する",
-      secondary: "やめる",
+      message: S.of(context).confirmDeleteFile,
+      primary: S.of(context).willDelete,
+      secondary: S.of(context).cancel,
     );
     if (result ?? false) {
       await ref
@@ -129,7 +130,7 @@ class DriveFileModalSheet extends ConsumerWidget {
       ref.read(drivePageNotifierProvider.notifier).deselectFile(file);
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("削除しました")),
+        SnackBar(content: Text(S.of(context).deleted)),
       );
       Navigator.of(context).pop();
     }
@@ -146,23 +147,23 @@ class DriveFileModalSheet extends ConsumerWidget {
             child: Thumbnail.driveFile(file),
           ),
           title: Text(file.name),
-          subtitle: Text(file.createdAt.formatUntilSeconds),
+          subtitle: Text(file.createdAt.formatUntilSeconds(context)),
         ),
         ListTile(
           leading: const Icon(Icons.settings),
-          title: const Text("ファイルを編集"),
+          title: Text(S.of(context).editFile),
           onTap: () => editFile(ref).expectFailure(context),
         ),
         if (file.type.startsWith("image") &&
             (Platform.isAndroid || Platform.isIOS || Platform.isMacOS))
           ListTile(
             leading: const Icon(Icons.crop),
-            title: const Text("画像を編集"),
+            title: Text(S.of(context).editImage),
             onTap: () => editImage(ref).expectFailure(context),
           ),
         ListTile(
           leading: const Icon(Icons.edit),
-          title: const Text("このファイルからノートを作成"),
+          title: Text(S.of(context).createNoteFromTheFile),
           onTap: () => context.pushRoute(
             NoteCreateRoute(
               initialAccount: account,
@@ -172,11 +173,11 @@ class DriveFileModalSheet extends ConsumerWidget {
         ),
         ListTile(
           leading: const Icon(Icons.link),
-          title: const Text("URLをコピー"),
+          title: Text(S.of(context).copyLinks),
           onTap: () {
             Clipboard.setData(ClipboardData(text: file.url));
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("コピーしました")),
+              SnackBar(content: Text(S.of(context).doneCopy)),
             );
             Navigator.of(context).pop();
           },
@@ -184,17 +185,17 @@ class DriveFileModalSheet extends ConsumerWidget {
         if (Platform.isAndroid || Platform.isIOS)
           ListTile(
             leading: const Icon(Icons.download),
-            title: const Text("ダウンロード"),
+            title: Text(S.of(context).download),
             onTap: () => download(ref).expectFailure(context),
           ),
         ListTile(
           leading: const Icon(Icons.drive_file_move),
-          title: const Text("移動"),
+          title: Text(S.of(context).move),
           onTap: () => move(ref).expectFailure(context),
         ),
         ListTile(
           leading: const Icon(Icons.delete),
-          title: const Text("削除"),
+          title: Text(S.of(context).delete),
           onTap: () => delete(ref).expectFailure(context),
         ),
       ],

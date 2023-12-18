@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/users_lists_show_response_extension.dart';
 import 'package:miria/model/account.dart';
@@ -125,7 +126,7 @@ class UsersListDetailPage extends ConsumerWidget {
                 final settings = await showDialog<UsersListSettings>(
                   context: context,
                   builder: (context) => UsersListSettingsDialog(
-                    title: const Text("編集"),
+                    title: Text(S.of(context).edit),
                     initialSettings: UsersListSettings.fromUsersList(list),
                   ),
                 );
@@ -151,12 +152,15 @@ class UsersListDetailPage extends ConsumerWidget {
               child: Column(
                 children: [
                   ListTile(
-                    title: const Text("メンバー"),
+                    title: Text(S.of(context).members),
                     subtitle: Text(
-                      "${users.length}/${account.i.policies.userEachUserListsLimit} 人",
+                      S.of(context).listCapacity(
+                            users.length,
+                            account.i.policies.userEachUserListsLimit,
+                          ),
                     ),
                     trailing: ElevatedButton(
-                      child: const Text("ユーザーを追加"),
+                      child: Text(S.of(context).addUser),
                       onPressed: () async {
                         final user = await showDialog<User>(
                           context: context,
@@ -190,9 +194,9 @@ class UsersListDetailPage extends ConsumerWidget {
                               onPressed: () async {
                                 final result = await SimpleConfirmDialog.show(
                                   context: context,
-                                  message: "このユーザーをリストから外しますか？",
-                                  primary: "外す",
-                                  secondary: "やめる",
+                                  message: S.of(context).confirmRemoveUser,
+                                  primary: S.of(context).removeUser,
+                                  secondary: S.of(context).cancel,
                                 );
                                 if (!context.mounted) return;
                                 if (result ?? false) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/providers.dart';
@@ -39,7 +40,7 @@ class VoteAreaState extends ConsumerState<VoteArea> {
                 .read(noteCreateProvider(AccountScope.of(context)).notifier)
                 .addVoteContent();
           },
-          child: const Text("増やす"),
+          child: Text(S.of(context).addChoice),
         ),
         const MultipleVoteRadioButton(),
         const VoteDuration(),
@@ -132,7 +133,9 @@ class VoteContentListItemState extends ConsumerState<VoteContentListItem> {
           Expanded(
             child: TextField(
               controller: controller,
-              decoration: InputDecoration(hintText: "回答${widget.index + 1}"),
+              decoration: InputDecoration(
+                hintText: S.of(context).choiceNumber(widget.index + 1),
+              ),
             ),
           ),
           IconButton(
@@ -167,7 +170,7 @@ class MultipleVoteRadioButton extends ConsumerWidget {
                 .toggleVoteMultiple();
           },
         ),
-        const Expanded(child: Text("複数回答")),
+        Expanded(child: Text(S.of(context).canMultipleChoice)),
       ],
     );
   }
@@ -185,7 +188,10 @@ class VoteDuration extends ConsumerWidget {
       ),
       items: [
         for (final item in VoteExpireType.values)
-          DropdownMenuItem(value: item, child: Text(item.displayText)),
+          DropdownMenuItem(
+            value: item,
+            child: Text(item.displayText(context)),
+          ),
       ],
       onChanged: (item) {
         if (item == null) return;
@@ -257,7 +263,7 @@ class VoteUntilDateState extends ConsumerState<VoteUntilDate> {
                 const Padding(padding: EdgeInsets.only(left: 10)),
                 Expanded(
                   child: Text(
-                    date?.formatUntilMinutes ?? "",
+                    date?.formatUntilSeconds(context) ?? "",
                   ),
                 ),
               ],
@@ -330,7 +336,7 @@ class VoteUntilDurationState extends ConsumerState<VoteUntilDuration> {
             for (final item in VoteExpireDurationType.values)
               DropdownMenuItem(
                 value: item,
-                child: Text(item.displayText),
+                child: Text(item.displayText(context)),
               ),
           ],
           value: ref.watch(

@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:json5/json5.dart';
 import 'package:miria/model/misskey_theme.dart';
@@ -25,7 +26,7 @@ class InstalledThemesPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("インストールされたテーマ"),
+        title: Text(S.of(context).installedThemes),
         actions: [
           IconButton(
             onPressed: () {
@@ -39,7 +40,7 @@ class InstalledThemesPage extends ConsumerWidget {
         ],
       ),
       body: themes.isEmpty
-          ? const Center(child: Text("インストールされたテーマがありません"))
+          ? Center(child: Text(S.of(context).noInstalledThemes))
           : ListView.builder(
               itemCount: themes.length,
               itemBuilder: (context, index) {
@@ -52,9 +53,9 @@ class InstalledThemesPage extends ConsumerWidget {
                     onPressed: () async {
                       final result = await SimpleConfirmDialog.show(
                         context: context,
-                        message: "このテーマを削除しますか？",
-                        primary: "削除する",
-                        secondary: "やめる",
+                        message: S.of(context).confirmDeleteTheme,
+                        primary: S.of(context).willDelete,
+                        secondary: S.of(context).cancel,
                       );
                       if (!context.mounted) return;
                       if (result ?? false) {
@@ -70,18 +71,18 @@ class InstalledThemesPage extends ConsumerWidget {
                       context: context,
                       builder: (context) => AlertDialog(
                         scrollable: true,
-                        title: const Text("テーマコード"),
+                        title: Text(S.of(context).themeCode),
                         content: Text(code),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Clipboard.setData(ClipboardData(text: code));
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("コピーしました")),
+                                SnackBar(content: Text(S.of(context).doneCopy)),
                               );
                               Navigator.of(context).pop();
                             },
-                            child: const Text("コピー"),
+                            child: Text(S.of(context).copy),
                           ),
                         ],
                       ),

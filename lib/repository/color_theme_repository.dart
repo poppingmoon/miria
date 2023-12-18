@@ -3,9 +3,14 @@ import 'package:json5/json5.dart';
 import 'package:miria/model/color_theme.dart';
 import 'package:miria/model/misskey_theme.dart';
 import 'package:miria/providers.dart';
-import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/themes/built_in_color_themes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+sealed class ColorThemeException implements Exception {}
+
+class InvalidThemeFormatException implements ColorThemeException {}
+
+class DuplicatedThemeException implements ColorThemeException {}
 
 class ColorThemeRepository extends Notifier<List<ColorTheme>> {
   @override
@@ -32,10 +37,10 @@ class ColorThemeRepository extends Notifier<List<ColorTheme>> {
         MisskeyTheme.fromJson(json5Decode(code) as Map<String, dynamic>),
       );
     } catch (e) {
-      throw SpecifiedException("テーマの形式が間違っています");
+      throw InvalidThemeFormatException();
     }
     if (state.any((element) => element.id == theme.id)) {
-      throw SpecifiedException("このテーマは既にインストールされています");
+      throw DuplicatedThemeException();
     }
 
     await ref

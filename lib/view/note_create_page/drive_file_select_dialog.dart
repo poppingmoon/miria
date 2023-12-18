@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -22,7 +23,7 @@ class DriveFileSelectDialog extends StatelessWidget {
       child: Dialog(
         child: DrivePage(
           account: account,
-          title: const Text("ファイルを選択"),
+          title: Text(S.of(context).chooseFile),
           tapToSelect: true,
           floatingActionButtonBuilder: (context) =>
               const DriveFileSelectDialogFloatingActionButton(),
@@ -41,7 +42,7 @@ class DriveFileSelectDialogFloatingActionButton extends ConsumerWidget {
     return FloatingActionButton.extended(
       onPressed:
           files.isNotEmpty ? () => Navigator.of(context).pop(files) : null,
-      label: const Text("選択"),
+      label: Text(S.of(context).select),
       icon: const Icon(Icons.check),
     );
   }

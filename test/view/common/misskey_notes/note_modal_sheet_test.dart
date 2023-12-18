@@ -26,8 +26,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
-          child: MaterialApp(
-            home: Scaffold(
+          child: DefaultRootNoRouterWidget(
+            child: Scaffold(
               body: NoteModalSheet(
                 baseNote: TestData.note1,
                 targetNote: TestData.note1,
@@ -64,8 +64,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
-          child: MaterialApp(
-            home: Scaffold(
+          child: DefaultRootNoRouterWidget(
+            child: Scaffold(
               body: NoteModalSheet(
                 baseNote: TestData.note1,
                 targetNote: TestData.note1,
@@ -116,9 +116,9 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.ensureVisible(find.text("削除する", skipOffstage: false));
+      await tester.ensureVisible(find.text("削除", skipOffstage: false));
       await tester.pumpAndSettle();
-      await tester.tap(find.text("削除する"));
+      await tester.tap(find.text("削除"));
       await tester.pumpAndSettle();
 
       await tester.tap(find.byType(ElevatedButton).hitTestable());
@@ -142,8 +142,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
-          child: MaterialApp(
-            home: Scaffold(
+          child: DefaultRootNoRouterWidget(
+            child: Scaffold(
               body: NoteModalSheet(
                 baseNote:
                     TestData.note1.copyWith(text: null, renote: TestData.note2),
@@ -157,7 +157,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text("削除する", skipOffstage: false), findsNothing);
+      expect(find.text("削除", skipOffstage: false), findsNothing);
       expect(find.text("削除してなおす", skipOffstage: false), findsNothing);
     });
 
@@ -172,8 +172,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
-          child: MaterialApp(
-            home: Scaffold(
+          child: DefaultRootNoRouterWidget(
+            child: Scaffold(
               body: NoteModalSheet(
                 baseNote: TestData.note3AsAnotherUser
                     .copyWith(text: null, renote: TestData.note1),
@@ -187,7 +187,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text("削除する", skipOffstage: false), findsNothing);
+      expect(find.text("削除", skipOffstage: false), findsNothing);
       expect(find.text("削除してなおす", skipOffstage: false), findsNothing);
     });
 
@@ -221,7 +221,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text("削除する", skipOffstage: false), findsOneWidget);
+      expect(find.text("削除", skipOffstage: false), findsOneWidget);
     });
 
     testWidgets("投票のみのノートを削除できること", (tester) async {
@@ -264,7 +264,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text("削除する", skipOffstage: false), findsOneWidget);
+      expect(find.text("削除", skipOffstage: false), findsOneWidget);
     });
 
     testWidgets("自分がした引用Renoteを削除できること", (tester) async {
@@ -278,8 +278,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
-          child: MaterialApp(
-            home: Scaffold(
+          child: DefaultRootNoRouterWidget(
+            child: Scaffold(
               body: NoteModalSheet(
                 baseNote: TestData.note1
                     .copyWith(text: "やっほー", renote: TestData.note2),
@@ -293,7 +293,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text("削除する", skipOffstage: false), findsOneWidget);
+      expect(find.text("削除", skipOffstage: false), findsOneWidget);
       expect(find.text("削除してなおす", skipOffstage: false), findsOneWidget);
     });
 
@@ -314,8 +314,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
-          child: MaterialApp(
-            home: Scaffold(
+          child: DefaultRootNoRouterWidget(
+            child: Scaffold(
               body: NoteModalSheet(
                 baseNote: note,
                 targetNote: TestData.note2,
@@ -328,7 +328,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text("削除する", skipOffstage: false), findsOneWidget);
+      expect(find.text("削除", skipOffstage: false), findsOneWidget);
       expect(find.text("削除してなおす", skipOffstage: false), findsOneWidget);
     });
 
@@ -359,8 +359,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
-          child: MaterialApp(
-            home: Scaffold(
+          child: DefaultRootNoRouterWidget(
+            child: Scaffold(
               body: NoteModalSheet(
                 baseNote: note,
                 targetNote: TestData.note2,
@@ -373,7 +373,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text("削除する", skipOffstage: false), findsOneWidget);
+      expect(find.text("削除", skipOffstage: false), findsOneWidget);
       expect(find.text("削除してなおす", skipOffstage: false), findsOneWidget);
     });
   });
@@ -428,8 +428,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
-          child: MaterialApp(
-            home: Scaffold(
+          child: DefaultRootNoRouterWidget(
+            child: Scaffold(
               body: NoteModalSheet(
                 baseNote: TestData.note1
                     .copyWith(text: "やっほー", renote: TestData.note2),
@@ -463,8 +463,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
-          child: MaterialApp(
-            home: Scaffold(
+          child: DefaultRootNoRouterWidget(
+            child: Scaffold(
               body: NoteModalSheet(
                 baseNote: note,
                 targetNote: TestData.note2,
@@ -507,8 +507,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
-          child: MaterialApp(
-            home: Scaffold(
+          child: DefaultRootNoRouterWidget(
+            child: Scaffold(
               body: NoteModalSheet(
                 baseNote: note,
                 targetNote: TestData.note2,
@@ -537,8 +537,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
-          child: MaterialApp(
-            home: Scaffold(
+          child: DefaultRootNoRouterWidget(
+            child: Scaffold(
               body: NoteModalSheet(
                 baseNote: note,
                 targetNote: TestData.note1,
@@ -569,8 +569,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [misskeyProvider.overrideWith((ref, arg) => misskey)],
-          child: MaterialApp(
-            home: Scaffold(
+          child: DefaultRootNoRouterWidget(
+            child: Scaffold(
               body: NoteModalSheet(
                 baseNote: TestData.note3AsAnotherUser,
                 targetNote: TestData.note3AsAnotherUser,
