@@ -67,7 +67,7 @@ class DriveFileNotes extends ConsumerWidget {
                   padding: const EdgeInsets.all(10),
                   child: PaginationBottomItem(
                     paginationState: notes,
-                    noItemLabel: Text(S.of(context).noAttachedNotes),
+                    noItemsLabel: Text(S.of(context).noAttachedNotes),
                     child: IconButton(
                       onPressed: () {},
                       icon: const Icon(Icons.keyboard_arrow_down),

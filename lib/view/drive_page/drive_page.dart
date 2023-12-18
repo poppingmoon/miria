@@ -314,7 +314,7 @@ class DrivePage extends ConsumerWidget {
                       padding: const EdgeInsets.all(10),
                       child: PaginationBottomItem(
                         paginationState: files,
-                        noItemLabel: Text(S.of(context).noFiles),
+                        noItemsLabel: Text(S.of(context).noFiles),
                         child: !loadAutomatically
                             ? IconButton(
                                 onPressed: ref

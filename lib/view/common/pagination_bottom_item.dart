@@ -5,12 +5,12 @@ class PaginationBottomItem<T> extends StatelessWidget {
   const PaginationBottomItem({
     super.key,
     required this.paginationState,
-    this.noItemLabel,
+    this.noItemsLabel,
     this.child,
   });
 
   final PaginationState<T> paginationState;
-  final Widget? noItemLabel;
+  final Widget? noItemsLabel;
   final Widget? child;
 
   @override
@@ -20,7 +20,7 @@ class PaginationBottomItem<T> extends StatelessWidget {
     }
     if (paginationState.isLastLoaded) {
       if (paginationState.isEmpty) {
-        return noItemLabel ?? const SizedBox.shrink();
+        return noItemsLabel ?? const SizedBox.shrink();
       } else {
         return const SizedBox.shrink();
       }
