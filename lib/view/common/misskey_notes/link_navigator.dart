@@ -51,6 +51,7 @@ class LinkNavigator {
           )) {
             await launchUrl(uri, mode: LaunchMode.externalApplication);
           }
+          return;
         }
       }
     }
