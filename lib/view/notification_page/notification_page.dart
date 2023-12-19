@@ -63,6 +63,9 @@ class NotificationPageState extends ConsumerState<NotificationPage> {
                     ref
                         .read(notesProvider(widget.account))
                         .registerAll(result.map((e) => e.note).whereNotNull());
+                    ref
+                        .read(accountRepositoryProvider.notifier)
+                        .readAllNotification(widget.account);
                     return result.toNotificationData(localize);
                   },
                   nextFuture: (lastElement, _) async {
