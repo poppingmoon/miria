@@ -296,7 +296,7 @@ class AccountRepository extends Notifier<List<Account>> {
     final misskey = Misskey(token: token, host: server);
     final i = await misskey.i.i();
     final meta = await misskey.meta();
-    _addAccount(
+    await _addAccount(
       Account(
         host: server,
         userId: i.username,
