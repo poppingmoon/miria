@@ -213,10 +213,7 @@ class FederationPageState extends ConsumerState<FederationPage> {
               if (enableSearch)
                 AccountScope(
                   account: Account.demoAccount(widget.host, metaResponse!.meta),
-                  child: NoteSearch(
-                    focusNode: FocusNode(),
-                    initialSearchText: "",
-                  ),
+                  child: const NoteSearch(),
                 ),
             ],
           ),
