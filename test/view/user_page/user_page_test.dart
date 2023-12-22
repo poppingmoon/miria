@@ -168,7 +168,6 @@ void main() {
             (_) async => TestData.usersShowResponse2.copyWith(
               isFollowing: false,
               isLocked: false,
-              autoAcceptFollowed: true,
             ),
           );
 
@@ -200,7 +199,6 @@ void main() {
               hasPendingFollowRequestFromYou: false,
               isLocked: true,
               isFollowed: false,
-              autoAcceptFollowed: false,
             ),
           );
 
@@ -694,7 +692,6 @@ void main() {
               followeeId: TestData.usersShowResponse2.id,
               followerId: TestData.account.i.id,
               followee: TestData.detailedUser2,
-              follower: TestData.user1,
             ),
           ],
         );
@@ -752,7 +749,6 @@ void main() {
               createdAt: DateTime.now(),
               followeeId: TestData.account.i.id,
               followerId: TestData.usersShowResponse2.id,
-              followee: TestData.user1,
               follower: TestData.detailedUser2,
             ),
           ],

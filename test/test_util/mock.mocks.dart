@@ -498,8 +498,8 @@ class _FakeMisskeyFollowingRequests_41 extends _i1.SmartFake
         );
 }
 
-class _FakeUser_42 extends _i1.SmartFake implements _i5.User {
-  _FakeUser_42(
+class _FakeUserLite_42 extends _i1.SmartFake implements _i5.UserLite {
+  _FakeUserLite_42(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -518,8 +518,8 @@ class _FakeHashtag_43 extends _i1.SmartFake implements _i5.Hashtag {
         );
 }
 
-class _FakeIResponse_44 extends _i1.SmartFake implements _i5.IResponse {
-  _FakeIResponse_44(
+class _FakeMeDetailed_44 extends _i1.SmartFake implements _i5.MeDetailed {
+  _FakeMeDetailed_44(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -615,9 +615,8 @@ class _FakeMisskeyUsersLists_52 extends _i1.SmartFake
         );
 }
 
-class _FakeUsersShowResponse_53 extends _i1.SmartFake
-    implements _i5.UsersShowResponse {
-  _FakeUsersShowResponse_53(
+class _FakeUserDetailed_53 extends _i1.SmartFake implements _i5.UserDetailed {
+  _FakeUserDetailed_53(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -2181,15 +2180,16 @@ class MockMisskey extends _i1.Mock implements _i5.Misskey {
           ) as _i18.Future<Iterable<_i5.GetAvatarDecorationsResponse>>);
 
   @override
-  _i18.Future<Iterable<_i5.User>> pinnedUsers() => (super.noSuchMethod(
+  _i18.Future<Iterable<_i5.UserDetailed>> pinnedUsers() => (super.noSuchMethod(
         Invocation.method(
           #pinnedUsers,
           [],
         ),
-        returnValue: _i18.Future<Iterable<_i5.User>>.value(<_i5.User>[]),
+        returnValue:
+            _i18.Future<Iterable<_i5.UserDetailed>>.value(<_i5.UserDetailed>[]),
         returnValueForMissingStub:
-            _i18.Future<Iterable<_i5.User>>.value(<_i5.User>[]),
-      ) as _i18.Future<Iterable<_i5.User>>);
+            _i18.Future<Iterable<_i5.UserDetailed>>.value(<_i5.UserDetailed>[]),
+      ) as _i18.Future<Iterable<_i5.UserDetailed>>);
 
   @override
   _i5.SocketController homeTimelineStream({
@@ -2633,8 +2633,8 @@ class MockMisskey extends _i1.Mock implements _i5.Misskey {
   _i5.SocketController userListStream({
     required String? listId,
     _i18.FutureOr<void> Function(_i5.Note)? onNoteReceived,
-    _i18.FutureOr<void> Function(_i5.User)? onUserAdded,
-    _i18.FutureOr<void> Function(_i5.User)? onUserRemoved,
+    _i18.FutureOr<void> Function(_i5.UserLite)? onUserAdded,
+    _i18.FutureOr<void> Function(_i5.UserLite)? onUserRemoved,
     _i18.FutureOr<void> Function(
       String,
       _i5.TimelineReacted,
@@ -2862,10 +2862,10 @@ class MockMisskey extends _i1.Mock implements _i5.Misskey {
     _i18.FutureOr<void> Function(_i5.Note)? onMention,
     _i18.FutureOr<void> Function(_i5.Note)? onReply,
     _i18.FutureOr<void> Function(_i5.Note)? onRenote,
-    _i18.FutureOr<void> Function(_i5.User)? onFollow,
-    _i18.FutureOr<void> Function(_i5.User)? onFollowed,
-    _i18.FutureOr<void> Function(_i5.User)? onUnfollow,
-    _i18.FutureOr<void> Function(_i5.User)? onMeUpdated,
+    _i18.FutureOr<void> Function(_i5.UserDetailedNotMe)? onFollow,
+    _i18.FutureOr<void> Function(_i5.UserLite)? onFollowed,
+    _i18.FutureOr<void> Function(_i5.UserDetailedNotMe)? onUnfollow,
+    _i18.FutureOr<void> Function(_i5.MeDetailed)? onMeUpdated,
     _i18.FutureOr<void> Function()? onReadAllNotifications,
     _i18.FutureOr<void> Function(_i5.INotificationsResponse)?
         onUnreadNotification,
@@ -2873,7 +2873,7 @@ class MockMisskey extends _i1.Mock implements _i5.Misskey {
     _i18.FutureOr<void> Function()? onReadAllUnreadMentions,
     _i18.FutureOr<void> Function(String)? onUnreadSpecifiedNote,
     _i18.FutureOr<void> Function()? onReadAllUnreadSpecifiedNotes,
-    _i18.FutureOr<void> Function(_i5.User)? onReceiveFollowRequest,
+    _i18.FutureOr<void> Function(_i5.UserLite)? onReceiveFollowRequest,
     _i18.FutureOr<void> Function()? onReadAllAnnouncements,
   }) =>
       (super.noSuchMethod(
@@ -3897,16 +3897,18 @@ class MockMisskeyFederation extends _i1.Mock implements _i5.MisskeyFederation {
       ) as _i18.Future<_i5.FederationShowInstanceResponse>);
 
   @override
-  _i18.Future<Iterable<_i5.User>> users(_i5.FederationUsersRequest? request) =>
+  _i18.Future<Iterable<_i5.UserDetailed>> users(
+          _i5.FederationUsersRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #users,
           [request],
         ),
-        returnValue: _i18.Future<Iterable<_i5.User>>.value(<_i5.User>[]),
+        returnValue:
+            _i18.Future<Iterable<_i5.UserDetailed>>.value(<_i5.UserDetailed>[]),
         returnValueForMissingStub:
-            _i18.Future<Iterable<_i5.User>>.value(<_i5.User>[]),
-      ) as _i18.Future<Iterable<_i5.User>>);
+            _i18.Future<Iterable<_i5.UserDetailed>>.value(<_i5.UserDetailed>[]),
+      ) as _i18.Future<Iterable<_i5.UserDetailed>>);
 }
 
 /// A class which mocks [MisskeyFollowing].
@@ -3927,73 +3929,77 @@ class MockMisskeyFollowing extends _i1.Mock implements _i5.MisskeyFollowing {
       ) as _i5.MisskeyFollowingRequests);
 
   @override
-  _i18.Future<_i5.User> create(_i5.FollowingCreateRequest? request) =>
+  _i18.Future<_i5.UserLite> create(_i5.FollowingCreateRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #create,
           [request],
         ),
-        returnValue: _i18.Future<_i5.User>.value(_FakeUser_42(
+        returnValue: _i18.Future<_i5.UserLite>.value(_FakeUserLite_42(
           this,
           Invocation.method(
             #create,
             [request],
           ),
         )),
-        returnValueForMissingStub: _i18.Future<_i5.User>.value(_FakeUser_42(
+        returnValueForMissingStub:
+            _i18.Future<_i5.UserLite>.value(_FakeUserLite_42(
           this,
           Invocation.method(
             #create,
             [request],
           ),
         )),
-      ) as _i18.Future<_i5.User>);
+      ) as _i18.Future<_i5.UserLite>);
 
   @override
-  _i18.Future<_i5.User> delete(_i5.FollowingDeleteRequest? request) =>
+  _i18.Future<_i5.UserLite> delete(_i5.FollowingDeleteRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #delete,
           [request],
         ),
-        returnValue: _i18.Future<_i5.User>.value(_FakeUser_42(
+        returnValue: _i18.Future<_i5.UserLite>.value(_FakeUserLite_42(
           this,
           Invocation.method(
             #delete,
             [request],
           ),
         )),
-        returnValueForMissingStub: _i18.Future<_i5.User>.value(_FakeUser_42(
+        returnValueForMissingStub:
+            _i18.Future<_i5.UserLite>.value(_FakeUserLite_42(
           this,
           Invocation.method(
             #delete,
             [request],
           ),
         )),
-      ) as _i18.Future<_i5.User>);
+      ) as _i18.Future<_i5.UserLite>);
 
   @override
-  _i18.Future<_i5.User> invalidate(_i5.FollowingInvalidateRequest? request) =>
+  _i18.Future<_i5.UserLite> invalidate(
+          _i5.FollowingInvalidateRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #invalidate,
           [request],
         ),
-        returnValue: _i18.Future<_i5.User>.value(_FakeUser_42(
+        returnValue: _i18.Future<_i5.UserLite>.value(_FakeUserLite_42(
           this,
           Invocation.method(
             #invalidate,
             [request],
           ),
         )),
-        returnValueForMissingStub: _i18.Future<_i5.User>.value(_FakeUser_42(
+        returnValueForMissingStub:
+            _i18.Future<_i5.UserLite>.value(_FakeUserLite_42(
           this,
           Invocation.method(
             #invalidate,
             [request],
           ),
         )),
-      ) as _i18.Future<_i5.User>);
+      ) as _i18.Future<_i5.UserLite>);
 
   @override
   _i18.Future<void> updateAll(_i5.FollowingUpdateAllRequest? request) =>
@@ -4074,16 +4080,18 @@ class MockMisskeyHashtags extends _i1.Mock implements _i5.MisskeyHashtags {
       ) as _i18.Future<Iterable<_i5.HashtagsTrendResponse>>);
 
   @override
-  _i18.Future<Iterable<_i5.User>> users(_i5.HashtagsUsersRequest? request) =>
+  _i18.Future<Iterable<_i5.UserDetailed>> users(
+          _i5.HashtagsUsersRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #users,
           [request],
         ),
-        returnValue: _i18.Future<Iterable<_i5.User>>.value(<_i5.User>[]),
+        returnValue:
+            _i18.Future<Iterable<_i5.UserDetailed>>.value(<_i5.UserDetailed>[]),
         returnValueForMissingStub:
-            _i18.Future<Iterable<_i5.User>>.value(<_i5.User>[]),
-      ) as _i18.Future<Iterable<_i5.User>>);
+            _i18.Future<Iterable<_i5.UserDetailed>>.value(<_i5.UserDetailed>[]),
+      ) as _i18.Future<Iterable<_i5.UserDetailed>>);
 }
 
 /// A class which mocks [MisskeyI].
@@ -4091,12 +4099,12 @@ class MockMisskeyHashtags extends _i1.Mock implements _i5.MisskeyHashtags {
 /// See the documentation for Mockito's code generation for more information.
 class MockMisskeyI extends _i1.Mock implements _i5.MisskeyI {
   @override
-  _i18.Future<_i5.IResponse> i() => (super.noSuchMethod(
+  _i18.Future<_i5.MeDetailed> i() => (super.noSuchMethod(
         Invocation.method(
           #i,
           [],
         ),
-        returnValue: _i18.Future<_i5.IResponse>.value(_FakeIResponse_44(
+        returnValue: _i18.Future<_i5.MeDetailed>.value(_FakeMeDetailed_44(
           this,
           Invocation.method(
             #i,
@@ -4104,14 +4112,14 @@ class MockMisskeyI extends _i1.Mock implements _i5.MisskeyI {
           ),
         )),
         returnValueForMissingStub:
-            _i18.Future<_i5.IResponse>.value(_FakeIResponse_44(
+            _i18.Future<_i5.MeDetailed>.value(_FakeMeDetailed_44(
           this,
           Invocation.method(
             #i,
             [],
           ),
         )),
-      ) as _i18.Future<_i5.IResponse>);
+      ) as _i18.Future<_i5.MeDetailed>);
 
   @override
   _i18.Future<Iterable<_i5.INotificationsResponse>> notifications(
@@ -4155,13 +4163,13 @@ class MockMisskeyI extends _i1.Mock implements _i5.MisskeyI {
       ) as _i18.Future<Iterable<_i5.IFavoritesResponse>>);
 
   @override
-  _i18.Future<_i5.IResponse> update(_i5.IUpdateRequest? request) =>
+  _i18.Future<_i5.MeDetailed> update(_i5.IUpdateRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #update,
           [request],
         ),
-        returnValue: _i18.Future<_i5.IResponse>.value(_FakeIResponse_44(
+        returnValue: _i18.Future<_i5.MeDetailed>.value(_FakeMeDetailed_44(
           this,
           Invocation.method(
             #update,
@@ -4169,14 +4177,14 @@ class MockMisskeyI extends _i1.Mock implements _i5.MisskeyI {
           ),
         )),
         returnValueForMissingStub:
-            _i18.Future<_i5.IResponse>.value(_FakeIResponse_44(
+            _i18.Future<_i5.MeDetailed>.value(_FakeMeDetailed_44(
           this,
           Invocation.method(
             #update,
             [request],
           ),
         )),
-      ) as _i18.Future<_i5.IResponse>);
+      ) as _i18.Future<_i5.MeDetailed>);
 }
 
 /// A class which mocks [MisskeyNotes].
@@ -4730,14 +4738,13 @@ class MockMisskeyUsers extends _i1.Mock implements _i5.MisskeyUsers {
       ) as _i5.MisskeyUsersLists);
 
   @override
-  _i18.Future<_i5.UsersShowResponse> show(_i5.UsersShowRequest? request) =>
+  _i18.Future<_i5.UserDetailed> show(_i5.UsersShowRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #show,
           [request],
         ),
-        returnValue:
-            _i18.Future<_i5.UsersShowResponse>.value(_FakeUsersShowResponse_53(
+        returnValue: _i18.Future<_i5.UserDetailed>.value(_FakeUserDetailed_53(
           this,
           Invocation.method(
             #show,
@@ -4745,40 +4752,38 @@ class MockMisskeyUsers extends _i1.Mock implements _i5.MisskeyUsers {
           ),
         )),
         returnValueForMissingStub:
-            _i18.Future<_i5.UsersShowResponse>.value(_FakeUsersShowResponse_53(
+            _i18.Future<_i5.UserDetailed>.value(_FakeUserDetailed_53(
           this,
           Invocation.method(
             #show,
             [request],
           ),
         )),
-      ) as _i18.Future<_i5.UsersShowResponse>);
+      ) as _i18.Future<_i5.UserDetailed>);
 
   @override
-  _i18.Future<Iterable<_i5.UsersShowResponse>> showByIds(
+  _i18.Future<Iterable<_i5.UserDetailed>> showByIds(
           _i5.UsersShowByIdsRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #showByIds,
           [request],
         ),
-        returnValue: _i18.Future<Iterable<_i5.UsersShowResponse>>.value(
-            <_i5.UsersShowResponse>[]),
+        returnValue:
+            _i18.Future<Iterable<_i5.UserDetailed>>.value(<_i5.UserDetailed>[]),
         returnValueForMissingStub:
-            _i18.Future<Iterable<_i5.UsersShowResponse>>.value(
-                <_i5.UsersShowResponse>[]),
-      ) as _i18.Future<Iterable<_i5.UsersShowResponse>>);
+            _i18.Future<Iterable<_i5.UserDetailed>>.value(<_i5.UserDetailed>[]),
+      ) as _i18.Future<Iterable<_i5.UserDetailed>>);
 
   @override
-  _i18.Future<_i5.UsersShowResponse> showByName(
+  _i18.Future<_i5.UserDetailed> showByName(
           _i5.UsersShowByUserNameRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #showByName,
           [request],
         ),
-        returnValue:
-            _i18.Future<_i5.UsersShowResponse>.value(_FakeUsersShowResponse_53(
+        returnValue: _i18.Future<_i5.UserDetailed>.value(_FakeUserDetailed_53(
           this,
           Invocation.method(
             #showByName,
@@ -4786,14 +4791,14 @@ class MockMisskeyUsers extends _i1.Mock implements _i5.MisskeyUsers {
           ),
         )),
         returnValueForMissingStub:
-            _i18.Future<_i5.UsersShowResponse>.value(_FakeUsersShowResponse_53(
+            _i18.Future<_i5.UserDetailed>.value(_FakeUserDetailed_53(
           this,
           Invocation.method(
             #showByName,
             [request],
           ),
         )),
-      ) as _i18.Future<_i5.UsersShowResponse>);
+      ) as _i18.Future<_i5.UserDetailed>);
 
   @override
   _i18.Future<Iterable<_i5.Note>> notes(_i5.UsersNotesRequest? request) =>
@@ -4899,16 +4904,18 @@ class MockMisskeyUsers extends _i1.Mock implements _i5.MisskeyUsers {
       ) as _i18.Future<Iterable<_i5.User>>);
 
   @override
-  _i18.Future<Iterable<_i5.User>> users(_i5.UsersUsersRequest? request) =>
+  _i18.Future<Iterable<_i5.UserDetailed>> users(
+          _i5.UsersUsersRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #users,
           [request],
         ),
-        returnValue: _i18.Future<Iterable<_i5.User>>.value(<_i5.User>[]),
+        returnValue:
+            _i18.Future<Iterable<_i5.UserDetailed>>.value(<_i5.UserDetailed>[]),
         returnValueForMissingStub:
-            _i18.Future<Iterable<_i5.User>>.value(<_i5.User>[]),
-      ) as _i18.Future<Iterable<_i5.User>>);
+            _i18.Future<Iterable<_i5.UserDetailed>>.value(<_i5.UserDetailed>[]),
+      ) as _i18.Future<Iterable<_i5.UserDetailed>>);
 
   @override
   _i18.Future<void> updateMemo(_i5.UsersUpdateMemoRequest? request) =>

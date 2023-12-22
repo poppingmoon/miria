@@ -16,7 +16,7 @@ class TestData {
   );
 
   // i
-  static IResponse i1 = IResponse.fromJson(
+  static MeDetailed i1 = MeDetailed.fromJson(
     JSON5.parse(r"""
 {
   id: '7rkr3b1c1c',
@@ -838,7 +838,7 @@ class TestData {
       );
 
   // ユーザー情報
-  static User user1 = User.fromJson(
+  static UserLite user1 = UserLite.fromJson(
     JSON5.parse('''
 {
   id: '7rkr3b1c1c',
@@ -856,7 +856,8 @@ class TestData {
   );
   static String user1ExpectId = "7rkr3b1c1c";
 
-  static User detailedUser1 = User.fromJson(
+  static UserDetailedNotMeWithRelations detailedUser1 =
+      UserDetailedNotMeWithRelations.fromJson(
     JSON5.parse(r'''
 {
   id: '7z9zua5kyv',
@@ -1027,7 +1028,8 @@ class TestData {
 }  ''') as Map<String, dynamic>,
   );
 
-  static User detailedUser2 = User.fromJson(
+  static UserDetailedNotMeWithRelations detailedUser2 =
+      UserDetailedNotMeWithRelations.fromJson(
     JSON5.parse(r'''
 {
   id: '9gbzuv2cze',
@@ -1141,7 +1143,8 @@ class TestData {
   static String detailedUser2ExpectedId = "9gbzuv2cze";
 
   // ユーザー情報
-  static UsersShowResponse usersShowResponse1 = UsersShowResponse.fromJson(
+  static UserDetailedNotMeWithRelations usersShowResponse1 =
+      UserDetailedNotMeWithRelations.fromJson(
     JSON5.parse(r'''
 {
   id: '7rkr3b1c1c',
@@ -1254,7 +1257,8 @@ class TestData {
   ''') as Map<String, dynamic>,
   );
 
-  static UsersShowResponse usersShowResponse2 = UsersShowResponse.fromJson(
+  static UserDetailedNotMeWithRelations usersShowResponse2 =
+      UserDetailedNotMeWithRelations.fromJson(
     JSON5.parse(r'''
 {
   id: '7z9zua5kyv',
@@ -1429,8 +1433,8 @@ class TestData {
   ''') as Map<String, dynamic>,
   );
 
-  static UsersShowResponse usersShowResponse3AsRemoteUser =
-      UsersShowResponse.fromJson(
+  static UserDetailedNotMeWithRelations usersShowResponse3AsRemoteUser =
+      UserDetailedNotMeWithRelations.fromJson(
     JSON5.parse(r'''
 {
   id: '9i08deo0vj',
@@ -1512,8 +1516,8 @@ class TestData {
 ''') as Map<String, dynamic>,
   );
 
-  static UsersShowResponse usersShowResponse3AsLocalUser =
-      UsersShowResponse.fromJson(
+  static UserDetailedNotMeWithRelations usersShowResponse3AsLocalUser =
+      UserDetailedNotMeWithRelations.fromJson(
     JSON5.parse('''
 {
   id: '9i07ia9bf0',

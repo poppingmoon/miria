@@ -11,7 +11,7 @@ class Account with _$Account {
     required String host,
     required String userId,
     String? token,
-    required IResponse i,
+    required MeDetailed i,
     MetaResponse? meta,
   }) = _Account;
   const Account._();
@@ -41,7 +41,7 @@ class Account with _$Account {
         host: host,
         userId: "",
         meta: meta,
-        i: IResponse(
+        i: MeDetailed(
           id: "",
           username: "",
           createdAt: DateTime.now(),
