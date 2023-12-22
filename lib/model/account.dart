@@ -56,7 +56,6 @@ class Account with _$Account {
           followersCount: 0,
           notesCount: 0,
           publicReactions: false,
-          ffVisibility: "",
           twoFactorEnabled: false,
           usePasswordLessLogin: false,
           securityKeys: false,
