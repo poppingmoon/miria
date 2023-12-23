@@ -11,3 +11,5 @@ Comment[ja]=モバイル向けのMisskeyクライアントアプリ（Linux向�
 Keywords=Misskey;Miria;みりあ
 Terminal=false
 StartupNotify=false
+StartupWMClass=miria
+Categories=InstantMessaging;Network;GTK
