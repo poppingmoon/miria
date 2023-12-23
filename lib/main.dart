@@ -33,10 +33,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Miria',
       debugShowCheckedModeBanner: false,
-      locale: const Locale("ja", "JP"),
-      supportedLocales: const [
-        Locale("ja", "JP"),
-      ],
+      supportedLocales: S.supportedLocales,
       scrollBehavior: AppScrollBehavior(),
       localizationsDelegates: const [
         S.delegate,
