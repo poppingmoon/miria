@@ -28,6 +28,7 @@ import "package:miria/view/common/color_picker_dialog.dart";
 import "package:miria/view/common/misskey_notes/reaction_user_dialog.dart";
 import "package:miria/view/common/misskey_notes/renote_modal_sheet.dart";
 import "package:miria/view/common/misskey_notes/renote_user_dialog.dart";
+import "package:miria/view/common/misskey_notes/translate_note_modal_sheet.dart";
 import "package:miria/view/explore_page/explore_page.dart";
 import "package:miria/view/explore_page/explore_role_users_page.dart";
 import "package:miria/view/favorited_note_page/favorited_note_page.dart";
@@ -170,6 +171,7 @@ class AppRouter extends _$AppRouter {
     AutoModalRouteSheet(page: AntennaModalRoute.page),
     AutoModalRouteSheet(page: ClipModalRoute.page),
     AutoModalRouteSheet(page: UsersListModalRoute.page),
+    AutoModalRouteSheet(page: TranslateNoteModalRoute.page),
     AutoModalRouteSheet<DriveModalSheetReturnValue>(page: DriveModalRoute.page),
   ];
 }

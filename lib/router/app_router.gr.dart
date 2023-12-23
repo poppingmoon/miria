@@ -107,12 +107,13 @@ abstract class _$AppRouter extends RootStackRouter {
       final args = routeData.argsAs<AntennaSettingsRouteArgs>();
       return AutoRoutePage<AntennaSettings>(
         routeData: routeData,
-        child: AntennaSettingsDialog(
+        child: WrappedRoute(
+            child: AntennaSettingsDialog(
           account: args.account,
           key: args.key,
           title: args.title,
           initialSettings: args.initialSettings,
-        ),
+        )),
       );
     },
     AppInfoRoute.name: (routeData) {
@@ -642,6 +643,18 @@ abstract class _$AppRouter extends RootStackRouter {
           initialTabSetting: args.initialTabSetting,
           key: args.key,
         ),
+      );
+    },
+    TranslateNoteModalRoute.name: (routeData) {
+      final args = routeData.argsAs<TranslateNoteModalRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(
+            child: TranslateNoteModalSheet(
+          accountContext: args.accountContext,
+          note: args.note,
+          key: args.key,
+        )),
       );
     },
     UpdateMemoRoute.name: (routeData) {
@@ -2979,6 +2992,50 @@ class TimeLineRouteArgs {
   @override
   String toString() {
     return 'TimeLineRouteArgs{initialTabSetting: $initialTabSetting, key: $key}';
+  }
+}
+
+/// generated route for
+/// [TranslateNoteModalSheet]
+class TranslateNoteModalRoute
+    extends PageRouteInfo<TranslateNoteModalRouteArgs> {
+  TranslateNoteModalRoute({
+    required AccountContext accountContext,
+    required Note note,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TranslateNoteModalRoute.name,
+          args: TranslateNoteModalRouteArgs(
+            accountContext: accountContext,
+            note: note,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'TranslateNoteModalRoute';
+
+  static const PageInfo<TranslateNoteModalRouteArgs> page =
+      PageInfo<TranslateNoteModalRouteArgs>(name);
+}
+
+class TranslateNoteModalRouteArgs {
+  const TranslateNoteModalRouteArgs({
+    required this.accountContext,
+    required this.note,
+    this.key,
+  });
+
+  final AccountContext accountContext;
+
+  final Note note;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'TranslateNoteModalRouteArgs{accountContext: $accountContext, note: $note, key: $key}';
   }
 }
 
