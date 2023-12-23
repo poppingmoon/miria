@@ -170,7 +170,7 @@ class NoteModalSheet extends ConsumerWidget {
             (account.meta?.translatorAvailable ?? false))
           ListTile(
             leading: const Icon(Icons.translate),
-            title: const Text("ノートを翻訳"),
+            title: Text(S.of(context).translateNote),
             onTap: () {
               Navigator.of(context).pop();
               showModalBottomSheet<void>(

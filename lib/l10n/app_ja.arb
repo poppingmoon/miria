@@ -81,6 +81,7 @@
     "antennaSourceAll": "ぜんぶ",
     "antennaSourceUser": "ユーザー",
     "antennaSourceList": "リスト",
+    "antennaSourceUserBlacklist": "ブラックリスト",
     "selectAntennaSource": "ソースを選択",
     "selectList": "リストを選択",
     "antennaSourceUserHintText": "ユーザーネームを改行で区切って指定します",
@@ -212,6 +213,7 @@
     "openBrowsersAsRemote": "ブラウザでリモート先を開く",
     "openInAnotherAccount": "別のアカウントで開く",
     "shareNotes": "ノートを共有",
+    "translateNote": "ノートを翻訳",
     "deleteFavorite": "お気に入り解除",
     "notesAfterRenote": "リノート直後のノート",
     "deletedRecreate": "削除してなおす",
@@ -219,6 +221,14 @@
     "deleteRenote": "リノートを解除する",
     "confirmDelete": "ほんまに消してええな？",
     "doDeleting": "消す！",
+    "translatedFrom": "{lang}から翻訳",
+    "@translatedFrom": {
+        "placeholders": {
+            "lang": {
+                "type": "String"
+            }
+        }
+    },
 
     "confirmPoll": "{choiced}に投票しますか？",
     "@confirmPoll": {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -37,11 +38,11 @@ class TranslateNoteModalSheet extends ConsumerWidget {
               child: Column(
                 children: [
                   ListTile(
-                    title: Text("${data.sourceLang}から翻訳"),
+                    title: Text(S.of(context).translatedFrom(data.sourceLang)),
                     trailing: IconButton(
                       onPressed: () =>
                           Clipboard.setData(ClipboardData(text: data.text)),
-                      tooltip: "コピー",
+                      tooltip: S.of(context).copy,
                       icon: const Icon(Icons.copy),
                     ),
                   ),

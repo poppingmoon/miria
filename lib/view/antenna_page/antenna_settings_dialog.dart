@@ -199,6 +199,8 @@ class AntennaSettingsForm extends ConsumerWidget {
                         AntennaSource.all => S.of(context).antennaSourceAll,
                         AntennaSource.users => S.of(context).antennaSourceUser,
                         AntennaSource.list => S.of(context).antennaSourceList,
+                        AntennaSource.usersBlackList =>
+                          S.of(context).antennaSourceUserBlacklist,
                       },
                     ),
                   ),
