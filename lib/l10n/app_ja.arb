@@ -81,7 +81,7 @@
     "antennaSourceAll": "ぜんぶ",
     "antennaSourceUser": "ユーザー",
     "antennaSourceList": "リスト",
-    "antennaSourceUserBlacklist": "ブラックリスト",
+    "antennaSourceUserBlacklist": "指定したユーザー以外",
     "selectAntennaSource": "ソースを選択",
     "selectList": "リストを選択",
     "antennaSourceUserHintText": "ユーザーネームを改行で区切って指定します",
