@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,51 +32,53 @@ class SharingIntentListenerState extends ConsumerState<SharingIntentListener> {
   @override
   void initState() {
     super.initState();
-    intentDataStreamSubscription =
-        ReceiveSharingIntent.getMediaStream().listen((event) {
-      final items = event.map((e) => e.path).toList();
-      if (account.length == 1) {
-        widget.router.push(
-          NoteCreateRoute(
-            initialMediaFiles: items,
-            initialAccount: account.first,
-          ),
-        );
-      } else {
-        widget.router.push(
-          SharingAccountSelectRoute(
-            filePath: items,
-          ),
-        );
-      }
-    });
-    intentDataTextStreamSubscription =
-        ReceiveSharingIntent.getTextStream().listen((event) {
-      final uri = Uri.tryParse(event);
-      if (uri != null) {
-        if (uri.scheme == "miria" && uri.host == "miria") {
-          if (uri.path == "/miauth") {
-            ref.read(miAuthCallbackProvider.notifier).state = uri;
-            return;
+    if (Platform.isAndroid || Platform.isIOS) {
+      intentDataStreamSubscription =
+          ReceiveSharingIntent.getMediaStream().listen((event) {
+        final items = event.map((e) => e.path).toList();
+        if (account.length == 1) {
+          widget.router.push(
+            NoteCreateRoute(
+              initialMediaFiles: items,
+              initialAccount: account.first,
+            ),
+          );
+        } else {
+          widget.router.push(
+            SharingAccountSelectRoute(
+              filePath: items,
+            ),
+          );
+        }
+      });
+      intentDataTextStreamSubscription =
+          ReceiveSharingIntent.getTextStream().listen((event) {
+        final uri = Uri.tryParse(event);
+        if (uri != null) {
+          if (uri.scheme == "miria" && uri.host == "miria") {
+            if (uri.path == "/miauth") {
+              ref.read(miAuthCallbackProvider.notifier).state = uri;
+              return;
+            }
           }
         }
-      }
 
-      if (account.length == 1) {
-        widget.router.push(
-          NoteCreateRoute(
-            initialText: event,
-            initialAccount: account.first,
-          ),
-        );
-      } else {
-        widget.router.push(
-          SharingAccountSelectRoute(
-            sharingText: event,
-          ),
-        );
-      }
-    });
+        if (account.length == 1) {
+          widget.router.push(
+            NoteCreateRoute(
+              initialText: event,
+              initialAccount: account.first,
+            ),
+          );
+        } else {
+          widget.router.push(
+            SharingAccountSelectRoute(
+              sharingText: event,
+            ),
+          );
+        }
+      });
+    }
   }
 
   @override
