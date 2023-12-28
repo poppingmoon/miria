@@ -339,14 +339,24 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                   title: Text(S.of(context).includeReplies),
                   subtitle: Text(S.of(context).includeRepliesAvailability),
                   value: isIncludeReply,
-                  onChanged: (value) =>
-                      setState(() => isIncludeReply = !isIncludeReply),
+                  enabled: !isMediaOnly,
+                  onChanged: (value) => setState(() {
+                    isIncludeReply = !isIncludeReply;
+                    if (value ?? false) {
+                      isMediaOnly = false;
+                    }
+                  }),
                 ),
               CheckboxListTile(
                 title: Text(S.of(context).mediaOnly),
                 value: isMediaOnly,
-                onChanged: (value) =>
-                    setState(() => isMediaOnly = !isMediaOnly),
+                enabled: !isIncludeReply,
+                onChanged: (value) => setState(() {
+                  isMediaOnly = !isMediaOnly;
+                  if (value ?? false) {
+                    isIncludeReply = false;
+                  }
+                }),
               ),
               CheckboxListTile(
                 title: Text(S.of(context).subscribeNotes),
