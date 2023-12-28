@@ -230,13 +230,9 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
         onVoted: noteRepository.addVote,
         onUpdated: noteRepository.updateNote,
       );
-      unawaited(
-        Future(() async {
-          await ref
-              .read(accountRepositoryProvider.notifier)
-              .loadFromSourceIfNeed(_tabSetting.acct);
-        }),
-      );
+      ref
+          .read(accountRepositoryProvider.notifier)
+          .loadFromSourceIfNeed(_tabSetting.acct);
       await Future.wait([
         ref.read(mainStreamRepositoryProvider(_account)).reconnect(),
         ref.read(emojiRepositoryProvider(_account)).loadFromSourceIfNeed(),
@@ -244,8 +240,8 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           downDirectionLoad()
         else
           _reloadLatestNotes(),
+        _misskey.startStreaming(),
       ]);
-      await _misskey.startStreaming();
     } catch (e, st) {
       state = state.copyWith(error: (e, st));
     } finally {

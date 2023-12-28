@@ -156,7 +156,7 @@ class UsersListDetailPage extends ConsumerWidget {
                     subtitle: Text(
                       S.of(context).listCapacity(
                             users.length,
-                            account.i.policies.userEachUserListsLimit,
+                            account.i.policies.userEachUserListsLimit.toInt(),
                           ),
                     ),
                     trailing: ElevatedButton(
