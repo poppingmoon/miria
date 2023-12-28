@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
@@ -32,7 +32,8 @@ class SharingIntentListenerState extends ConsumerState<SharingIntentListener> {
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (defaultTargetPlatform
+        case TargetPlatform.android || TargetPlatform.iOS) {
       intentDataStreamSubscription =
           ReceiveSharingIntent.getMediaStream().listen((event) {
         final items = event.map((e) => e.path).toList();
