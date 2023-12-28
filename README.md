@@ -1,6 +1,6 @@
 # Miria
 
-Miriaはスマートフォン向けMisskeyクライアントです。
+Miriaはスマートフォン向け[Misskey](https://github.com/misskey-dev/misskey)クライアントです。
 
 ## コンセプト
 
@@ -10,25 +10,22 @@ Miriaはスマートフォン向けMisskeyクライアントです。
 
 ## インストール
 
-- ストアからインストール
-  - [Play Store](https://play.google.com/store/apps/details?id=info.shiosyakeyakini.miria)
-  - [App Store](https://apps.apple.com/jp/app/miria/id6449201469)
-- 最新版をGitHubからインストール
-  - [GitHub最新版のリリース](https://github.com/shiosyakeyakini-info/miria/releases/latest)
-- 最新版をTestFlightからインストール
-  - TestFlightはpixivFanbox経由でのURL共有としています。 [pixivFanbox](https://shiosyakeyakini.fanbox.cc/)
+||iOS/macOS|Android|Windows|Linux|
+|:-:|:-:|:-:|:-:|:-:|
+|ストア版|[App Store](https://apps.apple.com/jp/app/miria/id6449201469)|[Play Store](https://play.google.com/store/apps/details?id=info.shiosyakeyakini.miria)|-|-|
+|最新版|[pixivFANBOX](https://shiosyakeyakini.fanbox.cc/)|[GitHub(APK)](https://github.com/shiosyakeyakini-info/miria/releases/latest)|[GitHub(インストーラー)](https://github.com/shiosyakeyakini-info/miria/releases/latest)|[セルフビルド](https://github.com/shiosyakeyakini-info/miria/wiki/%E9%96%8B%E7%99%BA%E8%80%85%E5%90%91%E3%81%91#linux)|
 
 ## 対応予定
 
 ### 対応する予定があるもの
 
-[issue](https://github.com/shiosyakeyakini-info/miria/issues)を対応予定のメモ欄がわりに使っています。
+[Issues](https://github.com/shiosyakeyakini-info/miria/issues)を対応予定のメモ欄がわりに使っています。
 
 ### 対応する予定がないもの
 
-- ページ、PlayなどのAiScriptが必要な機能
+- プラグイン、Playなどの[AiScript](https://github.com/aiscript-dev/aiscript)が必要な機能
   - これらの機能は実装がたいへん難しいので、いまのところ対応する予定はありません。
-- CalckeyなどのMisskeyベースの他のSNS対応
+- FirefishなどのMisskey v12派生やMastodonなどの他のSNS対応
   - APIのレスポンスの型が異なるなどさまざまな制約から、現状対応する予定はありません。
 - Misskeyの機能の網羅
   - このアプリはMisskeyの機能を完全に網羅する予定はありません。
