@@ -20,12 +20,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Convert Icon image to 256x256
-        run:  |
-          sudo apt install -y imagemagick
-          convert assets/images/icon.png -resize 256x256 snap/gui/miria.png
-          rm assets/images/icon_adaptive.png
-
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -47,7 +41,6 @@ jobs:
 
       # https://gihyo.jp/admin/serial/01/ubuntu-recipe/0660#sec3 : Snapパッケージアップロードまでの流れ
       # https://github.com/snapcore/action-publish : Snap ActionのREADME.md
-      # Releaseは"edge"に設定していますが、"stable"が選択可能です。
       # Snap Storeでパッケージ名"miria"を予約後、"SNAPCRAFT_STORE_CREDENTIALS"を登録し、
       # 以下をコメントアウトを解除することでSnap Storeへアップロードすることが可能です。
       # Snap Storeでの公開後は、上記の"Upload snap"をコメントアウトしてください。
@@ -59,4 +52,4 @@ jobs:
       #    SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
       #  with:
       #    snap: ${{ steps.snapcraft.outputs.snap }}
-      #    release: edge
+      #    release: stable
