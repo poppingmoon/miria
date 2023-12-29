@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -17,8 +15,6 @@ class _VideoDialogState extends State<VideoDialog> {
   late final player = Player();
   late final controller = VideoController(player);
   double aspectRatio = 1;
-  double verticalDragX = 0.0;
-  double verticalDragY = 0.0;
   int? listeningId;
 
   @override
@@ -59,56 +55,19 @@ class _VideoDialogState extends State<VideoDialog> {
         height: MediaQuery.of(context).size.height,
         child: Stack(
           children: [
-            Align(
-              child: AspectRatio(
-                aspectRatio: aspectRatio,
-                child: Listener(
-                  onPointerDown: (event) {
-                    // プレイヤー操作できるように画面下部に不感エリア
-                    if (event.localPosition.dy + 100 >
-                        min(
-                          MediaQuery.of(context).size.width / aspectRatio,
-                          MediaQuery.of(context).size.height,
-                        )) {
-                      listeningId = null;
-                      return;
-                    }
-
-                    if (listeningId != null) {
-                      setState(() {
-                        verticalDragX = 0;
-                        verticalDragY = 0;
-                      });
-                      listeningId = null;
-                      return;
-                    }
-                    listeningId = event.pointer;
-                  },
-                  onPointerMove: (event) {
-                    if (listeningId != null) {
-                      setState(() {
-                        //verticalDragX += event.delta.dx;
-                        verticalDragY += event.delta.dy;
-                      });
-                    }
-                  },
-                  onPointerUp: (event) {
-                    final angle =
-                        atan2(verticalDragY, verticalDragX).abs() / pi * 180;
-                    if (listeningId != null &&
-                        verticalDragY.abs() > 10 &&
-                        (angle > 60 && angle < 120)) {
-                      Navigator.of(context).pop();
-                    } else {
-                      listeningId = null;
-                    }
-                  },
-                  child: Transform.translate(
-                    offset: Offset(verticalDragX, verticalDragY),
-                    child: MaterialVideoControlsTheme(
-                      normal: themeData,
-                      fullscreen: themeData,
-                      child: Video(controller: controller),
+            Dismissible(
+              key: const ValueKey(""),
+              onDismissed: (_) => Navigator.of(context).pop(),
+              direction: DismissDirection.vertical,
+              child: Align(
+                child: AspectRatio(
+                  aspectRatio: aspectRatio,
+                  child: MaterialVideoControlsTheme(
+                    normal: themeData,
+                    fullscreen: themeData,
+                    child: Video(
+                      controller: controller,
+                      controls: MaterialVideoControls,
                     ),
                   ),
                 ),
