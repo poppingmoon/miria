@@ -26,6 +26,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
               Tab(text: "MiAuthでログイン"),
               Tab(text: "APIキーでログイン"),
             ],
+            tabAlignment: TabAlignment.center,
           ),
         ),
         body: const TabBarView(
