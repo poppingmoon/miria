@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
+import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/dialogs/simple_message_dialog.dart';
 
 @RoutePage()
@@ -65,7 +66,8 @@ class ImportExportPageState extends ConsumerState<ImportExportPage> {
                     }
                     await ref
                         .read(importExportRepository)
-                        .import(context, account);
+                        .import(context, account)
+                        .expectFailure(context);
                   },
                   child: const Text("選択"),
                 ),
@@ -110,7 +112,10 @@ class ImportExportPageState extends ConsumerState<ImportExportPage> {
                       );
                       return;
                     }
-                    ref.read(importExportRepository).export(context, account);
+                    ref
+                        .read(importExportRepository)
+                        .export(context, account)
+                        .expectFailure(context);
                   },
                   child: const Text("保存"),
                 ),
