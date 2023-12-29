@@ -27,6 +27,7 @@ class LoginPageState extends ConsumerState<LoginPage> {
               Tab(text: S.of(context).loginAsMiAuth),
               Tab(text: S.of(context).loginAsAPIKey),
             ],
+            tabAlignment: TabAlignment.center,
           ),
         ),
         body: const TabBarView(
