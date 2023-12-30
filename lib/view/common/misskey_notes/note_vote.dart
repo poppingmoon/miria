@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/date_time_extension.dart';
-import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/misskey_notes/mfm_text.dart';
@@ -17,12 +16,10 @@ class NoteVote extends ConsumerStatefulWidget {
     super.key,
     required this.displayNote,
     required this.poll,
-    required this.loginAs,
   });
 
   final Note displayNote;
   final NotePoll poll;
-  final Account? loginAs;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => NoteVoteState();
@@ -32,7 +29,6 @@ class NoteVoteState extends ConsumerState<NoteVote> {
   bool isOpened = false;
 
   bool isAnyVotable() {
-    if (widget.loginAs != null) return false;
     final expiresAt = widget.poll.expiresAt;
     return (expiresAt == null || expiresAt > DateTime.now()) &&
         ((widget.poll.multiple && widget.poll.choices.any((e) => !e.isVoted)) ||
@@ -64,6 +60,13 @@ class NoteVoteState extends ConsumerState<NoteVote> {
       return;
     }
     final account = AccountScope.of(context);
+    // 非ログイン時は他のアカウントを開く
+    if (!account.hasToken) {
+      await ref
+          .read(misskeyNoteNotifierProvider(account).notifier)
+          .openNoteInOtherAccount(context, widget.displayNote);
+      return;
+    }
 
     final dialogValue = await showDialog<bool>(
       context: context,

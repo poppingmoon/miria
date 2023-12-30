@@ -78,16 +78,11 @@ class NoteModalSheet extends ConsumerWidget {
           title: Text(S.of(context).user),
           trailing: const Icon(Icons.keyboard_arrow_right),
           onTap: () async {
-            final response = await ref
-                .read(misskeyProvider(account))
-                .users
-                .show(UsersShowRequest(userId: targetNote.userId));
-            if (!context.mounted) return;
             showModalBottomSheet<void>(
               context: context,
               builder: (context) => UserControlDialog(
                 account: account,
-                response: response,
+                userId: targetNote.userId,
               ),
             );
           },
@@ -166,80 +161,82 @@ class NoteModalSheet extends ConsumerWidget {
             });
           },
         ),
-        if (account.i.policies.canUseTranslator &&
-            (account.meta?.translatorAvailable ?? false))
+        if (account.hasToken) ...[
+          if (account.i.policies.canUseTranslator &&
+              (account.meta?.translatorAvailable ?? false))
+            ListTile(
+              leading: const Icon(Icons.translate),
+              title: Text(S.of(context).translateNote),
+              onTap: () {
+                Navigator.of(context).pop();
+                showModalBottomSheet<void>(
+                  context: context,
+                  builder: (context) => TranslateNoteModalSheet(
+                    account: account,
+                    note: targetNote,
+                  ),
+                );
+              },
+            ),
+          FutureBuilder(
+            future: ref
+                .read(misskeyProvider(account))
+                .notes
+                .state(NotesStateRequest(noteId: targetNote.id)),
+            builder: (_, snapshot) {
+              final data = snapshot.data;
+              return data == null
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListTile(
+                      leading: const Icon(Icons.star_rounded),
+                      onTap: () async {
+                        if (data.isFavorited) {
+                          ref
+                              .read(misskeyProvider(account))
+                              .notes
+                              .favorites
+                              .delete(
+                                NotesFavoritesDeleteRequest(
+                                  noteId: targetNote.id,
+                                ),
+                              );
+
+                          Navigator.of(context).pop();
+                        } else {
+                          ref
+                              .read(misskeyProvider(account))
+                              .notes
+                              .favorites
+                              .create(
+                                NotesFavoritesCreateRequest(
+                                  noteId: targetNote.id,
+                                ),
+                              );
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      title: Text(
+                        data.isFavorited
+                            ? S.of(context).deleteFavorite
+                            : S.of(context).favorite,
+                      ),
+                    );
+            },
+          ),
           ListTile(
-            leading: const Icon(Icons.translate),
-            title: Text(S.of(context).translateNote),
+            leading: const Icon(Icons.attach_file),
+            title: Text(S.of(context).clip),
             onTap: () {
               Navigator.of(context).pop();
+
               showModalBottomSheet<void>(
                 context: context,
-                builder: (context) => TranslateNoteModalSheet(
-                  account: account,
-                  note: targetNote,
-                ),
+                builder: (context2) =>
+                    ClipModalSheet(account: account, noteId: targetNote.id),
               );
             },
           ),
-        FutureBuilder(
-          future: ref
-              .read(misskeyProvider(account))
-              .notes
-              .state(NotesStateRequest(noteId: targetNote.id)),
-          builder: (_, snapshot) {
-            final data = snapshot.data;
-            return (data == null)
-                ? const Center(child: CircularProgressIndicator())
-                : ListTile(
-                    leading: const Icon(Icons.star_rounded),
-                    onTap: () async {
-                      if (data.isFavorited) {
-                        ref
-                            .read(misskeyProvider(account))
-                            .notes
-                            .favorites
-                            .delete(
-                              NotesFavoritesDeleteRequest(
-                                noteId: targetNote.id,
-                              ),
-                            );
-
-                        Navigator.of(context).pop();
-                      } else {
-                        ref
-                            .read(misskeyProvider(account))
-                            .notes
-                            .favorites
-                            .create(
-                              NotesFavoritesCreateRequest(
-                                noteId: targetNote.id,
-                              ),
-                            );
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    title: Text(
-                      data.isFavorited
-                          ? S.of(context).deleteFavorite
-                          : S.of(context).favorite,
-                    ),
-                  );
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.attach_file),
-          title: Text(S.of(context).clip),
-          onTap: () {
-            Navigator.of(context).pop();
-
-            showModalBottomSheet<void>(
-              context: context,
-              builder: (context2) =>
-                  ClipModalSheet(account: account, noteId: targetNote.id),
-            );
-          },
-        ),
+        ],
         ListTile(
           leading: const Icon(Icons.repeat_rounded),
           title: Text(S.of(context).notesAfterRenote),
@@ -252,120 +249,122 @@ class NoteModalSheet extends ConsumerWidget {
             );
           },
         ),
-        if (baseNote.user.host == null &&
-            baseNote.user.username == account.userId &&
-            !(baseNote.text == null &&
-                baseNote.renote != null &&
-                baseNote.poll == null &&
-                baseNote.files.isEmpty)) ...[
-          if (account.i.policies.canEditNote)
+        if (account.hasToken) ...[
+          if (baseNote.user.host == null &&
+              baseNote.user.username == account.userId &&
+              !(baseNote.text == null &&
+                  baseNote.renote != null &&
+                  baseNote.poll == null &&
+                  baseNote.files.isEmpty)) ...[
+            if (account.i.policies.canEditNote)
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: Text(S.of(context).edit),
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  context.pushRoute(
+                    NoteCreateRoute(
+                      initialAccount: account,
+                      note: targetNote,
+                      noteCreationMode: NoteCreationMode.update,
+                    ),
+                  );
+                },
+              ),
             ListTile(
-              leading: const Icon(Icons.edit),
-              title: Text(S.of(context).edit),
+              leading: const Icon(Icons.delete),
+              title: Text(S.of(context).delete),
               onTap: () async {
-                Navigator.of(context).pop();
-                context.pushRoute(
-                  NoteCreateRoute(
-                    initialAccount: account,
-                    note: targetNote,
-                    noteCreationMode: NoteCreationMode.update,
-                  ),
-                );
+                if (await showDialog<bool>(
+                      context: context,
+                      builder: (context) => SimpleConfirmDialog(
+                        message: S.of(context).confirmDelete,
+                        primary: S.of(context).doDeleting,
+                        secondary: S.of(context).cancel,
+                      ),
+                    ) ==
+                    true) {
+                  await ref
+                      .read(misskeyProvider(account))
+                      .notes
+                      .delete(NotesDeleteRequest(noteId: baseNote.id));
+                  ref.read(notesProvider(account)).delete(baseNote.id);
+                  if (!context.mounted) return;
+                  Navigator.of(context).pop();
+                }
               },
             ),
-          ListTile(
-            leading: const Icon(Icons.delete),
-            title: Text(S.of(context).delete),
-            onTap: () async {
-              if (await showDialog<bool>(
-                    context: context,
-                    builder: (context) => SimpleConfirmDialog(
-                      message: S.of(context).confirmDelete,
-                      primary: S.of(context).doDeleting,
-                      secondary: S.of(context).cancel,
+            ListTile(
+              leading: const Icon(Icons.edit_outlined),
+              title: Text(S.of(context).deletedRecreate),
+              onTap: () async {
+                if (await showDialog<bool>(
+                      context: context,
+                      builder: (context) => SimpleConfirmDialog(
+                        message: S.of(context).confirmDeletedRecreate,
+                        primary: S.of(context).doDeleting,
+                        secondary: S.of(context).cancel,
+                      ),
+                    ) ==
+                    true) {
+                  await ref
+                      .read(misskeyProvider(account))
+                      .notes
+                      .delete(NotesDeleteRequest(noteId: targetNote.id));
+                  ref.read(notesProvider(account)).delete(targetNote.id);
+                  if (!context.mounted) return;
+                  Navigator.of(context).pop();
+                  context.pushRoute(
+                    NoteCreateRoute(
+                      initialAccount: account,
+                      note: targetNote,
+                      noteCreationMode: NoteCreationMode.recreate,
                     ),
-                  ) ==
-                  true) {
+                  );
+                }
+              },
+            ),
+          ],
+          if (baseNote.user.host == null &&
+              baseNote.user.username == account.userId &&
+              baseNote.renote != null &&
+              baseNote.files.isEmpty &&
+              baseNote.poll == null) ...[
+            ListTile(
+              leading: const Icon(Icons.delete),
+              title: Text(S.of(context).deleteRenote),
+              onTap: () async {
                 await ref
                     .read(misskeyProvider(account))
                     .notes
+                    // unrenote ではないらしい
                     .delete(NotesDeleteRequest(noteId: baseNote.id));
                 ref.read(notesProvider(account)).delete(baseNote.id);
                 if (!context.mounted) return;
                 Navigator.of(context).pop();
-              }
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.edit_outlined),
-            title: Text(S.of(context).deletedRecreate),
-            onTap: () async {
-              if (await showDialog<bool>(
-                    context: context,
-                    builder: (context) => SimpleConfirmDialog(
-                      message: S.of(context).confirmDeletedRecreate,
-                      primary: S.of(context).doDeleting,
-                      secondary: S.of(context).cancel,
-                    ),
-                  ) ==
-                  true) {
-                await ref
-                    .read(misskeyProvider(account))
-                    .notes
-                    .delete(NotesDeleteRequest(noteId: targetNote.id));
-                ref.read(notesProvider(account)).delete(targetNote.id);
-                if (!context.mounted) return;
+              },
+            ),
+          ],
+          if (baseNote.user.host != null ||
+              (baseNote.user.host == null &&
+                  baseNote.user.username != account.userId))
+            ListTile(
+              leading: const Icon(Icons.report),
+              title: Text(S.of(context).reportAbuse),
+              onTap: () {
                 Navigator.of(context).pop();
-                context.pushRoute(
-                  NoteCreateRoute(
-                    initialAccount: account,
-                    note: targetNote,
-                    noteCreationMode: NoteCreationMode.recreate,
+                showDialog<bool>(
+                  context: context,
+                  builder: (context) => AbuseDialog(
+                    account: account,
+                    targetUser: targetNote.user,
+                    defaultText:
+                        "Note:\nhttps://${account.host}/notes/${targetNote.id}\n-----",
                   ),
                 );
-              }
-            },
-          ),
+              },
+            ),
         ],
-        if (baseNote.user.host == null &&
-            baseNote.user.username == account.userId &&
-            baseNote.renote != null &&
-            baseNote.files.isEmpty &&
-            baseNote.poll == null) ...[
-          ListTile(
-            leading: const Icon(Icons.delete),
-            title: Text(S.of(context).deleteRenote),
-            onTap: () async {
-              await ref
-                  .read(misskeyProvider(account))
-                  .notes
-                  // unrenote ではないらしい
-                  .delete(NotesDeleteRequest(noteId: baseNote.id));
-              ref.read(notesProvider(account)).delete(baseNote.id);
-              if (!context.mounted) return;
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-        if (baseNote.user.host != null ||
-            (baseNote.user.host == null &&
-                baseNote.user.username != account.userId))
-          ListTile(
-            leading: const Icon(Icons.report),
-            title: Text(S.of(context).reportAbuse),
-            onTap: () {
-              Navigator.of(context).pop();
-              showDialog<bool>(
-                context: context,
-                builder: (context) => AbuseDialog(
-                  account: account,
-                  targetUser: targetNote.user,
-                  defaultText:
-                      "Note:\nhttps://${account.host}/notes/${targetNote.id}\n-----",
-                ),
-              );
-            },
-          ),
       ],
     );
   }

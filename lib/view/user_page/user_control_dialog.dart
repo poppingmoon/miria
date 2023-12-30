@@ -8,6 +8,7 @@ import 'package:miria/model/account.dart';
 import 'package:miria/model/note_search_condition.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
+import 'package:miria/view/common/error_detail.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/dialogs/simple_confirm_dialog.dart';
 import 'package:miria/view/user_page/antenna_modal_sheet.dart';
@@ -15,271 +16,260 @@ import 'package:miria/view/user_page/users_list_modal_sheet.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-enum UserControl {
-  createMute,
-  deleteMute,
-  createRenoteMute,
-  deleteRenoteMute,
-  createBlock,
-  deleteBlock,
-}
-
-class UserControlDialog extends ConsumerStatefulWidget {
+class UserControlDialog extends ConsumerWidget {
   final Account account;
-  final UserDetailed response;
+  final String userId;
 
   const UserControlDialog({
     super.key,
     required this.account,
-    required this.response,
+    required this.userId,
   });
 
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      UserControlDialogState();
-}
-
-class UserControlDialogState extends ConsumerState<UserControlDialog> {
-  Future<void> addToList() async {
+  Future<void> addToList(BuildContext context, User user) async {
     return showModalBottomSheet(
       context: context,
       builder: (context) => UsersListModalSheet(
-        account: widget.account,
-        user: widget.response,
+        account: account,
+        user: user,
       ),
     );
   }
 
-  Future<void> addToAntenna() async {
+  Future<void> addToAntenna(BuildContext context, User user) async {
     return showModalBottomSheet(
       context: context,
       builder: (context) => AntennaModalSheet(
-        account: widget.account,
-        user: widget.response,
+        account: account,
+        user: user,
       ),
     );
   }
 
-  Future<Expire?> getExpire() async {
+  Future<Expire?> getExpire(BuildContext context) async {
     return await showDialog<Expire?>(
       context: context,
       builder: (context) => const ExpireSelectDialog(),
     );
   }
 
-  Future<void> renoteMuteCreate() async {
+  Future<void> renoteMuteCreate(BuildContext context, WidgetRef ref) async {
     await ref
-        .read(misskeyProvider(widget.account))
-        .renoteMute
-        .create(RenoteMuteCreateRequest(userId: widget.response.id));
-    if (!mounted) return;
-    Navigator.of(context).pop(UserControl.createRenoteMute);
+        .read(userDetailedNotifierProvider((account, userId)).notifier)
+        .createRenoteMute();
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
   }
 
-  Future<void> renoteMuteDelete() async {
+  Future<void> renoteMuteDelete(BuildContext context, WidgetRef ref) async {
     await ref
-        .read(misskeyProvider(widget.account))
-        .renoteMute
-        .delete(RenoteMuteDeleteRequest(userId: widget.response.id));
-    if (!mounted) return;
-    Navigator.of(context).pop(UserControl.deleteRenoteMute);
+        .read(userDetailedNotifierProvider((account, userId)).notifier)
+        .deleteRenoteMute();
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
   }
 
-  Future<void> muteCreate() async {
-    final expires = await getExpire();
+  Future<void> muteCreate(BuildContext context, WidgetRef ref) async {
+    final expires = await getExpire(context);
     if (expires == null) return;
-    final expiresDate = expires == Expire.indefinite
-        ? null
-        : DateTime.now().add(expires.expires!);
-    await ref.read(misskeyProvider(widget.account)).mute.create(
-          MuteCreateRequest(userId: widget.response.id, expiresAt: expiresDate),
-        );
-    if (!mounted) return;
-    Navigator.of(context).pop(UserControl.createMute);
-  }
-
-  Future<void> muteDelete() async {
     await ref
-        .read(misskeyProvider(widget.account))
-        .mute
-        .delete(MuteDeleteRequest(userId: widget.response.id));
-    if (!mounted) return;
-    Navigator.of(context).pop(UserControl.deleteMute);
+        .read(userDetailedNotifierProvider((account, userId)).notifier)
+        .createMute(expires.expires);
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
   }
 
-  Future<void> blockingCreate() async {
+  Future<void> muteDelete(BuildContext context, WidgetRef ref) async {
+    await ref
+        .read(
+          userDetailedNotifierProvider((account, userId)).notifier,
+        )
+        .deleteMute();
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
+  }
+
+  Future<void> blockingCreate(BuildContext context, WidgetRef ref) async {
     if (await SimpleConfirmDialog.show(
           context: context,
           message: S.of(context).confirmCreateBlock,
           primary: S.of(context).createBlock,
           secondary: S.of(context).cancel,
-        ) !=
-        true) {
+        ) ??
+        false) {
       return;
     }
 
     await ref
-        .read(misskeyProvider(widget.account))
-        .blocking
-        .create(BlockCreateRequest(userId: widget.response.id));
-    if (!mounted) return;
-    Navigator.of(context).pop(UserControl.createBlock);
+        .read(userDetailedNotifierProvider((account, userId)).notifier)
+        .createBlock();
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
   }
 
-  Future<void> blockingDelete() async {
+  Future<void> blockingDelete(BuildContext context, WidgetRef ref) async {
     await ref
-        .read(misskeyProvider(widget.account))
-        .blocking
-        .delete(BlockDeleteRequest(userId: widget.response.id));
-    if (!mounted) return;
-    Navigator.of(context).pop(UserControl.deleteBlock);
+        .read(userDetailedNotifierProvider((account, userId)).notifier)
+        .deleteBlock();
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
   }
 
   @override
-  Widget build(BuildContext context) {
-    final user = widget.response;
-    return ListView(
-      children: [
-        ListTile(
-          leading: const Icon(Icons.copy),
-          title: Text(S.of(context).copyName),
-          onTap: () {
-            Clipboard.setData(
-              ClipboardData(
-                text: user.name ?? user.username,
-              ),
-            );
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(S.of(context).doneCopy)),
-            );
-            Navigator.of(context).pop();
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.alternate_email),
-          title: Text(S.of(context).copyUserScreenName),
-          onTap: () {
-            Clipboard.setData(ClipboardData(text: user.acct));
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(S.of(context).doneCopy)),
-            );
-            Navigator.of(context).pop();
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.link),
-          title: Text(S.of(context).copyLinks),
-          onTap: () {
-            Clipboard.setData(
-              ClipboardData(
-                text: Uri(
-                  scheme: "https",
-                  host: widget.account.host,
-                  path: user.acct,
-                ).toString(),
-              ),
-            );
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(S.of(context).doneCopy)),
-            );
-            Navigator.of(context).pop();
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.open_in_browser),
-          title: Text(S.of(context).openBrowsers),
-          onTap: () {
-            launchUrl(
-              Uri(
-                scheme: "https",
-                host: widget.account.host,
-                path: user.acct,
-              ),
-              mode: LaunchMode.inAppWebView,
-            );
-            Navigator.of(context).pop();
-          },
-        ),
-        if (widget.response.host != null)
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userDetailedNotifierProvider((account, userId)));
+    return user.when(
+      data: (user) => ListView(
+        children: [
           ListTile(
-            leading: const Icon(Icons.rocket_launch),
-            title: Text(S.of(context).openBrowsersAsRemote),
+            leading: const Icon(Icons.copy),
+            title: Text(S.of(context).copyName),
             onTap: () {
-              final uri = widget.response.uri ?? widget.response.url;
-              if (uri == null) return;
-              launchUrl(uri, mode: LaunchMode.inAppWebView);
+              Clipboard.setData(
+                ClipboardData(
+                  text: user.name ?? user.username,
+                ),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(S.of(context).doneCopy)),
+              );
               Navigator.of(context).pop();
             },
           ),
-        ListTile(
-          leading: const Icon(Icons.open_in_new),
-          title: Text(S.of(context).openInAnotherAccount),
-          onTap: () => ref
-              .read(misskeyNoteNotifierProvider(widget.account).notifier)
-              .openUserInOtherAccount(context, user)
-              .expectFailure(context),
-        ),
-        ListTile(
-          leading: const Icon(Icons.search),
-          title: Text(S.of(context).searchNotes),
-          onTap: () => context.pushRoute(
-            SearchRoute(
-              account: widget.account,
-              initialNoteSearchCondition: NoteSearchCondition(
-                user: widget.response,
+          ListTile(
+            leading: const Icon(Icons.alternate_email),
+            title: Text(S.of(context).copyUserScreenName),
+            onTap: () {
+              Clipboard.setData(ClipboardData(text: user.acct));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(S.of(context).doneCopy)),
+              );
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.link),
+            title: Text(S.of(context).copyLinks),
+            onTap: () {
+              Clipboard.setData(
+                ClipboardData(
+                  text: Uri(
+                    scheme: "https",
+                    host: account.host,
+                    path: user.acct,
+                  ).toString(),
+                ),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(S.of(context).doneCopy)),
+              );
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.open_in_browser),
+            title: Text(S.of(context).openBrowsers),
+            onTap: () {
+              launchUrl(
+                Uri(
+                  scheme: "https",
+                  host: account.host,
+                  path: user.acct,
+                ),
+                mode: LaunchMode.inAppWebView,
+              );
+              Navigator.of(context).pop();
+            },
+          ),
+          if (user.host != null)
+            ListTile(
+              leading: const Icon(Icons.rocket_launch),
+              title: Text(S.of(context).openBrowsersAsRemote),
+              onTap: () {
+                final uri = user.uri ?? user.url;
+                if (uri == null) return;
+                launchUrl(uri, mode: LaunchMode.inAppWebView);
+                Navigator.of(context).pop();
+              },
+            ),
+          ListTile(
+            leading: const Icon(Icons.open_in_new),
+            title: Text(S.of(context).openInAnotherAccount),
+            onTap: () => ref
+                .read(misskeyNoteNotifierProvider(account).notifier)
+                .openUserInOtherAccount(context, user)
+                .expectFailure(context),
+          ),
+          ListTile(
+            leading: const Icon(Icons.search),
+            title: Text(S.of(context).searchNotes),
+            onTap: () => context.pushRoute(
+              SearchRoute(
+                account: account,
+                initialNoteSearchCondition: NoteSearchCondition(
+                  user: user,
+                ),
               ),
             ),
           ),
-        ),
-        ListTile(
-          leading: const Icon(Icons.list),
-          title: Text(S.of(context).addToList),
-          onTap: addToList,
-        ),
-        ListTile(
-          leading: const Icon(Icons.settings_input_antenna),
-          title: Text(S.of(context).addToAntenna),
-          onTap: addToAntenna,
-        ),
-        if (user is UserDetailedNotMeWithRelations) ...[
-          if (user.isRenoteMuted)
+          if (account.hasToken) ...[
             ListTile(
-              leading: const Icon(Icons.repeat_rounded),
-              title: Text(S.of(context).deleteRenoteMute),
-              onTap: renoteMuteDelete.expectFailure(context),
-            )
-          else
-            ListTile(
-              leading: const Icon(Icons.repeat_rounded),
-              title: Text(S.of(context).createRenoteMute),
-              onTap: renoteMuteCreate.expectFailure(context),
+              leading: const Icon(Icons.list),
+              title: Text(S.of(context).addToList),
+              onTap: () => addToList(context, user),
             ),
-          if (user.isMuted)
             ListTile(
-              leading: const Icon(Icons.visibility),
-              title: Text(S.of(context).deleteMute),
-              onTap: muteDelete.expectFailure(context),
-            )
-          else
-            ListTile(
-              leading: const Icon(Icons.visibility_off),
-              title: Text(S.of(context).createMute),
-              onTap: muteCreate.expectFailure(context),
+              leading: const Icon(Icons.settings_input_antenna),
+              title: Text(S.of(context).addToAntenna),
+              onTap: () => addToAntenna(context, user),
             ),
-          if (user.isBlocking)
-            ListTile(
-              leading: const Icon(Icons.block),
-              title: Text(S.of(context).deleteBlock),
-              onTap: blockingDelete.expectFailure(context),
-            )
-          else
-            ListTile(
-              leading: const Icon(Icons.block),
-              title: Text(S.of(context).createBlock),
-              onTap: blockingCreate.expectFailure(context),
-            ),
+            if (user is UserDetailedNotMeWithRelations) ...[
+              if (user.isRenoteMuted)
+                ListTile(
+                  leading: const Icon(Icons.repeat_rounded),
+                  title: Text(S.of(context).deleteRenoteMute),
+                  onTap: () =>
+                      renoteMuteDelete(context, ref).expectFailure(context),
+                )
+              else
+                ListTile(
+                  leading: const Icon(Icons.repeat_rounded),
+                  title: Text(S.of(context).createRenoteMute),
+                  onTap: () =>
+                      renoteMuteCreate(context, ref).expectFailure(context),
+                ),
+              if (user.isMuted)
+                ListTile(
+                  leading: const Icon(Icons.visibility),
+                  title: Text(S.of(context).deleteMute),
+                  onTap: () => muteDelete(context, ref).expectFailure(context),
+                )
+              else
+                ListTile(
+                  leading: const Icon(Icons.visibility_off),
+                  title: Text(S.of(context).createMute),
+                  onTap: () => muteCreate(context, ref).expectFailure(context),
+                ),
+              if (user.isBlocking)
+                ListTile(
+                  leading: const Icon(Icons.block),
+                  title: Text(S.of(context).deleteBlock),
+                  onTap: () =>
+                      blockingDelete(context, ref).expectFailure(context),
+                )
+              else
+                ListTile(
+                  leading: const Icon(Icons.block),
+                  title: Text(S.of(context).createBlock),
+                  onTap: () =>
+                      blockingCreate(context, ref).expectFailure(context),
+                ),
+            ],
+          ],
         ],
-      ],
+      ),
+      error: (e, st) => Center(child: ErrorDetail(error: e, stackTrace: st)),
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 }

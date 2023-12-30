@@ -28,7 +28,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: UserRoute(
-                userId: TestData.usersShowResponse1.id,
+                user: TestData.usersShowResponse1,
                 account: TestData.account,
               ),
             ),
@@ -45,7 +45,7 @@ void main() {
         );
       });
 
-      testWidgets("リモートユーザーの場合、リモートユーザー用のタブが表示されること", (tester) async {
+      testWidgets("リモートユーザーの場合、リモートで表示ボタンが表示されること", (tester) async {
         final mockMisskey = MockMisskey();
         final mockUser = MockMisskeyUsers();
         when(mockMisskey.users).thenReturn(mockUser);
@@ -53,6 +53,8 @@ void main() {
             .thenAnswer((_) async => TestData.usersShowResponse3AsRemoteUser);
         when(mockUser.showByName(any))
             .thenAnswer((_) async => TestData.usersShowResponse3AsLocalUser);
+        when(mockMisskey.emojis())
+            .thenAnswer((_) async => const EmojisResponse(emojis: []));
 
         final emojiRepository = MockEmojiRepository();
 
@@ -67,7 +69,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: UserRoute(
-                userId: TestData.usersShowResponse1.id,
+                user: TestData.usersShowResponse1,
                 account: TestData.account,
               ),
             ),
@@ -75,8 +77,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.text("アカウント情報（リモート）"), findsOneWidget);
-        expect(find.text("ノート（リモート）"), findsOneWidget);
+        expect(find.text("リモートで表示"), findsOneWidget);
       });
     });
 
@@ -97,7 +98,7 @@ void main() {
               ],
               child: DefaultRootWidget(
                 initialRoute: UserRoute(
-                  userId: TestData.usersShowResponse2.id,
+                  user: TestData.usersShowResponse2,
                   account: TestData.account,
                 ),
               ),
@@ -123,7 +124,7 @@ void main() {
               ],
               child: DefaultRootWidget(
                 initialRoute: UserRoute(
-                  userId: TestData.usersShowResponse2.id,
+                  user: TestData.usersShowResponse2,
                   account: TestData.account,
                 ),
               ),
@@ -149,7 +150,7 @@ void main() {
               ],
               child: DefaultRootWidget(
                 initialRoute: UserRoute(
-                  userId: TestData.usersShowResponse2.id,
+                  user: TestData.usersShowResponse2,
                   account: TestData.account,
                 ),
               ),
@@ -178,7 +179,7 @@ void main() {
               ],
               child: DefaultRootWidget(
                 initialRoute: UserRoute(
-                  userId: TestData.usersShowResponse2.id,
+                  user: TestData.usersShowResponse2,
                   account: TestData.account,
                 ),
               ),
@@ -209,7 +210,7 @@ void main() {
               ],
               child: DefaultRootWidget(
                 initialRoute: UserRoute(
-                  userId: TestData.usersShowResponse2.id,
+                  user: TestData.usersShowResponse2,
                   account: TestData.account,
                 ),
               ),
@@ -237,7 +238,7 @@ void main() {
               ],
               child: DefaultRootWidget(
                 initialRoute: UserRoute(
-                  userId: TestData.usersShowResponse2.id,
+                  user: TestData.usersShowResponse2,
                   account: TestData.account,
                 ),
               ),
@@ -262,7 +263,7 @@ void main() {
               ],
               child: DefaultRootWidget(
                 initialRoute: UserRoute(
-                  userId: TestData.usersShowResponse2.id,
+                  user: TestData.usersShowResponse2,
                   account: TestData.account,
                 ),
               ),
@@ -287,7 +288,7 @@ void main() {
               ],
               child: DefaultRootWidget(
                 initialRoute: UserRoute(
-                  userId: TestData.usersShowResponse2.id,
+                  user: TestData.usersShowResponse2,
                   account: TestData.account,
                 ),
               ),
@@ -320,7 +321,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: UserRoute(
-                userId: TestData.usersShowResponse1.id,
+                user: TestData.usersShowResponse1,
                 account: TestData.account,
               ),
             ),
@@ -367,7 +368,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: UserRoute(
-                userId: TestData.usersShowResponse2.id,
+                user: TestData.usersShowResponse2,
                 account: TestData.account,
               ),
             ),
@@ -427,7 +428,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: UserRoute(
-                userId: TestData.usersShowResponse2.id,
+                user: TestData.usersShowResponse2,
                 account: TestData.account,
               ),
             ),
@@ -466,7 +467,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: UserRoute(
-                userId: TestData.usersShowResponse2.id,
+                user: TestData.usersShowResponse2,
                 account: TestData.account,
               ),
             ),
@@ -505,7 +506,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: UserRoute(
-                userId: TestData.usersShowResponse2.id,
+                user: TestData.usersShowResponse2,
                 account: TestData.account,
               ),
             ),
@@ -547,7 +548,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: UserRoute(
-                userId: TestData.usersShowResponse2.id,
+                user: TestData.usersShowResponse2,
                 account: TestData.account,
               ),
             ),
@@ -581,7 +582,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: UserRoute(
-                userId: TestData.usersShowResponse2.id,
+                user: TestData.usersShowResponse2,
                 account: TestData.account,
               ),
             ),
@@ -644,7 +645,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: UserRoute(
-                userId: TestData.usersShowResponse2.id,
+                user: TestData.usersShowResponse2,
                 account: TestData.account,
               ),
             ),
@@ -703,7 +704,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: UserRoute(
-                userId: TestData.usersShowResponse1.id,
+                user: TestData.usersShowResponse1,
                 account: TestData.account,
               ),
             ),
@@ -761,7 +762,7 @@ void main() {
             ],
             child: DefaultRootWidget(
               initialRoute: UserRoute(
-                userId: TestData.usersShowResponse1.id,
+                user: TestData.usersShowResponse1,
                 account: TestData.account,
               ),
             ),

@@ -58,10 +58,7 @@ class AvatarIconState extends State<AvatarIcon> {
       onTap: widget.onTap ??
           () {
             context.pushRoute(
-              UserRoute(
-                userId: widget.user.id,
-                account: AccountScope.of(context),
-              ),
+              UserRoute(user: widget.user, account: AccountScope.of(context)),
             );
           },
       child: Padding(

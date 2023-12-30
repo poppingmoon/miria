@@ -38,6 +38,7 @@ import 'package:miria/state_notifier/photo_edit_page/photo_edit_state_notifier.d
 import 'package:miria/state_notifier/timeline_page/timeline_controller.dart';
 import 'package:miria/state_notifier/timeline_page/timeline_page_controller.dart';
 import 'package:miria/state_notifier/user_list_page/users_lists_notifier.dart';
+import 'package:miria/state_notifier/user_page/user_detailed_notifier.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 final dioProvider = Provider((ref) => Dio());
@@ -234,3 +235,8 @@ final drivePageNotifierProvider =
 final driveFilesAttachedNotesProvider = AsyncNotifierProvider.autoDispose
     .family<DriveFilesAttachedNotesNotifier, PaginationState<Note>,
         (Misskey, String)>(DriveFilesAttachedNotesNotifier.new);
+
+final userDetailedNotifierProvider = AsyncNotifierProvider.autoDispose
+    .family<UserDetailedNotifier, UserDetailed, (Account, String)>(
+  UserDetailedNotifier.new,
+);

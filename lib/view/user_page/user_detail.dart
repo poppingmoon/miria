@@ -11,43 +11,29 @@ import 'package:miria/router/app_router.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/avatar_icon.dart';
 import 'package:miria/view/common/constants.dart';
+import 'package:miria/view/common/error_detail.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/common/misskey_notes/mfm_text.dart';
 import 'package:miria/view/common/misskey_notes/misskey_note.dart';
 import 'package:miria/view/dialogs/simple_confirm_dialog.dart';
 import 'package:miria/view/themes/app_theme.dart';
 import 'package:miria/view/user_page/update_memo_dialog.dart';
-import 'package:miria/view/user_page/user_control_dialog.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 class UserDetail extends ConsumerStatefulWidget {
-  final Account account;
-  final Account? controlAccount;
-  final UserDetailed response;
+  final String userId;
 
-  const UserDetail({
-    super.key,
-    required this.response,
-    required this.account,
-    required this.controlAccount,
-  });
+  const UserDetail({super.key, required this.userId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => UserDetailState();
 }
 
 class UserDetailState extends ConsumerState<UserDetail> {
-  late UserDetailed response;
   bool isFollowEditing = false;
-  String memo = "";
 
   Future<void> followCreate() async {
     if (isFollowEditing) return;
-
-    final user = response;
-    if (user is! UserDetailedNotMeWithRelations) {
-      return;
-    }
 
     if (ref.read(generalSettingsRepositoryProvider).settings.isChicken) {
       final result = await SimpleConfirmDialog.show(
@@ -66,17 +52,15 @@ class UserDetailState extends ConsumerState<UserDetail> {
     });
     try {
       await ref
-          .read(misskeyProvider(AccountScope.of(context)))
-          .following
-          .create(FollowingCreateRequest(userId: user.id));
+          .read(
+            userDetailedNotifierProvider(
+              (AccountScope.of(context), widget.userId),
+            ).notifier,
+          )
+          .createFollow();
       if (!mounted) return;
-      final requiresFollowRequest = user.isLocked && !user.isFollowed;
       setState(() {
         isFollowEditing = false;
-        response = user.copyWith(
-          isFollowing: !requiresFollowRequest,
-          hasPendingFollowRequestFromYou: requiresFollowRequest,
-        );
       });
     } catch (e) {
       if (!mounted) return;
@@ -89,11 +73,6 @@ class UserDetailState extends ConsumerState<UserDetail> {
 
   Future<void> followDelete() async {
     if (isFollowEditing) return;
-
-    final user = response;
-    if (user is! UserDetailedNotMeWithRelations) {
-      return;
-    }
 
     final account = AccountScope.of(context);
     if (await SimpleConfirmDialog.show(
@@ -110,13 +89,15 @@ class UserDetailState extends ConsumerState<UserDetail> {
     });
     try {
       await ref
-          .read(misskeyProvider(account))
-          .following
-          .delete(FollowingDeleteRequest(userId: user.id));
+          .read(
+            userDetailedNotifierProvider(
+              (account, widget.userId),
+            ).notifier,
+          )
+          .deleteFollow();
       if (!mounted) return;
       setState(() {
         isFollowEditing = false;
-        response = user.copyWith(isFollowing: false);
       });
     } catch (e) {
       if (!mounted) return;
@@ -130,24 +111,20 @@ class UserDetailState extends ConsumerState<UserDetail> {
   Future<void> followRequestCancel() async {
     if (isFollowEditing) return;
 
-    final user = response;
-    if (user is! UserDetailedNotMeWithRelations) {
-      return;
-    }
-
     setState(() {
       isFollowEditing = true;
     });
     try {
       await ref
-          .read(misskeyProvider(AccountScope.of(context)))
-          .following
-          .requests
-          .cancel(FollowingRequestsCancelRequest(userId: user.id));
+          .read(
+            userDetailedNotifierProvider(
+              (AccountScope.of(context), widget.userId),
+            ).notifier,
+          )
+          .cancelFollowRequest();
       if (!mounted) return;
       setState(() {
         isFollowEditing = false;
-        response = user.copyWith(hasPendingFollowRequestFromYou: false);
       });
     } catch (e) {
       if (!mounted) return;
@@ -158,170 +135,104 @@ class UserDetailState extends ConsumerState<UserDetail> {
     }
   }
 
-  Future<void> userControl() async {
-    final result = await showModalBottomSheet<UserControl?>(
-      context: context,
-      builder: (context) => UserControlDialog(
-        account: widget.account,
-        response: response,
-      ),
-    );
-    if (result == null) return;
-
-    final user = response;
-    if (user is! UserDetailedNotMeWithRelations) {
-      return;
-    }
-
-    switch (result) {
-      case UserControl.createMute:
-        setState(() {
-          response = user.copyWith(isMuted: true);
-        });
-      case UserControl.deleteMute:
-        setState(() {
-          response = user.copyWith(isMuted: false);
-        });
-      case UserControl.createRenoteMute:
-        setState(() {
-          response = user.copyWith(isRenoteMuted: true);
-        });
-      case UserControl.deleteRenoteMute:
-        setState(() {
-          response = user.copyWith(isRenoteMuted: false);
-        });
-      case UserControl.createBlock:
-        setState(() {
-          response = user.copyWith(isBlocking: true);
-        });
-      case UserControl.deleteBlock:
-        setState(() {
-          response = user.copyWith(isBlocking: false);
-        });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    response = widget.response;
-    memo = response.memo ?? "";
-  }
-
-  Widget buildContent() {
-    final user = response;
+  Widget buildContent(UserDetailed user) {
+    final account = AccountScope.of(context);
+    final host = user.host;
+    final memo = user.memo;
 
     return Column(
       children: [
-        if (widget.controlAccount == null)
+        if (user is UserDetailedNotMeWithRelations) ...[
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (user is UserDetailedNotMeWithRelations)
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            if (user.isRenoteMuted)
-                              Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Text(S.of(context).renoteMuting),
-                                ),
-                              ),
-                            if (user.isMuted)
-                              Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Text(S.of(context).muting),
-                                ),
-                              ),
-                            if (user.isBlocking)
-                              Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Text(S.of(context).blocking),
-                                ),
-                              ),
-                            if (user.isFollowed)
-                              Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child: Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Text(S.of(context).followed),
-                                  ),
-                                ),
-                              ),
-                            if (!isFollowEditing)
-                              if (user.isFollowing)
-                                ElevatedButton(
-                                  onPressed:
-                                      followDelete.expectFailure(context),
-                                  child: Text(S.of(context).unfollow),
-                                )
-                              else if (user.hasPendingFollowRequestFromYou)
-                                ElevatedButton(
-                                  onPressed: followRequestCancel
-                                      .expectFailure(context),
-                                  child: Text(
-                                    S.of(context).followRequestPending,
-                                  ),
-                                )
-                              else
-                                OutlinedButton(
-                                  onPressed:
-                                      followCreate.expectFailure(context),
-                                  child: Text(
-                                    user.isLocked
-                                        ? S.of(context).followRequest
-                                        : S.of(context).createFollow,
-                                  ),
-                                )
-                            else
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: TextButton.icon(
-                                  onPressed: () {},
-                                  icon: SizedBox(
-                                    width: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.fontSize ??
-                                        22,
-                                    height: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.fontSize ??
-                                        22,
-                                    child: const CircularProgressIndicator(),
-                                  ),
-                                  label: Text(S.of(context).refreshing),
-                                ),
-                              ),
-                          ],
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    if (user.isRenoteMuted)
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Text(S.of(context).renoteMuting),
                         ),
                       ),
-                    ),
-                  )
-                else
-                  const Spacer(),
-                Align(
-                  child: IconButton(
-                    onPressed: userControl,
-                    icon: const Icon(Icons.more_vert),
-                  ),
+                    if (user.isMuted)
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Text(S.of(context).muting),
+                        ),
+                      ),
+                    if (user.isBlocking)
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Text(S.of(context).blocking),
+                        ),
+                      ),
+                    if (user.isFollowed)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text(S.of(context).followed),
+                          ),
+                        ),
+                      ),
+                    if (!isFollowEditing)
+                      if (user.isFollowing)
+                        ElevatedButton(
+                          onPressed: followDelete.expectFailure(context),
+                          child: Text(S.of(context).unfollow),
+                        )
+                      else if (user.hasPendingFollowRequestFromYou)
+                        ElevatedButton(
+                          onPressed: followRequestCancel.expectFailure(context),
+                          child: Text(
+                            S.of(context).followRequestPending,
+                          ),
+                        )
+                      else
+                        OutlinedButton(
+                          onPressed: followCreate.expectFailure(context),
+                          child: Text(
+                            user.isLocked
+                                ? S.of(context).followRequest
+                                : S.of(context).createFollow,
+                          ),
+                        )
+                    else
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton.icon(
+                          onPressed: () {},
+                          icon: SizedBox(
+                            width: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.fontSize ??
+                                22,
+                            height: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.fontSize ??
+                                22,
+                            child: const CircularProgressIndicator(),
+                          ),
+                          label: Text(S.of(context).refreshing),
+                        ),
+                      ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        const Divider(),
+          const Divider(),
+        ],
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 12),
           child: Column(
@@ -329,7 +240,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
               Row(
                 children: [
                   AvatarIcon(
-                    user: response,
+                    user: user,
                     height: 80,
                   ),
                   Expanded(
@@ -339,12 +250,12 @@ class UserDetailState extends ConsumerState<UserDetail> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           MfmText(
-                            mfmText: response.name ?? response.username,
+                            mfmText: user.name ?? user.username,
                             style: Theme.of(context).textTheme.headlineSmall,
-                            emoji: response.emojis,
+                            emoji: user.emojis,
                           ),
                           Text(
-                            response.acct,
+                            user.acct,
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                         ],
@@ -354,7 +265,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                 ],
               ),
               const Padding(padding: EdgeInsets.only(top: 5)),
-              if (widget.controlAccount == null)
+              if (account.hasToken)
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(10),
@@ -362,10 +273,10 @@ class UserDetailState extends ConsumerState<UserDetail> {
                       children: [
                         Expanded(
                           child: Text(
-                            memo.isNotEmpty
+                            memo != null && memo.isNotEmpty
                                 ? memo
-                                : S.of(context).memoDescription,
-                            style: memo.isNotEmpty
+                                : "なんかメモることあったら書いとき",
+                            style: memo != null && memo.isNotEmpty
                                 ? null
                                 : Theme.of(context)
                                     .inputDecorationTheme
@@ -373,20 +284,15 @@ class UserDetailState extends ConsumerState<UserDetail> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () async {
-                            final result = await showDialog<String>(
+                          onPressed: () {
+                            showDialog<void>(
                               context: context,
                               builder: (context) => UpdateMemoDialog(
-                                account: widget.account,
-                                initialMemo: memo,
-                                userId: response.id,
+                                account: account,
+                                initialMemo: memo ?? "",
+                                userId: user.id,
                               ),
                             );
-                            if (result != null) {
-                              setState(() {
-                                memo = result;
-                              });
-                            }
                           },
                           icon: const Icon(Icons.edit),
                         ),
@@ -399,7 +305,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                 spacing: 5,
                 runSpacing: 5,
                 children: [
-                  for (final role in response.roles ?? <UserRole>[])
+                  for (final role in user.roles ?? <UserRole>[])
                     Container(
                       decoration: BoxDecoration(
                         border:
@@ -411,7 +317,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                 ],
               ),
               const Padding(padding: EdgeInsets.only(top: 5)),
-              if (response.host != null)
+              if (host != null)
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
@@ -424,17 +330,54 @@ class UserDetailState extends ConsumerState<UserDetail> {
                             Text(S.of(context).remoteUserCaution),
                           ],
                         ),
-                        GestureDetector(
-                          onTap: () => context.pushRoute(
-                            FederationRoute(
-                              account: AccountScope.of(context),
-                              host: response.host!,
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () => context.pushRoute(
+                                FederationRoute(
+                                  account: account,
+                                  host: host,
+                                ),
+                              ),
+                              child: Text(
+                                S.of(context).showServerInformation,
+                                style: AppTheme.of(context).linkStyle,
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            S.of(context).showServerInformation,
-                            style: AppTheme.of(context).linkStyle,
-                          ),
+                            FutureBuilder(
+                              future: Future(() async {
+                                // 絵文字を取得することでソフトウェアの判定を行う
+                                await ref
+                                    .read(
+                                      emojiRepositoryProvider(
+                                        Account.demoAccount(host, null),
+                                      ),
+                                    )
+                                    .loadFromSourceIfNeed();
+                                return true;
+                              }),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return TextButton(
+                                    onPressed: () => ref
+                                        .read(
+                                          misskeyNoteNotifierProvider(account)
+                                              .notifier,
+                                        )
+                                        .navigateToUserPage(
+                                          context,
+                                          user,
+                                          Account.demoAccount(host, null),
+                                        )
+                                        .expectFailure(context),
+                                    child: const Text("リモートで表示"),
+                                  );
+                                } else {
+                                  return const SizedBox.shrink();
+                                }
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -442,8 +385,8 @@ class UserDetailState extends ConsumerState<UserDetail> {
                 ),
               Align(
                 child: MfmText(
-                  mfmText: response.description ?? "",
-                  emoji: response.emojis,
+                  mfmText: user.description ?? "",
+                  emoji: user.emojis,
                 ),
               ),
               const Padding(padding: EdgeInsets.only(top: 20)),
@@ -461,7 +404,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      TableCell(child: Text(response.location ?? "")),
+                      TableCell(child: Text(user.location ?? "")),
                     ],
                   ),
                   TableRow(
@@ -473,7 +416,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                         ),
                       ),
                       TableCell(
-                        child: Text(response.createdAt.format(context)),
+                        child: Text(user.createdAt.format(context)),
                       ), //FIXME
                     ],
                   ),
@@ -486,33 +429,33 @@ class UserDetailState extends ConsumerState<UserDetail> {
                         ),
                       ),
                       TableCell(
-                        child: Text(response.birthday?.format(context) ?? ""),
+                        child: Text(user.birthday?.format(context) ?? ""),
                       ),
                     ],
                   ),
                 ],
               ),
               const Padding(padding: EdgeInsets.only(top: 20)),
-              if (response.fields?.isNotEmpty == true) ...[
+              if (user.fields?.isNotEmpty == true) ...[
                 Table(
                   columnWidths: const {
                     1: FlexColumnWidth(2),
                     2: FlexColumnWidth(3),
                   },
                   children: [
-                    for (final field in response.fields ?? <UserField>[])
+                    for (final field in user.fields ?? <UserField>[])
                       TableRow(
                         children: [
                           TableCell(
                             child: MfmText(
                               mfmText: field.name,
-                              emoji: response.emojis,
+                              emoji: user.emojis,
                             ),
                           ),
                           TableCell(
                             child: MfmText(
                               mfmText: field.value,
-                              emoji: response.emojis,
+                              emoji: user.emojis,
                             ),
                           ),
                         ],
@@ -527,7 +470,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                   Column(
                     children: [
                       Text(
-                        response.notesCount.format(),
+                        user.notesCount.format(),
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       Text(
@@ -536,48 +479,46 @@ class UserDetailState extends ConsumerState<UserDetail> {
                       ),
                     ],
                   ),
-                  if (widget.response.isFollowingVisibleForMe)
-                    InkWell(
-                      onTap: () => context.pushRoute(
-                        UserFolloweeRoute(
-                          userId: response.id,
-                          account: AccountScope.of(context),
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            response.followingCount.format(),
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          Text(
-                            S.of(context).follow,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ],
+                  InkWell(
+                    onTap: () => context.pushRoute(
+                      UserFolloweeRoute(
+                        userId: user.id,
+                        account: AccountScope.of(context),
                       ),
                     ),
-                  if (widget.response.isFollowersVisibleForMe)
-                    InkWell(
-                      onTap: () => context.pushRoute(
-                        UserFollowerRoute(
-                          userId: response.id,
-                          account: AccountScope.of(context),
+                    child: Column(
+                      children: [
+                        Text(
+                          user.followingCount.format(),
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            response.followersCount.format(),
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          Text(
-                            S.of(context).follower,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ],
+                        Text(
+                          S.of(context).follow,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => context.pushRoute(
+                      UserFollowerRoute(
+                        userId: user.id,
+                        account: AccountScope.of(context),
                       ),
                     ),
+                    child: Column(
+                      children: [
+                        Text(
+                          user.followersCount.format(),
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Text(
+                          S.of(context).follower,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -589,35 +530,41 @@ class UserDetailState extends ConsumerState<UserDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return BirthdayConfetti(
-      response: widget.response,
-      child: Column(
-        children: [
-          if (response.bannerUrl != null)
-            Image.network(response.bannerUrl.toString()),
-          Align(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 800),
-              child: buildContent(),
-            ),
+    final account = AccountScope.of(context);
+    final user =
+        ref.watch(userDetailedNotifierProvider((account, widget.userId)));
+    return user.when(
+      data: (user) => SingleChildScrollView(
+        child: BirthdayConfetti(
+          response: user,
+          child: Column(
+            children: [
+              if (user.bannerUrl != null)
+                Image.network(user.bannerUrl.toString()),
+              Align(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 800),
+                  child: buildContent(user),
+                ),
+              ),
+              const Padding(padding: EdgeInsets.only(top: 20)),
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    for (final note in user.pinnedNotes ?? <Note>[])
+                      MisskeyNote(note: note),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const Padding(padding: EdgeInsets.only(top: 20)),
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                for (final note in response.pinnedNotes ?? <Note>[])
-                  MisskeyNote(
-                    note: note,
-                    loginAs: widget.controlAccount,
-                  ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
+      error: (e, st) => Center(child: ErrorDetail(error: e, stackTrace: st)),
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 }

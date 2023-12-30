@@ -418,7 +418,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: UserPage(
           key: args.key,
-          userId: args.userId,
+          user: args.user,
           account: args.account,
         ),
       );
@@ -1919,14 +1919,14 @@ class UserFollowerRouteArgs {
 class UserRoute extends PageRouteInfo<UserRouteArgs> {
   UserRoute({
     Key? key,
-    required String userId,
+    required User user,
     required Account account,
     List<PageRouteInfo>? children,
   }) : super(
           UserRoute.name,
           args: UserRouteArgs(
             key: key,
-            userId: userId,
+            user: user,
             account: account,
           ),
           initialChildren: children,
@@ -1940,19 +1940,19 @@ class UserRoute extends PageRouteInfo<UserRouteArgs> {
 class UserRouteArgs {
   const UserRouteArgs({
     this.key,
-    required this.userId,
+    required this.user,
     required this.account,
   });
 
   final Key? key;
 
-  final String userId;
+  final User user;
 
   final Account account;
 
   @override
   String toString() {
-    return 'UserRouteArgs{key: $key, userId: $userId, account: $account}';
+    return 'UserRouteArgs{key: $key, user: $user, account: $account}';
   }
 }
 
