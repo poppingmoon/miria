@@ -19,7 +19,7 @@ class UserListItem extends ConsumerWidget {
     return InkWell(
       onTap: onTap ??
           () => context.pushRoute(
-                UserRoute(userId: user.id, account: AccountScope.of(context)),
+                UserRoute(user: user, account: AccountScope.of(context)),
               ),
       child: Padding(
         padding: const EdgeInsets.all(10),
