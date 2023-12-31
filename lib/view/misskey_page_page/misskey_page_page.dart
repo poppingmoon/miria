@@ -256,11 +256,12 @@ class PageLikeButtonState extends ConsumerState<PageLikeButton> {
 
   @override
   Widget build(BuildContext context) {
+    final account = AccountScope.of(context);
     if (liked) {
       return ElevatedButton.icon(
         onPressed: () async {
           await ref
-              .read(misskeyProvider(AccountScope.of(context)))
+              .read(misskeyProvider(account))
               .pages
               .unlike(misskey.PagesUnlikeRequest(pageId: widget.pageId));
           setState(() {
@@ -278,7 +279,10 @@ class PageLikeButtonState extends ConsumerState<PageLikeButton> {
     } else {
       return OutlinedButton.icon(
         onPressed: () async {
-          if (AccountScope.of(context).i.id == widget.userId) {
+          if (!account.hasToken) {
+            return;
+          }
+          if (account.i.id == widget.userId) {
             SimpleMessageDialog.show(
               context,
               S.of(context).canNotFavoriteMyPage,
@@ -286,7 +290,7 @@ class PageLikeButtonState extends ConsumerState<PageLikeButton> {
             return;
           }
           await ref
-              .read(misskeyProvider(AccountScope.of(context)))
+              .read(misskeyProvider(account))
               .pages
               .like(misskey.PagesLikeRequest(pageId: widget.pageId));
           setState(() {
