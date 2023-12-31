@@ -42,6 +42,7 @@ class CommunityChannelView extends StatelessWidget {
                   child: Image.network(
                     channel.bannerUrl!.toString(),
                     fit: BoxFit.fitWidth,
+                    errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                   ),
                 ),
               Padding(
