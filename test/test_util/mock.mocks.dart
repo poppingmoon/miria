@@ -981,20 +981,24 @@ class MockEmojiRepository extends _i1.Mock implements _i22.EmojiRepository {
       );
 
   @override
-  _i18.Future<void> loadFromSourceIfNeed() => (super.noSuchMethod(
+  _i18.Future<void> loadFromSourceIfNeed({bool? forceSave = false}) =>
+      (super.noSuchMethod(
         Invocation.method(
           #loadFromSourceIfNeed,
           [],
+          {#forceSave: forceSave},
         ),
         returnValue: _i18.Future<void>.value(),
         returnValueForMissingStub: _i18.Future<void>.value(),
       ) as _i18.Future<void>);
 
   @override
-  _i18.Future<void> loadFromSource() => (super.noSuchMethod(
+  _i18.Future<void> loadFromSource({bool? forceSave = false}) =>
+      (super.noSuchMethod(
         Invocation.method(
           #loadFromSource,
           [],
+          {#forceSave: forceSave},
         ),
         returnValue: _i18.Future<void>.value(),
         returnValueForMissingStub: _i18.Future<void>.value(),

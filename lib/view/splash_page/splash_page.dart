@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/licenses.dart';
+import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
@@ -33,6 +34,20 @@ class SplashPageState extends ConsumerState<SplashPage> {
       await ref.read(emojiRepositoryProvider(account)).loadFromLocalCache();
       ref.read(mainStreamRepositoryProvider(account)).connect();
     }
+
+    await Future.wait(
+      ref
+          .read(tabSettingsRepositoryProvider)
+          .tabSettings
+          .where((tabSetting) => tabSetting.acct.username.isEmpty)
+          .map((tabSetting) => tabSetting.acct.host)
+          .toSet()
+          .map(
+            (host) => ref
+                .read(emojiRepositoryProvider(Account.demoAccount(host, null)))
+                .loadFromLocalCache(),
+          ),
+    );
 
     if (_isFirst) {
       if (Platform.isAndroid || Platform.isIOS) {
