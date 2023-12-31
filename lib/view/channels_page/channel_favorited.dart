@@ -7,7 +7,9 @@ import 'package:miria/view/common/futable_list_builder.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 
 class ChannelFavorited extends ConsumerWidget {
-  const ChannelFavorited({super.key});
+  const ChannelFavorited({super.key, this.onChannelSelected});
+
+  final void Function(CommunityChannel channel)? onChannelSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,7 +19,12 @@ class ChannelFavorited extends ConsumerWidget {
           .read(misskeyProvider(account))
           .channels
           .myFavorite(const ChannelsMyFavoriteRequest()),
-      builder: (context, item) => CommunityChannelView(channel: item),
+      builder: (context, item) => CommunityChannelView(
+        channel: item,
+        onTap: onChannelSelected != null
+            ? () => onChannelSelected?.call(item)
+            : null,
+      ),
     );
   }
 }
