@@ -11,6 +11,7 @@ import 'package:miria/providers.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/tab_icon_view.dart';
 import 'package:miria/view/dialogs/simple_message_dialog.dart';
+import 'package:miria/view/login_page/misskey_server_list_dialog.dart';
 import 'package:miria/view/settings_page/tab_settings_page/antenna_select_dialog.dart';
 import 'package:miria/view/settings_page/tab_settings_page/channel_select_dialog.dart';
 import 'package:miria/view/settings_page/tab_settings_page/icon_select_dialog.dart';
@@ -31,6 +32,7 @@ class TabSettingsPage extends ConsumerStatefulWidget {
 
 class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
   late Account? selectedAccount = ref.read(accountsProvider).first;
+  TextEditingController hostController = TextEditingController();
   TabType? selectedTabType = TabType.localTimeline;
   RolesListResponse? selectedRole;
   CommunityChannel? selectedChannel;
@@ -55,7 +57,12 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
     if (tab != null) {
       final tabSetting =
           ref.read(tabSettingsRepositoryProvider).tabSettings.toList()[tab];
-      selectedAccount = ref.read(accountProvider(tabSetting.acct));
+      if (tabSetting.acct.username.isEmpty) {
+        selectedAccount = null;
+        hostController.text = tabSetting.acct.host;
+      } else {
+        selectedAccount = ref.read(accountProvider(tabSetting.acct));
+      }
       selectedTabType = tabSetting.tabType;
       final roleId = tabSetting.roleId;
       final channelId = tabSetting.channelId;
@@ -152,6 +159,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
               Text(S.of(context).account),
               DropdownButton<Account>(
                 items: [
+                  const DropdownMenuItem(child: Text("なし")),
                   for (final account in accounts)
                     DropdownMenuItem(
                       value: account,
@@ -161,9 +169,11 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                 onChanged: (value) {
                   setState(() {
                     selectedAccount = value;
+                    selectedTabType = null;
                     selectedAntenna = null;
                     selectedUserList = null;
                     selectedChannel = null;
+                    nameController.clear();
                     if (selectedIcon?.customEmojiName != null) {
                       selectedIcon = null;
                     }
@@ -171,11 +181,39 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                 },
                 value: selectedAccount,
               ),
+              if (selectedAccount == null) ...[
+                const Padding(padding: EdgeInsets.all(10)),
+                Text(S.of(context).server),
+                TextField(
+                  controller: hostController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.dns),
+                    suffixIcon: IconButton(
+                      onPressed: () async {
+                        final url = await showDialog<String?>(
+                          context: context,
+                          builder: (context) => const MisskeyServerListDialog(),
+                        );
+                        if (url != null && url.isNotEmpty) {
+                          hostController.text = url;
+                        }
+                      },
+                      icon: const Icon(Icons.search),
+                    ),
+                  ),
+                ),
+              ],
               const Padding(padding: EdgeInsets.all(10)),
               Text(S.of(context).tabType),
               DropdownButton<TabType>(
                 items: [
-                  for (final tabType in TabType.values)
+                  for (final tabType in TabType.values.where(
+                    (tabType) =>
+                        selectedAccount != null ||
+                        tabType == TabType.localTimeline ||
+                        tabType == TabType.globalTimeline ||
+                        tabType == TabType.channel,
+                  ))
                     DropdownMenuItem(
                       value: tabType,
                       child: Text(tabType.displayName(context)),
@@ -221,13 +259,15 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                     Expanded(child: Text(selectedChannel?.name ?? "")),
                     IconButton(
                       onPressed: () async {
-                        final selected = selectedAccount;
-                        if (selected == null) return;
+                        final account = selectedAccount;
+                        final host = hostController.text;
+                        if (account == null && host.isEmpty) return;
 
                         selectedChannel = await showDialog<CommunityChannel>(
                           context: context,
-                          builder: (context) =>
-                              ChannelSelectDialog(account: selected),
+                          builder: (context) => ChannelSelectDialog(
+                            account: account ?? Account.demoAccount(host, null),
+                          ),
                         );
                         setState(() {
                           nameController.text =
@@ -300,10 +340,12 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
               Row(
                 children: [
                   Expanded(
-                    child: selectedAccount == null
+                    child: selectedAccount == null &&
+                            hostController.text.isEmpty
                         ? Container()
                         : AccountScope(
-                            account: selectedAccount!,
+                            account: selectedAccount ??
+                                Account.demoAccount(hostController.text, null),
                             child: SizedBox(
                               height: 32,
                               child: TabIconView(
@@ -315,11 +357,21 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                   ),
                   IconButton(
                     onPressed: () async {
-                      if (selectedAccount == null) return;
+                      final host = hostController.text;
+                      final demoAccount = Account.demoAccount(host, null);
+                      if (selectedAccount == null) {
+                        if (host.isEmpty) {
+                          return;
+                        }
+                        ref
+                            .read(emojiRepositoryProvider(demoAccount))
+                            .loadFromSourceIfNeed(forceSave: true);
+                      }
+                      if (!mounted) return;
                       selectedIcon = await showDialog<TabIcon>(
                         context: context,
                         builder: (context) => IconSelectDialog(
-                          account: selectedAccount!,
+                          account: selectedAccount ?? demoAccount,
                         ),
                       );
                       setState(() {});
@@ -369,7 +421,8 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                 child: ElevatedButton(
                   onPressed: () async {
                     final account = selectedAccount;
-                    if (account == null) {
+                    final host = hostController.text;
+                    if (account == null && host.isEmpty) {
                       SimpleMessageDialog.show(
                         context,
                         S.of(context).pleaseSelectAccount,
@@ -436,7 +489,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                       icon: icon,
                       tabType: tabType,
                       name: nameController.text,
-                      acct: account.acct,
+                      acct: (account ?? Account.demoAccount(host, null)).acct,
                       roleId: selectedRole?.id,
                       channelId: selectedChannel?.id,
                       listId: selectedUserList?.id,

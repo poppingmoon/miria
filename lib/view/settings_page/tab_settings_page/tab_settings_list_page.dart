@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/model/account.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
@@ -105,7 +106,9 @@ class TabSettingsListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final account = ref.watch(accountProvider(tabSetting.acct));
+    final account = tabSetting.acct.username.isEmpty
+        ? Account.demoAccount(tabSetting.acct.host, null)
+        : ref.watch(accountProvider(tabSetting.acct));
     return ListTile(
       leading: AccountScope(
         account: account,
@@ -113,7 +116,7 @@ class TabSettingsListItem extends ConsumerWidget {
       ),
       title: Text(tabSetting.name ?? tabSetting.tabType.displayName(context)),
       subtitle: Text(
-        "${tabSetting.tabType.displayName(context)} / ${tabSetting.acct}",
+        "${tabSetting.tabType.displayName(context)} / ${tabSetting.acct.username.isEmpty ? tabSetting.acct.host : tabSetting.acct}",
       ),
       trailing: const Icon(Icons.drag_handle),
       onTap: () => context.pushRoute(TabSettingsRoute(tabIndex: index)),
