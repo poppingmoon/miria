@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/note_extension.dart';
+import 'package:miria/model/account.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/providers.dart';
@@ -37,7 +38,9 @@ final _subscribeNoteProvider =
     timelineRepository.preserveUnsubscribe(note);
   });
 
-  final account = ref.read(accountProvider(tabSetting.acct));
+  final account = tabSetting.acct.username.isEmpty
+      ? Account.demoAccount(tabSetting.acct.host, null)
+      : ref.watch(accountProvider(tabSetting.acct));
   return ref.watch(
     notesProvider(account).select(
       (noteRepository) => noteRepository.notes[note.id],

@@ -37,7 +37,9 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
 
   TabSetting get _tabSetting => arg;
 
-  Account get _account => ref.read(accountProvider(_tabSetting.acct));
+  Account get _account => _tabSetting.acct.username.isEmpty
+      ? Account.demoAccount(_tabSetting.acct.host, null)
+      : ref.read(accountProvider(_tabSetting.acct));
 
   Misskey get _misskey => ref.read(misskeyProvider(_account));
 
@@ -235,7 +237,9 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           .loadFromSourceIfNeed(_tabSetting.acct);
       await Future.wait([
         ref.read(mainStreamRepositoryProvider(_account)).reconnect(),
-        ref.read(emojiRepositoryProvider(_account)).loadFromSourceIfNeed(),
+        ref
+            .read(emojiRepositoryProvider(_account))
+            .loadFromSourceIfNeed(forceSave: true),
         if (state.olderNotes.isEmpty)
           downDirectionLoad()
         else

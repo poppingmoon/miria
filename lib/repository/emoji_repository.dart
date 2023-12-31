@@ -13,8 +13,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class EmojiRepository {
   List<EmojiRepositoryData>? emoji;
-  Future<void> loadFromSourceIfNeed();
-  Future<void> loadFromSource();
+  Future<void> loadFromSourceIfNeed({bool forceSave = false});
+  Future<void> loadFromSource({bool forceSave = false});
 
   Future<void> loadFromLocalCache();
   Future<List<MisskeyEmojiData>> searchEmojis(String name, {int limit = 30});
@@ -71,11 +71,11 @@ class EmojiRepositoryImpl extends EmojiRepository {
   }
 
   @override
-  Future<void> loadFromSource() async {
+  Future<void> loadFromSource({bool forceSave = false}) async {
     final serverFetchData = await misskey.emojis();
     await _setEmojiData(serverFetchData);
 
-    if (account.token != null) {
+    if (forceSave || account.token != null) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(
         "emojis@${account.host}",
@@ -91,18 +91,18 @@ class EmojiRepositoryImpl extends EmojiRepository {
   }
 
   @override
-  Future<void> loadFromSourceIfNeed() async {
+  Future<void> loadFromSourceIfNeed({bool forceSave = false}) async {
     final settings = accountSettingsRepository.fromAccount(account);
     final latestUpdated = settings.latestEmojiCached;
     switch (settings.emojiCacheStrategy) {
       case CacheStrategy.whenTabChange:
-        await loadFromSource();
+        await loadFromSource(forceSave: forceSave);
       case CacheStrategy.whenLaunch:
         if (thisLaunchLoaded) return;
-        await loadFromSource();
+        await loadFromSource(forceSave: forceSave);
       case CacheStrategy.whenOneDay:
         if (latestUpdated == null || latestUpdated.day != DateTime.now().day) {
-          await loadFromSource();
+          await loadFromSource(forceSave: forceSave);
         }
     }
   }

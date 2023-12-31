@@ -20,8 +20,8 @@ class ChannelSelectDialog extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.8,
         height: MediaQuery.of(context).size.height * 0.8,
         child: DefaultTabController(
-          length: 4,
-          initialIndex: 2,
+          length: 2 + (account.hasToken ? 2 : 0),
+          initialIndex: account.hasToken ? 2 : 0,
           child: Column(
             children: [
               Padding(
@@ -36,8 +36,10 @@ class ChannelSelectDialog extends StatelessWidget {
                       tabs: [
                         Tab(text: S.of(context).search),
                         Tab(text: S.of(context).trend),
-                        Tab(text: S.of(context).favorite),
-                        Tab(text: S.of(context).following),
+                        if (account.hasToken) ...[
+                          Tab(text: S.of(context).favorite),
+                          Tab(text: S.of(context).following),
+                        ],
                       ],
                       isScrollable: true,
                       tabAlignment: TabAlignment.center,
@@ -64,20 +66,22 @@ class ChannelSelectDialog extends StatelessWidget {
                               Navigator.of(context).pop(channel),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: ChannelFavorited(
-                          onChannelSelected: (channel) =>
-                              Navigator.of(context).pop(channel),
+                      if (account.hasToken) ...[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: ChannelFavorited(
+                            onChannelSelected: (channel) =>
+                                Navigator.of(context).pop(channel),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: ChannelFollowed(
-                          onChannelSelected: (channel) =>
-                              Navigator.of(context).pop(channel),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: ChannelFollowed(
+                            onChannelSelected: (channel) =>
+                                Navigator.of(context).pop(channel),
+                          ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ),

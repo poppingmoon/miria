@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/model/account.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/model/tab_type.dart';
@@ -58,13 +59,16 @@ class TimelinePage extends ConsumerWidget {
                     .changePage,
                 itemBuilder: (_, index) {
                   final tabSetting = tabSettings[index];
-                  final account = ref.watch(accountProvider(tabSetting.acct));
+                  final account = tabSetting.acct.username.isEmpty
+                      ? Account.demoAccount(tabSetting.acct.host, null)
+                      : ref.watch(accountProvider(tabSetting.acct));
                   return AccountScope(
                     account: account,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        BannerArea(tabSetting: tabSetting),
+                        if (account.hasToken)
+                          BannerArea(tabSetting: tabSetting),
                         Expanded(
                           child: RefreshIndicator(
                             onRefresh: ref
@@ -80,42 +84,43 @@ class TimelinePage extends ConsumerWidget {
                 },
               ),
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: Focus(
-                    onKeyEvent: (node, event) {
-                      if (event is KeyDownEvent) {
-                        if (event.logicalKey == LogicalKeyboardKey.enter &&
-                            RawKeyboard.instance.keysPressed
-                                .contains(LogicalKeyboardKey.controlLeft)) {
-                          ref
-                              .read(timelinePageControllerProvider.notifier)
-                              .note(context)
-                              .expectFailure(context);
-                          return KeyEventResult.handled;
+            if (page.tabSetting.acct.username.isNotEmpty)
+              Row(
+                children: [
+                  Expanded(
+                    child: Focus(
+                      onKeyEvent: (node, event) {
+                        if (event is KeyDownEvent) {
+                          if (event.logicalKey == LogicalKeyboardKey.enter &&
+                              RawKeyboard.instance.keysPressed
+                                  .contains(LogicalKeyboardKey.controlLeft)) {
+                            ref
+                                .read(timelinePageControllerProvider.notifier)
+                                .note(context)
+                                .expectFailure(context);
+                            return KeyEventResult.handled;
+                          }
                         }
-                      }
-                      return KeyEventResult.ignored;
-                    },
-                    child: const TimelineNoteField(),
+                        return KeyEventResult.ignored;
+                      },
+                      child: const TimelineNoteField(),
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () => ref
-                      .read(timelinePageControllerProvider.notifier)
-                      .note(context)
-                      .expectFailure(context),
-                  icon: const Icon(Icons.edit),
-                ),
-                IconButton(
-                  onPressed: () => ref
-                      .read(timelinePageControllerProvider.notifier)
-                      .noteCreateRoute(context),
-                  icon: const Icon(Icons.keyboard_arrow_right),
-                ),
-              ],
-            ),
+                  IconButton(
+                    onPressed: () => ref
+                        .read(timelinePageControllerProvider.notifier)
+                        .note(context)
+                        .expectFailure(context),
+                    icon: const Icon(Icons.edit),
+                  ),
+                  IconButton(
+                    onPressed: () => ref
+                        .read(timelinePageControllerProvider.notifier)
+                        .noteCreateRoute(context),
+                    icon: const Icon(Icons.keyboard_arrow_right),
+                  ),
+                ],
+              ),
             if (tabPosition == TabPosition.bottom &&
                 !ref.watch(timelineFocusNode).hasFocus)
               TimelineAppBar(scaffoldKey: scaffoldKey),
@@ -141,7 +146,9 @@ class TimelineAppBar extends ConsumerWidget {
       tabSettingsRepositoryProvider.select((repo) => repo.tabSettings.toList()),
     );
     final page = ref.watch(timelinePageControllerProvider);
-    final account = ref.watch(accountProvider(page.tabSetting.acct));
+    final account = page.tabSetting.acct.username.isEmpty
+        ? Account.demoAccount(page.tabSetting.acct.host, null)
+        : ref.watch(accountProvider(page.tabSetting.acct));
 
     return AppBar(
       title: SingleChildScrollView(
@@ -152,7 +159,9 @@ class TimelineAppBar extends ConsumerWidget {
                 (index, tabSetting) => Builder(
                   builder: (context) {
                     final isCurrentTab = tabSetting == page.tabSetting;
-                    final account = ref.watch(accountProvider(tabSetting.acct));
+                    final account = tabSetting.acct.username.isEmpty
+                        ? Account.demoAccount(tabSetting.acct.host, null)
+                        : ref.watch(accountProvider(tabSetting.acct));
 
                     return Ink(
                       color: isCurrentTab
@@ -182,10 +191,11 @@ class TimelineAppBar extends ConsumerWidget {
         ),
       ),
       actions: [
-        AccountScope(
-          account: account,
-          child: const NotificationIcon(),
-        ),
+        if (account.hasToken)
+          AccountScope(
+            account: account,
+            child: const NotificationIcon(),
+          ),
       ],
       leading: IconButton(
         onPressed: () => scaffoldKey.currentState?.openDrawer(),
@@ -202,7 +212,9 @@ class TabHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final account = ref.watch(accountProvider(tabSetting.acct));
+    final account = tabSetting.acct.username.isEmpty
+        ? Account.demoAccount(tabSetting.acct.host, null)
+        : ref.watch(accountProvider(tabSetting.acct));
     final isLoading = ref.watch(
       timelineRepositoryProvider(tabSetting)
           .select((timeline) => timeline.isLoading),
@@ -349,10 +361,11 @@ class AnnoucementInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasUnread = ref.watch(
-      iProvider(tabSetting.acct)
-          .select((i) => i.unreadAnnouncements.isNotEmpty),
-    );
+    final hasUnread = tabSetting.acct.username.isNotEmpty &&
+        ref.watch(
+          iProvider(tabSetting.acct)
+              .select((i) => i.unreadAnnouncements.isNotEmpty),
+        );
 
     if (hasUnread) {
       return IconButton(
