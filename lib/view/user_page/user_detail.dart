@@ -275,7 +275,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                           child: Text(
                             memo != null && memo.isNotEmpty
                                 ? memo
-                                : "なんかメモることあったら書いとき",
+                                : S.of(context).memoDescription,
                             style: memo != null && memo.isNotEmpty
                                 ? null
                                 : Theme.of(context)

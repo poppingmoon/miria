@@ -61,7 +61,10 @@ class ImportExportRepository extends ChangeNotifier {
 
     if (!context.mounted) return;
     if (alreadyExists.isEmpty) {
-      await SimpleMessageDialog.show(context, "ここにMiriaの設定ファイルあれへんかったわ");
+      await SimpleMessageDialog.show(
+        context,
+        S.of(context).exportedFileNotFound,
+      );
       return;
     }
 

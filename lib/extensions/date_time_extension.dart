@@ -10,19 +10,19 @@ extension DateTimeExtension on DateTime {
   bool operator >=(DateTime other) => compareTo(other) >= 0;
 
   String format(BuildContext context) {
-    final localeName = Localizations.localeOf(context).toString();
+    final localeName = Localizations.localeOf(context).toLanguageTag();
     return DateFormat.yMMMd(localeName).format(toUtc().toLocal());
   }
 
   String formatUntilSeconds(BuildContext context) {
-    final localeName = Localizations.localeOf(context).toString();
+    final localeName = Localizations.localeOf(context).toLanguageTag();
     final formattedDate =
         DateFormat.yMMMd(localeName).add_Hms().format(toUtc().toLocal());
     return "${year < 0 ? "-" : ""}$formattedDate";
   }
 
   String formatUntilMilliSeconds(BuildContext context) {
-    final localeName = Localizations.localeOf(context).toString();
+    final localeName = Localizations.localeOf(context).toLanguageTag();
     final formattedDate = DateFormat.yMd(localeName)
         .add_Hms()
         .addPattern("S", ".")
