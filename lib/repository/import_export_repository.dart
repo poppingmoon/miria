@@ -96,14 +96,10 @@ class ImportExportRepository extends ChangeNotifier {
     final tabSettings = <TabSetting>[];
 
     for (final tabSetting in importedSettings.tabSettings) {
-      final account = accounts
-          .firstWhereOrNull((account) => tabSetting.acct == account.acct);
-
-      if (account == null) {
-        continue;
+      if (tabSetting.acct.username.isEmpty ||
+          accounts.any((account) => account.acct == tabSetting.acct)) {
+        tabSettings.add(tabSetting);
       }
-
-      tabSettings.add(tabSetting);
     }
     reader(tabSettingsRepositoryProvider).save(tabSettings);
 
