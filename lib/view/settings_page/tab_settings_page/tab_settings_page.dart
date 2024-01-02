@@ -365,7 +365,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                         }
                         ref
                             .read(emojiRepositoryProvider(demoAccount))
-                            .loadFromSourceIfNeed(forceSave: true);
+                            .loadFromSourceIfNeed();
                       }
                       if (!mounted) return;
                       selectedIcon = await showDialog<TabIcon>(

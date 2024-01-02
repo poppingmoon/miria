@@ -237,7 +237,9 @@ class TimelineRepository extends FamilyNotifier<TimelineState, TabSetting> {
           .loadFromSourceIfNeed(_tabSetting.acct);
       await Future.wait([
         ref.read(mainStreamRepositoryProvider(_account)).reconnect(),
-        ref.read(emojiRepositoryProvider(_account)).loadFromSourceIfNeed(),
+        ref
+            .read(emojiRepositoryProvider(_account))
+            .loadFromSourceIfNeed(forceSave: true),
         if (state.olderNotes.isEmpty)
           downDirectionLoad()
         else

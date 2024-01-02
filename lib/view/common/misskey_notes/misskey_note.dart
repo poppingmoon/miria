@@ -749,8 +749,8 @@ class NoteHeader1 extends ConsumerWidget {
               padding: const EdgeInsets.only(top: 2),
               child: GestureDetector(
                 onTap: () => context.pushRoute(
-                  NoteDetailRoute(
-                    note: displayNote,
+                  UserRoute(
+                    user: displayNote.user,
                     account: account,
                   ),
                 ),
