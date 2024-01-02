@@ -44,6 +44,7 @@ class MisskeyNote extends ConsumerStatefulWidget {
   final bool isForceUnvisibleRenote;
   final bool isVisibleAllReactions;
   final bool isForceVisibleLong;
+  final bool? hideAvatar;
 
   const MisskeyNote({
     super.key,
@@ -55,6 +56,7 @@ class MisskeyNote extends ConsumerStatefulWidget {
     this.isForceUnvisibleRenote = false,
     this.isVisibleAllReactions = false,
     this.isForceVisibleLong = false,
+    this.hideAvatar,
   });
 
   @override
@@ -216,6 +218,12 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
 
     final links = displayTextNodes!.extractLinks();
 
+    final hideAvatar = widget.hideAvatar ??
+        ref.watch(
+          generalSettingsRepositoryProvider
+              .select((repo) => repo.settings.hideAvatar),
+        );
+
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(
         textScaler: widget.recursive > 1
@@ -277,21 +285,23 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                     note: displayNote.reply!,
                     isDisplayBorder: false,
                     recursive: widget.recursive + 1,
+                    hideAvatar: hideAvatar,
                   ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AvatarIcon(
-                      user: displayNote.user,
-                      onTap: () => ref
-                          .read(misskeyNoteNotifierProvider(account).notifier)
-                          .navigateToUserPage(
-                            context,
-                            displayNote.user,
-                            widget.loginAs,
-                          )
-                          .expectFailure(context),
-                    ),
+                    if (!hideAvatar!)
+                      AvatarIcon(
+                        user: displayNote.user,
+                        onTap: () => ref
+                            .read(misskeyNoteNotifierProvider(account).notifier)
+                            .navigateToUserPage(
+                              context,
+                              displayNote.user,
+                              widget.loginAs,
+                            )
+                            .expectFailure(context),
+                      ),
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     Expanded(
                       child: Column(
@@ -304,11 +314,28 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                           Row(
                             children: [
                               Expanded(
-                                child: Text(
-                                  userId,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.clip,
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: GestureDetector(
+                                    onTap: () => ref
+                                        .read(
+                                          misskeyNoteNotifierProvider(account)
+                                              .notifier,
+                                        )
+                                        .navigateToUserPage(
+                                          context,
+                                          displayNote.user,
+                                          widget.loginAs,
+                                        )
+                                        .expectFailure(context),
+                                    child: Text(
+                                      userId,
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.clip,
+                                    ),
+                                  ),
                                 ),
                               ),
                               if (displayNote.user.instance != null)
@@ -478,6 +505,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                         isDisplayBorder: false,
                                         recursive: widget.recursive + 1,
                                         loginAs: widget.loginAs,
+                                        hideAvatar: hideAvatar,
                                       ),
                                     ),
                                   ),
@@ -785,9 +813,18 @@ class NoteHeader1 extends ConsumerWidget {
     return Row(
       children: [
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 2),
-            child: UserInformation(user: displayNote.user),
+          // GestureDetectorが反応する範囲を制限するためにAlignで囲む
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: GestureDetector(
+                onTap: () => ref
+                    .read(misskeyNoteNotifierProvider(account).notifier)
+                    .navigateToUserPage(context, displayNote.user, loginAs),
+                child: UserInformation(user: displayNote.user),
+              ),
+            ),
           ),
         ),
         if (displayNote.updatedAt != null)
@@ -853,24 +890,27 @@ class RenoteHeader extends ConsumerWidget {
       children: [
         const Padding(padding: EdgeInsets.only(left: 10)),
         Expanded(
-          child: GestureDetector(
-            onTap: () => ref
-                .read(misskeyNoteNotifierProvider(account).notifier)
-                .navigateToUserPage(context, note.user, loginAs)
-                .expectFailure(context),
-            child: SimpleMfmText(
-              note.user.name ?? note.user.username,
-              style: renoteTextStyle?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-              emojis: note.user.emojis,
-              suffixSpan: [
-                TextSpan(
-                  text:
-                      " が ${note.user.acct == note.renote?.user.acct ? "セルフRenote" : "Renote"}",
-                  style: renoteTextStyle,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: GestureDetector(
+              onTap: () => ref
+                  .read(misskeyNoteNotifierProvider(account).notifier)
+                  .navigateToUserPage(context, note.user, loginAs)
+                  .expectFailure(context),
+              child: SimpleMfmText(
+                note.user.name ?? note.user.username,
+                style: renoteTextStyle?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
+                emojis: note.user.emojis,
+                suffixSpan: [
+                  TextSpan(
+                    text:
+                        " が ${note.user.acct == note.renote?.user.acct ? "セルフRenote" : "Renote"}",
+                    style: renoteTextStyle,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
