@@ -598,7 +598,14 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
     MisskeyEmojiData? requestEmoji,
   }) async {
     final account = AccountScope.of(context);
-
+    if (requestEmoji != null &&
+        !ref
+            .read(generalSettingsRepositoryProvider)
+            .settings
+            .enableDirectReaction) {
+      // カスタム絵文字押下でのリアクション無効
+      return;
+    }
     // 他のサーバーからログインしている場合は他のアカウントで開く
     if (!account.hasToken) {
       ref
@@ -614,14 +621,6 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                 displayNote.user.host != null);
     if (displayNote.myReaction != null && requestEmoji != null) {
       // すでにリアクション済み
-      return;
-    }
-    if (requestEmoji != null &&
-        !ref
-            .read(generalSettingsRepositoryProvider)
-            .settings
-            .enableDirectReaction) {
-      // カスタム絵文字押下でのリアクション無効
       return;
     }
     if (requestEmoji != null && isLikeOnly) {

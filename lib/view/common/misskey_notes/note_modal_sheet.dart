@@ -112,8 +112,10 @@ class NoteModalSheet extends ConsumerWidget {
             },
           ),
         // ノートが連合なしのときは現在のアカウントと同じサーバーのアカウントが複数ある場合のみ表示する
+        // 非ログイン時は同じサーバーのアカウントが一つでもあれば表示する
         if (!targetNote.localOnly ||
-            accounts.where((e) => e.host == account.host).length > 1)
+            accounts.where((e) => e.host == account.host).length >
+                (account.hasToken ? 1 : 0))
           ListTile(
             leading: const Icon(Icons.open_in_new),
             title: Text(S.of(context).openInAnotherAccount),
