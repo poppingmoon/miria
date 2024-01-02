@@ -530,43 +530,8 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  TextButton.icon(
-                                    onPressed: () {
-                                      context.pushRoute(
-                                        NoteCreateRoute(
-                                          reply: displayNote,
-                                          initialAccount: account,
-                                        ),
-                                      );
-                                    },
-                                    style: const ButtonStyle(
-                                      padding: MaterialStatePropertyAll(
-                                        EdgeInsets.zero,
-                                      ),
-                                      minimumSize: MaterialStatePropertyAll(
-                                        Size.zero,
-                                      ),
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    label: Text(
-                                      displayNote.repliesCount == 0
-                                          ? ""
-                                          : displayNote.repliesCount.format(),
-                                    ),
-                                    icon: Icon(
-                                      Icons.reply,
-                                      size: MediaQuery.textScalerOf(context)
-                                          .scale(16),
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.color,
-                                    ),
-                                  ),
-                                  RenoteButton(
-                                    displayNote: displayNote,
-                                  ),
+                                  ReplyButton(displayNote: displayNote),
+                                  RenoteButton(displayNote: displayNote),
                                   FooterReactionButton(
                                     onPressed: () => reactionControl(
                                       ref,
