@@ -283,16 +283,7 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (!hideAvatar!)
-                        AvatarIcon(
-                          user: displayNote.user,
-                          onTap: () => context.pushRoute(
-                            UserRoute(
-                              account: account,
-                              user: displayNote.user,
-                            ),
-                          ),
-                        ),
+                      if (!hideAvatar!) AvatarIcon(user: displayNote.user),
                       const Padding(padding: EdgeInsets.only(left: 10)),
                       Expanded(
                         child: Column(
@@ -302,19 +293,23 @@ class MisskeyNoteState extends ConsumerState<MisskeyNote> {
                             Row(
                               children: [
                                 Expanded(
-                                  child: GestureDetector(
-                                    onTap: () => context.pushRoute(
-                                      UserRoute(
-                                        account: account,
-                                        user: displayNote.user,
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: GestureDetector(
+                                      onTap: () => context.pushRoute(
+                                        UserRoute(
+                                          account: account,
+                                          user: displayNote.user,
+                                        ),
                                       ),
-                                    ),
-                                    child: Text(
-                                      displayNote.user.acct,
-                                      style:
-                                          Theme.of(context).textTheme.bodySmall,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.clip,
+                                      child: Text(
+                                        displayNote.user.acct,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.clip,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -747,16 +742,20 @@ class NoteHeader1 extends ConsumerWidget {
     return Row(
       children: [
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 2),
-            child: GestureDetector(
-              onTap: () => context.pushRoute(
-                NoteDetailRoute(
-                  note: displayNote,
-                  account: account,
+          // GestureDetectorが反応する範囲を制限するためにAlignで囲む
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: GestureDetector(
+                onTap: () => context.pushRoute(
+                  NoteDetailRoute(
+                    note: displayNote,
+                    account: account,
+                  ),
                 ),
+                child: UserInformation(user: displayNote.user),
               ),
-              child: UserInformation(user: displayNote.user),
             ),
           ),
         ),
@@ -833,20 +832,23 @@ class RenoteHeader extends ConsumerWidget {
                 user: note.user,
               ),
             ),
-            child: SimpleMfmText(
-              note.user.name ?? note.user.username,
-              style: renoteTextStyle?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-              emojis: note.user.emojis,
-              suffixSpan: [
-                TextSpan(
-                  text: note.user.acct == note.renote?.user.acct
-                      ? S.of(context).selfRenotedBy
-                      : S.of(context).renotedBy,
-                  style: renoteTextStyle,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: SimpleMfmText(
+                note.user.name ?? note.user.username,
+                style: renoteTextStyle?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
+                emojis: note.user.emojis,
+                suffixSpan: [
+                  TextSpan(
+                    text: note.user.acct == note.renote?.user.acct
+                        ? S.of(context).selfRenotedBy
+                        : S.of(context).renotedBy,
+                    style: renoteTextStyle,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
