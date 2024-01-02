@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:miria/providers.dart';
-import 'package:miria/view/common/error_dialog_handler.dart';
+import 'package:miria/repository/account_repository.dart';
 import 'package:misskey_dart/misskey_dart.dart';
 import 'package:mockito/mockito.dart';
 
@@ -21,7 +21,7 @@ void main() {
 
     expect(
       () => accountRepository.openMiAuth("https://misskey.io/"),
-      throwsA(isA<SpecifiedException>()),
+      throwsA(isA<InvalidServerException>()),
     );
   });
 
@@ -35,7 +35,7 @@ void main() {
 
     expect(
       () => accountRepository.openMiAuth("sawakai.space"),
-      throwsA(isA<SpecifiedException>()),
+      throwsA(isA<ServerIsNotMisskeyException>()),
     );
     verify(
       dio.getUri<Map<String, dynamic>>(
@@ -77,7 +77,7 @@ void main() {
 
     await expectLater(
       () => accountRepository.openMiAuth("calckey.jp"),
-      throwsA(isA<SpecifiedException>()),
+      throwsA(isA<SoftwareNotCompatibleException>()),
     );
 
     verifyInOrder([
@@ -130,7 +130,7 @@ void main() {
 
     await expectLater(
       () => accountRepository.openMiAuth("misskey.dev"),
-      throwsA(isA<SpecifiedException>()),
+      throwsA(isA<SoftwareNotCompatibleException>()),
     );
   });
 }

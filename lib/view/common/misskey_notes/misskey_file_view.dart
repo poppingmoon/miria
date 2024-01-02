@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/providers.dart';
@@ -82,7 +83,7 @@ class MisskeyFileViewState extends ConsumerState<MisskeyFileView> {
               onPressed: () => setState(() {
                 isElipsed = !isElipsed;
               }),
-              child: const Text("続きを表示"),
+              child: Text(S.of(context).showMoreFiles),
             ),
         ],
       );
@@ -215,12 +216,12 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                             Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Text(
-                                  "閲覧注意",
-                                  style: TextStyle(color: Colors.white),
+                                Text(
+                                  S.of(context).sensitive,
+                                  style: const TextStyle(color: Colors.white),
                                 ),
                                 Text(
-                                  "タップして表示",
+                                  S.of(context).tapToShow,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: Theme.of(context)

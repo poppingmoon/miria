@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/extensions/date_time_extension.dart';
 import 'package:miria/providers.dart';
@@ -49,14 +50,14 @@ class FederationAnnouncementsState
                       }
                     });
                   },
-                  children: const [
+                  children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 5, right: 5),
-                      child: Text("いまの"),
+                      padding: const EdgeInsets.only(left: 5, right: 5),
+                      child: Text(S.of(context).activeAnnouncements),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 5, right: 5),
-                      child: Text("前の"),
+                      padding: const EdgeInsets.only(left: 5, right: 5),
+                      child: Text(S.of(context).inactiveAnnouncements),
                     ),
                   ],
                 ),
@@ -147,7 +148,7 @@ class AnnouncementState extends ConsumerState<Announcement> {
             children: [
               if (data.forYou == true)
                 Text(
-                  "あなた宛",
+                  S.of(context).announcementsForYou,
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium
@@ -166,7 +167,7 @@ class AnnouncementState extends ConsumerState<Announcement> {
               ),
               Align(
                 alignment: Alignment.centerRight,
-                child: Text(data.createdAt.format),
+                child: Text(data.createdAt.format(context)),
               ),
               const Padding(padding: EdgeInsets.only(top: 10)),
               MfmText(
@@ -183,9 +184,10 @@ class AnnouncementState extends ConsumerState<Announcement> {
                     if (data.needConfirmationToRead == true) {
                       final isConfirmed = await SimpleConfirmDialog.show(
                         context: context,
-                        message: "「${data.title}」の内容ちゃんと読んだか？",
-                        primary: "読んだ",
-                        secondary: "もうちょい待って",
+                        message:
+                            S.of(context).confirmAnnouncementsRead(data.title),
+                        primary: S.of(context).readAnnouncement,
+                        secondary: S.of(context).didNotReadAnnouncement,
                       );
                       if (isConfirmed != true) return;
                     }
@@ -199,7 +201,7 @@ class AnnouncementState extends ConsumerState<Announcement> {
                       data = data.copyWith(isRead: true);
                     });
                   },
-                  child: const Text("ほい"),
+                  child: Text(S.of(context).done),
                 ),
             ],
           ),

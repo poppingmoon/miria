@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
@@ -36,7 +37,7 @@ class RoleSelectDialogState extends ConsumerState<RoleSelectDialog> {
     return AccountScope(
       account: widget.account,
       child: AlertDialog(
-        title: const Text("ロール選択"),
+        title: Text(S.of(context).selectRole),
         content: SizedBox(
           width: MediaQuery.of(context).size.width * 0.8,
           height: MediaQuery.of(context).size.height * 0.8,
@@ -45,7 +46,7 @@ class RoleSelectDialogState extends ConsumerState<RoleSelectDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "ロール",
+                  S.of(context).role,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 ListView.builder(

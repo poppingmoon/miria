@@ -146,7 +146,7 @@ class MfmTextState extends ConsumerState<MfmText> {
               TextSpan(
                 style: style,
                 text:
-                    "${unixtime?.formatUntilSeconds ?? "？？？"} (${unixtime?.differenceNowDetail ?? "？？？"})",
+                    "${unixtime?.formatUntilSeconds(context) ?? "？？？"} (${unixtime?.differenceNowDetail(context) ?? "？？？"})",
               ),
             ),
           ),

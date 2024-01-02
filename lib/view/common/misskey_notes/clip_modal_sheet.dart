@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/account.dart';
 import 'package:miria/model/clip_settings.dart';
@@ -115,9 +116,9 @@ class ClipModalSheet extends ConsumerWidget {
             if (!context.mounted) return;
             final result = await SimpleConfirmDialog.show(
               context: context,
-              message: "すでにクリップに追加されたノートのようです。",
-              primary: "クリップから削除する",
-              secondary: "なにもしない",
+              message: S.of(context).alreadyAddedClip,
+              primary: S.of(context).deleteClip,
+              secondary: S.of(context).noneAction,
             );
             if (result == true) {
               await ref
@@ -159,12 +160,12 @@ class ClipModalSheet extends ConsumerWidget {
             } else {
               return ListTile(
                 leading: const Icon(Icons.add),
-                title: const Text("クリップを作成"),
+                title: Text(S.of(context).createClip),
                 onTap: () async {
                   final settings = await showDialog<ClipSettings>(
                     context: context,
-                    builder: (context) => const ClipSettingsDialog(
-                      title: Text("作成"),
+                    builder: (context) => ClipSettingsDialog(
+                      title: Text(S.of(context).create),
                     ),
                   );
                   if (!context.mounted) return;

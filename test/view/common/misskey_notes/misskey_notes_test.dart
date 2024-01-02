@@ -66,7 +66,7 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.textContaining("が Renote", findRichText: true),
+          find.textContaining("がRenote", findRichText: true),
           findsOneWidget,
         );
       });
@@ -90,7 +90,7 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.textContaining("が Renote", findRichText: true),
+          find.textContaining("がRenote", findRichText: true),
           findsNothing,
         );
       });
@@ -294,7 +294,7 @@ System.out.println("@ai uneune");
 
           await tester.pumpAndSettle();
 
-          expect(find.text("閲覧注意"), findsOneWidget);
+          expect(find.text("センシティブ"), findsOneWidget);
 
           expect(
             find.byWidgetPredicate(
@@ -304,7 +304,7 @@ System.out.println("@ai uneune");
             findsNothing,
           );
 
-          await tester.tap(find.text("閲覧注意"));
+          await tester.tap(find.text("センシティブ"));
           await tester.pumpAndSettle();
           await Future<void>.delayed(const Duration(seconds: 1));
           await tester.pumpAndSettle();

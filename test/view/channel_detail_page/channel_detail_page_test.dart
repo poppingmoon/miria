@@ -88,9 +88,9 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text("お気に入りにいれる"));
+      await tester.tap(find.text("お気に入りに入れるで"));
       await tester.pumpAndSettle();
-      expect(find.text("お気に入り中"), findsOneWidget);
+      expect(find.text("お気に入り"), findsOneWidget);
 
       verify(
         channel.favorite(
@@ -123,9 +123,9 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text("お気に入り中"));
+      await tester.tap(find.text("お気に入り"));
       await tester.pumpAndSettle();
-      expect(find.text("お気に入りにいれる"), findsOneWidget);
+      expect(find.text("お気に入りに入れるで"), findsOneWidget);
 
       verify(
         channel.unfavorite(
@@ -158,9 +158,9 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text("フォローする"));
+      await tester.tap(find.text("フォローするで"));
       await tester.pumpAndSettle();
-      expect(find.text("フォローしています"), findsOneWidget);
+      expect(find.text("フォロー中"), findsOneWidget);
 
       verify(
         channel.follow(
@@ -193,9 +193,9 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text("フォローしています"));
+      await tester.tap(find.text("フォロー中"));
       await tester.pumpAndSettle();
-      expect(find.text("フォローする"), findsOneWidget);
+      expect(find.text("フォローするで"), findsOneWidget);
 
       verify(
         channel.unfollow(

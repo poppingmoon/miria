@@ -6,8 +6,7 @@ part of 'account.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AccountImpl _$$AccountImplFromJson(Map<String, dynamic> json) =>
-    _$AccountImpl(
+_$_Account _$$_AccountFromJson(Map<String, dynamic> json) => _$_Account(
       host: json['host'] as String,
       userId: json['userId'] as String,
       token: json['token'] as String?,
@@ -17,7 +16,7 @@ _$AccountImpl _$$AccountImplFromJson(Map<String, dynamic> json) =>
           : MetaResponse.fromJson(json['meta'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$AccountImplToJson(_$AccountImpl instance) =>
+Map<String, dynamic> _$$_AccountToJson(_$_Account instance) =>
     <String, dynamic>{
       'host': instance.host,
       'userId': instance.userId,
