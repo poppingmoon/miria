@@ -381,7 +381,9 @@ class AnnoucementInfo extends ConsumerWidget {
   const AnnoucementInfo({super.key, required this.tabSetting});
 
   void announcementsRoute(BuildContext context, WidgetRef ref) {
-    final account = ref.read(accountProvider(tabSetting.acct));
+    final account = tabSetting.acct.username.isEmpty
+        ? Account.demoAccount(tabSetting.acct.host, null)
+        : ref.watch(accountProvider(tabSetting.acct));
     context.pushRoute(AnnouncementRoute(account: account));
   }
 
