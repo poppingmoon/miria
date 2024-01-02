@@ -12,6 +12,7 @@ import 'package:miria/router/app_router.dart';
 import 'package:miria/view/channel_dialog.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:miria/view/common/common_drawer.dart';
+import 'package:miria/view/common/error_detail.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/common/notification_icon.dart';
 import 'package:miria/view/common/tab_icon_view.dart';
@@ -35,10 +36,15 @@ class TimelinePage extends ConsumerWidget {
       tabSettingsRepositoryProvider.select((repo) => repo.tabSettings.toList()),
     );
     final page = ref.watch(timelinePageControllerProvider);
+    final currentTabSetting = tabSettings[page.index];
     final tabPosition = ref.watch(
       generalSettingsRepositoryProvider.select(
         (repo) => repo.settings.tabPosition,
       ),
+    );
+    final error = ref.watch(
+      timelineRepositoryProvider(currentTabSetting)
+          .select((timeline) => timeline.error),
     );
 
     return Scaffold(
@@ -49,7 +55,7 @@ class TimelinePage extends ConsumerWidget {
           children: [
             if (tabPosition == TabPosition.top)
               TimelineAppBar(scaffoldKey: scaffoldKey),
-            TabHeader(tabSetting: page.tabSetting),
+            TabHeader(tabSetting: currentTabSetting),
             Expanded(
               child: PageView.builder(
                 controller: page.pageController,
@@ -69,6 +75,11 @@ class TimelinePage extends ConsumerWidget {
                       children: [
                         if (account.hasToken)
                           BannerArea(tabSetting: tabSetting),
+                        if (error != null && page.isErrorExpanded)
+                          ErrorDetail(
+                            error: error.$1,
+                            stackTrace: error.$2,
+                          ),
                         Expanded(
                           child: RefreshIndicator(
                             onRefresh: ref
@@ -84,7 +95,7 @@ class TimelinePage extends ConsumerWidget {
                 },
               ),
             ),
-            if (page.tabSetting.acct.username.isNotEmpty)
+            if (currentTabSetting.acct.username.isNotEmpty)
               Row(
                 children: [
                   Expanded(
@@ -129,7 +140,7 @@ class TimelinePage extends ConsumerWidget {
       ),
       resizeToAvoidBottomInset: true,
       drawer: CommonDrawer(
-        initialOpenAcct: page.tabSetting.acct,
+        initialOpenAcct: currentTabSetting.acct,
       ),
     );
   }
@@ -146,9 +157,10 @@ class TimelineAppBar extends ConsumerWidget {
       tabSettingsRepositoryProvider.select((repo) => repo.tabSettings.toList()),
     );
     final page = ref.watch(timelinePageControllerProvider);
-    final account = page.tabSetting.acct.username.isEmpty
-        ? Account.demoAccount(page.tabSetting.acct.host, null)
-        : ref.watch(accountProvider(page.tabSetting.acct));
+    final currentTabSetting = tabSettings[page.index];
+    final account = currentTabSetting.acct.username.isEmpty
+        ? Account.demoAccount(currentTabSetting.acct.host, null)
+        : ref.watch(accountProvider(currentTabSetting.acct));
 
     return AppBar(
       title: SingleChildScrollView(
@@ -158,7 +170,7 @@ class TimelineAppBar extends ConsumerWidget {
               .mapIndexed(
                 (index, tabSetting) => Builder(
                   builder: (context) {
-                    final isCurrentTab = tabSetting == page.tabSetting;
+                    final isCurrentTab = tabSetting == currentTabSetting;
                     final account = tabSetting.acct.username.isEmpty
                         ? Account.demoAccount(tabSetting.acct.host, null)
                         : ref.watch(accountProvider(tabSetting.acct));
@@ -215,10 +227,12 @@ class TabHeader extends ConsumerWidget {
     final account = tabSetting.acct.username.isEmpty
         ? Account.demoAccount(tabSetting.acct.host, null)
         : ref.watch(accountProvider(tabSetting.acct));
-    final isLoading = ref.watch(
+    final page = ref.watch(timelinePageControllerProvider);
+    final (isLoading, hasError) = ref.watch(
       timelineRepositoryProvider(tabSetting)
-          .select((timeline) => timeline.isLoading),
+          .select((timeline) => (timeline.isLoading, timeline.error != null)),
     );
+
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border(
@@ -227,6 +241,18 @@ class TabHeader extends ConsumerWidget {
       ),
       child: Row(
         children: [
+          if (hasError)
+            IconButton(
+              onPressed: page.isErrorExpanded
+                  ? ref.read(timelinePageControllerProvider.notifier).foldError
+                  : ref
+                      .read(timelinePageControllerProvider.notifier)
+                      .expandError,
+              tooltip: "エラー",
+              icon: page.isErrorExpanded
+                  ? const Icon(Icons.error)
+                  : const Icon(Icons.error_outline),
+            ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(

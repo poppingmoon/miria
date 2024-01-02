@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miria/model/general_settings.dart';
 import 'package:miria/model/tab_setting.dart';
 import 'package:miria/providers.dart';
-import 'package:miria/view/common/error_detail.dart';
 import 'package:miria/view/common/error_dialog_handler.dart';
 import 'package:miria/view/timeline_page/note_wrapper.dart';
 
@@ -28,11 +27,6 @@ class MisskeyTimeline extends ConsumerWidget {
           const Padding(
             padding: EdgeInsets.only(top: 10),
             child: Center(child: CircularProgressIndicator()),
-          ),
-        if (timeline.error != null)
-          ErrorDetail(
-            error: timeline.error?.$1,
-            stackTrace: timeline.error?.$2,
           ),
         Expanded(
           child: Padding(

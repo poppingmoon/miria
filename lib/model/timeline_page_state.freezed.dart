@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$TimelinePageState {
   PageController get pageController => throw _privateConstructorUsedError;
   int get index => throw _privateConstructorUsedError;
-  TabSetting get tabSetting => throw _privateConstructorUsedError;
+  bool get isErrorExpanded => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TimelinePageStateCopyWith<TimelinePageState> get copyWith =>
@@ -31,9 +31,7 @@ abstract class $TimelinePageStateCopyWith<$Res> {
           TimelinePageState value, $Res Function(TimelinePageState) then) =
       _$TimelinePageStateCopyWithImpl<$Res, TimelinePageState>;
   @useResult
-  $Res call({PageController pageController, int index, TabSetting tabSetting});
-
-  $TabSettingCopyWith<$Res> get tabSetting;
+  $Res call({PageController pageController, int index, bool isErrorExpanded});
 }
 
 /// @nodoc
@@ -51,7 +49,7 @@ class _$TimelinePageStateCopyWithImpl<$Res, $Val extends TimelinePageState>
   $Res call({
     Object? pageController = null,
     Object? index = null,
-    Object? tabSetting = null,
+    Object? isErrorExpanded = null,
   }) {
     return _then(_value.copyWith(
       pageController: null == pageController
@@ -62,19 +60,11 @@ class _$TimelinePageStateCopyWithImpl<$Res, $Val extends TimelinePageState>
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
               as int,
-      tabSetting: null == tabSetting
-          ? _value.tabSetting
-          : tabSetting // ignore: cast_nullable_to_non_nullable
-              as TabSetting,
+      isErrorExpanded: null == isErrorExpanded
+          ? _value.isErrorExpanded
+          : isErrorExpanded // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $TabSettingCopyWith<$Res> get tabSetting {
-    return $TabSettingCopyWith<$Res>(_value.tabSetting, (value) {
-      return _then(_value.copyWith(tabSetting: value) as $Val);
-    });
   }
 }
 
@@ -86,10 +76,7 @@ abstract class _$$TimelinePageStateImplCopyWith<$Res>
       __$$TimelinePageStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({PageController pageController, int index, TabSetting tabSetting});
-
-  @override
-  $TabSettingCopyWith<$Res> get tabSetting;
+  $Res call({PageController pageController, int index, bool isErrorExpanded});
 }
 
 /// @nodoc
@@ -105,7 +92,7 @@ class __$$TimelinePageStateImplCopyWithImpl<$Res>
   $Res call({
     Object? pageController = null,
     Object? index = null,
-    Object? tabSetting = null,
+    Object? isErrorExpanded = null,
   }) {
     return _then(_$TimelinePageStateImpl(
       pageController: null == pageController
@@ -116,32 +103,34 @@ class __$$TimelinePageStateImplCopyWithImpl<$Res>
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
               as int,
-      tabSetting: null == tabSetting
-          ? _value.tabSetting
-          : tabSetting // ignore: cast_nullable_to_non_nullable
-              as TabSetting,
+      isErrorExpanded: null == isErrorExpanded
+          ? _value.isErrorExpanded
+          : isErrorExpanded // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
 
 /// @nodoc
 
-class _$TimelinePageStateImpl implements _TimelinePageState {
+class _$TimelinePageStateImpl extends _TimelinePageState {
   const _$TimelinePageStateImpl(
       {required this.pageController,
       required this.index,
-      required this.tabSetting});
+      this.isErrorExpanded = false})
+      : super._();
 
   @override
   final PageController pageController;
   @override
   final int index;
   @override
-  final TabSetting tabSetting;
+  @JsonKey()
+  final bool isErrorExpanded;
 
   @override
   String toString() {
-    return 'TimelinePageState(pageController: $pageController, index: $index, tabSetting: $tabSetting)';
+    return 'TimelinePageState(pageController: $pageController, index: $index, isErrorExpanded: $isErrorExpanded)';
   }
 
   @override
@@ -152,13 +141,13 @@ class _$TimelinePageStateImpl implements _TimelinePageState {
             (identical(other.pageController, pageController) ||
                 other.pageController == pageController) &&
             (identical(other.index, index) || other.index == index) &&
-            (identical(other.tabSetting, tabSetting) ||
-                other.tabSetting == tabSetting));
+            (identical(other.isErrorExpanded, isErrorExpanded) ||
+                other.isErrorExpanded == isErrorExpanded));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, pageController, index, tabSetting);
+      Object.hash(runtimeType, pageController, index, isErrorExpanded);
 
   @JsonKey(ignore: true)
   @override
@@ -168,18 +157,19 @@ class _$TimelinePageStateImpl implements _TimelinePageState {
           this, _$identity);
 }
 
-abstract class _TimelinePageState implements TimelinePageState {
+abstract class _TimelinePageState extends TimelinePageState {
   const factory _TimelinePageState(
       {required final PageController pageController,
       required final int index,
-      required final TabSetting tabSetting}) = _$TimelinePageStateImpl;
+      final bool isErrorExpanded}) = _$TimelinePageStateImpl;
+  const _TimelinePageState._() : super._();
 
   @override
   PageController get pageController;
   @override
   int get index;
   @override
-  TabSetting get tabSetting;
+  bool get isErrorExpanded;
   @override
   @JsonKey(ignore: true)
   _$$TimelinePageStateImplCopyWith<_$TimelinePageStateImpl> get copyWith =>

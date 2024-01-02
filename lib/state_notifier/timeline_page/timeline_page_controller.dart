@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:miria/model/tab_setting.dart';
 import 'package:miria/model/timeline_page_state.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
@@ -13,33 +14,35 @@ class TimelinePageController extends AutoDisposeNotifier<TimelinePageState> {
   @override
   TimelinePageState build() {
     final pageController = PageController();
-    final tabSetting =
-        ref.watch(tabSettingsRepositoryProvider).tabSettings.first;
     ref.onDispose(() {
       pageController.dispose();
     });
     return TimelinePageState(
       pageController: pageController,
       index: 0,
-      tabSetting: tabSetting,
     );
   }
 
+  TabSetting get _tabSetting {
+    return ref
+        .read(tabSettingsRepositoryProvider)
+        .tabSettings
+        .elementAt(state.index);
+  }
+
   void changePage(int index) {
-    final tabSetting =
-        ref.read(tabSettingsRepositoryProvider).tabSettings.elementAt(index);
-    state = state.copyWith(index: index, tabSetting: tabSetting);
+    state = state.copyWith(index: index);
   }
 
   void forceScrollToTop() {
     ref
-        .read(timelineControllerProvider(state.tabSetting).notifier)
+        .read(timelineControllerProvider(_tabSetting).notifier)
         .forceScrollToTop();
   }
 
   Future<void> reconnect() async {
     await ref
-        .read(timelineRepositoryProvider(state.tabSetting).notifier)
+        .read(timelineRepositoryProvider(_tabSetting).notifier)
         .startTimeline(restart: true);
     forceScrollToTop();
   }
@@ -61,17 +64,17 @@ class TimelinePageController extends AutoDisposeNotifier<TimelinePageState> {
     try {
       final accountSettings = ref
           .read(accountSettingsRepositoryProvider)
-          .fromAcct(state.tabSetting.acct);
+          .fromAcct(_tabSetting.acct);
       ref.read(timelineNoteProvider).clear();
       FocusManager.instance.primaryFocus?.unfocus();
 
-      final account = ref.read(accountProvider(state.tabSetting.acct));
+      final account = ref.read(accountProvider(_tabSetting.acct));
       await ref.read(misskeyProvider(account)).notes.create(
             NotesCreateRequest(
               text: text,
-              channelId: state.tabSetting.channelId,
+              channelId: _tabSetting.channelId,
               visibility: accountSettings.defaultNoteVisibility,
-              localOnly: state.tabSetting.channelId != null ||
+              localOnly: _tabSetting.channelId != null ||
                   accountSettings.defaultIsLocalOnly,
               reactionAcceptance: accountSettings.defaultReactionAcceptance,
             ),
@@ -84,9 +87,9 @@ class TimelinePageController extends AutoDisposeNotifier<TimelinePageState> {
 
   void noteCreateRoute(BuildContext context) {
     CommunityChannel? channel;
-    final channelId = state.tabSetting.channelId;
+    final channelId = _tabSetting.channelId;
     if (channelId != null) {
-      final timeline = ref.read(timelineRepositoryProvider(state.tabSetting));
+      final timeline = ref.read(timelineRepositoryProvider(_tabSetting));
       final channelName = timeline.oldestNote?.channel?.name;
 
       channel = CommunityChannel(
@@ -108,8 +111,16 @@ class TimelinePageController extends AutoDisposeNotifier<TimelinePageState> {
       NoteCreateRoute(
         channel: channel,
         initialText: sendText,
-        initialAccount: ref.read(accountProvider(state.tabSetting.acct)),
+        initialAccount: ref.read(accountProvider(_tabSetting.acct)),
       ),
     );
+  }
+
+  void expandError() {
+    state = state.copyWith(isErrorExpanded: true);
+  }
+
+  void foldError() {
+    state = state.copyWith(isErrorExpanded: false);
   }
 }
