@@ -52,10 +52,7 @@ class FederationTimelineState extends ConsumerState<FederationTimeline> {
           },
           itemBuilder: (context2, item) => Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
-            child: MisskeyNote(
-              note: item,
-              loginAs: AccountScope.of(context),
-            ),
+            child: MisskeyNote(note: item),
           ),
         ),
       ),

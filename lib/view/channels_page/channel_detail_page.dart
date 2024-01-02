@@ -50,22 +50,24 @@ class ChannelDetailPage extends ConsumerWidget {
               ),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.edit),
-            onPressed: () async {
-              final communityChannel = await ref
-                  .read(misskeyProvider(account))
-                  .channels
-                  .show(ChannelsShowRequest(channelId: channelId));
-              if (!context.mounted) return;
-              context.pushRoute(
-                NoteCreateRoute(
-                  initialAccount: account,
-                  channel: communityChannel,
-                ),
-              );
-            },
-          ),
+          floatingActionButton: account.hasToken
+              ? FloatingActionButton(
+                  child: const Icon(Icons.edit),
+                  onPressed: () async {
+                    final communityChannel = await ref
+                        .read(misskeyProvider(account))
+                        .channels
+                        .show(ChannelsShowRequest(channelId: channelId));
+                    if (!context.mounted) return;
+                    context.pushRoute(
+                      NoteCreateRoute(
+                        initialAccount: account,
+                        channel: communityChannel,
+                      ),
+                    );
+                  },
+                )
+              : null,
         ),
       ),
     );

@@ -11,6 +11,7 @@ class TestData {
   static Account account = Account(
     host: "example.miria.shiosyakeyakini.info",
     userId: "ai",
+    token: "token",
     i: i1,
     meta: meta,
   );

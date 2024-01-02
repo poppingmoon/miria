@@ -130,6 +130,6 @@ class LinkNavigator {
         );
 
     if (!context.mounted) return;
-    context.pushRoute(UserRoute(userId: response.id, account: account));
+    context.pushRoute(UserRoute(user: response.toUser(), account: account));
   }
 }

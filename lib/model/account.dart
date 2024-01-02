@@ -37,6 +37,10 @@ class Account with _$Account {
     );
   }
 
+  bool get hasToken {
+    return token != null;
+  }
+
   factory Account.demoAccount(String host, MetaResponse? meta) => Account(
         host: host,
         userId: "",
