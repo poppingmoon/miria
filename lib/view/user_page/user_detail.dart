@@ -479,46 +479,48 @@ class UserDetailState extends ConsumerState<UserDetail> {
                       ),
                     ],
                   ),
-                  InkWell(
-                    onTap: () => context.pushRoute(
-                      UserFolloweeRoute(
-                        userId: user.id,
-                        account: AccountScope.of(context),
+                  if (user.isFollowingVisibleForMe)
+                    InkWell(
+                      onTap: () => context.pushRoute(
+                        UserFolloweeRoute(
+                          userId: user.id,
+                          account: AccountScope.of(context),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            user.followingCount.format(),
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Text(
+                            S.of(context).follow,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Text(
-                          user.followingCount.format(),
-                          style: Theme.of(context).textTheme.titleMedium,
+                  if (user.isFollowersVisibleForMe)
+                    InkWell(
+                      onTap: () => context.pushRoute(
+                        UserFollowerRoute(
+                          userId: user.id,
+                          account: AccountScope.of(context),
                         ),
-                        Text(
-                          S.of(context).follow,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () => context.pushRoute(
-                      UserFollowerRoute(
-                        userId: user.id,
-                        account: AccountScope.of(context),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            user.followersCount.format(),
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Text(
+                            S.of(context).follower,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Text(
-                          user.followersCount.format(),
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text(
-                          S.of(context).follower,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ],
