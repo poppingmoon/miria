@@ -843,10 +843,11 @@ packages:
   mfm:
     dependency: "direct main"
     description:
-      name: mfm
-      sha256: "239bf1671acac3466e66dc4eb6b6e8ee3601cb138ce129bd7c192364e7633fd0"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: f3b583f9cff8067f4658824c81690efe1af27373
+      resolved-ref: f3b583f9cff8067f4658824c81690efe1af27373
+      url: "https://github.com/poppingmoon/mfm_renderer.git"
+    source: git
     version: "1.0.6"
   mfm_parser:
     dependency: "direct main"

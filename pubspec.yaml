@@ -42,7 +42,10 @@ dependencies:
   media_kit: ^1.1.8+2
   media_kit_libs_video: ^1.0.3
   media_kit_video: ^1.2.1
-  mfm: ^1.0.5
+  mfm:
+    git:
+      url: https://github.com/poppingmoon/mfm_renderer.git
+      ref: f3b583f9cff8067f4658824c81690efe1af27373
   mfm_parser: ^1.0.3
   mime: ^1.0.4
   misskey_dart:
