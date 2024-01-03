@@ -64,19 +64,6 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    hostController.addListener(() {
-      if (host != hostController.text) {
-        setState(() {
-          host = hostController.text;
-        });
-        refresh();
-      }
-    });
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
@@ -215,6 +202,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                   refresh();
                 },
                 value: selectedAccount,
+                isExpanded: true,
               ),
               if (selectedAccount == null) ...[
                 const Padding(padding: EdgeInsets.all(10)),
@@ -225,17 +213,29 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                     prefixIcon: const Icon(Icons.dns),
                     suffixIcon: IconButton(
                       onPressed: () async {
-                        final host = await showDialog<String?>(
+                        final result = await showDialog<String?>(
                           context: context,
                           builder: (context) => const MisskeyServerListDialog(),
                         );
-                        if (host != null && host.isNotEmpty) {
-                          hostController.text = host;
+                        if (result != null) {
+                          setState(() {
+                            hostController.text = result;
+                            host = result;
+                          });
+                          refresh();
                         }
                       },
                       icon: const Icon(Icons.search),
                     ),
                   ),
+                  onChanged: (result) {
+                    if (result != host) {
+                      setState(() {
+                        host = result;
+                      });
+                      refresh();
+                    }
+                  },
                 ),
               ],
               const Padding(padding: EdgeInsets.all(10)),
@@ -272,9 +272,18 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                         });
                       },
                       value: selectedTabType,
+                      isExpanded: true,
                     );
-                  } else {
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
+                  } else {
+                    return Center(
+                      child: IconButton(
+                        onPressed: () => setState(() {}),
+                        icon: const Icon(Icons.refresh),
+                      ),
+                    );
                   }
                 },
               ),
