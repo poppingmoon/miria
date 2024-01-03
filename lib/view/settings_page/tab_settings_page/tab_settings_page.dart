@@ -33,6 +33,7 @@ class TabSettingsPage extends ConsumerStatefulWidget {
 class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
   late Account? selectedAccount = ref.read(accountsProvider).first;
   TextEditingController hostController = TextEditingController();
+  String host = "";
   TabType? selectedTabType = TabType.localTimeline;
   RolesListResponse? selectedRole;
   CommunityChannel? selectedChannel;
@@ -48,6 +49,32 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
   bool get availableIncludeReply =>
       selectedTabType == TabType.localTimeline ||
       selectedTabType == TabType.hybridTimeline;
+
+  bool isTabTypeAvailable(TabType tabType, [MetaResponse? meta]) {
+    return switch (tabType) {
+      TabType.localTimeline => selectedAccount?.i.policies.ltlAvailable ??
+          meta?.policies?.ltlAvailable ??
+          false,
+      TabType.globalTimeline => selectedAccount?.i.policies.gtlAvailable ??
+          meta?.policies?.gtlAvailable ??
+          false,
+      TabType.channel => true,
+      _ => selectedAccount != null,
+    };
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    hostController.addListener(() {
+      if (host != hostController.text) {
+        setState(() {
+          host = hostController.text;
+        });
+        refresh();
+      }
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -125,6 +152,21 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
     super.dispose();
   }
 
+  void refresh() {
+    final tabType = selectedTabType;
+    setState(() {
+      selectedTabType =
+          tabType != null && isTabTypeAvailable(tabType) ? tabType : null;
+      selectedAntenna = null;
+      selectedUserList = null;
+      selectedChannel = null;
+      nameController.clear();
+      if (selectedIcon?.customEmojiName != null) {
+        selectedIcon = null;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final accounts = ref.watch(accountsProvider);
@@ -169,15 +211,8 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                 onChanged: (value) {
                   setState(() {
                     selectedAccount = value;
-                    selectedTabType = null;
-                    selectedAntenna = null;
-                    selectedUserList = null;
-                    selectedChannel = null;
-                    nameController.clear();
-                    if (selectedIcon?.customEmojiName != null) {
-                      selectedIcon = null;
-                    }
                   });
+                  refresh();
                 },
                 value: selectedAccount,
               ),
@@ -190,12 +225,12 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                     prefixIcon: const Icon(Icons.dns),
                     suffixIcon: IconButton(
                       onPressed: () async {
-                        final url = await showDialog<String?>(
+                        final host = await showDialog<String?>(
                           context: context,
                           builder: (context) => const MisskeyServerListDialog(),
                         );
-                        if (url != null && url.isNotEmpty) {
-                          hostController.text = url;
+                        if (host != null && host.isNotEmpty) {
+                          hostController.text = host;
                         }
                       },
                       icon: const Icon(Icons.search),
@@ -205,26 +240,43 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
               ],
               const Padding(padding: EdgeInsets.all(10)),
               Text(S.of(context).tabType),
-              DropdownButton<TabType>(
-                items: [
-                  for (final tabType in TabType.values.where(
-                    (tabType) =>
-                        selectedAccount != null ||
-                        tabType == TabType.localTimeline ||
-                        tabType == TabType.globalTimeline ||
-                        tabType == TabType.channel,
-                  ))
-                    DropdownMenuItem(
-                      value: tabType,
-                      child: Text(tabType.displayName(context)),
-                    ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    selectedTabType = value;
-                  });
+              FutureBuilder(
+                future: Future(() async {
+                  if (selectedAccount == null && host.isNotEmpty) {
+                    return ref
+                        .read(
+                          misskeyProvider(
+                            Account.demoAccount(host, null),
+                          ),
+                        )
+                        .meta();
+                  } else {
+                    return null;
+                  }
+                }),
+                builder: (context, snapshot) {
+                  final meta = snapshot.data;
+                  if (selectedAccount != null || meta != null) {
+                    return DropdownButton<TabType>(
+                      items: [
+                        for (final tabType in TabType.values)
+                          if (isTabTypeAvailable(tabType, meta))
+                            DropdownMenuItem(
+                              value: tabType,
+                              child: Text(tabType.displayName(context)),
+                            ),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          selectedTabType = value;
+                        });
+                      },
+                      value: selectedTabType,
+                    );
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
                 },
-                value: selectedTabType,
               ),
               const Padding(padding: EdgeInsets.all(10)),
               if (selectedTabType == TabType.roleTimeline) ...[
@@ -260,7 +312,6 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                     IconButton(
                       onPressed: () async {
                         final account = selectedAccount;
-                        final host = hostController.text;
                         if (account == null && host.isEmpty) return;
 
                         selectedChannel = await showDialog<CommunityChannel>(
@@ -340,12 +391,11 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
               Row(
                 children: [
                   Expanded(
-                    child: selectedAccount == null &&
-                            hostController.text.isEmpty
+                    child: selectedAccount == null && host.isEmpty
                         ? Container()
                         : AccountScope(
                             account: selectedAccount ??
-                                Account.demoAccount(hostController.text, null),
+                                Account.demoAccount(host, null),
                             child: SizedBox(
                               height: 32,
                               child: TabIconView(
@@ -357,7 +407,6 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                   ),
                   IconButton(
                     onPressed: () async {
-                      final host = hostController.text;
                       final demoAccount = Account.demoAccount(host, null);
                       if (selectedAccount == null) {
                         if (host.isEmpty) {
@@ -421,7 +470,6 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
                 child: ElevatedButton(
                   onPressed: () async {
                     final account = selectedAccount;
-                    final host = hostController.text;
                     if (account == null && host.isEmpty) {
                       SimpleMessageDialog.show(
                         context,
