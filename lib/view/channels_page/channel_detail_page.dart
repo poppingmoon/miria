@@ -5,6 +5,7 @@ import 'package:miria/model/account.dart';
 import 'package:miria/providers.dart';
 import 'package:miria/router/app_router.dart';
 import 'package:miria/view/channels_page/channel_detail_info.dart';
+import 'package:miria/view/channels_page/channel_highlight.dart';
 import 'package:miria/view/channels_page/channel_timeline.dart';
 import 'package:miria/view/common/account_scope.dart';
 import 'package:misskey_dart/misskey_dart.dart';
@@ -23,7 +24,7 @@ class ChannelDetailPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: AccountScope(
         account: account,
         child: Scaffold(
@@ -31,8 +32,9 @@ class ChannelDetailPage extends ConsumerWidget {
             title: const Text("チャンネル"),
             bottom: const TabBar(
               tabs: [
-                Tab(child: Text("チャンネル情報")),
-                Tab(child: Text("タイムライン")),
+                Tab(text: "チャンネル情報"),
+                Tab(text: "タイムライン"),
+                Tab(text: "ハイライト"),
               ],
             ),
           ),
@@ -47,6 +49,10 @@ class ChannelDetailPage extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),
                 child: ChannelTimeline(channelId: channelId),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: ChannelHighlight(channelId: channelId),
               ),
             ],
           ),
