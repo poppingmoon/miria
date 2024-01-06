@@ -188,7 +188,7 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
               Text(S.of(context).account),
               DropdownButton<Account>(
                 items: [
-                  const DropdownMenuItem(child: Text("なし")),
+                  DropdownMenuItem(child: Text(S.of(context).none)),
                   for (final account in accounts)
                     DropdownMenuItem(
                       value: account,

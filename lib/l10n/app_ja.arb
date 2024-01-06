@@ -379,6 +379,14 @@
             }
         }
     },
+    "roleNotification": "ロール「{role}」に入れられたみたいや",
+    "@roleNotification": {
+        "placeholders": {
+            "role": {
+                "type": "String"
+            }
+        }
+    },
     "notificationAll": "みんな",
     "notificationForMe": "自分宛て",
     "notificationDirect": "ダイレクト",
@@ -518,6 +526,7 @@
 
 
 
+    "error": "エラー",
     "thrownConnectionError": "通信に失敗しました。",
     "thrownConnectionTimeout": "タイムアウトしました。",
     "thrownWebSocketException": "通信に失敗しました。",
@@ -943,6 +952,7 @@
     "refreshing": "更新中",
     "remoteUserCaution": "リモートユーザーのため、情報が不完全です。",
     "showServerInformation": "サーバー情報を表示",
+    "showOnRemote": "リモートで表示",
     "location": "場所",
     "registeredDate": "登録日",
     "birthday": "誕生日",

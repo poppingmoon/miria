@@ -365,7 +365,7 @@ class UserDetailState extends ConsumerState<UserDetail> {
                                           Account.demoAccount(host, null),
                                         )
                                         .expectFailure(context),
-                                    child: const Text("リモートで表示"),
+                                    child: Text(S.of(context).showOnRemote),
                                   );
                                 } else {
                                   return const SizedBox.shrink();
