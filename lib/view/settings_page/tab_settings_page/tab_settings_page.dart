@@ -243,13 +243,20 @@ class TabSettingsAddDialogState extends ConsumerState<TabSettingsPage> {
               FutureBuilder(
                 future: Future(() async {
                   if (selectedAccount == null && host.isNotEmpty) {
-                    return ref
+                    final meta = await ref
                         .read(
                           misskeyProvider(
                             Account.demoAccount(host, null),
                           ),
                         )
                         .meta();
+                    if (selectedTabType != null &&
+                        !isTabTypeAvailable(selectedTabType!, meta)) {
+                      setState(() {
+                        selectedTabType = null;
+                      });
+                    }
+                    return meta;
                   } else {
                     return null;
                   }
