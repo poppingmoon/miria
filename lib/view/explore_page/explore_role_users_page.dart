@@ -23,18 +23,20 @@ class ExploreRoleUsersPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
-      length: 2,
+      length: 1 + (account.hasToken ? 1 : 0),
       child: AccountScope(
         account: account,
         child: Scaffold(
           appBar: AppBar(
             title: Text(item.name),
-            bottom: const TabBar(
-              tabs: [
-                Tab(text: "ユーザー"),
-                Tab(text: "タイムライン"),
-              ],
-            ),
+            bottom: account.hasToken
+                ? const TabBar(
+                    tabs: [
+                      Tab(text: "ユーザー"),
+                      Tab(text: "タイムライン"),
+                    ],
+                  )
+                : null,
           ),
           body: TabBarView(
             children: [
@@ -58,28 +60,29 @@ class ExploreRoleUsersPage extends ConsumerWidget {
                 },
                 itemBuilder: (context, item) => UserListItem(user: item.user),
               ),
-              PushableListView(
-                initializeFuture: () async {
-                  final response = await ref
-                      .read(misskeyProvider(account))
-                      .roles
-                      .notes(RolesNotesRequest(roleId: item.id));
-                  ref.read(notesProvider(account)).registerAll(response);
-                  return response.toList();
-                },
-                nextFuture: (lastItem, _) async {
-                  final response =
-                      await ref.read(misskeyProvider(account)).roles.notes(
-                            RolesNotesRequest(
-                              roleId: item.id,
-                              untilId: lastItem.id,
-                            ),
-                          );
-                  ref.read(notesProvider(account)).registerAll(response);
-                  return response.toList();
-                },
-                itemBuilder: (context, note) => MisskeyNote(note: note),
-              ),
+              if (account.hasToken)
+                PushableListView(
+                  initializeFuture: () async {
+                    final response = await ref
+                        .read(misskeyProvider(account))
+                        .roles
+                        .notes(RolesNotesRequest(roleId: item.id));
+                    ref.read(notesProvider(account)).registerAll(response);
+                    return response.toList();
+                  },
+                  nextFuture: (lastItem, _) async {
+                    final response =
+                        await ref.read(misskeyProvider(account)).roles.notes(
+                              RolesNotesRequest(
+                                roleId: item.id,
+                                untilId: lastItem.id,
+                              ),
+                            );
+                    ref.read(notesProvider(account)).registerAll(response);
+                    return response.toList();
+                  },
+                  itemBuilder: (context, note) => MisskeyNote(note: note),
+                ),
             ],
           ),
         ),
