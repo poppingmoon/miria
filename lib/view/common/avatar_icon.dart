@@ -53,7 +53,7 @@ class AvatarIconState extends State<AvatarIcon>
     super.initState();
 
     if (widget.user.isCat) {
-      catEarColor = (widget.user.isCat ? averageColor() : null);
+      catEarColor = averageColor();
       controller = AnimationController(
         duration: const Duration(seconds: 1),
         vsync: this,
