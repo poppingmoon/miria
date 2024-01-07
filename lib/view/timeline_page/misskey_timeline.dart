@@ -21,49 +21,42 @@ class MisskeyTimeline extends ConsumerWidget {
     final controller = ref.watch(timelineControllerProvider(tabSetting));
     final centerKey = ref.watch(_centerKeyProvider);
 
-    return Column(
-      children: [
-        if (timeline.isLoading && timeline.isEmpty)
-          const Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Center(child: CircularProgressIndicator()),
-          ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: CustomScrollView(
-              center: centerKey,
-              controller: controller.scrollController,
-              slivers: [
-                SliverAnimatedList(
-                  key: controller.listKey,
-                  initialItemCount: timeline.newerNotes.length,
-                  itemBuilder: (context, index, animation) {
-                    return SizeTransition(
-                      sizeFactor: animation,
-                      child: NoteWrapper(
-                        targetNote: timeline.newerNotes[index],
-                        tabSetting: tabSetting,
-                      ),
-                    );
-                  },
-                ),
-                SliverList.builder(
-                  key: centerKey,
-                  itemCount: timeline.olderNotes.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index < timeline.olderNotes.length) {
-                      return NoteWrapper(
-                        targetNote: timeline.olderNotes[index],
-                        tabSetting: tabSetting,
-                      );
-                    }
-                    return TimelineBottomItem(tabSetting: tabSetting);
-                  },
-                ),
-              ],
-            ),
-          ),
+    if (timeline.isLoading && timeline.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(10),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    return CustomScrollView(
+      center: centerKey,
+      controller: controller.scrollController,
+      slivers: [
+        SliverAnimatedList(
+          key: controller.listKey,
+          initialItemCount: timeline.newerNotes.length,
+          itemBuilder: (context, index, animation) {
+            return SizeTransition(
+              sizeFactor: animation,
+              child: NoteWrapper(
+                targetNote: timeline.newerNotes[index],
+                tabSetting: tabSetting,
+              ),
+            );
+          },
+        ),
+        SliverList.builder(
+          key: centerKey,
+          itemCount: timeline.olderNotes.length + 1,
+          itemBuilder: (context, index) {
+            if (index < timeline.olderNotes.length) {
+              return NoteWrapper(
+                targetNote: timeline.olderNotes[index],
+                tabSetting: tabSetting,
+              );
+            }
+            return TimelineBottomItem(tabSetting: tabSetting);
+          },
         ),
       ],
     );
