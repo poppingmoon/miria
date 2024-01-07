@@ -180,7 +180,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                       initialPage: widget.position,
                     ),
                   );
-                } else if (widget.fileType.startsWith("video")) {
+                } else if (widget.fileType.startsWith(RegExp("video|audio"))) {
                   showDialog<void>(
                     context: context,
                     builder: (context) => VideoDialog(
@@ -262,22 +262,26 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                             ),
                           ),
                         );
-                      } else if (widget.thumbnailUrl != null) {
+                      } else if (widget.fileType
+                          .startsWith(RegExp("video|audio"))) {
                         cachedWidget = Stack(
                           children: [
                             Positioned.fill(
                               child: SizedBox(
                                 height: 200,
-                                child: NetworkImageView(
-                                  url: widget.thumbnailUrl!,
-                                  type: ImageType.imageThumbnail,
-                                  loadingBuilder:
-                                      (context, widget, chunkEvent) => SizedBox(
-                                    width: double.infinity,
-                                    height: 200,
-                                    child: widget,
-                                  ),
-                                ),
+                                child: widget.thumbnailUrl != null
+                                    ? NetworkImageView(
+                                        url: widget.thumbnailUrl!,
+                                        type: ImageType.imageThumbnail,
+                                        loadingBuilder:
+                                            (context, widget, chunkEvent) =>
+                                                SizedBox(
+                                          width: double.infinity,
+                                          height: 200,
+                                          child: widget,
+                                        ),
+                                      )
+                                    : const SizedBox.shrink(),
                               ),
                             ),
                             const Positioned.fill(
