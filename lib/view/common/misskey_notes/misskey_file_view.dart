@@ -279,7 +279,7 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                       initialPage: widget.position,
                     ),
                   );
-                } else if (widget.fileType.startsWith("video")) {
+                } else if (widget.fileType.startsWith(RegExp("video|audio"))) {
                   showDialog<void>(
                     context: context,
                     builder: (context) => VideoDialog(
@@ -363,23 +363,27 @@ class MisskeyImageState extends ConsumerState<MisskeyImage> {
                             height: widget.height,
                           ),
                         );
-                      } else if (widget.thumbnailUrl != null) {
+                      } else if (widget.fileType
+                          .startsWith(RegExp("video|audio"))) {
                         cachedWidget = Stack(
                           children: [
                             Positioned.fill(
                               child: SizedBox(
                                 height: widget.height,
-                                child: NetworkImageView(
-                                  url: widget.thumbnailUrl!,
-                                  type: ImageType.imageThumbnail,
-                                  loadingBuilder:
-                                      (context, child, chunkEvent) => SizedBox(
-                                    width: double.infinity,
-                                    height: widget.height,
-                                    child: child,
-                                  ),
-                                  height: widget.height,
-                                ),
+                                child: widget.thumbnailUrl != null
+                                    ? NetworkImageView(
+                                        url: widget.thumbnailUrl!,
+                                        type: ImageType.imageThumbnail,
+                                        loadingBuilder:
+                                            (context, child, chunkEvent) =>
+                                                SizedBox(
+                                          width: double.infinity,
+                                          height: widget.height,
+                                          child: child,
+                                        ),
+                                        height: widget.height,
+                                      )
+                                    : const SizedBox.shrink(),
                               ),
                             ),
                             const Positioned.fill(
