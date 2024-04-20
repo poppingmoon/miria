@@ -488,40 +488,48 @@ class NoteCreateNotifier extends _$NoteCreateNotifier {
         .read(appRouterProvider)
         .push<DriveModalSheetReturnValue>(const DriveModalRoute());
 
-    if (result == DriveModalSheetReturnValue.drive) {
-      final result = await ref.read(appRouterProvider).push<List<DriveFile>>(
-            DriveFileSelectRoute(
-              account: ref.read(accountContextProvider).postAccount,
-              allowMultiple: true,
-            ),
-          );
-      if (result == null || result.isEmpty) return;
+    switch (result) {
+      case DriveModalSheetReturnValue.drive:
+        final result = await ref.read(appRouterProvider).push<List<DriveFile>>(
+              DriveFileSelectRoute(
+                account: ref.read(accountContextProvider).postAccount,
+                allowMultiple: true,
+              ),
+            );
+        if (result == null || result.isEmpty) return;
 
-      final files = result.map((file) => AlreadyPostedFile.file(file));
+        final files = result.map((file) => AlreadyPostedFile.file(file));
 
-      state = state.copyWith(
-        files: [
-          ...state.files,
-          ...files,
-        ],
-      );
-    } else if (result == DriveModalSheetReturnValue.upload) {
-      final result = await FilePicker.platform.pickFiles(
-        allowMultiple: true,
-        allowCompression: Platform.isIOS, // v8.1.3ではiOS以外でこの値を使用していない
-        compressionQuality: 0, // Androidでは0にすることで圧縮パススルー
-      );
-      if (result == null || result.files.isEmpty) return;
+        state = state.copyWith(
+          files: [
+            ...state.files,
+            ...files,
+          ],
+        );
+      case DriveModalSheetReturnValue.uploadFile ||
+            DriveModalSheetReturnValue.uploadMedia:
+        final pickerResult = await FilePicker.platform.pickFiles(
+          type: result == DriveModalSheetReturnValue.uploadMedia
+              ? FileType.media
+              : FileType.any,
+          allowMultiple: true,
+          allowCompression: Platform.isIOS, // v8.1.3ではiOS以外でこの値を使用していない
+          compressionQuality: 0, // Androidでは0にすることで圧縮パススルー
+        );
+        if (pickerResult == null || pickerResult.files.isEmpty) return;
 
-      final files = result.files.map((file) {
-        final path = file.path;
-        if (path != null) {
-          return PostFile.file(_fileSystem.file(path));
-        }
-        return null;
-      }).nonNulls;
+        final files = pickerResult.files.map(
+          (file) {
+            final path = file.path;
+            if (path != null) {
+              return PostFile.file(_fileSystem.file(path));
+            }
+            return null;
+          },
+        ).nonNulls;
 
-      state = state.copyWith(files: [...state.files, ...files]);
+        state = state.copyWith(files: [...state.files, ...files]);
+      default:
     }
   }
 
